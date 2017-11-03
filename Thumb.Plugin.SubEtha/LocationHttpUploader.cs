@@ -1,13 +1,11 @@
 ﻿using System;
-using Common.Logging;
+using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
 {
     public class LocationHttpUploader : IUploader<LocationState>
     {
-        private static readonly ILog Log = LogManager.GetLogger<LocationHttpUploader>();
-
         private readonly HttpUploadClient _client;
         public string User { get; }
         public string GameVersion { get; }
@@ -21,9 +19,9 @@ namespace Thumb.Plugin.SubEtha
 
         public void Upload(LocationState state)
         {
-            Log.Info($"Uploading location state \"{GameVersion}\"...");
+            Trace.TraceInformation($"Uploading location state \"{GameVersion}\"...");
+            Debug.WriteLine(JsonConvert.SerializeObject(state));
 
-            Log.Debug(JsonConvert.SerializeObject(state));
             _client.Upload(new Uri($"{User}/{GameVersion}/Location", UriKind.Relative), state);
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Common.Logging;
+using System.Diagnostics;
 using Howatworks.Configuration;
 using Howatworks.PlayerJournal;
 using Howatworks.PlayerJournal.Processing;
@@ -9,8 +9,6 @@ namespace Thumb.Plugin.SubEtha
 {
     public class SubEthaJournalProcessor : IJournalProcessor
     {
-        private static readonly ILog Log = LogManager.GetLogger<SubEthaJournalProcessor>();
-
         private readonly IList<IJournalProcessor> _childProcessors = new List<IJournalProcessor>();
 
         public SubEthaJournalProcessor(IConfigReader config, string user, string gameVersion)
@@ -31,7 +29,8 @@ namespace Thumb.Plugin.SubEtha
         public bool Apply(JournalEntryBase entry)
         {
             var somethingApplied = false;
-            Log.Debug(JsonConvert.SerializeObject(entry));
+            Debug.WriteLine(JsonConvert.SerializeObject(entry));
+
             foreach (var manager in _childProcessors)
             {
                 if (manager.Apply(entry))
@@ -41,7 +40,7 @@ namespace Thumb.Plugin.SubEtha
             }
             if (!somethingApplied)
             {
-                Log.Info($"No handler applied for event type {entry.Event}");
+                Trace.TraceInformation($"No handler applied for event type {entry.Event}");
             }
             return somethingApplied;
 

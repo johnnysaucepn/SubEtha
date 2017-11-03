@@ -1,5 +1,4 @@
-﻿using Common.Logging;
-using Howatworks.PlayerJournal;
+﻿using Howatworks.PlayerJournal;
 using Howatworks.PlayerJournal.Combat;
 using Howatworks.PlayerJournal.Other;
 using Howatworks.PlayerJournal.Processing;
@@ -12,9 +11,6 @@ namespace Thumb.Plugin.SubEtha
     {
         private readonly JournalEntryRouter _entryRouter;
         private readonly IUploader<LocationState> _client;
-        // ReSharper disable once UnusedMember.Local
-        private static readonly ILog Log = LogManager.GetLogger<LocationManager>();
-
         private LocationState _location;
         private bool _isDirty;
 

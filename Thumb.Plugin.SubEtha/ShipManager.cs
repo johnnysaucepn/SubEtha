@@ -1,5 +1,4 @@
-﻿using Common.Logging;
-using Howatworks.PlayerJournal;
+﻿using Howatworks.PlayerJournal;
 using Howatworks.PlayerJournal.Combat;
 using Howatworks.PlayerJournal.Processing;
 using Howatworks.PlayerJournal.Startup;
@@ -7,13 +6,11 @@ using Howatworks.PlayerJournal.StationServices;
 
 namespace Thumb.Plugin.SubEtha
 {
-
     public class ShipManager : IJournalProcessor
     {
         private readonly JournalEntryRouter _entryRouter;
         private readonly IUploader<ShipState> _client;
         // ReSharper disable once UnusedMember.Local
-        private static readonly ILog Log = LogManager.GetLogger<ShipManager>();
 
         private ShipState _ship;
         private bool _isDirty;

@@ -7,8 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.1" />
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,18 +14,6 @@
     <ProjectReference Include="..\Howatworks.PlayerJournal.Processing\Howatworks.PlayerJournal.Processing.csproj" />
     <ProjectReference Include="..\SubEtha.Domain\SubEtha.Domain.csproj" />
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.4.6.1\lib\net45\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging.Core">
-      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

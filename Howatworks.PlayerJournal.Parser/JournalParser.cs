@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Common.Logging;
 using Newtonsoft.Json;
 
 namespace Howatworks.PlayerJournal.Parser
 {
     public class JournalParser : IJournalParser
     {
-        private static readonly ILog Log = LogManager.GetLogger<JournalParser>();
-
         private readonly Lazy<Dictionary<string, Type>> _eventTypeLookup = new Lazy<Dictionary<string, Type>>(
             () =>
             {
@@ -35,7 +33,7 @@ namespace Howatworks.PlayerJournal.Parser
         {
             if (!_eventTypeLookup.Value.ContainsKey(eventType))
             {
-                Log.Warn($"Found unrecognised journal entry type {eventType}: {line}");
+                Trace.TraceWarning($"Found unrecognised journal entry type {eventType}: {line}");
                 return null;
             }
             var mappedType = _eventTypeLookup.Value[eventType];
@@ -47,11 +45,11 @@ namespace Howatworks.PlayerJournal.Parser
             }
             catch (JsonSerializationException e)
             {
-                Log.Error($"Failed to parse {line}", e);
+                Trace.TraceError($"Failed to parse {line}", e);
             }
             if (entry == null)
             {
-                Log.Warn($"Failed to parse {line}");
+                Trace.TraceWarning($"Failed to parse {line}");
                 return null;
             }
 

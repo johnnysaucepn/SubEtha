@@ -1,5 +1,4 @@
-﻿using Common.Logging;
-using Howatworks.PlayerJournal;
+﻿using Howatworks.PlayerJournal;
 using Howatworks.PlayerJournal.Processing;
 using Howatworks.PlayerJournal.Startup;
 
@@ -7,8 +6,6 @@ namespace Thumb.Plugin.SubEtha
 {
     public class SessionManager : IJournalProcessor
     {
-        private static readonly ILog Log = LogManager.GetLogger<SessionManager>();
-
         private readonly JournalEntryRouter _entryRouter;
         private readonly IUploader<SessionState> _client;
         // ReSharper disable once UnusedMember.Local

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using Common.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,8 +9,6 @@ namespace Howatworks.PlayerJournal.Parser
 {
     internal class JournalReader
     {
-        private static ILog Log = LogManager.GetLogger<JournalReader>();
-
         private readonly IJournalParser _parser;
         private StreamReader _streamReader;
         public JournalFileInfo FileInfo { get; }
@@ -80,7 +78,7 @@ namespace Howatworks.PlayerJournal.Parser
             while (!_streamReader.EndOfStream)
             {
                 var line = _streamReader.ReadLine();
-                Log.Trace(line);
+                Debug.Write(line);
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 // TODO: beef up error handling here, what if line is not a parseable event?

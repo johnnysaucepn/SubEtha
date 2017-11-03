@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Common.Logging;
 using System.Threading;
 using Howatworks.PlayerJournal.Other;
 
@@ -10,8 +10,6 @@ namespace Howatworks.PlayerJournal.Parser
 {
     public class JournalMonitor : IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger<JournalMonitor>();
-
         private readonly IJournalParser _parser;
         private readonly IJournalMonitorConfiguration _config;
         private readonly FileSystemWatcher _watcher;
@@ -51,7 +49,7 @@ namespace Howatworks.PlayerJournal.Parser
             {
                 if (_monitoredFiles.Count <= 0) return;
 
-                Log.Debug($"Rescanning {_monitoredFiles.Count} log files...");
+                Debug.WriteLine($"Rescanning {_monitoredFiles.Count} log files...");
                 
                 var entriesFound = RescanFiles(_monitoredFiles.Values, LastRead).ToList();
                 ProcessEntries(entriesFound, BatchMode.Ongoing);
@@ -130,7 +128,7 @@ namespace Howatworks.PlayerJournal.Parser
         {
             var info = reader.FileInfo;
 
-            Log.Debug($"Scanning file {info.Path}");
+            Debug.WriteLine($"Scanning file {info.Path}");
             var count = 0;
 
             if (reader.FileExists)
@@ -156,13 +154,13 @@ namespace Howatworks.PlayerJournal.Parser
 
             if (count > 0)
             {
-                Log.Info($"Scanned file {info.Path}, {count} new entries found");
+                Trace.TraceInformation($"Scanned file {info.Path}, {count} new entries found");
             }
         }
 
         private static void LogWatcherEvent(FileSystemEventArgs e)
         {
-            Log.Info($"Received {e.ChangeType} event on file {e.FullPath}");
+            Trace.TraceInformation($"Received {e.ChangeType} event on file {e.FullPath}");
         }
 
         private void StartMonitoringFile(string path)
@@ -193,7 +191,7 @@ namespace Howatworks.PlayerJournal.Parser
                 }
                 else
                 {
-                    Log.Error($"Not monitoring file {path} - cannot stop");
+                    Trace.TraceError($"Not monitoring file {path} - cannot stop");
                 }
             }
         }

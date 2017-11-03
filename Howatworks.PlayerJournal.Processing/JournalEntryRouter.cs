@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Common.Logging;
+using System.Diagnostics;
 
 namespace Howatworks.PlayerJournal.Processing
 {
     public class JournalEntryRouter
     {
-        private static readonly ILog Log = LogManager.GetLogger<JournalEntryRouter>();
-
         private readonly Dictionary<Type, List<IHandler>> _handlers = new Dictionary<Type, List<IHandler>>();
 
         public void RegisterFor<T>(Func<T, bool> handler) where T : JournalEntryBase
@@ -28,7 +26,7 @@ namespace Howatworks.PlayerJournal.Processing
             var applied = false;
             foreach (var handler in _handlers[t])
             {
-                Log.Info($"Applying journal event {t.Name} to {GetType().Name}");
+                Trace.TraceInformation($"Applying journal event {t.Name} to {GetType().Name}");
                 if (!handler.Invoke(entry)) continue;
                 applied = true;
 

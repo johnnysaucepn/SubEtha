@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using Common.Logging;
 using Howatworks.Configuration;
 using Howatworks.PlayerJournal;
 using Howatworks.PlayerJournal.Parser;
@@ -12,8 +12,6 @@ namespace Thumb.Plugin.SubEtha
 {
     public class SubEthaJournalProcessorPlugin : IJournalProcessorPlugin
     {
-        private static readonly ILog Log = LogManager.GetLogger<SubEthaJournalProcessorPlugin>();
-
         private readonly IConfigReader _sharedConfig;
         private readonly IConfigReader _pluginConfig;
         private readonly IDictionary<string, SubEthaJournalProcessor> _processors = new Dictionary<string, SubEthaJournalProcessor>();
@@ -51,8 +49,7 @@ namespace Thumb.Plugin.SubEtha
                     _processors[gameVersion] = new SubEthaJournalProcessor(_pluginConfig, _user, gameVersion);
                 }
                 var game = _processors[gameVersion];
-
-                Log.Debug(JsonConvert.SerializeObject(entry));
+                Debug.WriteLine(JsonConvert.SerializeObject(entry));
 
                 game.Apply(entry);
                 AppliedJournalEntries?.Invoke(this, new AppliedJournalEntriesEventArgs());

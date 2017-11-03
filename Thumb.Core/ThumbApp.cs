@@ -1,7 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Common.Logging.Log4Net.Universal;
 using Howatworks.PlayerJournal.Parser;
 using log4net;
 using log4net.Config;
@@ -52,9 +52,9 @@ namespace Thumb.Core
             var logFolder = Path.Combine(workingFolder, "Logs");
             Directory.CreateDirectory(logFolder);
 
-            Common.Logging.LogManager.Adapter = new Log4NetFactoryAdapter();
             GlobalContext.Properties["logfolder"] = logFolder;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            Trace.Listeners.Add(new Log4NetTraceListener(logRepository, this.GetType()));
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 

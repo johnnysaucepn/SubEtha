@@ -1,13 +1,11 @@
 ﻿using System;
-using Common.Logging;
+using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
 {
     public class ShipHttpUploader : IUploader<ShipState>
     {
-        private static readonly ILog Log = LogManager.GetLogger<ShipHttpUploader>();
-
         private readonly HttpUploadClient _client;
         public string User { get; }
         public string GameVersion { get; }
@@ -21,8 +19,8 @@ namespace Thumb.Plugin.SubEtha
 
         public void Upload(ShipState state)
         {
-            Log.Info($"Uploading ship state \"{GameVersion}\"...");
-            Log.Debug(JsonConvert.SerializeObject(state));
+            Trace.TraceInformation($"Uploading ship state \"{GameVersion}\"...");
+            Debug.WriteLine(JsonConvert.SerializeObject(state));
 
             _client.Upload(new Uri($"{User}/{GameVersion}/Ship", UriKind.Relative), state);
         }

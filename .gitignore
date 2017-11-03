@@ -2,3 +2,5 @@
 **/obj/
 TestResults/
 tools/
+packages/
+.vs/
