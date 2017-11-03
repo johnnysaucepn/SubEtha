@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>Elite: Dangerous Player Journal Entries</Title>
+    <Authors>James Howat</Authors>
+    <Company>Howatworks</Company>
+    <Description>Plain .NET object representations of Player Journal entries for the game Elite: Dangerous</Description>
+    <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
+    <Copyright />
+    <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
+    <PackageTags>elite dangerous player journal</PackageTags>
+    <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
+  </PropertyGroup>
+
+</Project>

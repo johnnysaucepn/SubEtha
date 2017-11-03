@@ -1,0 +1,10 @@
+﻿@Master['master.sshtml']
+
+@Section['Content']
+
+<div class="container-fluid" role="main">
+    <h1>Welcome to SubEtha!</h1>
+    <p class="lead">Here is some stuff.</p>
+</div>
+
+@EndSection

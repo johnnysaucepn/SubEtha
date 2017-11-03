@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Howatworks.PlayerJournal.Parser\Howatworks.PlayerJournal.Parser.csproj" />
+    <ProjectReference Include="..\Howatworks.PlayerJournal.Processing\Howatworks.PlayerJournal.Processing.csproj" />
+    <ProjectReference Include="..\Howatworks.PlayerJournal\Howatworks.PlayerJournal.csproj" />
+  </ItemGroup>
+
+</Project>

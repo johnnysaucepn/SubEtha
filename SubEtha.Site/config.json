@@ -1,0 +1,6 @@
+﻿{
+  "SubEtha.Site": {
+    "SiteBinding": "http://+:8985/SubEtha/Site",
+    "ServiceUri": "http://localhost:8984/SubEtha/Service"
+  }
+}

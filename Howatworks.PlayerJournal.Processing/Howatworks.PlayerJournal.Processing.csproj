@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>Elite: Dangerous Player Journal Processing</Title>
+    <Description>An API for custom tools to quickly and easily consume Player Journal log entries from the game Elite: Dangerous</Description>
+    <PackageTags>elite dangerous player journal processing</PackageTags>
+    <Authors>James Howat</Authors>
+    <Company>Howatworks</Company>
+    <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
+    <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
+    <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Howatworks.PlayerJournal\Howatworks.PlayerJournal.csproj" />
+  </ItemGroup>
+
+</Project>
