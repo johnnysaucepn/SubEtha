@@ -12,7 +12,6 @@ namespace Thumb.Plugin.SubEtha
 {
     public class SubEthaJournalProcessorPlugin : IJournalProcessorPlugin
     {
-        private readonly IConfigReader _sharedConfig;
         private readonly IConfigReader _pluginConfig;
         private readonly IDictionary<string, SubEthaJournalProcessor> _processors = new Dictionary<string, SubEthaJournalProcessor>();
         private readonly string _user;
@@ -25,9 +24,8 @@ namespace Thumb.Plugin.SubEtha
 
         public SubEthaJournalProcessorPlugin(IConfigReader sharedConfig, IConfigReader pluginConfig)
         {
-            _sharedConfig = sharedConfig;
             _pluginConfig = pluginConfig;
-            _user = _sharedConfig.Get<string>("User");
+            _user = sharedConfig.Get<string>("User");
             _flushBehaviour = FlushBehaviour.OnEveryBatch;
             _firstRunBehaviour = CatchupBehaviour.Process;
             _catchupBehaviour = CatchupBehaviour.Process;

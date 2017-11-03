@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Howatworks.PlayerJournal.Parser;
@@ -12,7 +13,11 @@ namespace Thumb.Core
     public class ThumbApp
     {
         private readonly JournalMonitor _monitor;
+
+        [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
         private readonly IJournalProcessorPlugin[] _processorPlugins;
+
+        [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
         private readonly IJournalMonitorNotifier _notifier;
 
         public ThumbApp(JournalMonitor monitor, IJournalMonitorNotifier notifier,
@@ -54,7 +59,7 @@ namespace Thumb.Core
 
             GlobalContext.Properties["logfolder"] = logFolder;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            Trace.Listeners.Add(new Log4NetTraceListener(logRepository, this.GetType()));
+            Trace.Listeners.Add(new Log4NetTraceListener(logRepository, GetType()));
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
@@ -62,8 +67,9 @@ namespace Thumb.Core
         {
             _monitor.Start();
         }
+
         public void Stop()
-        { 
+        {
             _monitor.Stop();
         }
 
