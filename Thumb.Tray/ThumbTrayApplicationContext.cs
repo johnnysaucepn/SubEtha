@@ -82,7 +82,7 @@ namespace Thumb.Tray
         private void Exit(object sender, EventArgs e)
         {
             _thumbApp?.Stop();
-            _updateTimer.Dispose();
+            _updateTimer?.Dispose();
             // Hide tray icon, otherwise it will remain shown until user mouses over it
             _trayIcon.Visible = false;
             _trayIcon.Dispose();

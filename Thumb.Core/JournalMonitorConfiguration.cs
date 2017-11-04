@@ -45,7 +45,7 @@ namespace Thumb.Core
         {
             // TODO: config-ise these, and find cross-platform way to detect default properly
             JournalPattern = "Journal.*.log";
-            JournalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games", "Frontier Developments", "Elite Dangerous");
+            JournalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Saved Games", "Frontier Developments", "Elite Dangerous");
             UpdateInterval = new TimeSpan(0, 0, 5);
 
             try
