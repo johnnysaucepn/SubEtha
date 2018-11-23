@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Howatworks.PlayerJournal.Parser;
+using Howatworks.PlayerJournal.Serialization;
 
 namespace Howatworks.PlayerJournal.Processing
 {
@@ -8,7 +10,7 @@ namespace Howatworks.PlayerJournal.Processing
     {
         private readonly Dictionary<Type, List<IHandler>> _handlers = new Dictionary<Type, List<IHandler>>();
 
-        public void RegisterFor<T>(Func<T, bool> handler) where T : JournalEntryBase
+        public void RegisterFor<T>(Func<T, bool> handler) where T : IJournalEntry
         {
             var t = typeof(T);
             if (!_handlers.ContainsKey(t))
@@ -18,7 +20,7 @@ namespace Howatworks.PlayerJournal.Processing
             _handlers[t].Add(new Handler<T>(handler));
         }
 
-        public bool Apply<T>(T entry) where T : JournalEntryBase
+        public bool Apply<T>(T entry) where T : IJournalEntry
         {
             var t = entry.GetType();
             if (!_handlers.ContainsKey(t)) return false;

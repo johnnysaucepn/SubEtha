@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Howatworks.Configuration;
-using Howatworks.PlayerJournal;
+using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Processing;
+using Howatworks.PlayerJournal.Serialization;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
@@ -25,22 +26,22 @@ namespace Thumb.Plugin.SubEtha
         /// <summary>
         /// By this point we already know that the entry is targetted to this game version
         /// </summary>
-        /// <param name="entry"></param>
-        public bool Apply(JournalEntryBase entry)
+        /// <param name="journalEntry"></param>
+        public bool Apply(IJournalEntry journalEntry)
         {
             var somethingApplied = false;
-            Debug.WriteLine(JsonConvert.SerializeObject(entry));
+            Debug.WriteLine(JsonConvert.SerializeObject(journalEntry));
 
             foreach (var manager in _childProcessors)
             {
-                if (manager.Apply(entry))
+                if (manager.Apply(journalEntry))
                 {
                     somethingApplied = true;
                 }
             }
             if (!somethingApplied)
             {
-                Trace.TraceInformation($"No handler applied for event type {entry.Event}");
+                Trace.TraceInformation($"No handler applied for event type {journalEntry.Event}");
             }
             return somethingApplied;
 

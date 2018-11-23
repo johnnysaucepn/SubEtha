@@ -1,8 +1,9 @@
 ﻿using System;
+using Howatworks.PlayerJournal.Serialization;
 
 namespace Howatworks.PlayerJournal.Processing
 {
-    public class Handler<T> : IHandler where T : JournalEntryBase
+    public class Handler<T> : IHandler where T : IJournalEntry
     {
         private readonly Func<T, bool> _action;
 
@@ -11,7 +12,7 @@ namespace Howatworks.PlayerJournal.Processing
             _action = action;
         }
 
-        public bool Invoke(JournalEntryBase journal)
+        public bool Invoke(IJournalEntry journal)
         {
             return _action((T)journal);
         }

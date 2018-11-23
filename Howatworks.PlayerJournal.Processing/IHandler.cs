@@ -1,7 +1,9 @@
+using Howatworks.PlayerJournal.Serialization;
+
 namespace Howatworks.PlayerJournal.Processing
 {
     public interface IHandler
     {
-        bool Invoke(JournalEntryBase journal);
+        bool Invoke(IJournalEntry journal);
     }
 }

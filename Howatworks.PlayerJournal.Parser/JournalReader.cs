@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Howatworks.PlayerJournal.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -63,12 +64,12 @@ namespace Howatworks.PlayerJournal.Parser
             }
             if (fileHeader != null)
             {
-                info = new JournalFileInfo(filePath, fileHeader.GameVersion, fileHeader.TimeStamp, lastEntry.GetValueOrDefault(fileHeader.TimeStamp));
+                info = new JournalFileInfo(filePath, fileHeader.GameVersion, fileHeader.Timestamp, lastEntry.GetValueOrDefault(fileHeader.Timestamp));
             }
             return info;
         }
 
-        public IEnumerable<JournalEntryBase> ReadAll(DateTime? since)
+        public IEnumerable<IJournalEntry> ReadAll(DateTimeOffset? since)
         {
             // Re-use reader where possible
             if (_streamReader == null)
@@ -89,12 +90,12 @@ namespace Howatworks.PlayerJournal.Parser
 
                 var eventType = json.Value<string>("event");
 
-                var entry = _parser.Parse(FileInfo.GameVersion, eventType, line);
+                var journalEntry = _parser.Parse(eventType, line);
 
                 // TODO: remove this check once we're confident we should recognise all types
-                if (entry != null)
+                if (journalEntry != null)
                 {
-                    yield return entry;
+                    yield return journalEntry;
                 }
             }
         }

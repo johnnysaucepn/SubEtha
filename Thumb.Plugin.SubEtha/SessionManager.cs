@@ -1,6 +1,6 @@
-﻿using Howatworks.PlayerJournal;
-using Howatworks.PlayerJournal.Processing;
-using Howatworks.PlayerJournal.Startup;
+﻿using Howatworks.PlayerJournal.Processing;
+using Howatworks.PlayerJournal.Serialization;
+using Howatworks.PlayerJournal.Serialization.Startup;
 
 namespace Thumb.Plugin.SubEtha
 {
@@ -64,10 +64,10 @@ namespace Thumb.Plugin.SubEtha
             return false;
         }
 
-        public bool Apply(JournalEntryBase entry)
+        public bool Apply(IJournalEntry journalEntry)
         {
-            if (!_entryRouter.Apply(entry)) return false;
-            _session.TimeStamp = entry.TimeStamp;
+            if (!_entryRouter.Apply(journalEntry)) return false;
+            _session.TimeStamp = journalEntry.Timestamp;
             _isDirty = true;
             return true;
         }

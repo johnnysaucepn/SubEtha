@@ -14,7 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.PlayerJournal\Howatworks.PlayerJournal.csproj" />
+    <ProjectReference Include="..\Howatworks.PlayerJournal.Parser\Howatworks.PlayerJournal.Parser.csproj" />
+    <ProjectReference Include="..\Howatworks.PlayerJournal.Serialization\Howatworks.PlayerJournal.Serialization.csproj" />
   </ItemGroup>
 
 </Project>

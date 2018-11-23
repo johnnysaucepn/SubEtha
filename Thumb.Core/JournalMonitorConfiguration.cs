@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Howatworks.PlayerJournal.Parser;
 using log4net;
@@ -40,7 +41,7 @@ namespace Thumb.Core
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public JournalMonitorConfiguration()
         {
             // TODO: config-ise these, and find cross-platform way to detect default properly
@@ -64,7 +65,7 @@ namespace Thumb.Core
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private void Save()
         {
 
@@ -82,10 +83,5 @@ namespace Thumb.Core
                 _state = null;
             }
         }
-    }
-
-    public class JournalMonitorState
-    {
-        public DateTime? LastRead { get; set; }
     }
 }

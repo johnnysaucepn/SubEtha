@@ -1,8 +1,8 @@
-﻿using Howatworks.PlayerJournal;
-using Howatworks.PlayerJournal.Combat;
-using Howatworks.PlayerJournal.Other;
-using Howatworks.PlayerJournal.Processing;
-using Howatworks.PlayerJournal.Travel;
+﻿using Howatworks.PlayerJournal.Processing;
+using Howatworks.PlayerJournal.Serialization;
+using Howatworks.PlayerJournal.Serialization.Combat;
+using Howatworks.PlayerJournal.Serialization.Other;
+using Howatworks.PlayerJournal.Serialization.Travel;
 using SubEtha.Domain;
 
 namespace Thumb.Plugin.SubEtha
@@ -131,10 +131,10 @@ namespace Thumb.Plugin.SubEtha
             return true;
         }
 
-        public bool Apply(JournalEntryBase entry)
+        public bool Apply(IJournalEntry journalEntry)
         {
-            if (!_entryRouter.Apply(entry)) return false;
-            _location.TimeStamp = entry.TimeStamp;
+            if (!_entryRouter.Apply(journalEntry)) return false;
+            _location.TimeStamp = journalEntry.Timestamp;
             _isDirty = true;
             return true;
         }

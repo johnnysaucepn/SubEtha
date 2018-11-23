@@ -1,4 +1,4 @@
-﻿using Howatworks.PlayerJournal.Combat;
+﻿using Howatworks.PlayerJournal.Serialization.Combat;
 using Newtonsoft.Json;
 using Xunit;
 

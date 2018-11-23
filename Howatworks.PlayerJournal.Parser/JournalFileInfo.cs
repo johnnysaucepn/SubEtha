@@ -7,9 +7,9 @@ namespace Howatworks.PlayerJournal.Parser
         public bool IsValid { get; set; }
 
         public string Path { get; set; }
-        public string GameVersion { get; set; }
-        public DateTime HeaderTimeStamp { get; set; }
-        public DateTime LastEntryTimeStamp { get; set; }
+        public string GameVersionDiscriminator { get; set; }
+        public DateTimeOffset HeaderTimeStamp { get; set; }
+        public DateTimeOffset LastEntryTimeStamp { get; set; }
 
         public JournalFileInfo(string path)
         {
@@ -17,16 +17,16 @@ namespace Howatworks.PlayerJournal.Parser
             IsValid = false;
         }
 
-        public JournalFileInfo(string path, string gameVersion, DateTime timeStamp)
+        public JournalFileInfo(string path, string gameVersion, DateTimeOffset timeStamp)
         {
             IsValid = true;
             Path = path;
-            GameVersion = gameVersion;
+            GameVersionDiscriminator = gameVersion;
             HeaderTimeStamp = timeStamp;
             LastEntryTimeStamp = timeStamp;
         }
 
-        public JournalFileInfo(string path, string gameVersion, DateTime timeStamp, DateTime lastTimeStamp)
+        public JournalFileInfo(string path, string gameVersion, DateTimeOffset timeStamp, DateTimeOffset lastTimeStamp)
             : this(path, gameVersion, timeStamp)
         {
             LastEntryTimeStamp = lastTimeStamp;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Howatworks.Configuration;
-using Howatworks.PlayerJournal;
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Processing;
+using Howatworks.PlayerJournal.Serialization;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
@@ -31,25 +31,25 @@ namespace Thumb.Plugin.SubEtha
             _catchupBehaviour = CatchupBehaviour.Process;
         }
 
-        public void Apply(IEnumerable<JournalEntryBase> entries, BatchMode mode)
+        public void Apply(IEnumerable<IJournalEntry> entries, BatchMode mode)
         {
             // TODO: extract this logic into a handling class
             // Skip all existing log files on first run
             if (mode == BatchMode.FirstRun && _firstRunBehaviour == CatchupBehaviour.Skip) return;
             if (mode == BatchMode.Catchup && _catchupBehaviour == CatchupBehaviour.Skip) return;
 
-            foreach (var entry in entries)
+            foreach (var journalEntry in entries)
             {
-                var gameVersion = entry.GameVersionDiscriminator;
+                var gameVersion = journalEntry.GameVersionDiscriminator;
 
                 if (!_processors.ContainsKey(gameVersion))
                 {
                     _processors[gameVersion] = new SubEthaJournalProcessor(_pluginConfig, _user, gameVersion);
                 }
                 var game = _processors[gameVersion];
-                Debug.WriteLine(JsonConvert.SerializeObject(entry));
+                Debug.WriteLine(JsonConvert.SerializeObject(journalEntry));
 
-                game.Apply(entry);
+                game.Apply(journalEntry);
                 AppliedJournalEntries?.Invoke(this, new AppliedJournalEntriesEventArgs());
 
                 // Upload on every entry if required

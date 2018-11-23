@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Howatworks.PlayerJournal.Other;
+using Howatworks.PlayerJournal.Serialization;
+using Howatworks.PlayerJournal.Serialization.Other;
 
 namespace Howatworks.PlayerJournal.Parser
 {
@@ -79,7 +80,7 @@ namespace Howatworks.PlayerJournal.Parser
         {
             _watcher.EnableRaisingEvents = false;
             // One last scan of live files
-            List<JournalEntryBase> entriesFound;
+            List<IJournalEntry> entriesFound;
             lock (_monitoredFiles)
             {
                 entriesFound = RescanFiles(_monitoredFiles.Values, LastRead).ToList();
@@ -88,12 +89,12 @@ namespace Howatworks.PlayerJournal.Parser
             _triggerUpdate.Dispose();
         }
 
-        private void ProcessEntries(IList<JournalEntryBase> entries, BatchMode mode)
+        private void ProcessEntries(IList<IJournalEntry> journalEntries, BatchMode mode)
         {
-            if (!entries.Any()) return;
+            if (!journalEntries.Any()) return;
 
-            JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(entries, mode));
-            LastRead = entries.OrderBy(x => x.TimeStamp).Last().TimeStamp;
+            JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(journalEntries, mode));
+            LastRead = journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp;
         }
 
         private static IEnumerable<string> EnumerateFolder(string path, string pattern)
@@ -101,7 +102,7 @@ namespace Howatworks.PlayerJournal.Parser
             return Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
         }
 
-        private IEnumerable<JournalReader> FilterFilesByDate(IEnumerable<string> filePaths, DateTime? since)
+        private IEnumerable<JournalReader> FilterFilesByDate(IEnumerable<string> filePaths, DateTimeOffset? since)
         {
             return filePaths.Select(filePath =>
             {
@@ -119,12 +120,12 @@ namespace Howatworks.PlayerJournal.Parser
                 .OrderBy(f => f.FileInfo.LastEntryTimeStamp);
         }
 
-        private IEnumerable<JournalEntryBase> RescanFiles(IEnumerable<JournalReader> readers, DateTime? since)
+        private IEnumerable<IJournalEntry> RescanFiles(IEnumerable<JournalReader> readers, DateTimeOffset? since)
         {
             return readers.SelectMany(reader => RescanFile(reader, since));
         }
 
-        private IEnumerable<JournalEntryBase> RescanFile(JournalReader reader, DateTime? since)
+        private IEnumerable<IJournalEntry> RescanFile(JournalReader reader, DateTimeOffset? since)
         {
             var info = reader.FileInfo;
 
@@ -136,8 +137,8 @@ namespace Howatworks.PlayerJournal.Parser
                 
                 foreach (var entry in reader.ReadAll(since))
                 {
-                    info.LastEntryTimeStamp = entry.TimeStamp;
-                    // Special case for 'Continued' journal event - stop monitoring this file after this, as
+                    info.LastEntryTimeStamp = entry.Timestamp;
+                    // Special case for 'Continued' journal entry - stop monitoring this file after this, as
                     // logging should be rolling over to a new file
                     if (entry is Continued)
                     {
@@ -160,7 +161,7 @@ namespace Howatworks.PlayerJournal.Parser
 
         private static void LogWatcherEvent(FileSystemEventArgs e)
         {
-            Trace.TraceInformation($"Received {e.ChangeType} event on file {e.FullPath}");
+            Trace.TraceInformation($"Received {e.ChangeType} entry on file {e.FullPath}");
         }
 
         private void StartMonitoringFile(string path)
