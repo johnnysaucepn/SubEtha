@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Howatworks.Configuration;
-using Howatworks.PlayerJournal.Parser;
-using Howatworks.PlayerJournal.Processing;
+using Howatworks.PlayerJournal.Monitor;
 using Howatworks.PlayerJournal.Serialization;
 using Newtonsoft.Json;
 

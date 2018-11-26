@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Howatworks.Configuration;
+using Howatworks.PlayerJournal.Monitor;
 using Howatworks.PlayerJournal.Parser;
 
 namespace Thumb.Core

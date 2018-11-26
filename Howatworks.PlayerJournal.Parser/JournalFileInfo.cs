@@ -2,7 +2,7 @@
 
 namespace Howatworks.PlayerJournal.Parser
 {
-    internal class JournalFileInfo
+    public class JournalFileInfo
     {
         public bool IsValid { get; set; }
 

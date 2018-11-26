@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Howatworks.PlayerJournal.Parser;
-using Howatworks.PlayerJournal.Processing;
+using Howatworks.PlayerJournal.Monitor;
 using Howatworks.PlayerJournal.Serialization;
 
 namespace Thumb.Plugin

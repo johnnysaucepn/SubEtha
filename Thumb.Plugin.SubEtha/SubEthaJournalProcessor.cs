@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Howatworks.Configuration;
 using Howatworks.PlayerJournal.Parser;
-using Howatworks.PlayerJournal.Processing;
 using Howatworks.PlayerJournal.Serialization;
 using Newtonsoft.Json;
 

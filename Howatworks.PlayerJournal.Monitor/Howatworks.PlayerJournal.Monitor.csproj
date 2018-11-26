@@ -2,13 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.PlayerJournal.Monitor\Howatworks.PlayerJournal.Monitor.csproj" />
     <ProjectReference Include="..\Howatworks.PlayerJournal.Parser\Howatworks.PlayerJournal.Parser.csproj" />
     <ProjectReference Include="..\Howatworks.PlayerJournal.Serialization\Howatworks.PlayerJournal.Serialization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Users\James\.nuget\packages\newtonsoft.json\10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

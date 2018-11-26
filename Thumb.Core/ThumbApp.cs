@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using Howatworks.PlayerJournal.Parser;
+using Howatworks.PlayerJournal.Monitor;
 using log4net;
 using log4net.Config;
 using Thumb.Plugin;

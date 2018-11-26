@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Howatworks.Configuration\Howatworks.Configuration.csproj" />
-    <ProjectReference Include="..\Howatworks.PlayerJournal.Processing\Howatworks.PlayerJournal.Processing.csproj" />
     <ProjectReference Include="..\SubEtha.Domain\SubEtha.Domain.csproj" />
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
   </ItemGroup>

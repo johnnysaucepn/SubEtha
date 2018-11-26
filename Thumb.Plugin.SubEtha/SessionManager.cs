@@ -1,4 +1,4 @@
-﻿using Howatworks.PlayerJournal.Processing;
+﻿using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Startup;
 

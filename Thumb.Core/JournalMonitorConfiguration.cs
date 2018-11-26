@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Howatworks.PlayerJournal.Parser;
+using Howatworks.PlayerJournal.Monitor;
 using log4net;
 using Newtonsoft.Json;
 
