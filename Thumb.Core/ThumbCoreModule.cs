@@ -15,8 +15,9 @@ namespace Thumb.Core
             builder.RegisterType<ThumbApp>().SingleInstance();
             builder.Register(c => new ConfigLoader("config.json")).As<IConfigLoader>().SingleInstance();
             builder.RegisterType<JournalMonitorConfiguration>().As<IJournalMonitorConfiguration>().SingleInstance();
-            builder.RegisterType<JournalMonitor>().AsSelf().SingleInstance();
+            builder.RegisterType<JournalMonitor>().As<IJournalMonitor>().SingleInstance();
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
+            builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();
 
             var plugins = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.Plugin.*.dll")
                 .Select(Assembly.LoadFile);

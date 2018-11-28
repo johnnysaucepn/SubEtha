@@ -39,18 +39,24 @@ namespace Howatworks.PlayerJournal.Parser
             }
             var mappedType = _entryTypeLookup.Value[eventType];
 
-            IJournalEntry entry = null;
             try
             {
-                entry = JsonConvert.DeserializeObject(line, mappedType, _serializerSettings) as IJournalEntry;
+                var entry = (IJournalEntry) JsonConvert.DeserializeObject(line, mappedType, _serializerSettings);
+                if (entry != null) return entry;
             }
             catch (JsonSerializationException e)
             {
-                Trace.TraceError($"Failed to parse {line}", e);
+                Trace.TraceError("JSON deserialisation failure {0}", e);
             }
-
-            if (entry != null) return entry;
-            Trace.TraceWarning($"Failed to parse {line}");
+            catch (FormatException e)
+            {
+                Trace.TraceError("Failure in type conversion {0}", e);
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError("Unexpected exception parsing {0}", e);
+            }
+            Trace.TraceError("Failed to parse {0}", line);
 
             return null;
 

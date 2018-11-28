@@ -1,15 +1,15 @@
 ﻿namespace Howatworks.PlayerJournal.Parser
 {
-    public class JournalReaderFactory
+    public class JournalReaderFactory : IJournalReaderFactory
     {
-        private readonly JournalParser _parser;
+        private readonly IJournalParser _parser;
 
-        public JournalReaderFactory(JournalParser parser)
+        public JournalReaderFactory(IJournalParser parser)
         {
             _parser = parser;
         }
         
-        public JournalReader Create(string filePath)
+        public IJournalReader Create(string filePath)
         {
             return new JournalReader(filePath, _parser);
         }

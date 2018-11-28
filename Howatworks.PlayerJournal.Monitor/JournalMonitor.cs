@@ -10,11 +10,10 @@ using Howatworks.PlayerJournal.Serialization.Other;
 
 namespace Howatworks.PlayerJournal.Monitor
 {
-    public class JournalMonitor : IDisposable
+    public class JournalMonitor : IDisposable, IJournalMonitor
     {
-        //private readonly IJournalParser _parser;
         private readonly IJournalMonitorConfiguration _config;
-        private readonly JournalReaderFactory _journalReaderFactory;
+        private readonly IJournalReaderFactory _journalReaderFactory;
         private readonly FileSystemWatcher _watcher;
 
         public event EventHandler<JournalEntriesParsedEventArgs> JournalEntriesParsed;
@@ -28,13 +27,12 @@ namespace Howatworks.PlayerJournal.Monitor
         }
 
         private readonly Timer _triggerUpdate;
-        private readonly Dictionary<string, JournalReader> _monitoredFiles = new Dictionary<string, JournalReader>();
+        private readonly Dictionary<string, IJournalReader> _monitoredFiles = new Dictionary<string, IJournalReader>();
 
-        public JournalMonitor(IJournalMonitorConfiguration config, JournalReaderFactory journalReaderFactory)
+        public JournalMonitor(IJournalMonitorConfiguration config, IJournalReaderFactory journalReaderFactory)
         {
             _config = config;
             _journalReaderFactory = journalReaderFactory;
-            //_parser = parser;
 
             _watcher = new FileSystemWatcher(_config.JournalFolder, _config.JournalPattern)
             {
@@ -105,30 +103,30 @@ namespace Howatworks.PlayerJournal.Monitor
             return Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
         }
 
-        private IEnumerable<JournalReader> FilterFilesByDate(IEnumerable<string> filePaths, DateTimeOffset? since)
+        private IEnumerable<IJournalReader> FilterFilesByDate(IEnumerable<string> filePaths, DateTimeOffset? since)
         {
             return filePaths.Select(filePath =>
                 {
                     var reader = _journalReaderFactory.Create(filePath);
-                var info = reader.FileInfo;
+                    var info = reader.FileInfo;
 
-                // If no header entry found, log is not a log file (yet).
-                // If it later gets a header, eventually we will be notified to start
-                // monitoring it, and we'll read it then.
-                if (!info.IsValid) return null;
+                    // If no header entry found, log is not a log file (yet).
+                    // If it later gets a header, eventually we will be notified to start
+                    // monitoring it, and we'll read it then.
+                    if (!info.IsValid) return null;
 
-                return info.LastEntryTimeStamp > since.GetValueOrDefault(DateTime.MinValue) ? reader : null;
-            })
+                    return info.LastEntryTimeStamp > since.GetValueOrDefault(DateTime.MinValue) ? reader : null;
+                })
                 .Where(f => f != null)
                 .OrderBy(f => f.FileInfo.LastEntryTimeStamp);
         }
 
-        private IEnumerable<IJournalEntry> RescanFiles(IEnumerable<JournalReader> readers, DateTimeOffset? since)
+        private IEnumerable<IJournalEntry> RescanFiles(IEnumerable<IJournalReader> readers, DateTimeOffset? since)
         {
             return readers.SelectMany(reader => RescanFile(reader, since));
         }
 
-        private IEnumerable<IJournalEntry> RescanFile(JournalReader reader, DateTimeOffset? since)
+        private IEnumerable<IJournalEntry> RescanFile(IJournalReader reader, DateTimeOffset? since)
         {
             var info = reader.FileInfo;
 
@@ -170,10 +168,10 @@ namespace Howatworks.PlayerJournal.Monitor
         private void StartMonitoringFile(string path)
         {
             StartMonitoringFile(_journalReaderFactory.Create(path));
-            //TODO: should check validity of JournalReader before adding it
+            //TODO: should check validity of IJournalReader before adding it
         }
 
-        private void StartMonitoringFile(JournalReader reader)
+        private void StartMonitoringFile(IJournalReader reader)
         {
             lock (_monitoredFiles)
             {
@@ -195,7 +193,7 @@ namespace Howatworks.PlayerJournal.Monitor
                 }
                 else
                 {
-                    Trace.TraceError($"Not monitoring file {path} - cannot stop");
+                    Trace.TraceError("Not monitoring file {0} - cannot stop", path);
                 }
             }
         }

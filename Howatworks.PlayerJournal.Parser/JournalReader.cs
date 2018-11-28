@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Howatworks.PlayerJournal.Parser
 {
-    public class JournalReader
+    public class JournalReader : IJournalReader
     {
         private readonly IJournalParser _parser;
         private StreamReader _streamReader;

@@ -12,7 +12,7 @@ namespace Thumb.Core
 {
     public class ThumbApp
     {
-        private readonly JournalMonitor _monitor;
+        private readonly IJournalMonitor _monitor;
 
         [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
         private readonly IJournalProcessorPlugin[] _processorPlugins;
@@ -20,8 +20,11 @@ namespace Thumb.Core
         [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
         private readonly IJournalMonitorNotifier _notifier;
 
-        public ThumbApp(JournalMonitor monitor, IJournalMonitorNotifier notifier,
-            IJournalProcessorPlugin[] processorPlugins)
+        public ThumbApp(
+            IJournalMonitor monitor,
+            IJournalMonitorNotifier notifier,
+            IJournalProcessorPlugin[] processorPlugins
+        )
         {
             _monitor = monitor;
             _processorPlugins = processorPlugins;
@@ -34,22 +37,13 @@ namespace Thumb.Core
                     processorPlugin.Apply(args.Entries, args.BatchMode);
                 }
             };
-            _monitor.JournalFileWatchingStarted += (sender, args) =>
-            {
-                _notifier.StartedWatchingFile(args.Path);
-            };
+            _monitor.JournalFileWatchingStarted += (sender, args) => { _notifier.StartedWatchingFile(args.Path); };
 
-            _monitor.JournalFileWatchingStopped += (sender, args) =>
-            {
-                _notifier.StoppedWatchingFile(args.Path);
-            };
+            _monitor.JournalFileWatchingStopped += (sender, args) => { _notifier.StoppedWatchingFile(args.Path); };
 
             foreach (var processorPlugin in _processorPlugins)
             {
-                processorPlugin.FlushedJournalProcessor += (sender, args) =>
-                {
-                    _notifier.UpdatedService(sender);
-                };
+                processorPlugin.FlushedJournalProcessor += (sender, args) => { _notifier.UpdatedService(sender); };
             }
 
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
