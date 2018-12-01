@@ -19,6 +19,7 @@ namespace Thumb.Core
         };
 
         public string JournalPattern { get; }
+        public string StatusPath { get; }
         public string JournalFolder { get; }
         public TimeSpan UpdateInterval { get; }
 
@@ -26,10 +27,7 @@ namespace Thumb.Core
 
         public DateTime? LastRead
         {
-            get
-            {
-                return _state?.LastRead;
-            }
+            get => _state?.LastRead;
             set
             {
                 if (_state == null)
@@ -47,6 +45,7 @@ namespace Thumb.Core
             // TODO: config-ise these, and find cross-platform way to detect default properly
             JournalPattern = "Journal.*.log";
             JournalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Saved Games", "Frontier Developments", "Elite Dangerous");
+            StatusPath = Path.Combine(JournalFolder, "Status.json");
             UpdateInterval = new TimeSpan(0, 0, 5);
 
             try

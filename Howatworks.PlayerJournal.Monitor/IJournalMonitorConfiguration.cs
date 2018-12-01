@@ -8,5 +8,6 @@ namespace Howatworks.PlayerJournal.Monitor
         string JournalFolder { get; }
         TimeSpan UpdateInterval { get; }
         DateTime? LastRead { get; set; }
+        string StatusPath { get; }
     }
 }

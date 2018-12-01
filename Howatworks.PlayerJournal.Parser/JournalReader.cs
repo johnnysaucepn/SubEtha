@@ -19,6 +19,7 @@ namespace Howatworks.PlayerJournal.Parser
             _parser = parser;
             FileInfo = ReadFileInfo(filePath);
         }
+
         private static StreamReader GetStreamReader(string filePath)
         {
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -33,8 +34,10 @@ namespace Howatworks.PlayerJournal.Parser
             var info = new JournalFileInfo(filePath);
             DateTime? lastEntry = null;
 
-            using (var streamReader = GetStreamReader(filePath))
+            try
             {
+                var streamReader = GetStreamReader(filePath);
+
                 // FileHeader *should* be the first line in the file, but at least try the first 5
                 var tolerance = 5;
 
@@ -59,13 +62,25 @@ namespace Howatworks.PlayerJournal.Parser
                     {
                         fileHeader = JsonConvert.DeserializeObject<FileHeader>(line);
                     }
+
                     tolerance--;
                 }
+
+                if (fileHeader != null)
+                {
+                    info = new JournalFileInfo(filePath, fileHeader.GameVersion, fileHeader.Timestamp,
+                        lastEntry.GetValueOrDefault(fileHeader.Timestamp));
+                }
             }
-            if (fileHeader != null)
+            catch (FileNotFoundException e)
             {
-                info = new JournalFileInfo(filePath, fileHeader.GameVersion, fileHeader.Timestamp, lastEntry.GetValueOrDefault(fileHeader.Timestamp));
+                Trace.TraceError($"Could not read file {e.FileName} - {e.Message}");
             }
+            catch (IOException e)
+            {
+                Trace.TraceError($"Could not read file {filePath} - {e.Message}");
+            }
+
             return info;
         }
 
