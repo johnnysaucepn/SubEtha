@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Howatworks.PlayerJournal.Serialization;
+using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -10,6 +10,8 @@ namespace Howatworks.PlayerJournal.Parser
 {
     public class JournalReader : IJournalReader
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalReader));
+
         private readonly IJournalParser _parser;
         private StreamReader _streamReader;
         public JournalFileInfo FileInfo { get; }
@@ -74,11 +76,11 @@ namespace Howatworks.PlayerJournal.Parser
             }
             catch (FileNotFoundException e)
             {
-                Trace.TraceError($"Could not read file {e.FileName} - {e.Message}");
+                Log.Error($"Could not read file {e.FileName} - {e.Message}");
             }
             catch (IOException e)
             {
-                Trace.TraceError($"Could not read file {filePath} - {e.Message}");
+                Log.Error($"Could not read file {filePath} - {e.Message}");
             }
 
             return info;
@@ -94,7 +96,7 @@ namespace Howatworks.PlayerJournal.Parser
             while (!_streamReader.EndOfStream)
             {
                 var line = _streamReader.ReadLine();
-                Debug.Write(line);
+                Log.Debug(line);
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 // TODO: beef up error handling here, what if line is not a parseable event?

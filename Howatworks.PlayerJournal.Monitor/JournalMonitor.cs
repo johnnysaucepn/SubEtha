@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Other;
+using log4net;
 
 namespace Howatworks.PlayerJournal.Monitor
 {
     public class JournalMonitor : IDisposable, IJournalMonitor
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalMonitor));
+
         private readonly IJournalMonitorConfiguration _config;
         private readonly IJournalReaderFactory _journalReaderFactory;
         private readonly FileSystemWatcher _journalWatcher;
@@ -49,20 +51,19 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private void TriggerUpdate_Elapsed(object data)
         {
-            if (_started)
+            if (!_started) return;
+
+            lock (_monitoredFiles)
             {
-                lock (_monitoredFiles)
-                {
-                    if (_monitoredFiles.Count <= 0) return;
+                if (_monitoredFiles.Count <= 0) return;
 
-                    Debug.WriteLine($"Rescanning {_monitoredFiles.Count} log files...");
+                Log.Debug($"Rescanning {_monitoredFiles.Count} log files...");
 
-                    // TODO: this appears to be required to avoid collection being modified during enumeration
-                    // Unclear as to how this can happen
-                    var readers = _monitoredFiles.Values.ToList();
-                    var entriesFound = RescanFiles(readers, LastRead).ToList();
-                    ProcessEntries(entriesFound, BatchMode.Ongoing);
-                }
+                // TODO: this appears to be required to avoid collection being modified during enumeration
+                // Unclear as to how this can happen
+                var readers = _monitoredFiles.Values.ToList();
+                var entriesFound = RescanFiles(readers, LastRead).ToList();
+                ProcessEntries(entriesFound, BatchMode.Ongoing);
             }
         }
 
@@ -142,7 +143,7 @@ namespace Howatworks.PlayerJournal.Monitor
         {
             var info = reader.FileInfo;
 
-            Debug.WriteLine($"Scanning file {info.Path}");
+            Log.Debug($"Scanning file {info.Path}");
             var count = 0;
 
             if (reader.FileExists)
@@ -168,13 +169,13 @@ namespace Howatworks.PlayerJournal.Monitor
 
             if (count > 0)
             {
-                Trace.TraceInformation($"Scanned file {info.Path}, {count} new entries found");
+                Log.Info($"Scanned file {info.Path}, {count} new entries found");
             }
         }
 
         private static void LogWatcherEvent(FileSystemEventArgs e)
         {
-            Trace.TraceInformation($"Received {e.ChangeType} entry on file {e.FullPath}");
+            Log.Info($"Received {e.ChangeType} entry on file {e.FullPath}");
         }
 
         private void StartMonitoringFile(string path)
@@ -205,7 +206,7 @@ namespace Howatworks.PlayerJournal.Monitor
                 }
                 else
                 {
-                    Trace.TraceError("Not monitoring file {0} - cannot stop", path);
+                    Log.Error($"Not monitoring file {path} - cannot stop");
                 }
             }
         }

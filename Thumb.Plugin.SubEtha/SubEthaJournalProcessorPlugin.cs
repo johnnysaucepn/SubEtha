@@ -1,70 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Howatworks.Configuration;
-using Howatworks.PlayerJournal.Monitor;
 using Howatworks.PlayerJournal.Serialization;
+using log4net;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
 {
     public class SubEthaJournalProcessorPlugin : IJournalProcessorPlugin
     {
-        private readonly IConfigReader _pluginConfig;
-        private readonly IDictionary<string, SubEthaJournalProcessor> _processors = new Dictionary<string, SubEthaJournalProcessor>();
-        private readonly string _user;
-        private readonly FlushBehaviour _flushBehaviour;
-        private readonly CatchupBehaviour _firstRunBehaviour;
-        private readonly CatchupBehaviour _catchupBehaviour;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SubEthaJournalProcessorPlugin));
 
+        private readonly IConfigReader _pluginConfig;
+        private readonly string _user;
+        public FlushBehaviour FlushBehaviour { get; set; }
+        public CatchupBehaviour FirstRunBehaviour { get; set; }
+        public CatchupBehaviour CatchupBehaviour { get; set; }
+        private readonly IDictionary<string, IJournalProcessor> _processors = new Dictionary<string, IJournalProcessor>();
+        
         public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
         public SubEthaJournalProcessorPlugin(IConfigReader sharedConfig, IConfigReader pluginConfig)
         {
-            _pluginConfig = pluginConfig;
             _user = sharedConfig.Get<string>("User");
-            _flushBehaviour = FlushBehaviour.OnEveryBatch;
-            _firstRunBehaviour = CatchupBehaviour.Process;
-            _catchupBehaviour = CatchupBehaviour.Process;
+            _pluginConfig = pluginConfig;           
         }
 
-        public void Apply(IEnumerable<IJournalEntry> entries, BatchMode mode)
+        public void Apply(IJournalEntry journalEntry)
         {
-            // TODO: extract this logic into a handling class
-            // Skip all existing log files on first run
-            if (mode == BatchMode.FirstRun && _firstRunBehaviour == CatchupBehaviour.Skip) return;
-            if (mode == BatchMode.Catchup && _catchupBehaviour == CatchupBehaviour.Skip) return;
+            var gameVersion = journalEntry.GameVersionDiscriminator;
 
-            foreach (var journalEntry in entries)
+            if (!_processors.ContainsKey(gameVersion))
             {
-                var gameVersion = journalEntry.GameVersionDiscriminator;
-
-                if (!_processors.ContainsKey(gameVersion))
-                {
-                    _processors[gameVersion] = new SubEthaJournalProcessor(_pluginConfig, _user, gameVersion);
-                }
-                var game = _processors[gameVersion];
-                Debug.WriteLine(JsonConvert.SerializeObject(journalEntry));
-
-                game.Apply(journalEntry);
-                AppliedJournalEntries?.Invoke(this, new AppliedJournalEntriesEventArgs());
-
-                // Upload on every entry if required
-                if (_flushBehaviour == FlushBehaviour.OnEveryAppliedEntry)
-                {
-                    game.Flush();
-                    FlushedJournalProcessor?.Invoke(this, new FlushedJournalProcessorEventArgs());
-                }
+                _processors[gameVersion] = new SubEthaJournalProcessor(_pluginConfig, _user, gameVersion);
             }
-            if (_flushBehaviour == FlushBehaviour.OnEveryBatch)
+            var game = _processors[gameVersion];
+            Log.Debug(JsonConvert.SerializeObject(journalEntry));
+
+            game.Apply(journalEntry);
+            AppliedJournalEntries?.Invoke(this, new AppliedJournalEntriesEventArgs());
+        }
+
+        public void Flush()
+        {
+            foreach (var game in _processors.Values)
             {
-                foreach (var game in _processors.Keys.Select(gameVersion => _processors[gameVersion]))
-                {
-                    game.Flush();
-                    FlushedJournalProcessor?.Invoke(this, new FlushedJournalProcessorEventArgs());
-                }
+                game.Flush();
+                FlushedJournalProcessor?.Invoke(this, new FlushedJournalProcessorEventArgs());
             }
         }
     }

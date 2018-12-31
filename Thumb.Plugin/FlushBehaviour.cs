@@ -1,6 +1,6 @@
-namespace Thumb.Plugin.SubEtha
+namespace Thumb.Plugin
 {
-    internal enum FlushBehaviour
+    public enum FlushBehaviour
     {
         Never,
         OnEveryAppliedEntry,

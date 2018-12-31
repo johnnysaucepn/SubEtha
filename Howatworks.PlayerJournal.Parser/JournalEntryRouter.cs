@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Howatworks.PlayerJournal.Serialization;
+using log4net;
 
 namespace Howatworks.PlayerJournal.Parser
 {
     public class JournalEntryRouter
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalEntryRouter));
+
         private readonly Dictionary<Type, List<IHandler>> _handlers = new Dictionary<Type, List<IHandler>>();
 
         public void RegisterFor<T>(Func<T, bool> handler) where T : IJournalEntry
@@ -27,7 +29,7 @@ namespace Howatworks.PlayerJournal.Parser
             var applied = false;
             foreach (var handler in _handlers[t])
             {
-                Trace.TraceInformation($"Applying journal event {t.Name} to {GetType().Name}");
+                Log.Info($"Applying journal event {t.Name} to {GetType().Name}");
                 if (!handler.Invoke(entry)) continue;
                 applied = true;
 

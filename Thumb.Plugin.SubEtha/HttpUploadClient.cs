@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net.Http;
 using Howatworks.Configuration;
+using log4net;
 using Newtonsoft.Json;
 using SubEtha.Domain;
 
@@ -9,6 +9,8 @@ namespace Thumb.Plugin.SubEtha
 {
     public class HttpUploadClient : IDisposable
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(HttpUploadClient));
+
         private Uri BaseUri { get; }
 
         private readonly HttpClient _client;
@@ -25,7 +27,7 @@ namespace Thumb.Plugin.SubEtha
             var targetUri = uri.IsAbsoluteUri ? uri : new Uri(BaseUri, uri);
 
             var response = _client.PostAsync(targetUri.AbsoluteUri, new StringContent(JsonConvert.SerializeObject(state))).Result;
-            Trace.TraceInformation($"HTTP {response.StatusCode}");
+            Log.Info($"HTTP {response.StatusCode}");
         }
 
         private bool _disposed;

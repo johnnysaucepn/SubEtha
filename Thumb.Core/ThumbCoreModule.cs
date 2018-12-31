@@ -5,6 +5,7 @@ using Autofac;
 using Howatworks.Configuration;
 using Howatworks.PlayerJournal.Monitor;
 using Howatworks.PlayerJournal.Parser;
+using Thumb.Plugin;
 
 namespace Thumb.Core
 {
@@ -18,6 +19,7 @@ namespace Thumb.Core
             builder.RegisterType<JournalMonitor>().As<IJournalMonitor>().SingleInstance();
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
             builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();
+            builder.RegisterType<ThumbProcessor>().AsSelf().SingleInstance();
 
             var plugins = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.Plugin.*.dll")
                 .Select(Assembly.LoadFile);

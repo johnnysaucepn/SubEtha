@@ -6,13 +6,13 @@ namespace Howatworks.PlayerJournal.Monitor
 {
     public class JournalEntriesParsedEventArgs : EventArgs
     {
-        public JournalEntriesParsedEventArgs(IEnumerable<IJournalEntry> journalEntries, BatchMode mode)
+        public JournalEntriesParsedEventArgs(IList<IJournalEntry> journalEntries, BatchMode mode)
         {
             Entries = journalEntries;
             BatchMode = mode;
         }
 
-        public IEnumerable<IJournalEntry> Entries { get; set; }
+        public IList<IJournalEntry> Entries { get; set; }
         public BatchMode BatchMode { get; set; }
     }
 }

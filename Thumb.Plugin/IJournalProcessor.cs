@@ -1,6 +1,6 @@
 ﻿using Howatworks.PlayerJournal.Serialization;
 
-namespace Howatworks.PlayerJournal.Parser
+namespace Thumb.Plugin
 {
     public interface IJournalProcessor
     {
