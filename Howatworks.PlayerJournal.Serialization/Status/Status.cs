@@ -2,12 +2,7 @@
 {
     public class Status : JournalEntryBase
     {
-        public int Flags
-        {
-            get;
-            set;
-
-        }
+        public StatusFlags Flags { get; set; }
         public int[] Pips { get; set; }
         public string Firegroup { get; set; }
 
@@ -18,5 +13,10 @@
         public decimal? Altitude { get; set; }
         public decimal? Longitude { get; set; }
         public decimal? Heading { get; set; }
+
+        public bool HasFlag(StatusFlags flag)
+        {
+            return (Flags & flag) != 0;
+        }
     }
 }
