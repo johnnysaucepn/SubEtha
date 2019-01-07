@@ -6,7 +6,8 @@ namespace Howatworks.PlayerJournal.Parser
 {
     public interface IJournalReader
     {
-        JournalFileInfo FileInfo { get; }
+        string FilePath { get; }
+        DateTimeOffset? LastEntryTimeStamp { get; }
         bool FileExists { get; }
         IEnumerable<IJournalEntry> ReadAll(DateTimeOffset? since);
     }

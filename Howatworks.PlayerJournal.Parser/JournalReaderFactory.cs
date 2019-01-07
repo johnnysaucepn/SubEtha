@@ -1,4 +1,7 @@
-﻿namespace Howatworks.PlayerJournal.Parser
+﻿using System;
+using System.IO;
+
+namespace Howatworks.PlayerJournal.Parser
 {
     public class JournalReaderFactory : IJournalReaderFactory
     {
@@ -11,7 +14,11 @@
         
         public IJournalReader Create(string filePath)
         {
-            return new JournalReader(filePath, _parser);
+            if (filePath != null && Path.GetFileName(filePath).Equals("status.json", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return new JournalStatusReader(filePath, _parser);
+            }
+            return new JournalLogReader(filePath, _parser);
         }
     }
 }

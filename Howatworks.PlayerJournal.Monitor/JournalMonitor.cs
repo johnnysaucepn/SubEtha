@@ -121,17 +121,17 @@ namespace Howatworks.PlayerJournal.Monitor
             return filePaths.Select(filePath =>
                 {
                     var reader = _journalReaderFactory.Create(filePath);
-                    var info = reader.FileInfo;
+                    //var info = reader.FileInfo;
 
                     // If no header entry found, log is not a log file (yet).
                     // If it later gets a header, eventually we will be notified to start
                     // monitoring it, and we'll read it then.
-                    if (!info.IsValid) return null;
+                    //if (!info.IsValid) return null;
 
-                    return info.LastEntryTimeStamp > since.GetValueOrDefault(DateTime.MinValue) ? reader : null;
+                    return reader.LastEntryTimeStamp > since.GetValueOrDefault(DateTime.MinValue) ? reader : null;
                 })
                 .Where(f => f != null)
-                .OrderBy(f => f.FileInfo.LastEntryTimeStamp);
+                .OrderBy(f => f.LastEntryTimeStamp);
         }
 
         private IEnumerable<IJournalEntry> RescanFiles(IEnumerable<IJournalReader> readers, DateTimeOffset? since)
@@ -141,22 +141,20 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private IEnumerable<IJournalEntry> RescanFile(IJournalReader reader, DateTimeOffset? since)
         {
-            var info = reader.FileInfo;
+            //var info = reader.FileInfo;
 
-            Log.Debug($"Scanning file {info.Path}");
+            Log.Debug($"Scanning file {reader.FilePath}");
             var count = 0;
 
             if (reader.FileExists)
             {
-                
                 foreach (var entry in reader.ReadAll(since))
                 {
-                    info.LastEntryTimeStamp = entry.Timestamp;
                     // Special case for 'Continued' journal entry - stop monitoring this file after this, as
                     // logging should be rolling over to a new file
                     if (entry is Continued)
                     {
-                        StopMonitoringFile(info.Path);
+                        StopMonitoringFile(reader.FilePath);
                     }
                     count++;
                     yield return entry;
@@ -164,12 +162,12 @@ namespace Howatworks.PlayerJournal.Monitor
             }
             else
             {
-                StopMonitoringFile(info.Path);
+                StopMonitoringFile(reader.FilePath);
             }
 
             if (count > 0)
             {
-                Log.Info($"Scanned file {info.Path}, {count} new entries found");
+                Log.Info($"Scanned file {reader.FilePath}, {count} new entries found");
             }
         }
 
@@ -188,10 +186,10 @@ namespace Howatworks.PlayerJournal.Monitor
         {
             lock (_monitoredFiles)
             {
-                if (_monitoredFiles.ContainsKey(reader.FileInfo.Path)) return;
-                _monitoredFiles.Add(reader.FileInfo.Path, reader);
+                if (_monitoredFiles.ContainsKey(reader.FilePath)) return;
+                _monitoredFiles.Add(reader.FilePath, reader);
             }
-            JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(reader.FileInfo.Path));
+            JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(reader.FilePath));
         }
 
         private void StopMonitoringFile(string path)

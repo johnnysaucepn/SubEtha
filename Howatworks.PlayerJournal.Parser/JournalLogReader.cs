@@ -8,18 +8,22 @@ using Newtonsoft.Json.Linq;
 
 namespace Howatworks.PlayerJournal.Parser
 {
-    public class JournalReader : IJournalReader
+    public class JournalLogReader : IJournalReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalReader));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalLogReader));
 
         private readonly IJournalParser _parser;
-        private StreamReader _streamReader;
-        public JournalFileInfo FileInfo { get; }
+        private readonly Lazy<StreamReader> _streamReader;
+        public string FilePath { get; }
+        private JournalLogFileInfo FileInfo { get; }
+        public DateTimeOffset? LastEntryTimeStamp { get; private set; }
 
-        public JournalReader(string filePath, IJournalParser parser)
+        public JournalLogReader(string filePath, IJournalParser parser)
         {
             _parser = parser;
+            FilePath = filePath; 
             FileInfo = ReadFileInfo(filePath);
+            _streamReader = new Lazy<StreamReader>(() => GetStreamReader(filePath));
         }
 
         private static StreamReader GetStreamReader(string filePath)
@@ -30,10 +34,10 @@ namespace Howatworks.PlayerJournal.Parser
 
         public bool FileExists => File.Exists(FileInfo.Path);
 
-        private static JournalFileInfo ReadFileInfo(string filePath)
+        private static JournalLogFileInfo ReadFileInfo(string filePath)
         {
             FileHeader fileHeader = null;
-            var info = new JournalFileInfo(filePath);
+            var info = new JournalLogFileInfo(filePath);
             DateTime? lastEntry = null;
 
             try
@@ -70,8 +74,7 @@ namespace Howatworks.PlayerJournal.Parser
 
                 if (fileHeader != null)
                 {
-                    info = new JournalFileInfo(filePath, fileHeader.GameVersion, fileHeader.Timestamp,
-                        lastEntry.GetValueOrDefault(fileHeader.Timestamp));
+                    info = new JournalLogFileInfo(filePath, fileHeader.GameVersion, fileHeader.Timestamp);
                 }
             }
             catch (FileNotFoundException e)
@@ -88,14 +91,11 @@ namespace Howatworks.PlayerJournal.Parser
 
         public IEnumerable<IJournalEntry> ReadAll(DateTimeOffset? since)
         {
-            // Re-use reader where possible
-            if (_streamReader == null)
+            var streamReader = _streamReader.Value;
+            
+            while (!streamReader.EndOfStream)
             {
-                _streamReader = GetStreamReader(FileInfo.Path);
-            }
-            while (!_streamReader.EndOfStream)
-            {
-                var line = _streamReader.ReadLine();
+                var line = streamReader.ReadLine();
                 Log.Debug(line);
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
@@ -112,6 +112,7 @@ namespace Howatworks.PlayerJournal.Parser
                 // TODO: remove this check once we're confident we should recognise all types
                 if (journalEntry != null)
                 {
+                    LastEntryTimeStamp = journalEntry.Timestamp;
                     yield return journalEntry;
                 }
             }
