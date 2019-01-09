@@ -14,4 +14,8 @@
     <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Types\" />
+  </ItemGroup>
+
 </Project>
