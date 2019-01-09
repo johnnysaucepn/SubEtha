@@ -5,6 +5,7 @@ using System.Reflection;
 using Howatworks.PlayerJournal.Monitor;
 using log4net;
 using log4net.Config;
+using Thumb.Plugin;
 
 namespace Thumb.Core
 {

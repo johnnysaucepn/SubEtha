@@ -15,7 +15,9 @@
     <ProjectReference Include="..\Howatworks.Configuration\Howatworks.Configuration.csproj" />
     <ProjectReference Include="..\Howatworks.PlayerJournal.Monitor\Howatworks.PlayerJournal.Monitor.csproj" />
     <ProjectReference Include="..\Howatworks.PlayerJournal.Parser\Howatworks.PlayerJournal.Parser.csproj" />
-    <ProjectReference Include="..\Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj" />
+    <ProjectReference Include="..\Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj">
+      <Private>true</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
   </ItemGroup>
 

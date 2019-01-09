@@ -12,9 +12,9 @@ namespace Thumb.Plugin.Controller
 
         private readonly IList<IJournalProcessor> _childProcessors = new List<IJournalProcessor>();
         
-        public ControllerJournalProcessor()
+        public ControllerJournalProcessor(IJournalMonitorNotifier notifier)
         {
-            _childProcessors.Add(new StatusManager());
+            _childProcessors.Add(new StatusManager(notifier));
         }
 
         public bool Apply(IJournalEntry journalEntry)

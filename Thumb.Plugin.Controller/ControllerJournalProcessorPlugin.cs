@@ -19,10 +19,11 @@ namespace Thumb.Plugin.Controller
         public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
-        public ControllerJournalProcessorPlugin(IConfigReader sharedConfig, IConfigReader pluginConfig)
+        public ControllerJournalProcessorPlugin(IConfigReader sharedConfig, IConfigReader pluginConfig, IJournalMonitorNotifier notifier)
         {
             _pluginConfig = pluginConfig;
-            _processor = new ControllerJournalProcessor();
+            _processor = new ControllerJournalProcessor(notifier);
+            FlushBehaviour = FlushBehaviour.OnEveryBatch;
         }
 
         public void Apply(IJournalEntry journalEntry)

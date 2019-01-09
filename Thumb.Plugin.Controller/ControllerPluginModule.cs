@@ -10,7 +10,8 @@ namespace Thumb.Plugin.Controller
             builder.Register(c =>
             {
                 var reader = c.Resolve<IConfigLoader>();
-                return new ControllerJournalProcessorPlugin(reader.GetConfigurationSection("Thumb.Shared"), reader.GetConfigurationSection("Thumb.Plugin.SubEtha"));
+                var notifier = c.Resolve<IJournalMonitorNotifier>();
+                return new ControllerJournalProcessorPlugin(reader.GetConfigurationSection("Thumb.Shared"), reader.GetConfigurationSection("Thumb.Plugin.SubEtha"), notifier);
             }).As<IJournalProcessorPlugin>().SingleInstance();
         }
         

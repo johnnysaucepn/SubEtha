@@ -10,17 +10,13 @@ namespace Thumb.Plugin.Controller
     public class StatusManager : IJournalProcessor
     {
         private readonly JournalEntryRouter _entryRouter;
+        private readonly ControllerStatus _status;
+        private readonly IJournalMonitorNotifier _notifier;
 
-        public bool LandingGearDown { get; private set; }
-        public bool Supercruise { get; private set; }
-        public bool HardpointsDeployed { get; private set; }
-        public bool LightsOn { get; private set; }
-        public bool CargoScoopDeployed { get; private set; }
-        public bool NightVision { get; private set; }
-        public bool HudAnalysisMode { get; private set; }
-
-        public StatusManager()
+        public StatusManager(IJournalMonitorNotifier notifier)
         {
+            _notifier = notifier;
+            _status = new ControllerStatus(_notifier);
             _entryRouter = new JournalEntryRouter();
 
             _entryRouter.RegisterFor<Status>(ApplyStatus);
@@ -28,15 +24,13 @@ namespace Thumb.Plugin.Controller
 
         private bool ApplyStatus(Status status)
         {
-            LandingGearDown = status.HasFlag(StatusFlags.LandingGearDown);
-            Supercruise = status.HasFlag(StatusFlags.Supercruise);
-            HardpointsDeployed = status.HasFlag(StatusFlags.HardPointsDeployed);
-            LightsOn = status.HasFlag(StatusFlags.LightsOn);
-            CargoScoopDeployed = status.HasFlag(StatusFlags.CargoScoopDeployed);
-            NightVision = status.HasFlag(StatusFlags.NightVision);
-            HudAnalysisMode = status.HasFlag(StatusFlags.HudAnalysisMode);
-
-            Console.WriteLine(JsonConvert.SerializeObject(this, Formatting.Indented));
+            _status.LandingGearDown = status.HasFlag(StatusFlags.LandingGearDown);
+            _status.Supercruise = status.HasFlag(StatusFlags.Supercruise);
+            _status.HardpointsDeployed = status.HasFlag(StatusFlags.HardPointsDeployed);
+            _status.LightsOn = status.HasFlag(StatusFlags.LightsOn);
+            _status.CargoScoopDeployed = status.HasFlag(StatusFlags.CargoScoopDeployed);
+            _status.NightVision = status.HasFlag(StatusFlags.NightVision);
+            _status.HudAnalysisMode = status.HasFlag(StatusFlags.HudAnalysisMode);
 
             return true;
         }
@@ -48,7 +42,8 @@ namespace Thumb.Plugin.Controller
 
         public void Flush()
         {
-            //TODO: do something to report the latest state of the ship
+            // TODO: do a thing
+            _status.Flush();
         }
     }
 }

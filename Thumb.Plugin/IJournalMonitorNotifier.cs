@@ -1,4 +1,4 @@
-﻿namespace Thumb.Core
+﻿namespace Thumb.Plugin
 {
     public interface IJournalMonitorNotifier
     {

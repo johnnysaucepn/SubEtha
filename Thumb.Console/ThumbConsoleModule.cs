@@ -1,5 +1,6 @@
 using Autofac;
 using Thumb.Core;
+using Thumb.Plugin;
 
 namespace Thumb.Console
 {
