@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Howatworks.PlayerJournal.Serialization.Startup
@@ -9,6 +10,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         // NOTE: no sample
         public class ManifestItem
         {
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
             public int MissionID { get; set; } // TODO: check data type
             public string Type { get; set; } // NOTE: type of passenger // TODO: check data type
             public bool VIP { get; set; }

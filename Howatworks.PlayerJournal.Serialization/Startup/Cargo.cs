@@ -10,10 +10,10 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             public int Count { get; set; }
             public int Stolen { get; set; }
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public int MissionID { get; set; }
+            public long MissionID { get; set; }
         }
 
-        public string Vessel { get; set; }
+        public string Vessel { get; set; } // TODO: consider enum - Ship, SRV
         public CargoItem[] Inventory { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Howatworks.PlayerJournal.Serialization.Startup
@@ -8,7 +9,8 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
     {
         public class MissionItem
         {
-            public int MissionID { get; set; }
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            public long MissionID { get; set; }
             public string Name { get; set; }
             public bool PassengerMission { get; set; }
             public int Expires { get; set; } // NOTE: in seconds
