@@ -33,7 +33,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             public string Quality { get; set; }  // TODO: check datatype
             public string ExperimentalEffect { get; set; } // Note: name
 
-            public ModuleItemEngineeringModificationItem[] Modifications { get; set; }
+            public List<ModuleItemEngineeringModificationItem> Modifications { get; set; }
         }
 
         public class ModuleItemEngineeringModificationItem
@@ -54,6 +54,6 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         public int Rebuy { get; set; } // TODO: check datatype
         public string Hot { get; set; }// TODO: check datatype
 
-        public ModuleItem[] Modules { get; set; }
+        public List<ModuleItem> Modules { get; set; }
     }
 }

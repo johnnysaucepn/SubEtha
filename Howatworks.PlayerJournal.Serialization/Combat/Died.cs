@@ -18,7 +18,7 @@ namespace Howatworks.PlayerJournal.Serialization.Combat
         public string KillerRank { get; set; } // NOTE: Rank currently string, not enum
 
         // The following properties are for wing kills only
-        public KillerItem[] Killers { get; set; }
+        public List<KillerItem> Killers { get; set; }
 
     }
 }

@@ -4,6 +4,12 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
 {
     public class Scan : JournalEntryBase
     {
+        public class MaterialItem
+        {
+            public string Name { get; set; }
+            public decimal Percent { get; set; }
+        }
+
         public class Ring
         {
             public string Name { get; set; }
@@ -17,7 +23,7 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
         public string BodyName { get; set; }
         public decimal DistanceFromArrivalLS { get; set; }
         public decimal SurfaceTemperature { get; set; }
-        public Ring[] Rings { get; set; }
+        public List<Ring> Rings { get; set; }
         #endregion
 
 
@@ -40,7 +46,7 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
         public decimal SurfaceGravity { get; set; }
         public decimal SurfacePressure { get; set; }
         public bool Landable { get; set; }
-        public Dictionary<string, decimal> Materials { get; set; }
+        public List<MaterialItem> Materials { get; set; }
         public decimal RotationPeriod { get; set; }
         #endregion
 

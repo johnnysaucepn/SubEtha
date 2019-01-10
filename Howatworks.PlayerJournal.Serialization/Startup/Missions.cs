@@ -16,8 +16,8 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             public int Expires { get; set; } // NOTE: in seconds
         }
 
-        public MissionItem[] Active { get; set; }
-        public MissionItem[] Failed { get; set; }
-        public MissionItem[] Complete { get; set; }
+        public List<MissionItem> Active { get; set; }
+        public List<MissionItem> Failed { get; set; }
+        public List<MissionItem> Complete { get; set; }
     }
 }

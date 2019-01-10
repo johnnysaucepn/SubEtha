@@ -1,9 +1,11 @@
-﻿namespace Howatworks.PlayerJournal.Serialization.Status
+﻿using System.Collections.Generic;
+
+namespace Howatworks.PlayerJournal.Serialization.Status
 {
     public class Status : JournalEntryBase
     {
         public StatusFlags Flags { get; set; }
-        public int[] Pips { get; set; }
+        public List<int> Pips { get; set; }
         public string Firegroup { get; set; }
 
         public string GuiFocus { get; set; }

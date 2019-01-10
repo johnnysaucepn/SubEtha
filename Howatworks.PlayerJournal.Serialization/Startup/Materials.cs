@@ -6,14 +6,14 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
 {
     public class Materials : JournalEntryBase
     {
-        public class MaterialsItem
+        public class MaterialItem
         {
             public string Name { get; set; }
             public int Count { get; set; }
         }
 
-        public MaterialsItem[] Raw { get; set; }
-        public MaterialsItem[] Manufactured { get; set; }
-        public MaterialsItem[] Encoded { get; set; }
+        public List<MaterialItem> Raw { get; set; }
+        public List<MaterialItem> Manufactured { get; set; }
+        public List<MaterialItem> Encoded { get; set; }
     }
 }

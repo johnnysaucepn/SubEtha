@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.PlayerJournal.Serialization.Startup
 {
@@ -14,6 +15,6 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         }
 
         public string Vessel { get; set; } // TODO: consider enum - Ship, SRV
-        public CargoItem[] Inventory { get; set; }
+        public List<CargoItem> Inventory { get; set; }
     }
 }

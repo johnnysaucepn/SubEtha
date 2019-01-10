@@ -1,4 +1,6 @@
-﻿namespace Howatworks.PlayerJournal.Serialization.Combat
+﻿using System.Collections.Generic;
+
+namespace Howatworks.PlayerJournal.Serialization.Combat
 {
     public class Bounty : JournalEntryBase
     {
@@ -8,7 +10,7 @@
             public int Reward { get; set; }
         }
 
-        public FactionRewardItem[] Rewards { get; set; }
+        public List<FactionRewardItem> Rewards { get; set; }
         public string Target { get; set; } // TODO: UNDOCUMENTED - ship type
         public string VictimFaction { get; set; }
         public int TotalReward { get; set; }
