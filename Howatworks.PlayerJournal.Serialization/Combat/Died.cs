@@ -4,18 +4,21 @@ namespace Howatworks.PlayerJournal.Serialization.Combat
 {
     public class Died : JournalEntryBase
     {
-        public string KillerName { get; set; } // NOTE: Commander name
-        public string KillerName_Localised { get; set; }
-        public string KillerRank { get; set; } // NOTE: Rank currently string, not enum
-
-        public class Killer
+        public class KillerItem
         {
             public string Name { get; set; } // NOTE: Commander name
-            public string Ship { get; set; }
+            public string Ship { get; set; } // NOTE: ship type
             public string Rank { get; set; } // NOTE: Rank currently string, not enum
         }
 
-        public List<Killer> Killers { get; set; }
+        // The following properties are for single kills only
+        public string KillerName { get; set; } // NOTE: Commander name
+        public string KillerName_Localised { get; set; }
+        public string KillerShip { get; set; } // NOTE: ship type
+        public string KillerRank { get; set; } // NOTE: Rank currently string, not enum
+
+        // The following properties are for wing kills only
+        public KillerItem[] Killers { get; set; }
 
     }
 }

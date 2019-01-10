@@ -1,5 +1,6 @@
 ﻿namespace Howatworks.PlayerJournal.Serialization.Combat
 {
+    // TODO: no sample
     public class CapShipBond : JournalEntryBase
     {
         public int Reward { get; set; }

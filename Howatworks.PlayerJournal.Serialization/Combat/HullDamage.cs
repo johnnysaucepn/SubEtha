@@ -1,5 +1,6 @@
 ﻿namespace Howatworks.PlayerJournal.Serialization.Combat
 {
+    // TODO: no sample
     public class HullDamage : JournalEntryBase
     {
         public decimal Health { get; set; }

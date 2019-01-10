@@ -2,6 +2,6 @@
 {
     public class ShieldState : JournalEntryBase
     {
-        public bool ShieldsUp { get; set; }
+        public bool ShieldsUp { get; set; } // Note: sample suggests bool, docs say int
     }
 }
