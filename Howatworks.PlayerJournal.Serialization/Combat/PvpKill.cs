@@ -5,6 +5,6 @@
     public class PvpKill : JournalEntryBase
     {
         public string Victim { get; set; } // NOTE: Commander name
-        public int CombatRank { get; set; }
+        public int CombatRank { get; set; } // TODO: enum?
     }
 }

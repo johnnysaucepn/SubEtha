@@ -11,6 +11,6 @@ namespace Howatworks.PlayerJournal.Serialization.Travel
         public long SystemAddress { get; set; } // TODO: check data type
         public string Body { get; set; } // Note: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public string BodyID { get; set; } // TODO: check data type
+        public int BodyID { get; set; } // TODO: check data type
     }
 }

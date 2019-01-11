@@ -32,11 +32,11 @@ namespace Howatworks.PlayerJournal.Serialization.Travel
         public List<decimal> StarPos { get; set; }
         public string Body { get; set; } // Note: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public string BodyID { get; set; } // TODO: check data type
+        public int BodyID { get; set; } // TODO: check data type
         public string BodyType { get; set; }
         public bool Docked { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
         public string StationName { get; set; }
         public string StationType { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]

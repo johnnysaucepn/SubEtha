@@ -8,5 +8,6 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
         public List<string> Discovered { get; set; }
         public int BaseValue { get; set; }
         public int Bonus { get; set; }
+        public int TotalEarnings { get; set; }
     }
 }

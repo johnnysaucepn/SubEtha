@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.PlayerJournal.Serialization.Exploration
 {
@@ -10,7 +11,7 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
             public decimal Percent { get; set; }
         }
 
-        public class Ring
+        public class RingItem
         {
             public string Name { get; set; }
             public string RingClass { get; set; }
@@ -19,46 +20,61 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
             public decimal OuterRad { get; set; }
         }
 
+        public class CompositionItem
+        {
+            public decimal Ice { get; set; }
+            public decimal Rock { get; set; }
+            public decimal Metal { get; set; }
+        }
+
         #region Common to all planets/stars/moons
+        public string ScanType { get; set; } // TODO: consider enum  Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan
         public string BodyName { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public int BodyID { get; set; }
         public decimal DistanceFromArrivalLS { get; set; }
         public decimal SurfaceTemperature { get; set; }
-        public List<Ring> Rings { get; set; }
+        public List<RingItem> Rings { get; set; }
         #endregion
 
 
         #region Stars only
         public string StarType { get; set; }
-        public decimal StellarMass { get; set; }
-        public decimal Radius { get; set; }
-        public decimal AbsoluteMagnitude { get; set; }
-        public decimal RotationalPeriod { get; set; }
-        public decimal Age_MY { get; set; }
+        public decimal? StellarMass { get; set; }
+        public decimal? Radius { get; set; }
+        public decimal? AbsoluteMagnitude { get; set; }
+        public decimal? RotationalPeriod { get; set; }
+        public decimal? Age_MY { get; set; }
         #endregion
 
         #region Planets and Moons only
-        public bool TidalLock { get; set; }
-        public string TerraformState { get; set; }
-        public string PlanetClass { get; set; } // TODO: See 11.3
-        public string Atmosphere { get; set;  } // TODO: See 11.4
+        public List<dynamic> Parents { get; set; } // TODO: spec suggests that key name in each pair varies
+        public bool? TidalLock { get; set; } // TODO: check data type, specs say int, sample says bool
+        public string TerraformState { get; set; } // TODO: enum, Terraformable, Terraforming, Terraformed, or null
+        public string PlanetClass { get; set; } // TODO: See 13.3
+        public string Atmosphere { get; set;  } // TODO: See 13.4
         public string AtmosphereType { get; set; }
-        public string Volcanism { get; set; } // TODO: See 11.5
-        public decimal SurfaceGravity { get; set; }
-        public decimal SurfacePressure { get; set; }
-        public bool Landable { get; set; }
+        public string Volcanism { get; set; } // TODO: See 13.5
+        public decimal? SurfaceGravity { get; set; }
+        public decimal? SurfacePressure { get; set; }
+        public bool? Landable { get; set; }
         public List<MaterialItem> Materials { get; set; }
-        public decimal RotationPeriod { get; set; }
+        public CompositionItem Composition { get; set; }
+        public string ReserveLevel { get; set; } // TODO: check if applies to stars, enum: Pristine/Major/Common/Low/Depleted
+        public decimal? RotationPeriod { get; set; }
+        public decimal? AxialTilt { get; set; }
         #endregion
 
         #region Orbital parameters
-        public decimal SemiMajorAxis { get; set; }
-        public decimal Eccentricity { get; set; }
-        public decimal OrbitalInclination { get; set; }
-        public decimal Periapsis { get; set; }
-        public decimal OrbitalPeriod { get; set; }
+        public decimal? SemiMajorAxis { get; set; }
+        public decimal? Eccentricity { get; set; }
+        public decimal? OrbitalInclination { get; set; }
+        public decimal? Periapsis { get; set; }
+        public decimal? OrbitalPeriod { get; set; }
         #endregion
 
 
     }
+
 }
 
