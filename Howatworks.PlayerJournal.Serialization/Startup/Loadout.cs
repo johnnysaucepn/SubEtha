@@ -29,8 +29,8 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public string BlueprintID { get; set; } // TODO: check datatype
             public string BlueprintName { get; set; }
-            public string Level { get; set; } // TODO: check datatype
-            public string Quality { get; set; }  // TODO: check datatype
+            public int Level { get; set; } // TODO: check datatype
+            public decimal Quality { get; set; }  // TODO: check datatype
             public string ExperimentalEffect { get; set; } // Note: name
 
             public List<ModuleItemEngineeringModificationItem> Modifications { get; set; }

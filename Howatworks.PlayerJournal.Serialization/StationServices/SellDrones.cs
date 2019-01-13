@@ -2,8 +2,7 @@
 {
     public class SellDrones : JournalEntryBase
     {
-        // TODO: localised?
-        public string Type { get; set; }
+        public string Type { get; set; } // TODO: localised?
         public int Count { get; set; }
         public int SellPrice { get; set; }
         public int TotalSale { get; set; }

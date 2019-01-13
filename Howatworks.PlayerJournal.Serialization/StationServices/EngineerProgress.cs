@@ -1,10 +1,40 @@
-﻿namespace Howatworks.PlayerJournal.Serialization.StationServices
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.PlayerJournal.Serialization.StationServices
 {
     public class EngineerProgress : JournalEntryBase
     {
-        public string Engineer { get; set; }
-        public int Rank { get; set; }
-        // TODO: possible enum
-        public string Progress { get; set; }
+        #region Summary at startup
+
+        public class EngineerProgressItem
+        {
+            public string Engineer { get; set; } // Note: name
+
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            public long EngineerID { get; set; } // TODO: check datatype
+
+            public int Rank { get; set; } // TODO: possible enum
+            public string Progress { get; set; } // TODO: check data type - enum Invited/Acquainted/Unlocked/Barred
+            public decimal RankProgress { get; set; } // TODO: check data type - sample suggests int
+        }
+
+        public List<EngineerProgressItem> Engineers { get; set; }
+
+        #endregion
+
+        #region Update one Engineer
+
+        public string Engineer { get; set; } // Note: name
+
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public long EngineerID { get; set; } // TODO: check datatype
+
+        public int Rank { get; set; } // TODO: possible enum
+        public string Progress { get; set; } // TODO: check data type - enum Invited/Acquainted/Unlocked/Barred
+        public decimal RankProgress { get; set; } // TODO: check data type - sample suggests int
+
+        #endregion
+
     }
 }

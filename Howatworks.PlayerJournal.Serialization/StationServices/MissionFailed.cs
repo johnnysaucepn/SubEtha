@@ -1,10 +1,14 @@
-﻿namespace Howatworks.PlayerJournal.Serialization.StationServices
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.PlayerJournal.Serialization.StationServices
 {
     public class MissionFailed : JournalEntryBase
     {
         // TODO: localised?
         public string Name { get; set; }
-        public int MissionID { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public long MissionID { get; set; }
+        public int? Fine { get; set; }
 
     }
 }

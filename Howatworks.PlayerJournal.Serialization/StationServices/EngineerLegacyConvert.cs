@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.PlayerJournal.Serialization.StationServices
 {
-    public class EngineerCraft : JournalEntryBase
+    // Note: no sample
+    [Obsolete]
+    public class EngineerLegacyConvert : JournalEntryBase
     {
-        public class IngredientItem
-        {
-            public string Name { get; set; }
-            public int Count { get; set; }
-        }
-
         public class ModifierItem
         {
             // TODO: the docs suggest that one of these values should be an enum: WeaponMode, DamageType, CabinClass
@@ -30,7 +27,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public int Level { get; set; }
         public decimal Quality { get; set; }
         public string ApplyExperimentalEffect { get; set; } // TODO: check data type
-        public List<IngredientItem> Ingredients { get; set; }
         public List<ModifierItem> Modifiers { get; set; }
+        public bool IsPreview { get; set; }
     }
 }

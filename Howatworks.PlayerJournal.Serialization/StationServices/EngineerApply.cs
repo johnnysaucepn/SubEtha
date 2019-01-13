@@ -1,5 +1,8 @@
-﻿namespace Howatworks.PlayerJournal.Serialization.StationServices
+﻿using System;
+
+namespace Howatworks.PlayerJournal.Serialization.StationServices
 {
+    [Obsolete] // As per v3.0
     public class EngineerApply : JournalEntryBase
     {
         public string Engineer { get; set; }

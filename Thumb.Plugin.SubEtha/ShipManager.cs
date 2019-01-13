@@ -46,7 +46,7 @@ namespace Thumb.Plugin.SubEtha
             _ship = new ShipState
             {
                 Type = shipyardNew.ShipType,
-                ShipID = shipyardNew.ShipID
+                ShipID = shipyardNew.NewShipID
             };
             return true;
         }
@@ -103,6 +103,6 @@ namespace Thumb.Plugin.SubEtha
             _client.Upload(_ship);
             _isDirty = false;
         }
-        
+
     }
 }

@@ -3,6 +3,6 @@
     public class ShipyardNew : JournalEntryBase
     {
         public string ShipType { get; set; }
-        public int ShipID { get; set; }
+        public int NewShipID { get; set; }
     }
 }
