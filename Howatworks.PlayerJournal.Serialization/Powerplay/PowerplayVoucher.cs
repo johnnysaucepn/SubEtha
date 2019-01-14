@@ -5,7 +5,6 @@ namespace Howatworks.PlayerJournal.Serialization.Powerplay
     public class PowerplayVoucher : JournalEntryBase
     {
         public string Power { get; set; }
-        // TODO: confirm type
-        public Dictionary<string, int> Systems { get; set; }
+        public List<string> Systems { get; set; } // TODO: check data type
     }
 }
