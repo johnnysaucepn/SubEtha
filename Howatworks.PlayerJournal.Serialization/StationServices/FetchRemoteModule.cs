@@ -10,7 +10,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         // TODO: is this localised?
         public string StoredItem_Localised { get; set; }
         public string ServerId { get; set; } // TODO: check capitalisation and data type
-        public int TransferCost { get; set; }
+        public long TransferCost { get; set; }
         public string Ship { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int ShipID { get; set; } // TODO: check capitalisation

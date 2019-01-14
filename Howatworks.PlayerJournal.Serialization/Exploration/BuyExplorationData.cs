@@ -3,6 +3,6 @@
     public class BuyExplorationData : JournalEntryBase
     {
         public string System { get; set; } // Note: name
-        public int Cost { get; set; }
+        public long Cost { get; set; }
     }
 }

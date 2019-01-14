@@ -24,7 +24,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             public int? TopRankSize { get; set; }
             public bool? PlayerInTopRank { get; set; }
             public string TierReached { get; set; }
-            public int Bonus { get; set; }
+            public long Bonus { get; set; }
         }
 
         public class TopTierItem

@@ -13,7 +13,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             public long id { get; set; } // TODO: check capitalisation
 
             public string ShipType { get; set; }
-            public int ShipPrice { get; set; }
+            public long ShipPrice { get; set; }
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]

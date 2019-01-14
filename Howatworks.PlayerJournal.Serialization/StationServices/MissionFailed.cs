@@ -8,7 +8,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public string Name { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long MissionID { get; set; }
-        public int? Fine { get; set; }
+        public long? Fine { get; set; }
 
     }
 }

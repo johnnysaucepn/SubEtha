@@ -9,7 +9,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public string ShipType { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int SellShipID { get; set; }
-        public int ShipPrice { get; set; }
+        public long ShipPrice { get; set; }
         public string System { get; set; }
     }
 }

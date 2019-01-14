@@ -14,8 +14,8 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public long? MarketID { get; set; }
             public string StorageSlot { get; set; }
-            public int? TransferCost { get; set; }
-            public int? TransferTime { get; set; } // TODO: check data type
+            public long? TransferCost { get; set; }
+            public int? TransferTime { get; set; } // TODO: check data type, time in seconds?
             public bool Hot { get; set; }
             public string EngineerModifications { get; set; }
             public int? Level { get; set; }

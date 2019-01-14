@@ -8,8 +8,8 @@
 
         #region Optional
         public string Victim { get; set; }
-        public int Fine { get; set; }
-        public int Bounty { get; set; }
+        public long Fine { get; set; }
+        public long Bounty { get; set; }
         #endregion
     }
 }

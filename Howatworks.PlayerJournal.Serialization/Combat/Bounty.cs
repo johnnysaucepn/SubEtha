@@ -7,16 +7,16 @@ namespace Howatworks.PlayerJournal.Serialization.Combat
         public class FactionRewardItem
         {
             public string Faction { get; set; }
-            public int Reward { get; set; }
+            public long Reward { get; set; }
         }
 
         public List<FactionRewardItem> Rewards { get; set; }
         public string Target { get; set; } // TODO: UNDOCUMENTED - ship type
         public string VictimFaction { get; set; }
-        public int? TotalReward { get; set; }
-        public int? SharedWithOthers { get; set; }
+        public long? TotalReward { get; set; }
+        public int? SharedWithOthers { get; set; } // Note: number of players
         public string Faction { get; set; } // Note: skimmers only
-        public int? Reward { get; set; } // Note: skimmers only
+        public long? Reward { get; set; } // Note: skimmers only
 
     }
 }

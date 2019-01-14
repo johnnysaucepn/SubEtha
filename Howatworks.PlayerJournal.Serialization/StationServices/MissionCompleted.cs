@@ -54,8 +54,8 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public string Target { get; set; }
         public string TargetType { get; set; }
         public string TargetFaction { get; set; }
-        public int? Reward { get; set; }
-        public int? Donation { get; set; }
+        public long? Reward { get; set; }
+        public long? Donation { get; set; }
         public List<string> PermitsAwarded { get; set; } // TODO: check data type
         public List<CommodityRewardItem> CommodityReward { get; set; }
         public List<MaterialRewardItem> MaterialsReward { get; set; }

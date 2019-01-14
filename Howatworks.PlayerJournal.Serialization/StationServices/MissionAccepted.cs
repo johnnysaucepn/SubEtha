@@ -12,7 +12,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public long MissionID { get; set; }
         public string Influence { get; set; } // TODO: enum (None/Low/Med/High)
         public string Reputation { get; set; } // TODO: enum (None/Low/Med/High)
-        public int Reward { get; set; }
+        public long Reward { get; set; }
         public bool Wing { get; set; }
 
         #region Optional

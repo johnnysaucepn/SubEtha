@@ -2,6 +2,6 @@
 {
     public class BuyAmmo : JournalEntryBase
     {
-        public int Cost { get; set; }
+        public long Cost { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long ShipMarketID { get; set; }
         public decimal Distance { get; set; }
-        public int TransferPrice { get; set; }
+        public long TransferPrice { get; set; }
         public decimal TransferTime { get; set; } // TODO: check data type
     }
 }

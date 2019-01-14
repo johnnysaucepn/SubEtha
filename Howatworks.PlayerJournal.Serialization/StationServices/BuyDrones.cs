@@ -4,7 +4,7 @@
     {
         public string Type { get; set; }
         public int Count { get; set; }
-        public int BuyPrice { get; set; }
-        public int TotalCost { get; set; }
+        public long BuyPrice { get; set; }
+        public long TotalCost { get; set; }
     }
 }

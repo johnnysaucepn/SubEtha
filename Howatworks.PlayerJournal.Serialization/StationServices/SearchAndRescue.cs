@@ -8,7 +8,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public long MarketID { get; set; }
         public string Name { get; set; } // Note: material name TODO: localised?
         public int Count { get; set; }
-        public int Reward { get; set; }
+        public long Reward { get; set; }
 
     }
 }

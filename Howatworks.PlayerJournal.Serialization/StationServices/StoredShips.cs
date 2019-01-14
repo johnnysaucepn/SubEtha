@@ -13,7 +13,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             public int ShipID { get; set; }
             public string ShipType { get; set; }
             public string Name { get; set; }
-            public int Value { get; set; }
+            public long Value { get; set; }
             public bool Hot { get; set; }
         }
 
@@ -23,13 +23,13 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             public int ShipID { get; set; }
             public string ShipType { get; set; }
             public string Name { get; set; }
-            public int Value { get; set; }
+            public long Value { get; set; }
             public bool Hot { get; set; }
             public bool? InTransit { get; set; }
             public string StarSystem { get; set; }
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public long? ShipMarketID { get; set; }
-            public int? TransferPrice { get; set; }
+            public long? TransferPrice { get; set; }
             public string TransferType { get; set; } // TODO: check data type, not in sample
         }
 

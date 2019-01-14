@@ -15,7 +15,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             public bool On { get; set; }
             public int Priority { get; set; } // TODO: check datatype
             public int Health { get; set; }// TODO: check datatype
-            public int Value { get; set; }// TODO: check datatype
+            public long Value { get; set; }// TODO: check datatype
             public int? AmmoInClip { get; set; }// TODO: check datatype
             public int? AmmoInHopper { get; set; }// TODO: check datatype
 
@@ -49,10 +49,10 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         public int ShipID { get; set; }
         public string ShipName { get; set; }
         public string ShipIdent { get; set; }
-        public int? HullValue { get; set; } // TODO: check datatype
-        public int? ModulesValue { get; set; } // TODO: check datatype
+        public long? HullValue { get; set; } // TODO: check datatype
+        public long? ModulesValue { get; set; } // TODO: check datatype
         public int HullHealth { get; set; } // TODO: check datatype
-        public int Rebuy { get; set; } // TODO: check datatype
+        public long Rebuy { get; set; } // TODO: check datatype
         public string Hot { get; set; } // TODO: check datatype
 
         public List<ModuleItem> Modules { get; set; }

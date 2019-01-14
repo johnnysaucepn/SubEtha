@@ -9,6 +9,6 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public long CGID { get; set; } // TODO: check data type
         public string Name { get; set; }
         public string System { get; set; }
-        public int Reward { get; set; }
+        public long Reward { get; set; }
     }
 }

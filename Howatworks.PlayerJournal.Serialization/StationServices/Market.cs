@@ -13,9 +13,9 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             public long id { get; set; } // TODO: check name
             public string Name { get; set; }
             public string Category { get; set; }
-            public int BuyPrice { get; set; }
-            public int SellPrice { get; set; }
-            public int MeanPrice { get; set; }
+            public long BuyPrice { get; set; }
+            public long SellPrice { get; set; }
+            public long MeanPrice { get; set; }
             public int StockBracket { get; set; }
             public int DemandBracket { get; set; }
             public int Stock { get; set; }

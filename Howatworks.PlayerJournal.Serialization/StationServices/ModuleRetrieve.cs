@@ -17,6 +17,6 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public int Level { get; set; }
         public decimal Quality { get; set; }
         public string SwapOutItem { get; set; }
-        public int Cost { get; set; }
+        public long Cost { get; set; }
     }
 }

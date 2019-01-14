@@ -11,6 +11,6 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public string System { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int SellShipID { get; set; } // TODO: Check capitalisation
-        public int ShipPrice { get; set; }
+        public long ShipPrice { get; set; }
     }
 }

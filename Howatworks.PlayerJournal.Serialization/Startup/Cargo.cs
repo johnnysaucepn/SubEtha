@@ -9,7 +9,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         {
             public string Name { get; set; }
             public int Count { get; set; }
-            public int Stolen { get; set; }
+            public int Stolen { get; set; } // Note: how many of these items are stolen?
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public long? MissionID { get; set; }
         }
