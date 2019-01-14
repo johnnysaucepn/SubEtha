@@ -6,7 +6,7 @@ namespace Howatworks.PlayerJournal.Serialization.Status
     {
         public StatusFlags Flags { get; set; }
         public List<int> Pips { get; set; }
-        public string Firegroup { get; set; }
+        public string Firegroup { get; set; } // TODO: check spelling
 
         public string GuiFocus { get; set; }
         public decimal? Fuel { get; set; }

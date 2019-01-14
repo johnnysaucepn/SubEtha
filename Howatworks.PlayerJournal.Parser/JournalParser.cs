@@ -29,7 +29,13 @@ namespace Howatworks.PlayerJournal.Parser
 
         private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
         {
-            MissingMemberHandling = MissingMemberHandling.Ignore
+            // Enable strict reporting where event properties are provided that don't exist on the class
+            // TODO: Remember to return this to MissingMemberHandling.Ignore when localisation check complete!
+            MissingMemberHandling = MissingMemberHandling.Error,
+            NullValueHandling = NullValueHandling.Ignore,
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            MaxDepth = 5
+
         };
 
         public IJournalEntry Parse(string eventType, string line)
