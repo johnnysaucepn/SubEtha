@@ -10,10 +10,9 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public string ToSlot { get; set; }
         public string FromItem { get; set; }
         public string FromItem_Localised { get; set; }
-        // TODO: if null, not localised
         public string ToItem { get; set; }
         public string ToItem_Localised { get; set; }
-        public string Ship { get; set; }
+        public string Ship { get; set; } // NOTE: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int ShipID { get; set; }
     }

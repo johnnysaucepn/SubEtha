@@ -4,6 +4,7 @@
     {
         public string From { get; set; }
         public string Message { get; set; }
+        public string Message_Localised { get; set; }
         public string Channel { get; set; } // TODO: enum? (wing/local/voicechat/friend/player/npc/squadron/starsystem)
     }
 }

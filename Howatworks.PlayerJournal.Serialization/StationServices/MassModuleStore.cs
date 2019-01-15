@@ -14,7 +14,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
 
             // TODO: is this localised?
             public string Name_Localised { get; set; }
-            public bool Hot { get; set; } // TODO: check data type
+            public bool Hot { get; set; }
             public string EngineerModifications { get; set; } // TODO: check data type
             public int Level { get; set; } // TODO: check datatype
             public decimal Quality { get; set; }  // TODO: check datatype

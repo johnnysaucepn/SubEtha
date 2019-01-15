@@ -10,12 +10,14 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public class ModuleItem
         {
             public string Name { get; set; }
+            public string Name_Localised { get; set; }
             public string StarSystem { get; set; }
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public long? MarketID { get; set; }
-            public string StorageSlot { get; set; }
-            public long? TransferCost { get; set; }
-            public int? TransferTime { get; set; } // TODO: check data type, time in seconds?
+            public long MarketID { get; set; }
+            public int StorageSlot { get; set; }
+            public long TransferCost { get; set; }
+            public int TransferTime { get; set; } // NOTE: time in seconds
+            public long BuyPrice { get; set; } // WARNING: not in docs
             public bool Hot { get; set; }
             public string EngineerModifications { get; set; }
             public int? Level { get; set; }
@@ -25,6 +27,8 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long MarketID { get; set; }
+        public string StarSystem { get; set; } // WARNING: not in docs
+        public string StationName { get; set; } // WARNING: not in docs
         public List<ModuleItem> Items { get; set; }
     }
 }

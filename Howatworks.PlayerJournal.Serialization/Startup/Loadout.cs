@@ -13,24 +13,25 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             public string Slot { get; set; } // NOTE: slot name
             public string Item { get; set; } // NOTE: item name
             public bool On { get; set; }
-            public int Priority { get; set; } // TODO: check datatype
-            public int Health { get; set; }// TODO: check datatype
-            public long Value { get; set; }// TODO: check datatype
-            public int? AmmoInClip { get; set; }// TODO: check datatype
-            public int? AmmoInHopper { get; set; }// TODO: check datatype
+            public int Priority { get; set; }
+            public decimal Health { get; set; }
+            public long? Value { get; set; } // NOTE: appears optional in 3.3
+            public int? AmmoInClip { get; set; }
+            public int? AmmoInHopper { get; set; }
 
             public ModuleItemEngineering Engineering { get; set; }
         }
 
         public class ModuleItemEngineering
         {
-            public string EngineerId { get; set; } // TODO: check datatype
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            public long EngineerID { get; set; }
             public string Engineer { get; set; } // NOTE: name
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public string BlueprintID { get; set; } // TODO: check datatype
+            public long BlueprintID { get; set; }
             public string BlueprintName { get; set; }
-            public int Level { get; set; } // TODO: check datatype
-            public decimal Quality { get; set; }  // TODO: check datatype
+            public int Level { get; set; }
+            public decimal Quality { get; set; }
             public string ExperimentalEffect { get; set; } // Note: name
 
             public List<ModuleItemEngineeringModificationItem> Modifications { get; set; }
@@ -39,9 +40,9 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         public class ModuleItemEngineeringModificationItem
         {
             public string Label { get; set; } // NOTE: see 13.11
-            public string Value { get; set; } // TODO: check datatype
-            public string OriginalValue { get; set; } // TODO: check datatype
-            public bool LessIsGood { get; set; }
+            public decimal Value { get; set; }
+            public decimal OriginalValue { get; set; }
+            public int LessIsGood { get; set; } // NOTE: not bool, 0 or 1
         }
 
         public string Ship { get; set; } // NOTE: Ship type
@@ -49,11 +50,11 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         public int ShipID { get; set; }
         public string ShipName { get; set; }
         public string ShipIdent { get; set; }
-        public long? HullValue { get; set; } // TODO: check datatype
-        public long? ModulesValue { get; set; } // TODO: check datatype
-        public int HullHealth { get; set; } // TODO: check datatype
-        public long Rebuy { get; set; } // TODO: check datatype
-        public string Hot { get; set; } // TODO: check datatype
+        public long? HullValue { get; set; }
+        public long? ModulesValue { get; set; }
+        public decimal HullHealth { get; set; }
+        public long Rebuy { get; set; }
+        public bool Hot { get; set; }
 
         public List<ModuleItem> Modules { get; set; }
     }

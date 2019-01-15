@@ -4,7 +4,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
 {
     public class ModuleSellRemote : JournalEntryBase
     {
-        public string StorageSlot { get; set; }
+        public int StorageSlot { get; set; }
         public string SellItem { get; set; }
         public string SellItem_Localised { get; set; }
         public string ServerId { get; set; } // TODO: check data type and capitalisation

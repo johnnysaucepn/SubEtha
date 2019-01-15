@@ -5,7 +5,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
     // Note: no sample
     public class FetchRemoteModule : JournalEntryBase
     {
-        public string StorageSlot { get; set; }
+        public int StorageSlot { get; set; }
         public string StoredItem { get; set; }
         // TODO: is this localised?
         public string StoredItem_Localised { get; set; }
