@@ -54,7 +54,7 @@ namespace Howatworks.PlayerJournal.Parser
             }
             catch (JsonSerializationException e)
             {
-                Log.Error("JSON deserialisation failure", e);
+                Log.Error($"JSON deserialisation failure: {e.Message}");
             }
             catch (FormatException e)
             {

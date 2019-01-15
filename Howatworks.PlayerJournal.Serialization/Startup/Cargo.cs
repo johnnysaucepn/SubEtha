@@ -15,6 +15,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         }
 
         public string Vessel { get; set; } // TODO: consider enum - Ship, SRV
+        public int Count { get; set; } // WARNING: not in docs
         public List<CargoItem> Inventory { get; set; }
     }
 }

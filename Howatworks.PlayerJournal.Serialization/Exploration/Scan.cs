@@ -45,6 +45,7 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
         public decimal? AbsoluteMagnitude { get; set; }
         public decimal? RotationalPeriod { get; set; }
         public decimal? Age_MY { get; set; }
+        public string Luminosity { get; set; } // TODO: enum? // WARNING: not in docs
         #endregion
 
         #region Planets and Moons only
@@ -55,6 +56,8 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
         public string Atmosphere { get; set;  } // TODO: See 13.4
         public string AtmosphereType { get; set; }
         public string Volcanism { get; set; } // TODO: See 13.5
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public decimal? MassEM { get; set; } // WARNING: not in docs
         public decimal? SurfaceGravity { get; set; }
         public decimal? SurfacePressure { get; set; }
         public bool? Landable { get; set; }

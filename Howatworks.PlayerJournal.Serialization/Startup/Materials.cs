@@ -9,6 +9,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         public class MaterialItem
         {
             public string Name { get; set; }
+            public string Name_Localised { get; set; }
             public int Count { get; set; }
         }
 

@@ -34,10 +34,10 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             public decimal Quality { get; set; }
             public string ExperimentalEffect { get; set; } // Note: name
 
-            public List<ModuleItemEngineeringModificationItem> Modifications { get; set; }
+            public List<ModuleItemEngineeringModifierItem> Modifiers { get; set; } // WARNING: docs say Modifications
         }
 
-        public class ModuleItemEngineeringModificationItem
+        public class ModuleItemEngineeringModifierItem
         {
             public string Label { get; set; } // NOTE: see 13.11
             public decimal Value { get; set; }

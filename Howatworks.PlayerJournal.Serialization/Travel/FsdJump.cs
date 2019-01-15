@@ -11,6 +11,9 @@ namespace Howatworks.PlayerJournal.Serialization.Travel
             public string FactionState { get; set; } // TODO: consider enum?
             public string Government { get; set; } // TODO: consider enum?
             public decimal Influence { get; set; }
+            public string Allegiance { get; set; } // WARNING: not in docs // TODO: enum?
+            public string Happiness { get; set; } // WARNING: not in docs
+            public string Happiness_Localised { get; set; } // WARNING: not in docs
             public decimal MyReputation { get; set; }
             public List<FactionItemStateItem> PendingStates { get; set; }
             public List<FactionItemStateItem> RecoveringStates { get; set; } // TODO: check spelling?
@@ -22,8 +25,8 @@ namespace Howatworks.PlayerJournal.Serialization.Travel
 
         public class FactionItemStateItem
         {
-            public string State { get; set; } // TODO: check name
-            public string Trend { get; set; } // TODO: check data type?
+            public string State { get; set; } // TODO: enum?
+            public decimal Trend { get; set; } // TODO: check data type
         }
 
         public string StarSystem { get; set; }
@@ -41,7 +44,7 @@ namespace Howatworks.PlayerJournal.Serialization.Travel
         public string SystemEconomy { get; set; }
         public string SystemEconomy_Localised { get; set; }
         public string SystemSecondEconomy { get; set; }
-        public string SystemSecondEconomy_Localised { get; set; } // TODO: assumed
+        public string SystemSecondEconomy_Localised { get; set; }
         public string SystemGovernment { get; set; }
         public string SystemGovernment_Localised { get; set; }
         public string SystemSecurity { get; set; }
