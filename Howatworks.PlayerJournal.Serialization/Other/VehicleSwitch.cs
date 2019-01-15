@@ -2,7 +2,6 @@
 {
     public class VehicleSwitch : JournalEntryBase
     {
-        // TODO: enumerate?
-        public string To { get; set; }
+        public string To { get; set; } // TODO: enum?  Mothership/Fighter
     }
 }

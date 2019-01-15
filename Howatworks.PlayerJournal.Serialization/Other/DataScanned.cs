@@ -2,7 +2,6 @@
 {
     public class DataScanned : JournalEntryBase
     {
-        // TODO: enumerable?
-        public string Type { get; set; }
+        public string Type { get; set; } // TODO: enum?  "DataLink", "DataPoint", "ListeningPost", "AbandonedDataLog", "WreckedShip", etc
     }
 }

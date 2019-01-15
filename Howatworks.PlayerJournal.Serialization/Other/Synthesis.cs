@@ -10,9 +10,7 @@ namespace Howatworks.PlayerJournal.Serialization.Other
             public int Count { get; set; }
         }
 
-        // TODO: localised?
         public string Name { get; set; }
-        // TODO: enough usages to make a distinct type?
         public List<MaterialItem> Materials { get; set; }
     }
 }

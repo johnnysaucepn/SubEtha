@@ -2,8 +2,7 @@
 {
     public class Resurrect : JournalEntryBase
     {
-        // TODO: confirm type
-        public string Option { get; set; }
+        public string Option { get; set; } // TODO: enum?
         public long Cost { get; set; }
         public bool Bankrupt { get; set; }
     }

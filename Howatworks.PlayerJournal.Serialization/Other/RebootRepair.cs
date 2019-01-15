@@ -4,6 +4,6 @@ namespace Howatworks.PlayerJournal.Serialization.Other
 {
     public class RebootRepair : JournalEntryBase
     {
-        public List<string> Modules { get; set; } 
+        public List<string> Modules { get; set; }
     }
 }

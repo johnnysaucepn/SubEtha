@@ -5,7 +5,7 @@ namespace Howatworks.PlayerJournal.Serialization.Status
     public class Status : JournalEntryBase
     {
         public StatusFlags Flags { get; set; }
-        public List<int> Pips { get; set; }
+        public List<int> Pips { get; set; } // TODO: measured in half-pips, consider converting
         public string Firegroup { get; set; } // TODO: check spelling
 
         public string GuiFocus { get; set; }

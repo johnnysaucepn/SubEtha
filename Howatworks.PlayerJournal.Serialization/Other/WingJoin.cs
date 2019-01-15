@@ -4,6 +4,6 @@ namespace Howatworks.PlayerJournal.Serialization.Other
 {
     public class WingJoin : JournalEntryBase
     {
-        public List<string> Others { get; set; } 
+        public List<string> Others { get; set; } // Note: names
     }
 }
