@@ -15,7 +15,7 @@ namespace Thumb.Core
         {
             builder.RegisterType<ThumbApp>().SingleInstance();
             builder.Register(c => new ConfigLoader("config.json")).As<IConfigLoader>().SingleInstance();
-            builder.RegisterType<JournalMonitorConfiguration>().As<IJournalMonitorConfiguration>().SingleInstance();
+            builder.RegisterType<JsonJournalMonitorState>().As<IJournalMonitorState>().SingleInstance();
             builder.RegisterType<JournalMonitor>().As<IJournalMonitor>().SingleInstance();
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
             builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();

@@ -21,12 +21,12 @@ namespace Howatworks.PlayerJournal.Parser
         public JournalLogReader(string filePath, IJournalParser parser)
         {
             _parser = parser;
-            FilePath = filePath; 
+            FilePath = filePath;
             FileInfo = ReadFileInfo(filePath);
             _streamReader = new Lazy<StreamReader>(() => GetStreamReader(filePath));
         }
 
-        private static StreamReader GetStreamReader(string filePath)
+        private StreamReader GetStreamReader(string filePath)
         {
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return new StreamReader(fileStream);
@@ -34,7 +34,7 @@ namespace Howatworks.PlayerJournal.Parser
 
         public bool FileExists => File.Exists(FileInfo.Path);
 
-        private static JournalLogFileInfo ReadFileInfo(string filePath)
+        private JournalLogFileInfo ReadFileInfo(string filePath)
         {
             FileHeader fileHeader = null;
             var info = new JournalLogFileInfo(filePath);
@@ -92,7 +92,7 @@ namespace Howatworks.PlayerJournal.Parser
         public IEnumerable<IJournalEntry> ReadAll(DateTimeOffset? since)
         {
             var streamReader = _streamReader.Value;
-            
+
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();

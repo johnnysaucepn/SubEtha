@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
+using System.Timers;
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Other;
 using log4net;
+using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.PlayerJournal.Monitor
 {
@@ -14,42 +15,49 @@ namespace Howatworks.PlayerJournal.Monitor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(JournalMonitor));
 
-        private readonly IJournalMonitorConfiguration _config;
+        private readonly IJournalMonitorState _journalMonitorState;
         private readonly IJournalReaderFactory _journalReaderFactory;
         private readonly FileSystemWatcher _journalWatcher;
 
         private bool _started = false;
 
+        private readonly string _journalFolder;
+        private readonly string _journalPattern;
+        private readonly string _statusPath;
+
         public event EventHandler<JournalEntriesParsedEventArgs> JournalEntriesParsed;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        private DateTime? LastRead
-        {
-            get => _config.LastRead;
-            set => _config.LastRead = value;
-        }
-
         private readonly Timer _triggerUpdate;
         private readonly Dictionary<string, IJournalReader> _monitoredFiles = new Dictionary<string, IJournalReader>();
 
-        public JournalMonitor(IJournalMonitorConfiguration config, IJournalReaderFactory journalReaderFactory)
+        public JournalMonitor(IConfiguration config, IJournalMonitorState journalMonitorState, IJournalReaderFactory journalReaderFactory)
         {
-            _config = config;
+            _journalMonitorState = journalMonitorState;
             _journalReaderFactory = journalReaderFactory;
 
-            _journalWatcher = new FileSystemWatcher(_config.JournalFolder, _config.JournalPattern)
+            // TODO: this makes the config read-only; consider keeping hold of the config object and reacting to config changes
+            _journalFolder = config["JournalFolder"];
+            _journalPattern = config["JournalPattern"];
+            _statusPath = config["StatusPath"];
+            var updateInterval = TimeSpan.Parse(config["UpdateInterval"]);
+
+            _journalWatcher = new FileSystemWatcher(_journalFolder, _journalPattern)
             {
                 EnableRaisingEvents = false
             };
+
             _journalWatcher.Created += (s, e) => { LogWatcherEvent(e); StartMonitoringFile(e.FullPath); };
             _journalWatcher.Changed += (s, e) => { LogWatcherEvent(e); StartMonitoringFile(e.FullPath); };
 
-            var updatePeriod = Convert.ToInt32(_config.UpdateInterval.TotalMilliseconds);
-            _triggerUpdate = new Timer(TriggerUpdate_Elapsed, null, updatePeriod, updatePeriod);
+            _triggerUpdate = new Timer(updateInterval.TotalMilliseconds);
+            _triggerUpdate.Elapsed += (o, args) => TriggerUpdate_Elapsed(_journalMonitorState.LastRead);
+            _triggerUpdate.AutoReset = true;
         }
 
-        private void TriggerUpdate_Elapsed(object data)
+
+        private void TriggerUpdate_Elapsed(DateTime? lastRead)
         {
             if (!_started) return;
 
@@ -62,42 +70,50 @@ namespace Howatworks.PlayerJournal.Monitor
                 // TODO: this appears to be required to avoid collection being modified during enumeration
                 // Unclear as to how this can happen
                 var readers = _monitoredFiles.Values.ToList();
-                var entriesFound = RescanFiles(readers, LastRead).ToList();
+                var entriesFound = RescanFiles(readers, lastRead.GetValueOrDefault(DateTime.MinValue)).ToList();
                 ProcessEntries(entriesFound, BatchMode.Ongoing);
             }
         }
 
         public void Start()
         {
+            var firstRun = !_journalMonitorState.LastRead.HasValue;
+            var lastRead = _journalMonitorState.LastRead.GetValueOrDefault(DateTime.MinValue);
+
             // Scan any files created since last run
 
-            var allFilesInFolder = EnumerateFolder(_config.JournalFolder, _config.JournalPattern);
-            var recentFilesInFolder = FilterFilesByDate(allFilesInFolder, LastRead).ToList();
-            
+            var allFilesInFolder = EnumerateFolder(_journalFolder, _journalPattern);
+            var recentFilesInFolder = FilterFilesByDate(allFilesInFolder, lastRead).ToList();
+
             if (recentFilesInFolder.Any())
             {
-                var entriesFound = RescanFiles(recentFilesInFolder, LastRead).ToList();
-                ProcessEntries(entriesFound, LastRead.HasValue ? BatchMode.Catchup : BatchMode.FirstRun);
+                var entriesFound = RescanFiles(recentFilesInFolder, lastRead).ToList();
+                ProcessEntries(entriesFound, firstRun ? BatchMode.FirstRun : BatchMode.Catchup);
 
                 // If we've found some files changed since last run, the last one *might* be active.
                 StartMonitoringFile(recentFilesInFolder.Last());
             }
 
-            StartMonitoringFile(Path.Combine(_config.StatusPath));
+            StartMonitoringFile(Path.Combine(_journalFolder, _statusPath));
 
             _journalWatcher.EnableRaisingEvents = true;
+            _triggerUpdate.Enabled = true;
             _started = true;
         }
 
         public void Stop()
         {
             _started = false;
+            _triggerUpdate.Enabled = false;
             _journalWatcher.EnableRaisingEvents = false;
+
+            var lastRead = _journalMonitorState.LastRead;
+
             // One last scan of live files
             List<IJournalEntry> entriesFound;
             lock (_monitoredFiles)
             {
-                entriesFound = RescanFiles(_monitoredFiles.Values, LastRead).ToList();
+                entriesFound = RescanFiles(_monitoredFiles.Values, lastRead).ToList();
             }
             ProcessEntries(entriesFound, BatchMode.Ongoing);
             _triggerUpdate.Dispose();
@@ -108,7 +124,7 @@ namespace Howatworks.PlayerJournal.Monitor
             if (!journalEntries.Any()) return;
 
             JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(journalEntries, mode));
-            LastRead = journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp;
+            _journalMonitorState.LastRead = journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp;
         }
 
         private static IEnumerable<string> EnumerateFolder(string path, string pattern)
@@ -116,7 +132,7 @@ namespace Howatworks.PlayerJournal.Monitor
             return Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
         }
 
-        private IEnumerable<IJournalReader> FilterFilesByDate(IEnumerable<string> filePaths, DateTimeOffset? since)
+        private IEnumerable<IJournalReader> FilterFilesByDate(IEnumerable<string> filePaths, DateTimeOffset since)
         {
             return filePaths.Select(filePath =>
                 {
@@ -128,7 +144,7 @@ namespace Howatworks.PlayerJournal.Monitor
                     // monitoring it, and we'll read it then.
                     //if (!info.IsValid) return null;
 
-                    return reader.LastEntryTimeStamp > since.GetValueOrDefault(DateTime.MinValue) ? reader : null;
+                    return reader.LastEntryTimeStamp.GetValueOrDefault(DateTimeOffset.MaxValue) > since ? reader : null;
                 })
                 .Where(f => f != null)
                 .OrderBy(f => f.LastEntryTimeStamp);
@@ -211,8 +227,6 @@ namespace Howatworks.PlayerJournal.Monitor
 
 
         private bool _disposed;
- 
-
 
         public void Dispose()
         {
@@ -234,7 +248,7 @@ namespace Howatworks.PlayerJournal.Monitor
 
         public DateTime? LastUpdated()
         {
-            return LastRead;
+            return _journalMonitorState.LastRead;
         }
     }
 }

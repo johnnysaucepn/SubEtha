@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 using Autofac;
 using log4net;
+using Microsoft.Extensions.Configuration;
 using Thumb.Core;
 using Thumb.Tray.Properties;
 
@@ -48,9 +51,28 @@ namespace Thumb.Tray
                     : Resources.NotifyIconNeverUpdatedLabel;
             });
 
+            // TODO: In tray, we can use the Win32 add-on package that extends SpecialFolder to retrieve SavedGames directly
+            var defaultJournalFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "..", "Saved Games", "Frontier Developments", "Elite Dangerous"
+            );
+
+            var defaultConfig = new Dictionary<string, string>
+            {
+                ["JournalFolder"] = defaultJournalFolder,
+                ["JournalPattern"] = "Journal.*.log",
+                ["StatusPath"] = "Status.json",
+                ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString()
+            };
+
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(defaultConfig)
+                .AddJsonFile("journalmonitor.json")
+                .Build();
+
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule());
-            builder.RegisterModule(new ThumbTrayModule());
+            builder.RegisterModule(new ThumbTrayModule(config));
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
@@ -71,7 +93,7 @@ namespace Thumb.Tray
                 }
             }
 
-            
+
         }
 
         private void UpdateProgress(object state)
