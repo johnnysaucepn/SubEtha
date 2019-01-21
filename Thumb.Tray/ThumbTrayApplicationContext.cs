@@ -61,7 +61,7 @@ namespace Thumb.Tray
             {
                 ["JournalFolder"] = defaultJournalFolder,
                 ["JournalPattern"] = "Journal.*.log",
-                ["StatusPath"] = "Status.json",
+                ["StatusFilename"] = "Status.json",
                 ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString()
             };
 

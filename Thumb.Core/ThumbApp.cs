@@ -11,13 +11,13 @@ namespace Thumb.Core
 {
     public class ThumbApp
     {
-        private readonly IJournalMonitor _monitor;
+        private readonly JournalMonitorScheduler _monitor;
 
         [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
         private readonly IJournalMonitorNotifier _notifier;
 
         public ThumbApp(
-            IJournalMonitor monitor,
+            JournalMonitorScheduler monitor,
             IJournalMonitorNotifier notifier,
             ThumbProcessor processor
         )

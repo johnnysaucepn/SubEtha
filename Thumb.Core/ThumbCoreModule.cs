@@ -5,6 +5,7 @@ using Autofac;
 using Howatworks.Configuration;
 using Howatworks.PlayerJournal.Monitor;
 using Howatworks.PlayerJournal.Parser;
+using Microsoft.Extensions.Configuration;
 using Thumb.Plugin;
 
 namespace Thumb.Core
@@ -16,7 +17,7 @@ namespace Thumb.Core
             builder.RegisterType<ThumbApp>().SingleInstance();
             builder.Register(c => new ConfigLoader("config.json")).As<IConfigLoader>().SingleInstance();
             builder.RegisterType<JsonJournalMonitorState>().As<IJournalMonitorState>().SingleInstance();
-            builder.RegisterType<JournalMonitor>().As<IJournalMonitor>().SingleInstance();
+            builder.RegisterType<JournalMonitorScheduler>().AsSelf().SingleInstance();
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
             builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();
             builder.RegisterType<ThumbProcessor>().AsSelf().SingleInstance();

@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using Howatworks.PlayerJournal.Serialization;
 
 namespace Howatworks.PlayerJournal.Monitor
 {
     public interface IJournalMonitor
     {
-        event EventHandler<JournalEntriesParsedEventArgs> JournalEntriesParsed;
         event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
-        void Start();
+        IList<IJournalEntry> Start(bool firstRun, DateTime lastRead);
         void Stop();
-        DateTime? LastUpdated();
+        IList<IJournalEntry> Update(DateTime lastRead);
     }
 }
