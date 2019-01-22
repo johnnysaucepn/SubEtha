@@ -21,10 +21,15 @@ namespace Howatworks.PlayerJournal.Monitor
         public JournalMonitorScheduler(IConfiguration config, IJournalMonitorState journalMonitorState, IJournalReaderFactory readerFactory)
         {
             _journalMonitorState = journalMonitorState;
+
+            var folder = config["JournalFolder"];
+            var pattern = config["JournalPattern"];
+            var status = config["StatusFilename"];
+
             _journalMonitors = new List<IJournalMonitor>
             {
-                new JournalMonitor(config, readerFactory),
-                new StandaloneMonitor(config, readerFactory)
+                new IncrementalJournalMonitor(folder, pattern, readerFactory),
+                new RealTimeJournalMonitor(folder, status, readerFactory)
             };
 
             foreach (var monitor in _journalMonitors)

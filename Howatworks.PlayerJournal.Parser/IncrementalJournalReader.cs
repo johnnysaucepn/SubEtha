@@ -8,9 +8,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Howatworks.PlayerJournal.Parser
 {
-    public class JournalLogReader : IJournalReader
+    public class IncrementalJournalReader : IJournalReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalLogReader));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(IncrementalJournalReader));
 
         private readonly IJournalParser _parser;
         private readonly Lazy<StreamReader> _streamReader;
@@ -18,7 +18,7 @@ namespace Howatworks.PlayerJournal.Parser
         private JournalLogFileInfo FileInfo { get; }
         public DateTimeOffset? LastEntryTimeStamp { get; private set; }
 
-        public JournalLogReader(string filePath, IJournalParser parser)
+        public IncrementalJournalReader(string filePath, IJournalParser parser)
         {
             _parser = parser;
             FilePath = filePath;

@@ -5,13 +5,12 @@ using System.Linq;
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
-using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.PlayerJournal.Monitor
 {
-    public class StandaloneMonitor : IJournalMonitor
+    public class RealTimeJournalMonitor : IJournalMonitor
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(StandaloneMonitor));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeJournalMonitor));
 
         private readonly IJournalReaderFactory _journalReaderFactory;
         private readonly FileSystemWatcher _journalWatcher;
@@ -25,17 +24,15 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private IJournalReader _monitoredFile;
 
-        public StandaloneMonitor(IConfiguration config, IJournalReaderFactory journalReaderFactory)
+        public RealTimeJournalMonitor(string folder, string filename, IJournalReaderFactory journalReaderFactory)
         {
             _journalReaderFactory = journalReaderFactory;
+            _filename = filename;
 
-            // TODO: this makes the config read-only; consider keeping hold of the config object and reacting to config changes
-            var journalFolder = config["JournalFolder"];
-            _filename = config["StatusFilename"];
+            // Safe to add it to the monitored list, even if it doesn't yet exist
+            StartMonitoringFile(Path.Combine(folder, _filename));
 
-            var filePath = Path.Combine(journalFolder, _filename);
-
-            _journalWatcher = new FileSystemWatcher(journalFolder, _filename)
+            _journalWatcher = new FileSystemWatcher(folder, _filename)
             {
                 EnableRaisingEvents = false
             };
@@ -52,23 +49,16 @@ namespace Howatworks.PlayerJournal.Monitor
                 StopMonitoringFile(e.FullPath);
             };
 
-            if (File.Exists(filePath))
-            {
-                StartMonitoringFile(filePath);
-            }
-
         }
 
         public IList<IJournalEntry> Update(DateTime lastRead)
         {
             var entriesFound = new List<IJournalEntry>();
 
-            if (!_started) return entriesFound;
+            if (!_started || _monitoredFile == null) return entriesFound;
 
             lock (_monitoredFile)
             {
-                if (_monitoredFile == null) return entriesFound;
-
                 Log.Debug($"Rescanning {_filename} file...");
 
                 // TODO: this list assignment should be unnecessary
@@ -96,7 +86,6 @@ namespace Howatworks.PlayerJournal.Monitor
             _started = false;
 
             _journalWatcher.EnableRaisingEvents = false;
-
         }
 
         private IEnumerable<IJournalEntry> RescanFile(IJournalReader reader, DateTimeOffset since)
@@ -106,6 +95,7 @@ namespace Howatworks.PlayerJournal.Monitor
 
             if (reader.FileExists)
             {
+                // Only expect one entry per standalone file, but no harm in checking
                 foreach (var entry in reader.ReadAll(since))
                 {
                     count++;
@@ -130,7 +120,7 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private void StartMonitoringFile(string path)
         {
-            _monitoredFile = _journalReaderFactory.Create(path);
+            _monitoredFile = _journalReaderFactory.CreateRealTimeJournalReader(path);
             JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(_monitoredFile.FilePath));
             //TODO: should check validity of IJournalReader before adding it
         }

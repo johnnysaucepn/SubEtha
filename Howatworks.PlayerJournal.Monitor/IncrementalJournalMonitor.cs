@@ -6,14 +6,12 @@ using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Other;
 using log4net;
-using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.PlayerJournal.Monitor
 {
-    public class JournalMonitor :  IJournalMonitor
+    public class IncrementalJournalMonitor :  IJournalMonitor
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalMonitor));
-
+        private static readonly ILog Log = LogManager.GetLogger(typeof(IncrementalJournalMonitor));
 
         private readonly IJournalReaderFactory _journalReaderFactory;
         private readonly FileSystemWatcher _journalWatcher;
@@ -28,13 +26,13 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private readonly Dictionary<string, IJournalReader> _monitoredFiles = new Dictionary<string, IJournalReader>();
 
-        public JournalMonitor(IConfiguration config, IJournalReaderFactory journalReaderFactory)
+        public IncrementalJournalMonitor(string folder, string pattern, IJournalReaderFactory journalReaderFactory)
         {
             _journalReaderFactory = journalReaderFactory;
 
             // TODO: this makes the config read-only; consider keeping hold of the config object and reacting to config changes
-            _journalFolder = config["JournalFolder"];
-            _journalPattern = config["JournalPattern"];
+            _journalFolder = folder;
+            _journalPattern = pattern;
 
             _journalWatcher = new FileSystemWatcher(_journalFolder, _journalPattern)
             {
@@ -59,7 +57,6 @@ namespace Howatworks.PlayerJournal.Monitor
             };
 
         }
-
 
         public IList<IJournalEntry> Update(DateTime lastRead)
         {
@@ -112,8 +109,6 @@ namespace Howatworks.PlayerJournal.Monitor
 
         }
 
-
-
         private static IEnumerable<string> EnumerateFolder(string path, string pattern)
         {
             return Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
@@ -123,7 +118,7 @@ namespace Howatworks.PlayerJournal.Monitor
         {
             return filePaths.Select(filePath =>
                 {
-                    var reader = _journalReaderFactory.Create(filePath);
+                    var reader = _journalReaderFactory.CreateIncrementalJournalReader(filePath);
                     //var info = reader.FileInfo;
 
                     // If no header entry found, log is not a log file (yet).
@@ -182,7 +177,7 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private void StartMonitoringFile(string path)
         {
-            StartMonitoringFile(_journalReaderFactory.Create(path));
+            StartMonitoringFile(_journalReaderFactory.CreateIncrementalJournalReader(path));
             //TODO: should check validity of IJournalReader before adding it
         }
 

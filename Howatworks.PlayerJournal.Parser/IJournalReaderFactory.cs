@@ -2,6 +2,7 @@
 {
     public interface IJournalReaderFactory
     {
-        IJournalReader Create(string filePath);
+        IncrementalJournalReader CreateIncrementalJournalReader(string filePath);
+        RealTimeJournalReader CreateRealTimeJournalReader(string filePath);
     }
 }

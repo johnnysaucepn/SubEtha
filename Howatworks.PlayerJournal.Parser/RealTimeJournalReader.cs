@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Howatworks.PlayerJournal.Parser
 {
-    public class JournalStatusReader : IJournalReader
+    public class RealTimeJournalReader : IJournalReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalStatusReader));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeJournalReader));
 
         private readonly IJournalParser _parser;
         public DateTimeOffset? LastEntryTimeStamp { get; private set; }
         public string FilePath { get; }
 
-        public JournalStatusReader(string filePath, IJournalParser parser)
+        public RealTimeJournalReader(string filePath, IJournalParser parser)
         {
             FilePath = filePath;
             _parser = parser;
