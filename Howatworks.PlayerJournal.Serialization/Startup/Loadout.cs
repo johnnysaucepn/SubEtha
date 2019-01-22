@@ -33,6 +33,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
             public int Level { get; set; }
             public decimal Quality { get; set; }
             public string ExperimentalEffect { get; set; } // Note: name
+            public string ExperimentalEffect_Localised { get; set; }
 
             public List<ModuleItemEngineeringModifierItem> Modifiers { get; set; } // WARNING: docs say Modifications
         }

@@ -27,12 +27,20 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
             public decimal Metal { get; set; }
         }
 
+        public class AtmosphereCompositionItem
+        {
+            // WARNING: content is undocumented
+            public string Name { get; set; }
+            public decimal Percent { get; set; }
+        }
+
         #region Common to all planets/stars/moons
         public string ScanType { get; set; } // TODO: consider enum  Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan
         public string BodyName { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int BodyID { get; set; }
         public decimal DistanceFromArrivalLS { get; set; }
+        public decimal Radius { get; set; } // WARNING: docs say star-only, definitely appears for planets 
         public decimal SurfaceTemperature { get; set; }
         public List<RingItem> Rings { get; set; }
         #endregion
@@ -41,7 +49,6 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
         #region Stars only
         public string StarType { get; set; }
         public decimal? StellarMass { get; set; }
-        public decimal? Radius { get; set; }
         public decimal? AbsoluteMagnitude { get; set; }
         public decimal? RotationalPeriod { get; set; }
         public decimal? Age_MY { get; set; }
@@ -50,14 +57,16 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
 
         #region Planets and Moons only
         public List<dynamic> Parents { get; set; } // TODO: spec suggests that key name in each pair varies
-        public bool? TidalLock { get; set; } // TODO: check data type, specs say int, sample says bool
+        public bool? TidalLock { get; set; } // WARNING: specs say int
         public string TerraformState { get; set; } // TODO: enum, Terraformable, Terraforming, Terraformed, or null
         public string PlanetClass { get; set; } // TODO: See 13.3
         public string Atmosphere { get; set;  } // TODO: See 13.4
         public string AtmosphereType { get; set; }
+        public List<AtmosphereCompositionItem> AtmosphereComposition { get; set; }
+
         public string Volcanism { get; set; } // TODO: See 13.5
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public decimal? MassEM { get; set; } // WARNING: not in docs
+        public decimal? MassEM { get; set; } // WARNING: not in docs, in sample
         public decimal? SurfaceGravity { get; set; }
         public decimal? SurfacePressure { get; set; }
         public bool? Landable { get; set; }

@@ -8,6 +8,7 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
         public class CargoItem
         {
             public string Name { get; set; }
+            public string Name_Localised { get; set; }
             public int Count { get; set; }
             public int Stolen { get; set; } // Note: how many of these items are stolen?
             [SuppressMessage("ReSharper", "InconsistentNaming")]

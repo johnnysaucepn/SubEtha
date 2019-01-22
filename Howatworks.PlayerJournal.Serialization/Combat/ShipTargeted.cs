@@ -6,17 +6,18 @@ using System.Text;
 namespace Howatworks.PlayerJournal.Serialization.Combat
 {
     // Note: no sample
-    [SuppressMessage("ReSharper", "IdentifierTypo")]
-    public class ShipTargetted : JournalEntryBase
+    public class ShipTargeted : JournalEntryBase // WARNING: named ShipTargetted in docs
     {
         public bool TargetLocked { get; set; }
 
         // If target locked:
         public string Ship { get; set; } // Note: ship name
+        public string Ship_Localised { get; set; }
         public int? ScanStage { get; set; } // TODO: enumerate these?
 
         // If ScanStage >=1
         public string PilotName { get; set; } // Note: commander name
+        public string PilotName_Localised { get; set; }
         public string PilotRank { get; set; } // Note: rank name, not enum
 
         // If ScanStage >=2

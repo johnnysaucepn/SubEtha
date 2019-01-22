@@ -5,9 +5,11 @@ namespace Howatworks.PlayerJournal.Serialization.Startup
     public class LoadGame : JournalEntryBase
     {
         public string Commander { get; set; } // NOTE: Commander name
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public string FID { get; set; }     // NOTE: Player ID
         public bool Horizons { get; set; }
         public string Ship { get; set; } // NOTE: ship type
+        public string Ship_Localised { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int ShipID { get; set; }
         public bool? StartLanded { get; set; }

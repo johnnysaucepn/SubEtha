@@ -7,6 +7,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long MarketID { get; set; }
         public string ShipType { get; set; }
+        public string ShipType_Localised { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int ShipID { get; set; }
         public string StoreOldShip { get; set; }

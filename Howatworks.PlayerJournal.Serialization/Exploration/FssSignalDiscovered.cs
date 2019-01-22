@@ -11,8 +11,10 @@ namespace Howatworks.PlayerJournal.Serialization.Exploration
         public string SignalName { get; set; }
         public string SignalName_Localised { get; set; }
         public string SpawningState { get; set; } // TODO: check data type - enum?
+        public string SpawningState_Localised { get; set; }
         public string SpawningFaction { get; set; }
-        public int? TimeRemaining { get; set; } // TODO: check data type - in seconds
+        public string SpawningFaction_Localised { get; set; }
+        public decimal? TimeRemaining { get; set; } // TODO: in seconds
         public long SystemAddress { get; set; }
         public int? ThreatLevel { get; set; }
         public string USSType { get; set; } // TODO: check data type - enum? See USSDrop

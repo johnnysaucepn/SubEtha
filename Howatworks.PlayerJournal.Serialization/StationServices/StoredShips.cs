@@ -12,6 +12,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public int ShipID { get; set; }
             public string ShipType { get; set; }
+            public string ShipType_Localised { get; set; }
             public string Name { get; set; }
             public long Value { get; set; }
             public bool Hot { get; set; }
@@ -22,6 +23,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public int ShipID { get; set; }
             public string ShipType { get; set; }
+            public string ShipType_Localised { get; set; }
             public string Name { get; set; }
             public long Value { get; set; }
             public bool Hot { get; set; }
@@ -30,7 +32,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public long? ShipMarketID { get; set; }
             public long? TransferPrice { get; set; }
-            public string TransferType { get; set; } // TODO: check data type, not in sample
+            public int TransferTime { get; set; } // WARNING: docs define TransferType, not found in sample or live, presume typo?
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]

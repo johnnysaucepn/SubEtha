@@ -18,9 +18,9 @@ namespace Howatworks.PlayerJournal.Serialization.Travel
             public List<FactionItemStateItem> PendingStates { get; set; }
             public List<FactionItemStateItem> RecoveringStates { get; set; } // TODO: check spelling?
             public List<FactionItemStateItem> ActiveStates { get; set; } // TODO: No trend value, check this is okay
-            public bool SquadronFaction { get; set; }
-            public bool HappiestSystem { get; set; }
-            public bool HomeSystem { get; set; }
+            public bool? SquadronFaction { get; set; }
+            public bool? HappiestSystem { get; set; }
+            public bool? HomeSystem { get; set; }
         }
 
         public class FactionItemStateItem
