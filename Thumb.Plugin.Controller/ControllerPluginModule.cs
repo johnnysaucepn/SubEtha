@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Howatworks.Configuration;
 
 namespace Thumb.Plugin.Controller
 {
@@ -7,12 +6,7 @@ namespace Thumb.Plugin.Controller
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c =>
-            {
-                var reader = c.Resolve<IConfigLoader>();
-                var notifier = c.Resolve<IJournalMonitorNotifier>();
-                return new ControllerJournalProcessorPlugin(reader.GetConfigurationSection("Thumb.Shared"), reader.GetConfigurationSection("Thumb.Plugin.SubEtha"), notifier);
-            }).As<IJournalProcessorPlugin>().SingleInstance();
+            builder.RegisterType<ControllerJournalProcessorPlugin>().As<IJournalProcessorPlugin>().SingleInstance();
         }
         
     }

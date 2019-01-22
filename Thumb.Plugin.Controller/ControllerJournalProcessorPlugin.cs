@@ -10,7 +10,6 @@ namespace Thumb.Plugin.Controller
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControllerJournalProcessorPlugin));
 
-        private readonly IConfigReader _pluginConfig;
         private readonly ControllerJournalProcessor _processor;
         public FlushBehaviour FlushBehaviour { get; set; }
         public CatchupBehaviour FirstRunBehaviour { get; set; }
@@ -19,9 +18,8 @@ namespace Thumb.Plugin.Controller
         public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
-        public ControllerJournalProcessorPlugin(IConfigReader sharedConfig, IConfigReader pluginConfig, IJournalMonitorNotifier notifier)
+        public ControllerJournalProcessorPlugin(IJournalMonitorNotifier notifier)
         {
-            _pluginConfig = pluginConfig;
             _processor = new ControllerJournalProcessor(notifier);
             FlushBehaviour = FlushBehaviour.OnEveryBatch;
         }

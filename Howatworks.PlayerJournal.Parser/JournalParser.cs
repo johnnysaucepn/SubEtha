@@ -34,7 +34,7 @@ namespace Howatworks.PlayerJournal.Parser
             MissingMemberHandling = MissingMemberHandling.Error,
             NullValueHandling = NullValueHandling.Ignore,
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-            MaxDepth = 5
+            MaxDepth = 7
 
         };
 

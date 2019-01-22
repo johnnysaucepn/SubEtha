@@ -71,8 +71,8 @@ namespace Thumb.Tray
                 .Build();
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ThumbCoreModule());
-            builder.RegisterModule(new ThumbTrayModule(config));
+            builder.RegisterModule(new ThumbCoreModule(config));
+            builder.RegisterModule(new ThumbTrayModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())

@@ -31,7 +31,7 @@ namespace Howatworks.PlayerJournal.Parser
  
         public bool FileExists => File.Exists(FilePath);
 
-        public IEnumerable<IJournalEntry> ReadAll(DateTimeOffset? since)
+        public IEnumerable<IJournalEntry> ReadAll(DateTimeOffset since)
         {
             // Always get a new stream reader
             var streamReader = GetStreamReader(FilePath);
@@ -46,7 +46,7 @@ namespace Howatworks.PlayerJournal.Parser
                 var json = JObject.Parse(line);
                 var timestamp = json.Value<DateTime>("timestamp");
 
-                if (timestamp <= since.GetValueOrDefault(DateTime.MinValue)) continue;
+                if (timestamp <= since) continue;
 
                 var eventType = json.Value<string>("event");
 

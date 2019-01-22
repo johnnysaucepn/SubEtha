@@ -137,12 +137,12 @@ namespace Howatworks.PlayerJournal.Monitor
                 .OrderBy(f => f.LastEntryTimeStamp);
         }
 
-        private IEnumerable<IJournalEntry> RescanFiles(IEnumerable<IJournalReader> readers, DateTimeOffset? since)
+        private IEnumerable<IJournalEntry> RescanFiles(IEnumerable<IJournalReader> readers, DateTimeOffset since)
         {
             return readers.SelectMany(reader => RescanFile(reader, since));
         }
 
-        private IEnumerable<IJournalEntry> RescanFile(IJournalReader reader, DateTimeOffset? since)
+        private IEnumerable<IJournalEntry> RescanFile(IJournalReader reader, DateTimeOffset since)
         {
             //var info = reader.FileInfo;
 
