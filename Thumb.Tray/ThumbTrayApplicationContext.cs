@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Autofac;
 using log4net;
 using Microsoft.Extensions.Configuration;
+using Microsoft.WindowsAPICodePack.Shell;
 using Thumb.Core;
 using Thumb.Tray.Properties;
 
@@ -51,11 +52,8 @@ namespace Thumb.Tray
                     : Resources.NotifyIconNeverUpdatedLabel;
             });
 
-            // TODO: In tray, we can use the Win32 add-on package that extends SpecialFolder to retrieve SavedGames directly
-            var defaultJournalFolder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "..", "Saved Games", "Frontier Developments", "Elite Dangerous"
-            );
+            // TODO: In tray, we can use the Win32 package that exposes KnownFolders to retrieve SavedGames directly
+            var defaultJournalFolder = Path.Combine(KnownFolders.SavedGames.Path, "Frontier Developments", "Elite Dangerous");
 
             var defaultConfig = new Dictionary<string, string>
             {
