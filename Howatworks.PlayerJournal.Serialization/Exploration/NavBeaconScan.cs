@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Howatworks.PlayerJournal.Serialization.Exploration
+﻿namespace Howatworks.PlayerJournal.Serialization.Exploration
 {
     public class NavBeaconScan : JournalEntryBase
     {

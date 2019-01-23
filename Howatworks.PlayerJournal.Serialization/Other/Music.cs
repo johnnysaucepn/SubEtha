@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Howatworks.PlayerJournal.Serialization.Other
+﻿namespace Howatworks.PlayerJournal.Serialization.Other
 {
     public class Music : JournalEntryBase
     {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Howatworks.Configuration;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
 using Newtonsoft.Json;

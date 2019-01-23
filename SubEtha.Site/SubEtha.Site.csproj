@@ -294,12 +294,6 @@
     <Content Include="Content\SubEtha.js" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Configuration\Howatworks.Configuration.csproj">
-      <Project>{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}</Project>
-      <Name>Howatworks.Configuration</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Autofac">
       <Version>4.8.1</Version>
     </PackageReference>
@@ -308,6 +302,15 @@
     </PackageReference>
     <PackageReference Include="log4net">
       <Version>2.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration">
+      <Version>2.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <Version>2.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json">
+      <Version>2.2.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Owin.Host.HttpListener">
       <Version>4.0.0</Version>

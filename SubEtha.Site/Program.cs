@@ -2,9 +2,9 @@
 using System.IO;
 using System.Reflection;
 using Autofac;
-using Howatworks.Configuration;
 using log4net;
 using log4net.Config;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Owin.Hosting;
 using Owin;
 
@@ -16,6 +16,11 @@ namespace SubEtha.Site
 
         private static void Main()
         {
+            var config = new ConfigurationBuilder()
+                //.AddInMemoryCollection(defaultConfig)
+                .AddJsonFile("config.json")
+                .Build();
+
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var workingFolder = Path.Combine(appDataFolder, "Howatworks", "SubEtha");
             var logFolder = Path.Combine(workingFolder, "Logs");
@@ -26,12 +31,11 @@ namespace SubEtha.Site
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new SiteAutofacModule());
+            builder.RegisterModule(new SiteAutofacModule(config));
             var container = builder.Build();
 
-            var configLoader = container.Resolve<IConfigLoader>();
-            var section = configLoader.GetConfigurationSection("SubEtha.Site");
-            var url = section.Get<string>("SiteBinding") ?? "http://+:8984/SubEtha/Site";
+            var section = config.GetSection("SubEtha.Site");
+            var url = section["SiteBinding"] ?? "http://+:8984/SubEtha/Site";
 
             // Start OWIN host
             using (WebApp.Start(new StartOptions(url), app =>
@@ -42,8 +46,8 @@ namespace SubEtha.Site
 
                 app
                     .UseAutofacMiddleware(container)
-                    .UseNancy(config => {
-                        config.Bootstrapper = new SubEthaBootstrapper();
+                    .UseNancy(c => {
+                        c.Bootstrapper = new SubEthaBootstrapper();
                     });
             }))
             {

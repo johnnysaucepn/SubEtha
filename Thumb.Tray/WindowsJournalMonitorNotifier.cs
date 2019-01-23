@@ -1,5 +1,4 @@
 ﻿using System.Media;
-using Thumb.Core;
 using Thumb.Plugin;
 
 namespace Thumb.Tray

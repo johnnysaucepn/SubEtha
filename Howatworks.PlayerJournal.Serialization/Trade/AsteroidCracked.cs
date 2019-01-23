@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Howatworks.PlayerJournal.Serialization.Trade
+﻿namespace Howatworks.PlayerJournal.Serialization.Trade
 {
     public class AsteroidCracked : JournalEntryBase
     {

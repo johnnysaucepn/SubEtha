@@ -1,7 +1,7 @@
 ﻿using Autofac;
-using Howatworks.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SubEtha.Core.Entities;
 using SubEtha.Core.Repositories;
@@ -21,17 +21,22 @@ namespace SubEtha.Service
 
         public static void ConfigureContainer(ContainerBuilder builder)
         {
+            var config = new ConfigurationBuilder()
+                //.AddInMemoryCollection(defaultConfig)
+                .AddJsonFile("config.json")
+                .Build();
+
             builder.RegisterModule(new RepositoryModule());
             builder.RegisterModule(new InMemoryModule());
             //builder.RegisterModule(new MongoModule());
-            builder.RegisterModule(new ServiceModule());
+            builder.RegisterModule(new ServiceModule(config));
             //builderRegisterApiControllers(typeof(ServiceModule).Assembly);
 
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IGroupRepository groupRepoz, IConfigLoader configLoader)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IGroupRepository groupRepoz, IConfiguration config)
         {
             //var groupRepoz = container.Resolve<IGroupRepository>();
             if (groupRepoz.GetDefaultGroup() == null)
@@ -39,8 +44,8 @@ namespace SubEtha.Service
                 groupRepoz.Add(new Group(GroupRepository.DefaultGroupName));
             }
 
-            var section = configLoader.GetConfigurationSection("SubEtha.Service");
-            var url = section.Get<string>("ServiceBinding") ?? "http://+:8984/SubEtha/Service";
+            var section = config.GetSection("SubEtha.Service");
+            var url = section["ServiceBinding"] ?? "http://+:8984/SubEtha/Service";
 
             if (env.IsDevelopment())
             {

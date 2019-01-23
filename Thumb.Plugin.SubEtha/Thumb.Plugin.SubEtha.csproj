@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -8,10 +8,10 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Configuration\Howatworks.Configuration.csproj" />
     <ProjectReference Include="..\SubEtha.Domain\SubEtha.Domain.csproj" />
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
   </ItemGroup>

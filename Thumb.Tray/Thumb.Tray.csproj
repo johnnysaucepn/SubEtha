@@ -105,10 +105,6 @@
     <None Include="Resources\ThumbIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Configuration\Howatworks.Configuration.csproj">
-      <Project>{d7c6a28a-60ec-428a-baf9-2ce232bdb254}</Project>
-      <Name>Howatworks.Configuration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Thumb.Core\Thumb.Core.csproj">
       <Project>{0E35222F-41E9-4F59-9BDD-96DB9696AE08}</Project>
       <Name>Thumb.Core</Name>
@@ -127,6 +123,12 @@
     </PackageReference>
     <PackageReference Include="log4net">
       <Version>2.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration">
+      <Version>2.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <Version>2.2.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json">
       <Version>2.2.0</Version>

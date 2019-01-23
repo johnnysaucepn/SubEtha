@@ -1,5 +1,4 @@
-﻿using Thumb.Core;
-using Thumb.Plugin;
+﻿using Thumb.Plugin;
 
 namespace Thumb.Console
 {

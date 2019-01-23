@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Howatworks.Configuration;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
@@ -12,7 +12,7 @@ namespace Thumb.Plugin.SubEtha
 
         private readonly IList<IJournalProcessor> _childProcessors = new List<IJournalProcessor>();
 
-        public SubEthaJournalProcessor(IConfigReader config, string user, string gameVersion)
+        public SubEthaJournalProcessor(IConfiguration config, string user, string gameVersion)
         {
             var client = new HttpUploadClient(config);
             _childProcessors.Add(new LocationManager(new LocationHttpUploader(user, gameVersion, client)));

@@ -1,9 +1,6 @@
-﻿using System;
-using Howatworks.PlayerJournal.Parser;
+﻿using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Status;
-using Howatworks.PlayerJournal.Serialization.Travel;
-using Newtonsoft.Json;
 
 namespace Thumb.Plugin.Controller
 {

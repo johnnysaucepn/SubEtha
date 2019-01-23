@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Howatworks.PlayerJournal.Serialization.Travel
+﻿namespace Howatworks.PlayerJournal.Serialization.Travel
 {
     [JournalName("FSDTarget")]
     public class FsdTarget : JournalEntryBase

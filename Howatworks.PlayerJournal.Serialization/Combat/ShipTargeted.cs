@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-
-namespace Howatworks.PlayerJournal.Serialization.Combat
+﻿namespace Howatworks.PlayerJournal.Serialization.Combat
 {
     // Note: no sample
     public class ShipTargeted : JournalEntryBase // WARNING: named ShipTargetted in docs

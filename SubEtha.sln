@@ -21,11 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.ps1 = build.ps1
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{B1D88AC6-2679-456B-B477-C3A204582B64}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.PlayerJournal.Parser", "Howatworks.PlayerJournal.Parser\Howatworks.PlayerJournal.Parser.csproj", "{F0ED9E22-04EE-49C6-98C9-BFC95FB42209}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Configuration", "Howatworks.Configuration\Howatworks.Configuration.csproj", "{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubEtha.Core", "SubEtha.Core\SubEtha.Core.csproj", "{D45C6987-490D-4C29-B3D1-BB3562795C10}"
 EndProject
@@ -47,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.PlayerJournal.Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.PlayerJournal.Monitor", "Howatworks.PlayerJournal.Monitor\Howatworks.PlayerJournal.Monitor.csproj", "{4D2E7C4C-B0EB-4C95-A8FC-48023196594A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thumb.Plugin.Controller", "Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj", "{B55FFA05-6211-4060-B5D3-73974049D8A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thumb.Plugin.Controller", "Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj", "{B55FFA05-6211-4060-B5D3-73974049D8A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,14 +73,6 @@ Global
 		{F0ED9E22-04EE-49C6-98C9-BFC95FB42209}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0ED9E22-04EE-49C6-98C9-BFC95FB42209}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0ED9E22-04EE-49C6-98C9-BFC95FB42209}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.CoreDebug|Any CPU.ActiveCfg = CoreDebug|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.CoreDebug|Any CPU.Build.0 = CoreDebug|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.CoreRelease|Any CPU.ActiveCfg = CoreRelease|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.CoreRelease|Any CPU.Build.0 = CoreRelease|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D45C6987-490D-4C29-B3D1-BB3562795C10}.CoreDebug|Any CPU.ActiveCfg = CoreDebug|Any CPU
 		{D45C6987-490D-4C29-B3D1-BB3562795C10}.CoreDebug|Any CPU.Build.0 = CoreDebug|Any CPU
 		{D45C6987-490D-4C29-B3D1-BB3562795C10}.CoreRelease|Any CPU.ActiveCfg = CoreRelease|Any CPU
@@ -182,7 +170,6 @@ Global
 		{F6627F39-E61E-42C7-98C9-56B1B32FA439} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}
 		{77FFDC79-D0F3-4F8F-9527-713C780A9FEC} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}
 		{F0ED9E22-04EE-49C6-98C9-BFC95FB42209} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}
-		{D7C6A28A-60EC-428A-BAF9-2CE232BDB254} = {B1D88AC6-2679-456B-B477-C3A204582B64}
 		{D45C6987-490D-4C29-B3D1-BB3562795C10} = {7F6A6246-D98E-484F-AE12-351FB37863FC}
 		{2C3ADBF2-778B-4CAA-880E-ACF45565615B} = {7F6A6246-D98E-484F-AE12-351FB37863FC}
 		{ED2E180F-82DF-4F5D-B4DE-6B24140C6B85} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}

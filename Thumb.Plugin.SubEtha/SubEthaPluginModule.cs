@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Howatworks.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Thumb.Plugin.SubEtha
 {
@@ -9,12 +9,12 @@ namespace Thumb.Plugin.SubEtha
         {
             builder.Register(c =>
             {
-                var reader = c.Resolve<IConfigLoader>();
-                return new SubEthaJournalProcessorPlugin(reader.GetConfigurationSection("Thumb.Shared"), reader.GetConfigurationSection("Thumb.Plugin.SubEtha"));
+                var reader = c.Resolve<IConfiguration>();
+                return new SubEthaJournalProcessorPlugin(reader.GetSection("Thumb.Shared"), reader.GetSection("Thumb.Plugin.SubEtha"));
             }).As<IJournalProcessorPlugin>().SingleInstance();
 
             //builder.Register<HttpUploadClient>().As<IUploader<>>().AsSingleInstance();
         }
-        
+
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Howatworks.PlayerJournal.Serialization.Powerplay
+﻿namespace Howatworks.PlayerJournal.Serialization.Powerplay
 {
     public class PowerplayVote : JournalEntryBase
     {

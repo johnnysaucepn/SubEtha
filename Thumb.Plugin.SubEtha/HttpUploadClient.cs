@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
-using Howatworks.Configuration;
 using log4net;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SubEtha.Domain;
 
@@ -15,11 +15,11 @@ namespace Thumb.Plugin.SubEtha
 
         private readonly HttpClient _client;
 
-        public HttpUploadClient(IConfigReader configReader)
+        public HttpUploadClient(IConfiguration config)
         {
             _client = new HttpClient();
-            
-            BaseUri = new Uri(configReader.Get<string>("ServiceUri"));
+
+            BaseUri = new Uri(config["ServiceUri"]);
         }
 
         public void Upload(Uri uri, IState state)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Howatworks.PlayerJournal.Serialization.Startup
+﻿namespace Howatworks.PlayerJournal.Serialization.Startup
 {
     public class Commander : JournalEntryBase
     {

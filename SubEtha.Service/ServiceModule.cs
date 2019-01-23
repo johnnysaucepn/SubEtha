@@ -1,18 +1,21 @@
-﻿using System.IO;
-using System.Reflection;
-using Autofac;
-using Howatworks.Configuration;
+﻿using Autofac;
+using Microsoft.Extensions.Configuration;
 using Module = Autofac.Module;
 
 namespace SubEtha.Service
 {
     public class ServiceModule : Module
     {
+        private readonly IConfiguration _config;
+
+        public ServiceModule(IConfiguration config)
+        {
+            _config = config;
+        }
+
         protected override void Load(ContainerBuilder builder)
         {
-            var appFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            builder.Register(c => new ConfigLoader(Path.Combine(appFolder,"config.json")))
-                .As<IConfigLoader>().SingleInstance();
+            builder.Register(c => _config).As<IConfiguration>().SingleInstance();
         }
 
     }

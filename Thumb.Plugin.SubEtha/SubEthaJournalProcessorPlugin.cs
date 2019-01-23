@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Howatworks.Configuration;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
@@ -11,20 +11,20 @@ namespace Thumb.Plugin.SubEtha
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SubEthaJournalProcessorPlugin));
 
-        private readonly IConfigReader _pluginConfig;
+        private readonly IConfiguration _pluginConfig;
         private readonly string _user;
         public FlushBehaviour FlushBehaviour { get; set; }
         public CatchupBehaviour FirstRunBehaviour { get; set; }
         public CatchupBehaviour CatchupBehaviour { get; set; }
         private readonly IDictionary<string, IJournalProcessor> _processors = new Dictionary<string, IJournalProcessor>();
-        
+
         public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
-        public SubEthaJournalProcessorPlugin(IConfigReader sharedConfig, IConfigReader pluginConfig)
+        public SubEthaJournalProcessorPlugin(IConfiguration sharedConfig, IConfiguration pluginConfig)
         {
-            _user = sharedConfig.Get<string>("User");
-            _pluginConfig = pluginConfig;           
+            _user = sharedConfig["User"];
+            _pluginConfig = pluginConfig;
         }
 
         public void Apply(IJournalEntry journalEntry)
