@@ -21,24 +21,22 @@ namespace Howatworks.PlayerJournal.Parser
             _parser = parser;
         }
 
-        private static StreamReader GetStreamReader(string filePath)
+        private StreamReader GetStreamReader()
         {
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return new StreamReader(fileStream);
         }
 
- 
         public bool FileExists => File.Exists(FilePath);
 
         public IEnumerable<IJournalEntry> ReadAll(DateTimeOffset since)
         {
             // Always get a new stream reader
-            var streamReader = GetStreamReader(FilePath);
-            
+            var streamReader = GetStreamReader();
+
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
-                Log.Debug(line);
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 // TODO: beef up error handling here, what if line is not a parseable event?
@@ -47,6 +45,7 @@ namespace Howatworks.PlayerJournal.Parser
 
                 if (timestamp <= since) continue;
 
+                Log.Debug(line);
                 var eventType = json.Value<string>("event");
 
                 var journalEntry = _parser.Parse(eventType, line);

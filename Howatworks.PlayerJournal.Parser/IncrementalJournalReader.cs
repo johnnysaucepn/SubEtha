@@ -22,27 +22,27 @@ namespace Howatworks.PlayerJournal.Parser
         {
             _parser = parser;
             FilePath = filePath;
-            FileInfo = ReadFileInfo(filePath);
-            _streamReader = new Lazy<StreamReader>(() => GetStreamReader(filePath));
+            FileInfo = ReadFileInfo();
+            _streamReader = new Lazy<StreamReader>(GetStreamReader);
         }
 
-        private StreamReader GetStreamReader(string filePath)
+        private StreamReader GetStreamReader()
         {
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return new StreamReader(fileStream);
         }
 
         public bool FileExists => File.Exists(FileInfo.Path);
 
-        private JournalLogFileInfo ReadFileInfo(string filePath)
+        private JournalLogFileInfo ReadFileInfo()
         {
             FileHeader fileHeader = null;
-            var info = new JournalLogFileInfo(filePath);
+            var info = new JournalLogFileInfo(FilePath);
             DateTime? lastEntry = null;
 
             try
             {
-                var streamReader = GetStreamReader(filePath);
+                var streamReader = GetStreamReader();
 
                 // FileHeader *should* be the first line in the file, but at least try the first 5
                 var tolerance = 5;
@@ -74,7 +74,7 @@ namespace Howatworks.PlayerJournal.Parser
 
                 if (fileHeader != null)
                 {
-                    info = new JournalLogFileInfo(filePath, fileHeader.GameVersion, fileHeader.Timestamp);
+                    info = new JournalLogFileInfo(FilePath, fileHeader.GameVersion, fileHeader.Timestamp);
                 }
             }
             catch (FileNotFoundException e)
@@ -83,7 +83,7 @@ namespace Howatworks.PlayerJournal.Parser
             }
             catch (IOException e)
             {
-                Log.Error($"Could not read file {filePath} - {e.Message}");
+                Log.Error($"Could not read file {FilePath} - {e.Message}");
             }
 
             return info;
