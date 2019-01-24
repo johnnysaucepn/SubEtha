@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using log4net;
+using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace Howatworks.PlayerJournal.Monitor
 {
@@ -12,21 +13,21 @@ namespace Howatworks.PlayerJournal.Monitor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CustomFileWatcher));
 
-        private readonly string _filename;
-        private readonly Action<string> _onCreated;
-        private readonly Action<string> _onDeleted;
+        public event Action<string> Created;
+        public event Action<string> Changed;
+        public event Action<string> Deleted;
         private readonly FileSystemWatcher _journalWatcher;
+        private readonly Matcher _matcher;
 
-        public CustomFileWatcher(string folder, string filename, Action<string> onCreated, Action<string> onDeleted)
+        public CustomFileWatcher(string folder, string pattern)
         {
-            _filename = filename;
-            _onCreated = onCreated;
-            _onDeleted = onDeleted;
+            _matcher = new Matcher(StringComparison.InvariantCultureIgnoreCase).AddInclude(pattern);
             _journalWatcher = new FileSystemWatcher(folder)
             {
                 EnableRaisingEvents = false
             };
             _journalWatcher.Renamed += JournalWatcher_OnRenamed;
+            _journalWatcher.Changed += JournalWatcher_OnChanged;
             _journalWatcher.Created += JournalWatcher_OnCreated;
             _journalWatcher.Deleted += JournalWatcher_OnDeleted;
         }
@@ -43,36 +44,45 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private void JournalWatcher_OnDeleted(object s, FileSystemEventArgs e)
         {
-            if (e.Name.Equals(_filename, StringComparison.InvariantCultureIgnoreCase))
+            if (_matcher.Match(e.Name).HasMatches)
             {
                 LogWatcherEvent(e);
-                _onDeleted(e.FullPath);
+                Deleted?.Invoke(e.FullPath);
+            }
+        }
+
+        private void JournalWatcher_OnChanged(object s, FileSystemEventArgs e)
+        {
+            if (_matcher.Match(e.Name).HasMatches)
+            {
+                LogWatcherEvent(e);
+                Changed?.Invoke(e.FullPath);
             }
         }
 
         private void JournalWatcher_OnCreated(object s, FileSystemEventArgs e)
         {
-            if (e.Name.Equals(_filename, StringComparison.InvariantCultureIgnoreCase))
+            if (_matcher.Match(e.Name).HasMatches)
             {
                 LogWatcherEvent(e);
-                _onCreated(e.FullPath);
+                Created?.Invoke(e.FullPath);
             }
         }
 
         private void JournalWatcher_OnRenamed(object s, RenamedEventArgs e)
         {
             // If renamed from something we care about
-            if (e.OldName.Equals(_filename, StringComparison.InvariantCultureIgnoreCase))
+            if (_matcher.Match(e.OldName).HasMatches)
             {
                 LogWatcherEvent(e);
-                _onDeleted(e.OldFullPath);
+                Deleted?.Invoke(e.OldFullPath);
             }
 
             // If renamed to something we care about
-            if (e.Name.Equals(_filename, StringComparison.InvariantCultureIgnoreCase))
+            if (_matcher.Match(e.Name).HasMatches)
             {
                 LogWatcherEvent(e);
-                _onCreated(e.FullPath);
+                Created?.Invoke(e.FullPath);
             }
         }
 

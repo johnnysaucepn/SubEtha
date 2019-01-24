@@ -14,13 +14,14 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private readonly string _folder;
         private readonly string _filename;
+        private readonly IJournalReaderFactory _journalReaderFactory;
 
         private bool _started = false;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        private readonly IJournalReader _monitoredFile;
+        //private readonly IJournalReader _monitoredFile;
         private readonly CustomFileWatcher _customFileWatcher;
 
         private string FilePath => Path.Combine(_folder, _filename);
@@ -29,9 +30,11 @@ namespace Howatworks.PlayerJournal.Monitor
         {
             _folder = folder;
             _filename = filename;
+            _journalReaderFactory = journalReaderFactory;
 
-            _customFileWatcher = new CustomFileWatcher(folder, filename, StartMonitoringFile, StopMonitoringFile);
-            _monitoredFile = journalReaderFactory.CreateRealTimeJournalReader(FilePath);
+            _customFileWatcher = new CustomFileWatcher(folder, filename);
+            _customFileWatcher.Created += StartMonitoringFile;
+            _customFileWatcher.Deleted += StopMonitoringFile;
         }
 
         public IList<IJournalEntry> Update(DateTime lastRead)
@@ -40,12 +43,9 @@ namespace Howatworks.PlayerJournal.Monitor
 
             if (!_started) return entriesFound;
 
-            lock (_monitoredFile)
-            {
-                Log.Debug($"Rescanning {_filename} file...");
+            Log.Debug($"Rescanning {_filename} file...");
 
-                entriesFound = RescanFile(lastRead).ToList();
-            }
+            entriesFound = RescanFile(lastRead).ToList();
 
             return entriesFound;
         }
@@ -69,18 +69,20 @@ namespace Howatworks.PlayerJournal.Monitor
         {
             var entries = new List<IJournalEntry>();
 
-            if (!_monitoredFile.FileExists)
+            if (!File.Exists(FilePath))
             {
                 return entries;
             }
 
-            Log.Debug($"Scanning file {_monitoredFile.FilePath}");
-            entries = _monitoredFile.ReadAll(since).ToList();
+            Log.Debug($"Scanning file {FilePath}");
+
+            var reader = _journalReaderFactory.CreateRealTimeJournalReader(FilePath);
+            entries = reader.ReadAll(since).ToList();
 
             // Only expect one entry per standalone file, but no harm in checking
             if (entries.Count > 0)
             {
-                Log.Info($"Scanned file {_monitoredFile.FilePath}, {entries.Count} new entries found");
+                Log.Info($"Scanned file {FilePath}, {entries.Count} new entries found");
             }
 
             return entries;

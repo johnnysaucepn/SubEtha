@@ -14,7 +14,7 @@ namespace Howatworks.PlayerJournal.Monitor
         private static readonly ILog Log = LogManager.GetLogger(typeof(IncrementalJournalMonitor));
 
         private readonly IJournalReaderFactory _journalReaderFactory;
-        private readonly FileSystemWatcher _journalWatcher;
+        private readonly CustomFileWatcher _journalWatcher;
 
         private bool _started = false;
 
@@ -24,7 +24,7 @@ namespace Howatworks.PlayerJournal.Monitor
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        private readonly Dictionary<string, IJournalReader> _monitoredFiles = new Dictionary<string, IJournalReader>();
+        private readonly Dictionary<string, IJournalReader> _activeReaders = new Dictionary<string, IJournalReader>();
 
         public IncrementalJournalMonitor(string folder, string pattern, IJournalReaderFactory journalReaderFactory)
         {
@@ -34,28 +34,10 @@ namespace Howatworks.PlayerJournal.Monitor
             _journalFolder = folder;
             _journalPattern = pattern;
 
-            _journalWatcher = new FileSystemWatcher(_journalFolder, _journalPattern)
-            {
-                EnableRaisingEvents = false
-            };
-
-            _journalWatcher.Created += (s, e) =>
-            {
-                LogWatcherEvent(e);
-                StartMonitoringFile(e.FullPath);
-            };
-            _journalWatcher.Changed += (s, e) =>
-            {
-                LogWatcherEvent(e);
-                StartMonitoringFile(e.FullPath);
-            };
-
-            _journalWatcher.Deleted += (s, e) =>
-            {
-                LogWatcherEvent(e);
-                StopMonitoringFile(e.FullPath);
-            };
-
+            _journalWatcher = new CustomFileWatcher(_journalFolder, _journalPattern);
+            _journalWatcher.Created += StartMonitoringFile;
+            _journalWatcher.Changed += StartMonitoringFile;
+            _journalWatcher.Deleted += StopMonitoringFile;
         }
 
         public IList<IJournalEntry> Update(DateTime lastRead)
@@ -64,15 +46,15 @@ namespace Howatworks.PlayerJournal.Monitor
 
             if (!_started) return entriesFound;
 
-            lock (_monitoredFiles)
+            lock (_activeReaders)
             {
-                if (_monitoredFiles.Count <= 0) return entriesFound;
+                if (_activeReaders.Count <= 0) return entriesFound;
 
-                Log.Debug($"Rescanning {_monitoredFiles.Count} log files...");
+                Log.Debug($"Rescanning {_activeReaders.Count} log files...");
 
-                // TODO: this appears to be required to avoid collection being modified during enumeration
-                // Unclear as to how this can happen
-                var readers = _monitoredFiles.Values.ToList();
+                // TODO: this is required to avoid collection being modified during enumeration
+                // Should note the readers to be removed after the operation
+                var readers = _activeReaders.Values.ToList();
                 entriesFound = RescanFiles(readers, lastRead).ToList();
             }
 
@@ -96,7 +78,7 @@ namespace Howatworks.PlayerJournal.Monitor
                 StartMonitoringFile(recentFilesInFolder.Last());
             }
 
-            _journalWatcher.EnableRaisingEvents = true;
+            _journalWatcher.Start();
             _started = true;
             return firstEntries;
         }
@@ -105,8 +87,7 @@ namespace Howatworks.PlayerJournal.Monitor
         {
             _started = false;
 
-            _journalWatcher.EnableRaisingEvents = false;
-
+            _journalWatcher.Stop();
         }
 
         private static IEnumerable<string> EnumerateFolder(string path, string pattern)
@@ -170,23 +151,19 @@ namespace Howatworks.PlayerJournal.Monitor
             }
         }
 
-        private static void LogWatcherEvent(FileSystemEventArgs e)
-        {
-            Log.Info($"Received {e.ChangeType} entry on file {e.FullPath}");
-        }
-
         private void StartMonitoringFile(string path)
         {
-            StartMonitoringFile(_journalReaderFactory.CreateIncrementalJournalReader(path));
-            //TODO: should check validity of IJournalReader before adding it
+            var reader = _journalReaderFactory.CreateIncrementalJournalReader(path);
+            StartMonitoringFile(reader);
         }
 
         private void StartMonitoringFile(IJournalReader reader)
         {
-            lock (_monitoredFiles)
+            lock (_activeReaders)
             {
-                if (_monitoredFiles.ContainsKey(reader.FilePath)) return;
-                _monitoredFiles.Add(reader.FilePath, reader);
+                if (_activeReaders.ContainsKey(reader.FilePath)) return;
+                _activeReaders.Add(reader.FilePath, reader);
+                //TODO: should check validity of IJournalReader before adding it
             }
 
             JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(reader.FilePath));
@@ -196,11 +173,11 @@ namespace Howatworks.PlayerJournal.Monitor
         {
             JournalFileWatchingStopped?.Invoke(this, new JournalFileEventArgs(path));
 
-            lock (_monitoredFiles)
+            lock (_activeReaders)
             {
-                if (_monitoredFiles.ContainsKey(path))
+                if (_activeReaders.ContainsKey(path))
                 {
-                    _monitoredFiles.Remove(path);
+                    _activeReaders.Remove(path);
                 }
                 else
                 {
