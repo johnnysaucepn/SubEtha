@@ -40,7 +40,6 @@ namespace Thumb.Core
 
             GlobalContext.Properties["logfolder"] = logFolder;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            //Trace.Listeners.Add(new Log4NetTraceListener(logRepository, GetType()));
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
