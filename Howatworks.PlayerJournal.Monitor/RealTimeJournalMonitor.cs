@@ -12,57 +12,39 @@ namespace Howatworks.PlayerJournal.Monitor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeJournalMonitor));
 
-        private readonly IJournalReaderFactory _journalReaderFactory;
-        private readonly FileSystemWatcher _journalWatcher;
+        private readonly string _folder;
+        private readonly string _filename;
 
         private bool _started = false;
-
-        private readonly string _filename;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        private IJournalReader _monitoredFile;
+        private readonly IJournalReader _monitoredFile;
+        private readonly CustomFileWatcher _customFileWatcher;
+
+        private string FilePath => Path.Combine(_folder, _filename);
 
         public RealTimeJournalMonitor(string folder, string filename, IJournalReaderFactory journalReaderFactory)
         {
-            _journalReaderFactory = journalReaderFactory;
+            _folder = folder;
             _filename = filename;
 
-            // Safe to add it to the monitored list, even if it doesn't yet exist
-            StartMonitoringFile(Path.Combine(folder, _filename));
-
-            _journalWatcher = new FileSystemWatcher(folder, _filename)
-            {
-                EnableRaisingEvents = false
-            };
-
-            _journalWatcher.Created += (s, e) =>
-            {
-                LogWatcherEvent(e);
-                StartMonitoringFile(e.FullPath);
-            };
-
-            _journalWatcher.Deleted += (s, e) =>
-            {
-                LogWatcherEvent(e);
-                StopMonitoringFile(e.FullPath);
-            };
-
+            _customFileWatcher = new CustomFileWatcher(folder, filename, StartMonitoringFile, StopMonitoringFile);
+            _monitoredFile = journalReaderFactory.CreateRealTimeJournalReader(FilePath);
         }
 
         public IList<IJournalEntry> Update(DateTime lastRead)
         {
             var entriesFound = new List<IJournalEntry>();
 
-            if (!_started || _monitoredFile == null) return entriesFound;
+            if (!_started) return entriesFound;
 
             lock (_monitoredFile)
             {
                 Log.Debug($"Rescanning {_filename} file...");
 
-                // TODO: this list assignment should be unnecessary
-                entriesFound = RescanFile(_monitoredFile, lastRead).ToList();
+                entriesFound = RescanFile(lastRead).ToList();
             }
 
             return entriesFound;
@@ -70,71 +52,48 @@ namespace Howatworks.PlayerJournal.Monitor
 
         public IList<IJournalEntry> Start(bool firstRun, DateTime lastRead)
         {
-            // Scan any files created since last run
-            if (_monitoredFile == null) return new List<IJournalEntry>();
-
-            // TODO: this list assignment should be unnecessary
-            IList<IJournalEntry> firstEntries = RescanFile(_monitoredFile, lastRead).ToList();
-
-            _journalWatcher.EnableRaisingEvents = true;
+            _customFileWatcher.Start();
             _started = true;
-            return firstEntries;
+
+            // Scan any files created since last run
+            return RescanFile(lastRead);
         }
 
         public void Stop()
         {
+            _customFileWatcher.Stop();
             _started = false;
-
-            _journalWatcher.EnableRaisingEvents = false;
         }
 
-        private IEnumerable<IJournalEntry> RescanFile(IJournalReader reader, DateTimeOffset since)
+        private IList<IJournalEntry> RescanFile(DateTimeOffset since)
         {
-            Log.Debug($"Scanning file {reader.FilePath}");
-            var count = 0;
+            var entries = new List<IJournalEntry>();
 
-            if (reader.FileExists)
+            if (!_monitoredFile.FileExists)
             {
-                // Only expect one entry per standalone file, but no harm in checking
-                foreach (var entry in reader.ReadAll(since))
-                {
-                    count++;
-                    yield return entry;
-                }
-            }
-            else
-            {
-                StopMonitoringFile(reader.FilePath);
+                return entries;
             }
 
-            if (count > 0)
-            {
-                Log.Info($"Scanned file {reader.FilePath}, {count} new entries found");
-            }
-        }
+            Log.Debug($"Scanning file {_monitoredFile.FilePath}");
+            entries = _monitoredFile.ReadAll(since).ToList();
 
-        private static void LogWatcherEvent(FileSystemEventArgs e)
-        {
-            Log.Info($"Received {e.ChangeType} entry on file {e.FullPath}");
+            // Only expect one entry per standalone file, but no harm in checking
+            if (entries.Count > 0)
+            {
+                Log.Info($"Scanned file {_monitoredFile.FilePath}, {entries.Count} new entries found");
+            }
+
+            return entries;
         }
 
         private void StartMonitoringFile(string path)
         {
-            _monitoredFile = _journalReaderFactory.CreateRealTimeJournalReader(path);
-            JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(_monitoredFile.FilePath));
-            //TODO: should check validity of IJournalReader before adding it
+            JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(path));
         }
-
 
         private void StopMonitoringFile(string path)
         {
             JournalFileWatchingStopped?.Invoke(this, new JournalFileEventArgs(path));
-
-            if (_monitoredFile == null)
-            {
-                Log.Error($"Not monitoring file {path} - cannot stop");
-            }
-            _monitoredFile = null;
         }
 
     }

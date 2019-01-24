@@ -32,33 +32,34 @@ namespace Howatworks.PlayerJournal.Parser
         public IEnumerable<IJournalEntry> ReadAll(DateTimeOffset since)
         {
             // Always get a new stream reader
-            var streamReader = GetStreamReader();
-
-            while (!streamReader.EndOfStream)
+            using (var streamReader = GetStreamReader())
             {
-                var line = streamReader.ReadLine();
-                if (string.IsNullOrWhiteSpace(line)) continue;
 
-                // TODO: beef up error handling here, what if line is not a parseable event?
-                var json = JObject.Parse(line);
-                var timestamp = json.Value<DateTime>("timestamp");
-
-                if (timestamp <= since) continue;
-
-                Log.Debug(line);
-                var eventType = json.Value<string>("event");
-
-                var journalEntry = _parser.Parse(eventType, line);
-
-                // TODO: remove this check once we're confident we should recognise all types
-                if (journalEntry != null)
+                while (!streamReader.EndOfStream)
                 {
-                    LastEntryTimeStamp = journalEntry.Timestamp;
-                    yield return journalEntry;
+                    var line = streamReader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    // TODO: beef up error handling here, what if line is not a parseable event?
+                    var json = JObject.Parse(line);
+                    var timestamp = json.Value<DateTime>("timestamp");
+
+                    if (timestamp <= since) continue;
+
+                    Log.Debug(line);
+                    var eventType = json.Value<string>("event");
+
+                    var journalEntry = _parser.Parse(eventType, line);
+
+                    // TODO: remove this check once we're confident we should recognise all types
+                    if (journalEntry != null)
+                    {
+                        LastEntryTimeStamp = journalEntry.Timestamp;
+                        yield return journalEntry;
+                    }
                 }
             }
         }
-
 
     }
 }
