@@ -10,7 +10,7 @@ namespace Howatworks.PlayerJournal.Monitor
 {
     public class JournalMonitorScheduler : IDisposable
     {
-        private readonly IEnumerable<IJournalMonitor> _journalMonitors;
+        private readonly IList<IJournalMonitor> _journalMonitors = new List<IJournalMonitor>();
         private readonly IJournalMonitorState _journalMonitorState;
         private readonly Timer _triggerUpdate;
 
@@ -24,13 +24,15 @@ namespace Howatworks.PlayerJournal.Monitor
 
             var folder = config["JournalFolder"];
             var pattern = config["JournalPattern"];
-            var status = config["StatusFilename"];
+            var realTimeFilenames = config["RealTimeFilenames"].Split(';').Select(x => x.Trim());
 
-            _journalMonitors = new List<IJournalMonitor>
+            // Start with the set of all ongoing journal logs
+            _journalMonitors.Add(new IncrementalJournalMonitor(folder, pattern, readerFactory));
+            // Add each of the real-time, standalone files that are constantly replaced
+            foreach (var filename in realTimeFilenames)
             {
-                new IncrementalJournalMonitor(folder, pattern, readerFactory),
-                new RealTimeJournalMonitor(folder, status, readerFactory)
-            };
+                _journalMonitors.Add(new RealTimeJournalMonitor(folder, filename, readerFactory));
+            }
 
             foreach (var monitor in _journalMonitors)
             {
