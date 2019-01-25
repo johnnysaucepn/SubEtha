@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thumb.Plugin.Controller", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputPrototype", "InputPrototype\InputPrototype.csproj", "{731367D2-C16C-4636-A49A-923AF5ACE5DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thumb.Plugin.Controller.Tests", "Thumb.Plugin.Controller.Tests\Thumb.Plugin.Controller.Tests.csproj", "{9EF2A436-D70D-4913-901B-477B9875D8F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CoreDebug|Any CPU = CoreDebug|Any CPU
@@ -171,6 +173,14 @@ Global
 		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.CoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.CoreDebug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.CoreRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.CoreRelease|Any CPU.Build.0 = Release|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF2A436-D70D-4913-901B-477B9875D8F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

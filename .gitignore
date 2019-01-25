@@ -4,3 +4,4 @@ TestResults/
 tools/
 packages/
 .vs/
+*.user
