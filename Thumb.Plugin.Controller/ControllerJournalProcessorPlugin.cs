@@ -1,6 +1,7 @@
 ﻿using System;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.Controller
@@ -10,17 +11,16 @@ namespace Thumb.Plugin.Controller
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControllerJournalProcessorPlugin));
 
         private readonly ControllerJournalProcessor _processor;
-        public FlushBehaviour FlushBehaviour { get; set; }
-        public CatchupBehaviour FirstRunBehaviour { get; set; }
-        public CatchupBehaviour CatchupBehaviour { get; set; }
-       
+        public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
+        public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
+        public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Skip;
+
         public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
-        public ControllerJournalProcessorPlugin(IJournalMonitorNotifier notifier)
+        public ControllerJournalProcessorPlugin(IConfiguration configuration, IJournalMonitorNotifier notifier)
         {
             _processor = new ControllerJournalProcessor(notifier);
-            FlushBehaviour = FlushBehaviour.OnEveryBatch;
         }
 
         public void Apply(IJournalEntry journalEntry)

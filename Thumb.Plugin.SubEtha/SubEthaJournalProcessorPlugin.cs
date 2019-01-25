@@ -13,9 +13,10 @@ namespace Thumb.Plugin.SubEtha
 
         private readonly IConfiguration _pluginConfig;
         private readonly string _user;
-        public FlushBehaviour FlushBehaviour { get; set; }
-        public CatchupBehaviour FirstRunBehaviour { get; set; }
-        public CatchupBehaviour CatchupBehaviour { get; set; }
+        public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
+        public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Process;
+        public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Process;
+
         private readonly IDictionary<string, IJournalProcessor> _processors = new Dictionary<string, IJournalProcessor>();
 
         public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;

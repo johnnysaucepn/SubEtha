@@ -10,7 +10,7 @@ namespace Thumb.Plugin.Controller
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControllerJournalProcessor));
 
         private readonly IList<IJournalProcessor> _childProcessors = new List<IJournalProcessor>();
-        
+
         public ControllerJournalProcessor(IJournalMonitorNotifier notifier)
         {
             _childProcessors.Add(new StatusManager(notifier));

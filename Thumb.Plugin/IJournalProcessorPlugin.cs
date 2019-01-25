@@ -7,9 +7,9 @@ namespace Thumb.Plugin
     {
         event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
-        FlushBehaviour FlushBehaviour { get; set; }
-        CatchupBehaviour FirstRunBehaviour { get; set; }
-        CatchupBehaviour CatchupBehaviour { get; set; }
+        FlushBehaviour FlushBehaviour { get; }
+        CatchupBehaviour FirstRunBehaviour { get; }
+        CatchupBehaviour CatchupBehaviour { get; }
         void Apply(IJournalEntry journalEntry);
         void Flush();
     }
