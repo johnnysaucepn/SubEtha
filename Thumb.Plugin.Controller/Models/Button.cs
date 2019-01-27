@@ -11,6 +11,9 @@ namespace Thumb.Plugin.Controller.Models
         public class ButtonBinding
         {
             [XmlAttribute]
+            public string Device { get; set; }
+
+            [XmlAttribute]
             public string Key { get; set; }
 
             [XmlElement]
@@ -29,5 +32,8 @@ namespace Thumb.Plugin.Controller.Models
 
         [XmlElement]
         public ButtonBinding Secondary { get; set; }
+
+        [XmlElement]
+        public Setting<bool> ToggleOn { get; set; } // TODO: check data type
     }
 }

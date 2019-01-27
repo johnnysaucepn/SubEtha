@@ -13,7 +13,8 @@ namespace Thumb.Plugin.Controller.Models
             public string Key { get; set; }
         }
 
-        [XmlElement]
         public AxisBinding Binding { get; set; }
+        public Setting<bool> Inverted { get; set; }
+        public Setting<float> Deadzone { get; set; }
     }
 }

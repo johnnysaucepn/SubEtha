@@ -56,6 +56,45 @@ namespace Thumb.Plugin.Controller.Tests
             Assert.Equal("Joy_7", binding.LeftThrustButton.Secondary.Modifier[1].Key);
         }
 
+        [Fact]
+        public void DeserializeToggleButton()
+        {
+            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+
+            Assert.NotNull(binding.YawToRollButton.ToggleOn);
+            Assert.False(binding.YawToRollButton.ToggleOn.Value);
+
+            Assert.NotNull(binding.HeadLookToggle.ToggleOn);
+            Assert.True(binding.HeadLookToggle.ToggleOn.Value);
+
+            Assert.Null(binding.SetSpeedMinus50.ToggleOn);
+        }
+
+        [Fact]
+        public void DeserializeFloatOption()
+        {
+            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+
+            Assert.Equal(0.40000001f, binding.YawToRollSensitivity.Value, 8);
+        }
+
+        [Fact]
+        public void DeserializeBoolOption()
+        {
+            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+
+            Assert.True(binding.EnableCameraLockOn.Value);
+        }
+
+        [Fact]
+        public void DeserializeStringOption()
+        {
+            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+
+            Assert.Equal("mute_toggle", binding.MuteButtonMode.Value);
+
+        }
+
         private static Binding DeserializeSampleBindingFile(string path)
         {
             var serializer = new XmlSerializer(typeof(Binding), new XmlRootAttribute("Root"));
