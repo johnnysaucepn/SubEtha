@@ -34,29 +34,25 @@ namespace Howatworks.PlayerJournal.Parser
             // Always get a new stream reader
             using (var streamReader = GetStreamReader())
             {
+                var content = streamReader.ReadToEnd();
+                if (string.IsNullOrWhiteSpace(content)) yield break;
 
-                while (!streamReader.EndOfStream)
+                // TODO: beef up error handling here, what if content is not a parseable event, or is multiple events?
+                var json = JObject.Parse(content);
+                var timestamp = json.Value<DateTime>("timestamp");
+
+                if (timestamp <= since) yield break;
+
+                Log.Debug(content);
+                var eventType = json.Value<string>("event");
+
+                var journalEntry = _parser.Parse(eventType, content);
+
+                // TODO: remove this check once we're confident we should recognise all types
+                if (journalEntry != null)
                 {
-                    var line = streamReader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line)) continue;
-
-                    // TODO: beef up error handling here, what if line is not a parseable event?
-                    var json = JObject.Parse(line);
-                    var timestamp = json.Value<DateTime>("timestamp");
-
-                    if (timestamp <= since) continue;
-
-                    Log.Debug(line);
-                    var eventType = json.Value<string>("event");
-
-                    var journalEntry = _parser.Parse(eventType, line);
-
-                    // TODO: remove this check once we're confident we should recognise all types
-                    if (journalEntry != null)
-                    {
-                        LastEntryTimeStamp = journalEntry.Timestamp;
-                        yield return journalEntry;
-                    }
+                    LastEntryTimeStamp = journalEntry.Timestamp;
+                    yield return journalEntry;
                 }
             }
         }

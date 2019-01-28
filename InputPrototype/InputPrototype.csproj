@@ -53,6 +53,9 @@
     <PackageReference Include="InputSimulator">
       <Version>1.0.4</Version>
     </PackageReference>
+    <PackageReference Include="PInvoke.User32">
+      <Version>0.5.184</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
