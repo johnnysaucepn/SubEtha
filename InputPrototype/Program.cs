@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using WindowsInput;
-using WindowsInput.Native;
 using static PInvoke.User32;
 
 namespace InputPrototype
@@ -15,9 +9,6 @@ namespace InputPrototype
     {
         static void Main(string[] args)
         {
-            
-
-            var input = new InputSimulator();
             do
             {
                 var windowTitle = "Elite - Dangerous (CLIENT)";
@@ -28,18 +19,8 @@ namespace InputPrototype
                     if (GetForegroundWindow() == hwnd)
                     {
                         Console.Write("X");
-                        //input.Keyboard.KeyPress(VirtualKeyCode.DOWN);
-                        var downKey = new INPUT
-                        {
-                            type = InputType.INPUT_KEYBOARD,
-                            Inputs = new INPUT.InputUnion()
-                                {ki = new KEYBDINPUT() {wScan = ScanCode.DOWN, wVk = VirtualKey.VK_DOWN}}
-                        };
-                        var inputs = new[]
-                        {
-                            downKey,
-                        };
-                        PInvoke.User32.SendInput(inputs.Length, inputs, Marshal.SizeOf(downKey));
+                        PressAndRelease(ScanCode.DOWN, true);
+                        //PressAndRelease(VirtualKey.VK_DOWN);  // Doesn't work, at least for arrow keys
                     }
                 }
                 Console.Write(".");
@@ -47,5 +28,60 @@ namespace InputPrototype
                 Thread.Sleep(2000);
             } while (true);
         }
+
+        private static void PressAndRelease(ScanCode scanCode, bool extended)
+        {
+            SendKeyAction(true, scanCode, extended);
+            Thread.Sleep(100);
+            SendKeyAction(false, scanCode, extended);
+        }
+        
+        private static uint SendKeyAction(bool keyDown, ScanCode scanCode, bool extended)
+        {
+            var key = new INPUT
+            {
+                type = InputType.INPUT_KEYBOARD,
+                Inputs = new INPUT.InputUnion()
+                {
+                    ki = new KEYBDINPUT()
+                    {
+                        dwFlags = KEYEVENTF.KEYEVENTF_SCANCODE |
+                                  (extended ? KEYEVENTF.KEYEVENTF_EXTENDED_KEY : 0) |
+                                  (keyDown ? 0 : KEYEVENTF.KEYEVENTF_KEYUP),
+                        wScan = scanCode
+                    }
+                }
+            };
+            var inputs = new[] {key};
+            var response = SendInput(inputs.Length, inputs, Marshal.SizeOf(key));
+            return response;
+        }
+
+        private static void PressAndRelease(VirtualKey virtualKey)
+        {
+            SendKeyAction(true, virtualKey);
+            Thread.Sleep(100);
+            SendKeyAction(false, virtualKey);
+        }
+
+        private static uint SendKeyAction(bool keyDown, VirtualKey virtualKey)
+        {
+            var key = new INPUT
+            {
+                type = InputType.INPUT_KEYBOARD,
+                Inputs = new INPUT.InputUnion()
+                {
+                    ki = new KEYBDINPUT()
+                    {
+                        dwFlags = (keyDown ? 0 : KEYEVENTF.KEYEVENTF_KEYUP),
+                        wVk = virtualKey
+                    }
+                }
+            };
+            var inputs = new[] { key };
+            var response = SendInput(inputs.Length, inputs, Marshal.SizeOf(key));
+            return response;
+        }
+
     }
 }

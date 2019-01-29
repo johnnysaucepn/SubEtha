@@ -50,9 +50,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="InputSimulator">
-      <Version>1.0.4</Version>
-    </PackageReference>
     <PackageReference Include="PInvoke.User32">
       <Version>0.5.184</Version>
     </PackageReference>
