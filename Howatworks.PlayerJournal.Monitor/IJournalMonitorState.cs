@@ -4,6 +4,7 @@ namespace Howatworks.PlayerJournal.Monitor
 {
     public interface IJournalMonitorState
     {
-        DateTime? LastRead { get; set; }
+        DateTimeOffset? LastRead { get; set; }
+        DateTimeOffset? LastChecked { get; set; }
     }
 }

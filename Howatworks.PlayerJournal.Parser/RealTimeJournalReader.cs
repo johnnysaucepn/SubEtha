@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
-using Newtonsoft.Json.Linq;
 
 namespace Howatworks.PlayerJournal.Parser
 {
@@ -38,13 +37,11 @@ namespace Howatworks.PlayerJournal.Parser
                 if (string.IsNullOrWhiteSpace(content)) yield break;
 
                 // TODO: beef up error handling here, what if content is not a parseable event, or is multiple events?
-                var json = JObject.Parse(content);
-                var timestamp = json.Value<DateTime>("timestamp");
+                var (eventType, timestamp) = _parser.ParseCommonProperties(content);
 
                 if (timestamp <= since) yield break;
 
                 Log.Debug(content);
-                var eventType = json.Value<string>("event");
 
                 var journalEntry = _parser.Parse(eventType, content);
 

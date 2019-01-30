@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Howatworks.PlayerJournal.Parser
 {
@@ -38,7 +36,7 @@ namespace Howatworks.PlayerJournal.Parser
         {
             FileHeader fileHeader = null;
             var info = new JournalLogFileInfo(FilePath);
-            DateTime? lastEntry = null;
+            DateTimeOffset? lastEntry = null;
 
             try
             {
@@ -53,20 +51,16 @@ namespace Howatworks.PlayerJournal.Parser
                     if (string.IsNullOrWhiteSpace(line)) continue;
 
                     // TODO: beef up error handling here, what if line is not a parseable event?
-                    var json = JObject.Parse(line);
-                    var eventType = json.Value<string>("event");
-                    var timeStamp = json.Value<DateTime?>("timestamp");
-                    if (timeStamp.HasValue)
+                    var (eventType, timestamp) = _parser.ParseCommonProperties(line);
+
+                    if (timestamp > lastEntry.GetValueOrDefault(DateTimeOffset.MinValue))
                     {
-                        if (timeStamp > lastEntry.GetValueOrDefault(DateTime.MinValue))
-                        {
-                            lastEntry = timeStamp;
-                        }
+                        lastEntry = timestamp;
                     }
 
-                    if (eventType != null && eventType.ToLower() == "fileheader")
+                    if (eventType != null && eventType.Equals("fileheader", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        fileHeader = JsonConvert.DeserializeObject<FileHeader>(line);
+                        fileHeader = _parser.Parse<FileHeader>(line);
                     }
 
                     tolerance--;
@@ -100,12 +94,9 @@ namespace Howatworks.PlayerJournal.Parser
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 // TODO: beef up error handling here, what if line is not a parseable event?
-                var json = JObject.Parse(line);
-                var timestamp = json.Value<DateTime>("timestamp");
+                var (eventType, timestamp) = _parser.ParseCommonProperties(line);
 
                 if (timestamp <= since) continue;
-
-                var eventType = json.Value<string>("event");
 
                 var journalEntry = _parser.Parse(eventType, line);
 

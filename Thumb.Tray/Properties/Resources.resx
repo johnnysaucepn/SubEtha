@@ -128,7 +128,7 @@
     <value>Exit</value>
   </data>
   <data name="NotifyIconLastUpdatedLabel" xml:space="preserve">
-    <value>Last updated {0} {1}</value>
+    <value>Last entry {0}, last checked {1}</value>
   </data>
   <data name="NotifyIconNeverUpdatedLabel" xml:space="preserve">
     <value>Never updated</value>

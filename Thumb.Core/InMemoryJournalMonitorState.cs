@@ -5,6 +5,7 @@ namespace Thumb.Core
 {
     public class InMemoryJournalMonitorState : IJournalMonitorState
     {
-        public DateTime? LastRead { get; set; }
+        public DateTimeOffset? LastRead { get; set; }
+        public DateTimeOffset? LastChecked { get; set; }
     }
 }

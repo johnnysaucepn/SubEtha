@@ -6,6 +6,6 @@ namespace Howatworks.PlayerJournal.Serialization
     {
         string Event { get; set; }
         string GameVersionDiscriminator { get; set; }
-        DateTime Timestamp { get; set; }
+        DateTimeOffset Timestamp { get; set; }
     }
 }

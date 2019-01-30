@@ -17,7 +17,7 @@ namespace Thumb.Tray
         private ThumbApp _thumbApp;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ThumbTrayApplicationContext));
-        private IProgress<DateTime?> _progressHandler;
+        private IProgress<DateTimeOffset?> _progressHandler;
 
         private System.Threading.Timer _updateTimer;
 
@@ -35,20 +35,20 @@ namespace Thumb.Tray
             _trayIcon = new NotifyIcon
             {
                 Icon = Resources.ThumbIcon,
-                ContextMenu = new ContextMenu(new[]
-                {
-                    exitMenuItem
-                }),
+                ContextMenu = new ContextMenu(new[] {exitMenuItem}),
                 Visible = true,
                 Text = Resources.NotifyIconDefaultLabel
             };
-            _trayIcon.Text = Resources.NotifyIconNeverUpdatedLabel;
 
-            _progressHandler = new Progress<DateTime?>(lastUpdated =>
+            _progressHandler = new Progress<DateTimeOffset?>(lastUpdated =>
             {
+                var lastChecked = _thumbApp.LastUpdated().GetValueOrDefault(DateTimeOffset.UtcNow);
                 _trayIcon.Text = lastUpdated.HasValue
-                    ? string.Format(Resources.NotifyIconLastUpdatedLabel, lastUpdated.Value.ToShortDateString(),
-                        lastUpdated.Value.ToShortTimeString())
+                    ? string.Format(
+                        Resources.NotifyIconLastUpdatedLabel,
+                        $"{lastUpdated.Value.LocalDateTime:g}",
+                        $"{lastChecked.LocalDateTime:g}"
+                    )
                     : Resources.NotifyIconNeverUpdatedLabel;
             });
 

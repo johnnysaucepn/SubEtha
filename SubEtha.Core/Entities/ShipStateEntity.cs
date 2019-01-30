@@ -9,7 +9,7 @@ namespace SubEtha.Core.Entities
 
         public GameContext GameContext { get; set; }
 
-        public DateTime TimeStamp { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
 
         public int ShipID { get; set; }
         public string Type { get; set; }

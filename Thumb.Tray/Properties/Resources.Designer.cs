@@ -79,7 +79,7 @@ namespace Thumb.Tray.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last updated {0} {1}.
+        ///   Looks up a localized string similar to Last entry {0}, last checked {1}.
         /// </summary>
         internal static string NotifyIconLastUpdatedLabel {
             get {

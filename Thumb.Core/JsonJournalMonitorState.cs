@@ -23,12 +23,25 @@ namespace Thumb.Core
         /// <summary>
         /// Update the internal representation and save
         /// </summary>
-        public DateTime? LastRead
+        public DateTimeOffset? LastRead
         {
             get => _state.Value.LastRead;
             set
             {
                 _state.Value.LastRead = value;
+                Save();
+            }
+        }
+
+        /// <summary>
+        /// Update the internal representation and save
+        /// </summary>
+        public DateTimeOffset? LastChecked
+        {
+            get => _state.Value.LastChecked;
+            set
+            {
+                _state.Value.LastChecked = value;
                 Save();
             }
         }

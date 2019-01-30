@@ -8,12 +8,10 @@ namespace Thumb.Plugin.Controller
     {
         private readonly JournalEntryRouter _entryRouter;
         private readonly ControllerStatus _status;
-        private readonly IJournalMonitorNotifier _notifier;
 
         public StatusManager(IJournalMonitorNotifier notifier)
         {
-            _notifier = notifier;
-            _status = new ControllerStatus(_notifier);
+            _status = new ControllerStatus(notifier);
             _entryRouter = new JournalEntryRouter();
 
             _entryRouter.RegisterFor<Status>(ApplyStatus);

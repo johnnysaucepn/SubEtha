@@ -9,7 +9,7 @@ namespace SubEtha.Core.Entities
 
         public GameContext GameContext { get; set; }
 
-        public DateTime TimeStamp { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
 
         public Body Body { get; set; }
         public SignalSource SignalSource { get; set; }

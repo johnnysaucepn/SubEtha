@@ -5,7 +5,7 @@ namespace Thumb.Plugin.SubEtha
 {
     public class ShipState : IShipState
     {
-        public DateTime TimeStamp { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
 
         public string Type { get; set; }
         public int ShipID { get; set; }

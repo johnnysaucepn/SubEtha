@@ -16,7 +16,7 @@ namespace Howatworks.PlayerJournal.Monitor
         private readonly string _filename;
         private readonly IJournalReaderFactory _journalReaderFactory;
 
-        private bool _started = false;
+        private bool _started;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
@@ -37,7 +37,7 @@ namespace Howatworks.PlayerJournal.Monitor
             _customFileWatcher.Deleted += StopMonitoringFile;
         }
 
-        public IList<IJournalEntry> Update(DateTime lastRead)
+        public IList<IJournalEntry> Update(DateTimeOffset lastRead)
         {
             var entriesFound = new List<IJournalEntry>();
 
@@ -50,7 +50,7 @@ namespace Howatworks.PlayerJournal.Monitor
             return entriesFound;
         }
 
-        public IList<IJournalEntry> Start(bool firstRun, DateTime lastRead)
+        public IList<IJournalEntry> Start(bool firstRun, DateTimeOffset lastRead)
         {
             _customFileWatcher.Start();
             _started = true;

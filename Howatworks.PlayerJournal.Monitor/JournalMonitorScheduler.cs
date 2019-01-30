@@ -48,14 +48,14 @@ namespace Howatworks.PlayerJournal.Monitor
 
         private void _triggerUpdate_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Update(_journalMonitorState.LastRead.GetValueOrDefault(DateTime.MinValue), BatchMode.Ongoing);
+            Update(_journalMonitorState.LastRead, BatchMode.Ongoing);
         }
 
-        public void Update(DateTime lastRead, BatchMode batchMode)
+        private void Update(DateTimeOffset? lastRead, BatchMode batchMode)
         {
             foreach (var monitor in _journalMonitors)
             {
-                var entries = monitor.Update(lastRead);
+                var entries = monitor.Update(lastRead.GetValueOrDefault(DateTimeOffset.MinValue));
                 ProcessEntries(entries, batchMode);
             }
         }
@@ -63,7 +63,7 @@ namespace Howatworks.PlayerJournal.Monitor
         public void Start()
         {
             var firstRun = !_journalMonitorState.LastRead.HasValue;
-            var lastRead = _journalMonitorState.LastRead.GetValueOrDefault(DateTime.MinValue);
+            var lastRead = _journalMonitorState.LastRead.GetValueOrDefault(DateTimeOffset.MinValue);
             foreach (var monitor in _journalMonitors)
             {
                 var firstEntries = monitor.Start(firstRun, lastRead);
@@ -78,17 +78,21 @@ namespace Howatworks.PlayerJournal.Monitor
             _triggerUpdate.Enabled = false;
 
             // One last run
-            var lastRead = _journalMonitorState.LastRead.GetValueOrDefault(DateTime.MinValue);
+            var lastRead = _journalMonitorState.LastRead;
             Update(lastRead, BatchMode.Ongoing);
 
             _triggerUpdate.Dispose();
         }
 
-        public DateTime? LastUpdated()
+        public DateTimeOffset? LastUpdated()
         {
             return _journalMonitorState.LastRead;
         }
 
+        public DateTimeOffset? LastChecked()
+        {
+            return _journalMonitorState.LastChecked;
+        }
 
         private void ProcessEntries(IList<IJournalEntry> journalEntries, BatchMode mode)
         {
@@ -96,6 +100,7 @@ namespace Howatworks.PlayerJournal.Monitor
 
             JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(journalEntries, mode));
             _journalMonitorState.LastRead = journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp;
+            _journalMonitorState.LastChecked = DateTimeOffset.UtcNow;
         }
 
         public void Dispose()

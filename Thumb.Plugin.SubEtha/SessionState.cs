@@ -5,7 +5,7 @@ namespace Thumb.Plugin.SubEtha
 {
     public class SessionState : ISessionState
     {
-        public DateTime TimeStamp { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
 
         public string Build { get; set; }
         public string CommanderName { get; set; }

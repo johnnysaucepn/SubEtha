@@ -8,7 +8,7 @@ namespace SubEtha.Core.Repositories
     { 
         IEnumerable<T> GetRange(string user, string gameVersion, int skip, int take);
         T GetMostRecent(string user, string gameVersion);
-        T GetAtDateTime(string user, string gameVersion, DateTime at);
-        IEnumerable<DateTime> GetTimestamps(string user, string gameVersion);
+        T GetAtDateTime(string user, string gameVersion, DateTimeOffset at);
+        IEnumerable<DateTimeOffset> GetTimestamps(string user, string gameVersion);
     }
 }

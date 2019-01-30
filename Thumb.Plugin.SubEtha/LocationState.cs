@@ -5,7 +5,7 @@ namespace Thumb.Plugin.SubEtha
 {
     public class LocationState : ILocationState
     {
-        public DateTime TimeStamp { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
 
         public StarSystem StarSystem { get; set; }
         public Body Body { get; set; }

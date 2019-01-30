@@ -5,6 +5,7 @@ using System.Reflection;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Howatworks.PlayerJournal.Parser
 {
@@ -34,9 +35,33 @@ namespace Howatworks.PlayerJournal.Parser
             MissingMemberHandling = MissingMemberHandling.Error,
             NullValueHandling = NullValueHandling.Ignore,
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            DateParseHandling = DateParseHandling.DateTimeOffset,
             MaxDepth = 7
 
         };
+
+        /// <summary>
+        /// Parse the absolute minimum required for an entry - saves time in deserialising
+        /// to a specific type too early.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public (string, DateTimeOffset) ParseCommonProperties(string line)
+        {
+            //var json = JObject.Parse(line);
+            var json = (JObject)JsonConvert.DeserializeObject(line, _serializerSettings);
+            var eventType = json.Value<string>("event");
+            var timeStamp = json.Value<DateTimeOffset>("timestamp");
+
+            return (eventType, timeStamp);
+
+        }
+
+        public T Parse<T>(string line) where T : class
+        {
+            return Parse(typeof(T).Name, line) as T;
+        }
 
         public IJournalEntry Parse(string eventType, string line)
         {

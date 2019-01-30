@@ -8,8 +8,8 @@ namespace Howatworks.PlayerJournal.Monitor
     {
         event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
-        IList<IJournalEntry> Start(bool firstRun, DateTime lastRead);
+        IList<IJournalEntry> Start(bool firstRun, DateTimeOffset lastRead);
         void Stop();
-        IList<IJournalEntry> Update(DateTime lastRead);
+        IList<IJournalEntry> Update(DateTimeOffset lastRead);
     }
 }

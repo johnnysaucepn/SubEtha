@@ -33,7 +33,7 @@ namespace SubEtha.Core.Repositories
                 .FirstOrDefault();
         }
 
-        public T GetAtDateTime(string user, string gameVersion, DateTime at)
+        public T GetAtDateTime(string user, string gameVersion, DateTimeOffset at)
         {
             var expression = QueryByVersion(user, gameVersion);
 
@@ -44,7 +44,7 @@ namespace SubEtha.Core.Repositories
                 .FirstOrDefault();
         }
 
-        public IEnumerable<DateTime> GetTimestamps(string user, string gameVersion)
+        public IEnumerable<DateTimeOffset> GetTimestamps(string user, string gameVersion)
         {
             var expression = QueryByVersion(user, gameVersion);
 
