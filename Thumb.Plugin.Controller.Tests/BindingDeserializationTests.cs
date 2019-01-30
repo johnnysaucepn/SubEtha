@@ -7,10 +7,12 @@ namespace Thumb.Plugin.Controller.Tests
 {
     public class BindingDeserializationTests
     {
+        private const string DefaultBindingsFilename = "dahkron.binds";
+
         [Fact]
         public void DeserializeRoot()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
             Assert.NotNull(binding);
 
             Assert.Equal("Dahkron", binding.PresetName);
@@ -21,7 +23,7 @@ namespace Thumb.Plugin.Controller.Tests
         [Fact]
         public void DeserializeAxis()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
             Assert.NotNull(binding);
 
             Assert.NotNull(binding.YawAxisRaw);
@@ -31,7 +33,7 @@ namespace Thumb.Plugin.Controller.Tests
         [Fact]
         public void DeserializeButton()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
             Assert.NotNull(binding);
 
             Assert.NotNull(binding.YawLeftButton);
@@ -43,7 +45,7 @@ namespace Thumb.Plugin.Controller.Tests
         [Fact]
         public void DeserializeModifiedButton()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
             Assert.NotNull(binding);
 
             Assert.NotNull(binding.LeftThrustButton);
@@ -59,7 +61,7 @@ namespace Thumb.Plugin.Controller.Tests
         [Fact]
         public void DeserializeToggleButton()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
 
             Assert.NotNull(binding.YawToRollButton.ToggleOn);
             Assert.False(binding.YawToRollButton.ToggleOn.Value);
@@ -73,7 +75,7 @@ namespace Thumb.Plugin.Controller.Tests
         [Fact]
         public void DeserializeFloatOption()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
 
             Assert.Equal(0.40000001f, binding.YawToRollSensitivity.Value, 8);
         }
@@ -81,7 +83,7 @@ namespace Thumb.Plugin.Controller.Tests
         [Fact]
         public void DeserializeBoolOption()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
 
             Assert.True(binding.EnableCameraLockOn.Value);
         }
@@ -89,7 +91,7 @@ namespace Thumb.Plugin.Controller.Tests
         [Fact]
         public void DeserializeStringOption()
         {
-            var binding = DeserializeSampleBindingFile("samplebindings.xml");
+            var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
 
             Assert.Equal("mute_toggle", binding.MuteButtonMode.Value);
 

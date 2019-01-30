@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace Thumb.Plugin.Controller.Models
@@ -25,9 +26,11 @@ namespace Thumb.Plugin.Controller.Models
         public Setting<float> MouseDecayRate { get; set; }
         public Setting<float> MouseDeadZone { get; set; }
         public Setting<float> MouseLinearity { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Setting<int> MouseGUI { get; set; } // TODO: check data type
 
         public Setting<float> YawToRollSensitivity { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Setting<string> YawToRollMode_FAOff { get; set; } // TODO: check data type
         public Button YawToRollButton { get; set; }
 
@@ -147,6 +150,7 @@ namespace Thumb.Plugin.Controller.Models
         public Button IncreaseSystemsPower { get; set; }
         public Button ResetPowerDistribution { get; set; }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button HMDReset { get; set; }
 
         public Button ToggleCargoScoop { get; set; }
@@ -159,6 +163,7 @@ namespace Thumb.Plugin.Controller.Models
 
         public Button UseShieldCell { get; set; }
         public Button FireChaffLauncher { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button ChargeECM { get; set; }
 
         public Setting<bool> EnableRumbleTrigger { get; set; } // TODO: check data type
@@ -168,7 +173,9 @@ namespace Thumb.Plugin.Controller.Models
         public Button EngineColourToggle { get; set; }
         public Button NightVisionToggle { get; set; }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UIFocus { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Setting<string> UIFocusMode { get; set; } // TODO: enum?
         public Button FocusLeftPanel { get; set; }
         public Button FocusCommsPanel { get; set; }
@@ -185,20 +192,29 @@ namespace Thumb.Plugin.Controller.Models
 
         public Button GalaxyMapOpen { get; set; }
         public Button SystemMapOpen { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button ShowPGScoreSummaryInput { get; set; }
         public Button HeadLookToggle { get; set; }
 
         public Button Pause { get; set; }
         public Button FriendsMenu { get; set; }
         public Button OpenCodexGoToDiscovery { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button PlayerHUDModeToggle { get; set; }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UI_Up { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UI_Down { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UI_Left { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UI_Right { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UI_Select { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UI_Back { get; set; }
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Button UI_Toggle { get; set; }
         public Button CycleNextPanel { get; set; }
         public Button CyclePreviousPanel { get; set; }

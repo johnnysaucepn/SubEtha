@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading;
 using static PInvoke.User32;
@@ -7,7 +8,8 @@ namespace InputPrototype
 {
     class Program
     {
-        static void Main(string[] args)
+        [SuppressMessage("ReSharper", "FunctionNeverReturns")]
+        private static void Main()
         {
             do
             {
@@ -36,6 +38,7 @@ namespace InputPrototype
             SendKeyAction(false, scanCode, extended);
         }
         
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private static uint SendKeyAction(bool keyDown, ScanCode scanCode, bool extended)
         {
             var key = new INPUT
@@ -57,6 +60,7 @@ namespace InputPrototype
             return response;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private static void PressAndRelease(VirtualKey virtualKey)
         {
             SendKeyAction(true, virtualKey);
@@ -64,6 +68,7 @@ namespace InputPrototype
             SendKeyAction(false, virtualKey);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private static uint SendKeyAction(bool keyDown, VirtualKey virtualKey)
         {
             var key = new INPUT
