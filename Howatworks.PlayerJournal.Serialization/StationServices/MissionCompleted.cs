@@ -57,13 +57,14 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public string Target { get; set; }
         public string TargetType { get; set; }
         public string TargetFaction { get; set; } // NOTE: name
-        public string DestinationSystem { get; set; } // NOTE: name, undocumented in event, described in changelog
-        public string DestinationStation { get; set; } // NOTE: name, undocumented in event, described in changelog
+        public string DestinationSystem { get; set; } // NOTE: name // WARNING: undocumented in event, described in changelog
+        public string DestinationStation { get; set; } // NOTE: name // WARNING: undocumented in event, described in changelog
         public long? Reward { get; set; }
         public long? Donation { get; set; }
         public List<string> PermitsAwarded { get; set; } // TODO: check data type
         public List<CommodityRewardItem> CommodityReward { get; set; }
         public List<MaterialRewardItem> MaterialsReward { get; set; }
+        public List<FactionEffectItem> FactionEffects { get; set; }
 
         #endregion
     }

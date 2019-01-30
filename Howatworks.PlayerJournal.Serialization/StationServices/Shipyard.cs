@@ -8,9 +8,11 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public class PriceItem
         {
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public long id { get; set; } // TODO: check capitalisation
+            [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "As per Journal documentation")]
+            public long id { get; set; }
 
             public string ShipType { get; set; }
+            public string ShipType_Localised { get; set; }
             public long ShipPrice { get; set; }
         }
 
@@ -25,7 +27,7 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public bool AllowCobraMkIV { get; set; }
         [SuppressMessage("ReSharper", "IdentifierTypo")]
-        public List<PriceItem> Pricelist { get; set; } // TODO: check capitalisation
+        public List<PriceItem> PriceList { get; set; } // WARNING: doc uses spelling Pricelist?
 
         #endregion
     }

@@ -8,9 +8,12 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public class MarketItem
         {
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public long id { get; set; } // TODO: check name
+            [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "As per Journal documentation")]
+            public long id { get; set; }
             public string Name { get; set; }
+            public string Name_Localised { get; set; }
             public string Category { get; set; }
+            public string Category_Localised { get; set; }
             public long BuyPrice { get; set; }
             public long SellPrice { get; set; }
             public long MeanPrice { get; set; }

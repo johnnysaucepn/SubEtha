@@ -8,7 +8,8 @@ namespace Howatworks.PlayerJournal.Serialization.StationServices
         public class OutfittingItem
         {
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public long id { get; set; } // TODO: check capitalisation
+            [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "As per Journal documentation")]
+            public long id { get; set; }
             public string Name { get; set; }
             public long BuyPrice { get; set; }
         }
