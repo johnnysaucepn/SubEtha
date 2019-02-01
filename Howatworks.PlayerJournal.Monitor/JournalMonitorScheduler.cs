@@ -84,7 +84,7 @@ namespace Howatworks.PlayerJournal.Monitor
             _triggerUpdate.Dispose();
         }
 
-        public DateTimeOffset? LastUpdated()
+        public DateTimeOffset? LastEntry()
         {
             return _journalMonitorState.LastRead;
         }

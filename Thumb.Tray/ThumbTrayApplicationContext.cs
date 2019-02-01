@@ -40,15 +40,15 @@ namespace Thumb.Tray
                 Text = Resources.NotifyIconDefaultLabel
             };
 
-            _progressHandler = new Progress<DateTimeOffset?>(lastUpdated =>
+            _progressHandler = new Progress<DateTimeOffset?>(_ =>
             {
-                var lastChecked = _thumbApp.LastUpdated().GetValueOrDefault(DateTimeOffset.UtcNow);
-                _trayIcon.Text = lastUpdated.HasValue
+                var lastChecked = _thumbApp.LastChecked().GetValueOrDefault(DateTimeOffset.UtcNow);
+                var lastEntry = _thumbApp.LastEntry();
+                _trayIcon.Text = lastEntry.HasValue
                     ? string.Format(
-                        Resources.NotifyIconLastUpdatedLabel,
-                        $"{lastUpdated.Value.LocalDateTime:g}",
-                        $"{lastChecked.LocalDateTime:g}"
-                    )
+                        Resources.NotifyIconLastUpdatedLabel.Replace("\\n", Environment.NewLine),
+                        lastEntry.Value.LocalDateTime.ToString("g"),
+                        lastChecked.LocalDateTime.ToString("g"))
                     : Resources.NotifyIconNeverUpdatedLabel;
             });
 
@@ -96,7 +96,7 @@ namespace Thumb.Tray
 
         private void UpdateProgress(object state)
         {
-            _progressHandler.Report(_thumbApp.LastUpdated());
+            _progressHandler.Report(_thumbApp.LastEntry());
         }
 
         private void Exit(object sender, EventArgs e)

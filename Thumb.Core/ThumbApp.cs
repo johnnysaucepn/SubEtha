@@ -53,9 +53,9 @@ namespace Thumb.Core
             _monitor.Stop();
         }
 
-        public DateTimeOffset? LastUpdated()
+        public DateTimeOffset? LastEntry()
         {
-            return _monitor.LastUpdated();
+            return _monitor.LastEntry();
         }
 
         public DateTimeOffset? LastChecked()
