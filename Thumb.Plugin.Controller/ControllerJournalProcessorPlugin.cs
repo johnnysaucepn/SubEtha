@@ -1,6 +1,7 @@
 ﻿using System;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -23,6 +24,19 @@ namespace Thumb.Plugin.Controller
         {
             _configuration = configuration;
             _processor = new ControllerJournalProcessor(notifier);
+        }
+
+        public void Startup()
+        {
+            var hostBuilder = new WebHostBuilder()
+                .UseConfiguration(_configuration)
+                .UseStartup<Startup>()
+                .UseKestrel()
+                .UseUrls("http://localhost:5984");
+
+            var host = hostBuilder.Build();
+
+            host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
         }
 
         public void Apply(IJournalEntry journalEntry)

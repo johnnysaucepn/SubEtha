@@ -28,6 +28,10 @@ namespace Thumb.Plugin.SubEtha
             _pluginConfig = pluginConfig;
         }
 
+        public void Startup()
+        {
+        }
+
         public void Apply(IJournalEntry journalEntry)
         {
             var gameVersion = journalEntry.GameVersionDiscriminator;

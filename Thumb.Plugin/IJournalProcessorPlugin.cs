@@ -10,6 +10,8 @@ namespace Thumb.Plugin
         FlushBehaviour FlushBehaviour { get; }
         CatchupBehaviour FirstRunBehaviour { get; }
         CatchupBehaviour CatchupBehaviour { get; }
+
+        void Startup();
         void Apply(IJournalEntry journalEntry);
         void Flush();
     }

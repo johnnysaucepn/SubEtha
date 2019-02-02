@@ -109,6 +109,10 @@
       <Project>{0E35222F-41E9-4F59-9BDD-96DB9696AE08}</Project>
       <Name>Thumb.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj">
+      <Project>{b55ffa05-6211-4060-b5d3-73974049d8a3}</Project>
+      <Name>Thumb.Plugin.Controller</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj">
       <Project>{ED2E180F-82DF-4F5D-B4DE-6B24140C6B85}</Project>
       <Name>Thumb.Plugin</Name>

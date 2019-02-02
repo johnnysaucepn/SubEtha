@@ -16,6 +16,7 @@ namespace Thumb.Core
 
             foreach (var plugin in _plugins)
             {
+                plugin.Startup();
                 plugin.FlushedJournalProcessor += (sender, args) => { notifier.UpdatedService(sender); };
             }
         }
