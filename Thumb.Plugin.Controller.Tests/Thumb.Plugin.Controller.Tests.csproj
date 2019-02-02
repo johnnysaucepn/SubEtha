@@ -19,13 +19,4 @@
     <ProjectReference Include="..\Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="dahkron.binds">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="samplebindings.binds">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Thumb.Plugin.Controller.Models
+namespace Howatworks.EliteDangerous.Bindings
 {
     [Serializable]
     public class Setting<T>

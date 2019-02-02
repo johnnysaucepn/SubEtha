@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Thumb.Plugin.Controller.Models
+namespace Howatworks.EliteDangerous.Bindings
 {
     [Serializable]
     public class Button

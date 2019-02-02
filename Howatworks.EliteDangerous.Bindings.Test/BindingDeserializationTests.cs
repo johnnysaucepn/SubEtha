@@ -1,9 +1,8 @@
 using System.IO;
 using System.Xml.Serialization;
-using Thumb.Plugin.Controller.Models;
 using Xunit;
 
-namespace Thumb.Plugin.Controller.Tests
+namespace Howatworks.EliteDangerous.Bindings.Test
 {
     public class BindingDeserializationTests
     {
