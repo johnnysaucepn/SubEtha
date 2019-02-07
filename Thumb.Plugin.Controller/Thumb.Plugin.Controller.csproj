@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
+    <ProjectReference Include="..\WebSocketManager\WebSocketManager.csproj" />
   </ItemGroup>
 
 </Project>
