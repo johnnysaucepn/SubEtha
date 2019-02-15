@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WebSocketManager;
-using WebSocketManager.Common;
 
 namespace Thumb.Plugin.Controller.Handlers
 {
     public class ControlHandler : WebSocketHandler
     {
         public ControlHandler(WebSocketConnectionManager webSocketConnectionManager)
-            : base(webSocketConnectionManager, new ControllerMethodInvocationStrategy())
+            : base(webSocketConnectionManager)
         {
-            ((ControllerMethodInvocationStrategy) MethodInvocationStrategy).Controller = this;
+
         }
 
         public override async Task OnConnected(WebSocket socket)
@@ -23,13 +20,10 @@ namespace Thumb.Plugin.Controller.Handlers
 
             var socketId = WebSocketConnectionManager.GetId(socket);
 
-            var message = new Message()
-            {
-                MessageType = MessageType.Text,
-                Data = $"{socketId} is now connected"
-            };
+            var message = $"{socketId} is now connected";
 
-            await SendMessageToAllAsync(message);
+            //await SendAsync(socket, message);
+            Console.WriteLine(message);
         }
 
         // this method can be called from a client, doesn't return anything.
@@ -43,16 +37,11 @@ namespace Thumb.Plugin.Controller.Handlers
             }
             catch (JsonException)
             {
-                await SendMessageAsync(socket,
-                    new Message()
-                    {
-                        MessageType = MessageType.Text, Data = message.ToUpperInvariant()
-                    });
+                await SendAsync(socket, message.ToUpperInvariant());
             }
 
         }
 
-        // we ask a client to do some math for us then broadcast the results.
         private void PretendToPressKey(WebSocket socket, ControlRequest controlRequest)
         {
             Console.WriteLine("Pressed a key");
@@ -64,12 +53,7 @@ namespace Thumb.Plugin.Controller.Handlers
 
             await base.OnDisconnected(socket);
 
-            var message = new Message()
-            {
-                MessageType = MessageType.Text,
-                Data = $"{socketId} disconnected"
-            };
-            await SendMessageToAllAsync(message);
+            Console.WriteLine($"{socketId} disconnected");
         }
     }
 }

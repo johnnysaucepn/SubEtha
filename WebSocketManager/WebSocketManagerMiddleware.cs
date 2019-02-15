@@ -5,9 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using WebSocketManager.Common;
 
 namespace WebSocketManager
 {
@@ -16,18 +13,9 @@ namespace WebSocketManager
         private readonly RequestDelegate _next;
         private WebSocketHandler _webSocketHandler { get; set; }
 
-        private JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
-            SerializationBinder = new JsonBinderWithoutAssembly()
-        };
-
         public WebSocketManagerMiddleware(RequestDelegate next,
                                           WebSocketHandler webSocketHandler)
         {
-            _jsonSerializerSettings.Converters.Insert(0, new PrimitiveJsonConverter());
             _next = next;
             _webSocketHandler = webSocketHandler;
         }
@@ -43,11 +31,10 @@ namespace WebSocketManager
             var socket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
             await _webSocketHandler.OnConnected(socket).ConfigureAwait(false);
 
-            await Receive(socket, async (result, serializedMessage) =>
+            await Receive(socket, async (result, message) =>
             {
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    Message message = JsonConvert.DeserializeObject<Message>(serializedMessage, _jsonSerializerSettings);
                     await _webSocketHandler.ReceiveAsync(socket, result, message).ConfigureAwait(false);
                     return;
                 }
@@ -71,7 +58,7 @@ namespace WebSocketManager
         {
             while (socket.State == WebSocketState.Open)
             {
-                ArraySegment<Byte> buffer = new ArraySegment<byte>(new Byte[1024 * 4]);
+                ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024 * 4]);
                 string message = null;
                 WebSocketReceiveResult result = null;
                 try
