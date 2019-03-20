@@ -3,8 +3,6 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Thumb.Plugin.Controller.Handlers;
-using WebSocketManager;
 
 namespace Thumb.Plugin.Controller
 {
@@ -14,7 +12,6 @@ namespace Thumb.Plugin.Controller
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvcCore();
-            services.AddWebSocketManager(Assembly.GetExecutingAssembly());
         }
 
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
@@ -25,7 +22,7 @@ namespace Thumb.Plugin.Controller
             app
 
                 .UseWebSockets()
-                .MapWebSocketManager("/Controller", serviceProvider.GetService<ControlHandler>())
+                .UseWebSocketHandler()
                 .UseStaticFiles(new StaticFileOptions
                 {
                     FileProvider = staticContentFileProvider
