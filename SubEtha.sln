@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.EliteDangerous.B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thumb.Plugin.Controller.Test", "Thumb.Plugin.Controller.Test\Thumb.Plugin.Controller.Test.csproj", "{8B50EB4B-C778-4170-BC34-711FE5FFDE95}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{28AFE659-D17C-435C-A237-75CF5845CC6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CoreDebug|Any CPU = CoreDebug|Any CPU

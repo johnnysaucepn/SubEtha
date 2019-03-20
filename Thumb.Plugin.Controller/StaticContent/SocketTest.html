@@ -8,13 +8,16 @@
 
         // Original test URI and source of this code
         //var wsUri = "wss://echo.websocket.org/";
-        var wsUri = "ws://localhost:5984/ws";
+        var wsUri = "ws://localhost:5984/Controller";
         var output;
 
         function init()
         {
             output = document.getElementById("output");
             testWebSocket();
+
+            document.getElementById("sendup").onclick = function (evt) { doSend("{'BindingName':'Up'}"); }
+            document.getElementById("senddown").onclick = function (evt) { doSend("{'BindingName':'Down'}"); }
         }
 
         function testWebSocket()
@@ -29,7 +32,7 @@
         function onOpen(evt)
         {
             writeToScreen("CONNECTED");
-            doSend("WebSocket rocks");
+
         }
 
         function onClose(evt)
@@ -70,6 +73,8 @@
 
     <h2>WebSocket Test</h2>
 
+    <button type="button" id="sendup">Send Up</button>
+    <button type="button" id="senddown">Send Down</button>
     <div id="output"></div>
 </body>
 </html>
