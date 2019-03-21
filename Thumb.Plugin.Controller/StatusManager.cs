@@ -1,20 +1,31 @@
-﻿using Howatworks.PlayerJournal.Parser;
+﻿using System;
+using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Status;
+using Newtonsoft.Json;
 
 namespace Thumb.Plugin.Controller
 {
     public class StatusManager : IJournalProcessor
     {
         private readonly JournalEntryRouter _entryRouter;
-        private readonly ControllerStatus _status;
+        private readonly ControllerStatus _status = new ControllerStatus();
+        private readonly IJournalMonitorNotifier _notifier;
+        private bool _updateRequired;
 
         public StatusManager(IJournalMonitorNotifier notifier)
         {
-            _status = new ControllerStatus(notifier);
             _entryRouter = new JournalEntryRouter();
 
             _entryRouter.RegisterFor<Status>(ApplyStatus);
+            _notifier = notifier;
+
+            _status.Changed += Status_Changed;
+        }
+
+        private void Status_Changed(object sender, EventArgs e)
+        {
+            _updateRequired = true;
         }
 
         private bool ApplyStatus(Status status)
@@ -37,8 +48,12 @@ namespace Thumb.Plugin.Controller
 
         public void Flush()
         {
-            // TODO: do a thing
-            _status.Flush();
+            if (_updateRequired)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(_status, Formatting.Indented));
+                _notifier.UpdatedService(_status);
+                _updateRequired = false;
+            }
         }
     }
 }

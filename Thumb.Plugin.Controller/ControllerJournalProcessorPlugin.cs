@@ -12,7 +12,7 @@ namespace Thumb.Plugin.Controller
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControllerJournalProcessorPlugin));
 
         private readonly IConfiguration _configuration;
-        private readonly ControllerJournalProcessor _processor;
+        private readonly StatusManager _statusManager;
         public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
         public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
         public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Skip;
@@ -23,7 +23,7 @@ namespace Thumb.Plugin.Controller
         public ControllerJournalProcessorPlugin(IConfiguration configuration, IJournalMonitorNotifier notifier)
         {
             _configuration = configuration;
-            _processor = new ControllerJournalProcessor(notifier);
+            _statusManager = new StatusManager(notifier);
         }
 
         public void Startup()
@@ -43,13 +43,15 @@ namespace Thumb.Plugin.Controller
         {
             Log.Debug(JsonConvert.SerializeObject(journalEntry));
 
-            _processor.Apply(journalEntry);
-            AppliedJournalEntries?.Invoke(this, new AppliedJournalEntriesEventArgs());
+            if (_statusManager.Apply(journalEntry))
+            {
+                AppliedJournalEntries?.Invoke(this, new AppliedJournalEntriesEventArgs());
+            }
         }
 
         public void Flush()
         {
-            _processor.Flush();
+            _statusManager.Flush();
             FlushedJournalProcessor?.Invoke(this, new FlushedJournalProcessorEventArgs());
         }
     }

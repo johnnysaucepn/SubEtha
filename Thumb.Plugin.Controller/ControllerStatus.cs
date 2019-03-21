@@ -14,13 +14,7 @@ namespace Thumb.Plugin.Controller
         private bool _nightVision;
         private bool _hudAnalysisMode;
 
-        private bool _isDirty;
-        private readonly IJournalMonitorNotifier _notifier;
-
-        public ControllerStatus(IJournalMonitorNotifier notifier)
-        {
-            _notifier = notifier;
-        }
+        public event EventHandler Changed;
 
         [JsonProperty]
         public bool LandingGearDown
@@ -76,20 +70,9 @@ namespace Thumb.Plugin.Controller
         {
             if (!EqualityComparer<T>.Default.Equals(originalValue, newValue))
             {
-                _isDirty = true;
+                originalValue = newValue;
+                Changed?.Invoke(this, new EventArgs());
             }
-
-            originalValue = newValue;
-        }
-
-        public void Flush()
-        {
-            if (!_isDirty) return;
-
-            Console.WriteLine(JsonConvert.SerializeObject(this, Formatting.Indented));
-
-            _notifier.UpdatedService(this);
-            _isDirty = false;
         }
 
     }
