@@ -4,9 +4,9 @@ namespace Thumb.Plugin.Controller
 {
     public static class WebSocketMiddlewareExtensions
     {
-        public static IApplicationBuilder UseWebSocketHandler(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseWebSocketHandler(this IApplicationBuilder builder, StatusManager statusManager)
         {
-            return builder.UseMiddleware<WebSocketMiddleware>();
+            return builder.UseMiddleware<WebSocketMiddleware>(statusManager);
         }
     }
 }

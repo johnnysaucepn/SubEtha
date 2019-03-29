@@ -2,7 +2,6 @@
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Status;
-using Newtonsoft.Json;
 
 namespace Thumb.Plugin.Controller
 {
@@ -50,10 +49,16 @@ namespace Thumb.Plugin.Controller
         {
             if (_updateRequired)
             {
-                Console.WriteLine(JsonConvert.SerializeObject(_status, Formatting.Indented));
                 _notifier.UpdatedService(_status);
                 _updateRequired = false;
             }
         }
+
+        public void ActivateBinding(ControlRequest controlRequest)
+        {
+            Console.WriteLine($"Pressed a key: {controlRequest.BindingName}");
+        }
+
+
     }
 }

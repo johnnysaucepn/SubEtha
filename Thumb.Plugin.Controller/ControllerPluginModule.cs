@@ -7,7 +7,7 @@ namespace Thumb.Plugin.Controller
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ControllerJournalProcessorPlugin>().As<IJournalProcessorPlugin>().SingleInstance();
+            builder.RegisterType<StatusManager>().AsSelf().SingleInstance();
         }
-        
     }
 }

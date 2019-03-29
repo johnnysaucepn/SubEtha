@@ -13,13 +13,15 @@ namespace Thumb.Plugin.Controller
     {
         private readonly RequestDelegate _next;
         private static readonly ConcurrentBag<WebSocket> WebSockets = new ConcurrentBag<WebSocket>();
+        private readonly StatusManager _statusManager;
 
-        public WebSocketMiddleware(RequestDelegate next)
+        public WebSocketMiddleware(RequestDelegate next, StatusManager statusManager)
         {
             _next = next;
+            _statusManager = statusManager;
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             if (httpContext.WebSockets.IsWebSocketRequest)
             {
@@ -44,7 +46,7 @@ namespace Thumb.Plugin.Controller
                             try
                             {
                                 var structuredMessage = JsonConvert.DeserializeObject<ControlRequest>(incoming);
-                                PretendToPressKey(socket, structuredMessage);
+                                _statusManager.ActivateBinding(structuredMessage);
 
                             }
                             catch (JsonException)
@@ -62,9 +64,14 @@ namespace Thumb.Plugin.Controller
             }
         }
 
-        private void PretendToPressKey(WebSocket socket, ControlRequest controlRequest)
+        public async void SendStatus(WebSocket socket, ControllerStatus status)
         {
-            Console.WriteLine($"Pressed a key: {controlRequest.BindingName}");
+            var statusMessage = JsonConvert.SerializeObject(status, Formatting.Indented);
+
+            var statusBytes = Encoding.UTF8.GetBytes(statusMessage);
+            await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+
+            Console.WriteLine(statusMessage);
         }
     }
 }

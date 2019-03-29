@@ -1,8 +1,10 @@
 ﻿using System;
+using Autofac;
 using Howatworks.PlayerJournal.Serialization;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.Controller
@@ -12,6 +14,7 @@ namespace Thumb.Plugin.Controller
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControllerJournalProcessorPlugin));
 
         private readonly IConfiguration _configuration;
+        private readonly IComponentContext _context;
         private readonly StatusManager _statusManager;
         public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
         public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
@@ -20,16 +23,19 @@ namespace Thumb.Plugin.Controller
         public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
-        public ControllerJournalProcessorPlugin(IConfiguration configuration, IJournalMonitorNotifier notifier)
+        public ControllerJournalProcessorPlugin(IConfiguration configuration, IComponentContext context, IJournalMonitorNotifier notifier, StatusManager statusManager)
         {
             _configuration = configuration;
-            _statusManager = new StatusManager(notifier);
+            _context = context;
+            _statusManager = statusManager;
         }
 
         public void Startup()
         {
             var hostBuilder = new WebHostBuilder()
                 .UseConfiguration(_configuration)
+                // Use our existing Autofac context in the web app services
+                .ConfigureServices(services => { services.AddSingleton<IComponentContext>(_context); })
                 .UseStartup<Startup>()
                 .UseKestrel()
                 .UseUrls("http://localhost:5984");

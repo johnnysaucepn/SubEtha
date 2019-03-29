@@ -18,6 +18,7 @@
 
             document.getElementById("sendup").onclick = function (evt) { doSend("{'BindingName':'Up'}"); }
             document.getElementById("senddown").onclick = function (evt) { doSend("{'BindingName':'Down'}"); }
+            document.getElementById("disconnect").onclick = function (evt) { websocket.close(); }
         }
 
         function testWebSocket()
@@ -32,7 +33,6 @@
         function onOpen(evt)
         {
             writeToScreen("CONNECTED");
-
         }
 
         function onClose(evt)
@@ -43,7 +43,6 @@
         function onMessage(evt)
         {
             writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-            websocket.close();
         }
 
         function onError(evt)
@@ -75,6 +74,7 @@
 
     <button type="button" id="sendup">Send Up</button>
     <button type="button" id="senddown">Send Down</button>
+    <button type="button" id="disconnect">Disconnect</button>
     <div id="output"></div>
 </body>
 </html>
