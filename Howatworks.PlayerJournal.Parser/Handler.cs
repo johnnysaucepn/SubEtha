@@ -12,7 +12,7 @@ namespace Howatworks.PlayerJournal.Parser
             _action = action;
         }
 
-        public bool Invoke(IJournalEntry journal)
+        public bool Invoke(IJournalEntry journal, BatchMode mode)
         {
             return _action((T)journal);
         }

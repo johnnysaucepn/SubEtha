@@ -9,28 +9,26 @@ namespace Thumb.Plugin.SubEtha
 {
     public class LocationManager : IJournalProcessor
     {
-        private readonly JournalEntryRouter _entryRouter;
         private readonly IUploader<LocationState> _client;
         private LocationState _location;
         private bool _isDirty;
 
-        public LocationManager(IUploader<LocationState> client)
+        public LocationManager(JournalEntryRouter router, IUploader<LocationState> client)
         {
-            _entryRouter = new JournalEntryRouter();
             _client = client;
 
             _location = new LocationState();
 
-            _entryRouter.RegisterFor<Location>(ApplyLocation);
-            _entryRouter.RegisterFor<FsdJump>(ApplyFsdJump);
-            _entryRouter.RegisterFor<Docked>(ApplyDocked);
-            _entryRouter.RegisterFor<Undocked>(ApplyUndocked);
-            _entryRouter.RegisterFor<Touchdown>(ApplyTouchdown);
-            _entryRouter.RegisterFor<Liftoff>(ApplyLiftoff);
-            _entryRouter.RegisterFor<SupercruiseEntry>(ApplySuperCruiseEntry);
-            _entryRouter.RegisterFor<SupercruiseExit>(ApplySupercruiseExit);
-            _entryRouter.RegisterFor<UssDrop>(ApplyUssDrop);
-            _entryRouter.RegisterFor<Died>(ApplyDied);
+            router.RegisterFor<Location>(ApplyLocation);
+            router.RegisterFor<FsdJump>(ApplyFsdJump);
+            router.RegisterFor<Docked>(ApplyDocked);
+            router.RegisterFor<Undocked>(ApplyUndocked);
+            router.RegisterFor<Touchdown>(ApplyTouchdown);
+            router.RegisterFor<Liftoff>(ApplyLiftoff);
+            router.RegisterFor<SupercruiseEntry>(ApplySuperCruiseEntry);
+            router.RegisterFor<SupercruiseExit>(ApplySupercruiseExit);
+            router.RegisterFor<UssDrop>(ApplyUssDrop);
+            router.RegisterFor<Died>(ApplyDied);
         }
 
         private bool ApplyLocation(Location location)
@@ -44,6 +42,7 @@ namespace Thumb.Plugin.SubEtha
                 Station = Station.Create(location.StationName, location.StationType)
                 // All other items set to default
             };
+            Updated(location);
 
             return true;
         }
@@ -56,6 +55,7 @@ namespace Thumb.Plugin.SubEtha
                 StarSystem = new StarSystem(fsdJump.StarSystem, fsdJump.StarPos)
                 // All other items set to default
             };
+            Updated(fsdJump);
 
             return true;
         }
@@ -66,6 +66,7 @@ namespace Thumb.Plugin.SubEtha
             _location.SurfaceLocation = null;
             _location.Station = Station.Create(docked.StationName, docked.StationType);
             _location.SignalSource = null;
+            Updated(docked);
             return true;
         }
 
@@ -75,6 +76,7 @@ namespace Thumb.Plugin.SubEtha
             _location.SurfaceLocation = null;
             _location.Station = null;
             _location.SignalSource = null;
+            Updated(undocked);
             return true;
         }
 
@@ -84,6 +86,7 @@ namespace Thumb.Plugin.SubEtha
             _location.SurfaceLocation = new SurfaceLocation(true, touchdown.Latitude, touchdown.Longitude);
             _location.Station = null;
             _location.SignalSource = null;
+            Updated(touchdown);
             return true;
         }
 
@@ -93,6 +96,7 @@ namespace Thumb.Plugin.SubEtha
             _location.SurfaceLocation = new SurfaceLocation(false, liftoff.Latitude, liftoff.Longitude);
             _location.Station = null;
             _location.SignalSource = null;
+            Updated(liftoff);
             return true;
         }
 
@@ -102,6 +106,7 @@ namespace Thumb.Plugin.SubEtha
             _location.SurfaceLocation = null;
             _location.Station = null;
             _location.SignalSource = null;
+            Updated(entry);
             return true;
         }
 
@@ -111,6 +116,7 @@ namespace Thumb.Plugin.SubEtha
             _location.SurfaceLocation = null;
             _location.Station = null;
             _location.SignalSource = null;
+            Updated(exit);
             return true;
         }
 
@@ -120,6 +126,7 @@ namespace Thumb.Plugin.SubEtha
             _location.SurfaceLocation = null;
             _location.Station = null;
             _location.SignalSource = new SignalSource(new LocalisedString(ussDrop.USSType, ussDrop.USSType_Localised), ussDrop.USSThreat);
+            Updated(ussDrop);
             return true;
         }
 
@@ -128,15 +135,14 @@ namespace Thumb.Plugin.SubEtha
             // Ignore previous information, return new location
 
             _location = new LocationState();
+            Updated(died);
             return true;
         }
 
-        public bool Apply(IJournalEntry journalEntry)
+        private void Updated(IJournalEntry entry)
         {
-            if (!_entryRouter.Apply(journalEntry)) return false;
-            _location.TimeStamp = journalEntry.Timestamp;
+            _location.TimeStamp = entry.Timestamp;
             _isDirty = true;
-            return true;
         }
 
         public void Flush()

@@ -20,9 +20,13 @@ namespace Thumb.Plugin.Controller
             var staticContentAssembly = Assembly.GetExecutingAssembly();
             var staticContentFileProvider = new ManifestEmbeddedFileProvider(staticContentAssembly, "StaticContent");
 
+
+            var statusManager = autofacContext.Resolve<StatusManager>();
+            var webSocketConnectionManager = autofacContext.Resolve<WebSocketConnectionManager>();
+
             app
                 .UseWebSockets()
-                .UseWebSocketHandler(autofacContext.Resolve<StatusManager>())
+                .UseWebSocketHandler(webSocketConnectionManager)
                 .UseStaticFiles(new StaticFileOptions
                 {
                     FileProvider = staticContentFileProvider

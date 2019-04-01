@@ -6,7 +6,6 @@ namespace Thumb.Plugin.SubEtha
 {
     public class SessionManager : IJournalProcessor
     {
-        private readonly JournalEntryRouter _entryRouter;
         private readonly IUploader<SessionState> _client;
         // ReSharper disable once UnusedMember.Local
 
@@ -14,17 +13,16 @@ namespace Thumb.Plugin.SubEtha
         private SessionState _session;
         private bool _isDirty;
 
-        public SessionManager(IUploader<SessionState> client)
+        public SessionManager(JournalEntryRouter router, IUploader<SessionState> client)
         {
-            _entryRouter = new JournalEntryRouter();
             _client = client;
 
             _session = new SessionState();
 
-            _entryRouter.RegisterFor<LoadGame>(ApplyLoadGame);
-            _entryRouter.RegisterFor<NewCommander>(ApplyNewCommander);
-            _entryRouter.RegisterFor<ClearSavedGame>(ApplyClearSavedGame);
-            _entryRouter.RegisterFor<FileHeader>(ApplyFileHeader);
+            router.RegisterFor<LoadGame>(ApplyLoadGame);
+            router.RegisterFor<NewCommander>(ApplyNewCommander);
+            router.RegisterFor<ClearSavedGame>(ApplyClearSavedGame);
+            router.RegisterFor<FileHeader>(ApplyFileHeader);
 
         }
 
@@ -36,6 +34,7 @@ namespace Thumb.Plugin.SubEtha
                 GameMode = loadGame.GameMode,
                 Group = loadGame.Group
             };
+            Updated(loadGame);
             return true;
         }
 
@@ -45,6 +44,7 @@ namespace Thumb.Plugin.SubEtha
             {
                 CommanderName = newCommander.Name
             };
+            Updated(newCommander);
             return true;
         }
 
@@ -54,6 +54,7 @@ namespace Thumb.Plugin.SubEtha
             {
                 CommanderName = clearSavedGame.Name
             };
+            Updated(clearSavedGame);
             return true;
         }
 
@@ -64,12 +65,10 @@ namespace Thumb.Plugin.SubEtha
             return false;
         }
 
-        public bool Apply(IJournalEntry journalEntry)
+        private void Updated(IJournalEntry entry)
         {
-            if (!_entryRouter.Apply(journalEntry)) return false;
-            _session.TimeStamp = journalEntry.Timestamp;
+            _session.TimeStamp = entry.Timestamp;
             _isDirty = true;
-            return true;
         }
 
         public void Flush()

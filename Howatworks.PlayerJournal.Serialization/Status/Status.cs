@@ -6,9 +6,9 @@ namespace Howatworks.PlayerJournal.Serialization.Status
     {
         public StatusFlags Flags { get; set; }
         public List<int> Pips { get; set; } // TODO: measured in half-pips, consider converting
-        public string Firegroup { get; set; } // TODO: check spelling
+        public int Firegroup { get; set; } // TODO: check spelling
 
-        public string GuiFocus { get; set; }
+        public int GuiFocus { get; set; }
         public decimal? Fuel { get; set; }
         public decimal? Cargo { get; set; }
         public decimal? Latitude { get; set; }

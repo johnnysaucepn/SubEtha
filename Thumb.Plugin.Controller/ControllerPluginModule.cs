@@ -8,6 +8,7 @@ namespace Thumb.Plugin.Controller
         {
             builder.RegisterType<ControllerJournalProcessorPlugin>().As<IJournalProcessorPlugin>().SingleInstance();
             builder.RegisterType<StatusManager>().AsSelf().SingleInstance();
+            builder.RegisterType<WebSocketConnectionManager>().AsSelf().SingleInstance();
         }
     }
 }

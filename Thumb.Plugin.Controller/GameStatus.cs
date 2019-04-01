@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Thumb.Plugin.Controller
 {
-    public class ControllerStatus
+    public class GameStatus
     {
         private bool _landingGearDown;
         private bool _supercruise;

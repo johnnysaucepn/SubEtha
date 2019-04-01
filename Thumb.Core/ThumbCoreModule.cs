@@ -28,6 +28,7 @@ namespace Thumb.Core
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
             builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();
             builder.RegisterType<ThumbProcessor>().AsSelf().SingleInstance();
+            builder.RegisterType<JournalEntryRouter>().AsSelf().SingleInstance();
 
             var plugins = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.Plugin.*.dll")
                 .Select(Assembly.LoadFile);

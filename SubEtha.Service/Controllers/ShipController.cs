@@ -37,12 +37,12 @@ namespace SubEtha.Service.Controllers
         public IActionResult PostShip(string user, string gameVersion, [FromBody]ShipStateEntity ship)
         {
             ship.GameContext = new GameContext(gameVersion, user);
- 
+
             _shipRepoz.Add(ship);
 
             Log.Info(JsonConvert.SerializeObject(ship));
 
             return Ok(ship);
-        }        
+        }
     }
 }

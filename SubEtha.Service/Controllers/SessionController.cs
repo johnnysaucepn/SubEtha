@@ -57,6 +57,6 @@ namespace SubEtha.Service.Controllers
             Log.Info(JsonConvert.SerializeObject(session));
 
             return Ok(session);
-        }        
+        }
     }
 }

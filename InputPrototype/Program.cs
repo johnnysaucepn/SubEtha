@@ -26,7 +26,7 @@ namespace InputPrototype
                     }
                 }
                 Console.Write(".");
-                
+
                 Thread.Sleep(2000);
             } while (true);
         }
@@ -37,7 +37,7 @@ namespace InputPrototype
             Thread.Sleep(100);
             SendKeyAction(false, scanCode, extended);
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private static uint SendKeyAction(bool keyDown, ScanCode scanCode, bool extended)
         {

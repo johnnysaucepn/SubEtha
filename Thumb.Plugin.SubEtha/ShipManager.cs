@@ -1,4 +1,6 @@
-﻿using Howatworks.PlayerJournal.Parser;
+﻿using System;
+using System.Collections.Generic;
+using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization;
 using Howatworks.PlayerJournal.Serialization.Combat;
 using Howatworks.PlayerJournal.Serialization.Startup;
@@ -8,100 +10,141 @@ namespace Thumb.Plugin.SubEtha
 {
     public class ShipManager : IJournalProcessor
     {
-        private readonly JournalEntryRouter _entryRouter;
         private readonly IUploader<ShipState> _client;
         // ReSharper disable once UnusedMember.Local
 
-        private ShipState _ship;
+        private readonly Dictionary<string, ShipState> _ships = new Dictionary<string, ShipState>();
         private bool _isDirty;
 
-        public ShipManager(IUploader<ShipState> client)
+        public ShipManager(JournalEntryRouter router, IUploader<ShipState> client)
         {
-            _entryRouter = _entryRouter = new JournalEntryRouter();
             _client = client;
 
-            _ship = new ShipState();
+            router.RegisterFor<LoadGame>(ApplyLoadGame);
+            router.RegisterFor<ShipyardNew>(ApplyShipyardNew);
+            router.RegisterFor<ShipyardSwap>(ApplyShipyardSwap);
 
-            _entryRouter.RegisterFor<LoadGame>(ApplyLoadGame);
-            _entryRouter.RegisterFor<ShipyardNew>(ApplyShipyardNew);
-            _entryRouter.RegisterFor<ShipyardSwap>(ApplyShipyardSwap);
-
-            _entryRouter.RegisterFor<ShieldState>(ApplyShieldState);
-            _entryRouter.RegisterFor<HullDamage>(ApplyHullDamage);
-            _entryRouter.RegisterFor<Repair>(ApplyRepair);
-            _entryRouter.RegisterFor<RepairAll>(ApplyRepairAll);
+            router.RegisterFor<ShieldState>(ApplyShieldState);
+            router.RegisterFor<HullDamage>(ApplyHullDamage);
+            router.RegisterFor<Repair>(ApplyRepair);
+            router.RegisterFor<RepairAll>(ApplyRepairAll);
         }
 
         private bool ApplyLoadGame(LoadGame loadGame)
         {
-            _ship.Type = loadGame.Ship;
-            _ship.ShipID = loadGame.ShipID;
-            //_ship.Name = loadGame.ShipName;
-            //_ship.Ident = loadGame.ShipIdent;
-            return true;
+            return Apply(loadGame, ship =>
+            {
+                ship.Type = loadGame.Ship;
+                ship.ShipID = loadGame.ShipID;
+                //ship.Name = loadGame.ShipName;
+                //ship.Ident = loadGame.ShipIdent;
+                return true;
+            });
         }
 
         private bool ApplyShipyardNew(ShipyardNew shipyardNew)
         {
-            _ship = new ShipState
+            return Replace(shipyardNew, () => new ShipState
             {
                 Type = shipyardNew.ShipType,
                 ShipID = shipyardNew.NewShipID
-            };
-            return true;
+            });
         }
 
         private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap)
         {
-            _ship = new ShipState
+            return Apply(shipyardSwap, ship =>
             {
-                Type = shipyardSwap.ShipType,
-                ShipID = shipyardSwap.ShipID
-            };
-            return true;
+                ship.Type = shipyardSwap.ShipType;
+                ship.ShipID = shipyardSwap.ShipID;
+                return true;
+            });
         }
 
         private bool ApplyHullDamage(HullDamage hullDamage)
         {
-            _ship.HullIntegrity = hullDamage.Health;
-            return true;
+            return Apply(hullDamage, ship =>
+            {
+                ship.HullIntegrity = hullDamage.Health;
+                return true;
+            });
         }
 
         private bool ApplyShieldState(ShieldState shieldState)
         {
-            // If shield state was unknown before (i.e. null) we know it now
-            _ship.ShieldsUp = shieldState.ShieldsUp;
-            return true;
+            return Apply(shieldState, ship =>
+            {
+                // If shield state was unknown before (i.e. null) we know it now
+                ship.ShieldsUp = shieldState.ShieldsUp;
+                return true;
+            });
         }
 
         private bool ApplyRepair(Repair repair)
         {
-            if (repair.Item != "hull" && repair.Item != "all") return false;
-            _ship.HullIntegrity = 1;
-            return true;
+            return Apply(repair, ship =>
+            {
+                if (repair.Item != "hull" && repair.Item != "all") return false;
+                ship.HullIntegrity = 1;
+                return true;
+            });
         }
 
         private bool ApplyRepairAll(RepairAll repair)
         {
-            _ship.HullIntegrity = 1;
-            return true;
+            return Apply(repair, ship =>
+            {
+                ship.HullIntegrity = 1;
+                return true;
+            });
         }
-
-        public bool Apply(IJournalEntry journalEntry)
-        {
-            if (!_entryRouter.Apply(journalEntry)) return false;
-            _ship.TimeStamp = journalEntry.Timestamp;
-            _isDirty = true;
-            return true;
-        }
-
 
         public void Flush()
         {
             if (!_isDirty) return;
 
-            _client.Upload(_ship);
+            foreach (ShipState ship in _ships.Values)
+            {
+                _client.Upload(ship);
+            }
+
             _isDirty = false;
+        }
+
+        private bool Apply(IJournalEntry entry, Func<ShipState, bool> action)
+        {
+            if (!_ships.ContainsKey(entry.GameVersionDiscriminator))
+            {
+                _ships[entry.GameVersionDiscriminator] = new ShipState();
+            }
+
+            var ship = _ships[entry.GameVersionDiscriminator];
+
+            // If handler didn't apply the change, don't update state
+            if (action(ship))
+            {
+                ship.TimeStamp = entry.Timestamp;
+                _isDirty = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool Replace(IJournalEntry entry, Func<ShipState> action)
+        {
+            // If handler didn't apply the change, don't update state
+            var newState = action();
+            if (newState != null)
+            {
+                newState.TimeStamp = entry.Timestamp;
+                _isDirty = true;
+
+                _ships[entry.GameVersionDiscriminator] = newState;
+                return true;
+            }
+
+            return false;
         }
 
     }

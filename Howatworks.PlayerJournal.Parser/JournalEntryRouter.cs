@@ -21,7 +21,7 @@ namespace Howatworks.PlayerJournal.Parser
             _handlers[t].Add(new Handler<T>(handler));
         }
 
-        public bool Apply<T>(T entry) where T : IJournalEntry
+        public bool Apply<T>(T entry, BatchMode mode) where T : IJournalEntry
         {
             var t = entry.GetType();
             if (!_handlers.ContainsKey(t)) return false;
@@ -30,13 +30,13 @@ namespace Howatworks.PlayerJournal.Parser
             foreach (var handler in _handlers[t])
             {
                 Log.Info($"Applying journal event {t.Name} to {GetType().Name}");
-                if (!handler.Invoke(entry)) continue;
+                if (!handler.Invoke(entry, mode)) continue;
                 applied = true;
 
             }
             return applied;
         }
 
-        
+
     }
 }

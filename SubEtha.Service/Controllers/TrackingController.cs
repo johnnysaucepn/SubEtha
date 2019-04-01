@@ -23,10 +23,10 @@ namespace SubEtha.Service.Controllers
         }
 
         [HttpGet]
-        [Route("{groupname}/{gameVersion}/Tracking")]
-        public IActionResult GetTracking(string groupname, string gameVersion)
+        [Route("{groupName}/{gameVersion}/Tracking")]
+        public IActionResult GetTracking(string groupName, string gameVersion)
         {
-            var group = _groupRepository.Query().FirstOrDefault(x => x.Name == groupname);
+            var group = _groupRepository.Query().FirstOrDefault(x => x.Name == groupName);
             if (group == null) return NotFound();
 
 
@@ -39,9 +39,9 @@ namespace SubEtha.Service.Controllers
                 var ship = _shipRepository.GetAtDateTime(user, gameVersion, location.TimeStamp);
                 results.Add(ToTrackingRepresentation(cmdr, location, ship));
             }
-            
+
             return Ok(new {
-                Group = groupname,
+                Group = groupName,
                 GameVersion = gameVersion,
                 Tracking = results
             });

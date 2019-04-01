@@ -1,4 +1,4 @@
-﻿namespace Howatworks.PlayerJournal.Monitor
+﻿namespace Howatworks.PlayerJournal.Parser
 {
     public enum BatchMode
     {

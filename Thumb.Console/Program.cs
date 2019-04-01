@@ -42,7 +42,7 @@ namespace Thumb.Console
                 System.Console.ReadKey();
                 app.Stop();
             }
-            
+
         }
     }
 }
