@@ -12,12 +12,7 @@ namespace Thumb.Plugin.Controller
     {
         private static readonly ConcurrentBag<WebSocket> WebSockets = new ConcurrentBag<WebSocket>();
 
-        private readonly StatusManager _statusManager;
-
-        public WebSocketConnectionManager(StatusManager statusManager)
-        {
-            _statusManager = statusManager;
-        }
+        public event EventHandler<MessageReceivedArgs> MessageReceived = delegate { };
 
         public async Task Connect(WebSocket socket)
         {
@@ -39,9 +34,7 @@ namespace Thumb.Plugin.Controller
                         var incoming = Encoding.UTF8.GetString(buffer.Array ?? throw new InvalidOperationException(), buffer.Offset, buffer.Count);
                         try
                         {
-                            var structuredMessage = JsonConvert.DeserializeObject<ControlRequest>(incoming);
-                            _statusManager.ActivateBinding(structuredMessage);
-
+                            MessageReceived.Invoke(this, new MessageReceivedArgs(incoming));
                         }
                         catch (JsonException)
                         {
@@ -61,17 +54,15 @@ namespace Thumb.Plugin.Controller
             }
         }
 
-        public async void SendStatusToAllClients(GameStatus status)
+        public async void SendMessageToAllClients(string message)
         {
-            var statusMessage = JsonConvert.SerializeObject(status, Formatting.Indented);
-
-            var statusBytes = Encoding.UTF8.GetBytes(statusMessage);
+            var statusBytes = Encoding.UTF8.GetBytes(message);
             foreach (var socket in WebSockets)
             {
                 await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None);
             }
 
-            Console.WriteLine(statusMessage);
+            Console.WriteLine(message);
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using Thumb.Plugin.Controller.Messages;
 
 namespace Thumb.Plugin.Controller
 {
-    public class GameStatus
+    public class ControlStateModel : IControlState
     {
         private bool _landingGearDown;
         private bool _supercruise;
@@ -16,54 +16,60 @@ namespace Thumb.Plugin.Controller
 
         public event EventHandler Changed;
 
-        [JsonProperty]
         public bool LandingGearDown
         {
             get => _landingGearDown;
             set => UpdateProperty(ref _landingGearDown, value);
         }
 
-
-        [JsonProperty]
         public bool Supercruise
         {
             get => _supercruise;
             set => UpdateProperty(ref _supercruise, value);
         }
 
-        [JsonProperty]
         public bool HardpointsDeployed
         {
             get => _hardpointsDeployed;
             set => UpdateProperty(ref _hardpointsDeployed, value);
         }
 
-        [JsonProperty]
         public bool LightsOn
         {
             get => _lightsOn;
             set => UpdateProperty(ref _lightsOn, value);
         }
 
-        [JsonProperty]
         public bool CargoScoopDeployed
         {
             get => _cargoScoopDeployed;
             set => UpdateProperty(ref _cargoScoopDeployed, value);
         }
 
-        [JsonProperty]
         public bool NightVision
         {
             get => _nightVision;
             set => UpdateProperty(ref _nightVision, value);
         }
 
-        [JsonProperty]
         public bool HudAnalysisMode
         {
             get => _hudAnalysisMode;
             set => UpdateProperty(ref _hudAnalysisMode, value);
+        }
+
+        public ControlState CreateControlStateMessage()
+        {
+            return new ControlState
+            {
+                CargoScoopDeployed = CargoScoopDeployed,
+                HardpointsDeployed = HardpointsDeployed,
+                HudAnalysisMode = HudAnalysisMode,
+                LandingGearDown = LandingGearDown,
+                LightsOn = LightsOn,
+                NightVision = NightVision,
+                Supercruise = Supercruise
+            };
         }
 
         private void UpdateProperty<T>(ref T originalValue, T newValue)

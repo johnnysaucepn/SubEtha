@@ -1,15 +1,16 @@
 ﻿using System;
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization.Status;
+using Thumb.Plugin.Controller.Messages;
 
 namespace Thumb.Plugin.Controller
 {
     public class StatusManager : IJournalProcessor
     {
-        private readonly GameStatus _status = new GameStatus();
+        private readonly ControlStateModel _status = new ControlStateModel();
         private bool _updateRequired;
 
-        public event EventHandler<ControllerModeUpdateEventArgs> ControllerModeUpdated = (sender, args) => { };
+        public event EventHandler<ControlStateModelChangedEventArgs> ControlStateChanged = (sender, args) => { };
 
         public StatusManager(JournalEntryRouter router)
         {
@@ -40,7 +41,7 @@ namespace Thumb.Plugin.Controller
         {
             if (_updateRequired)
             {
-                ControllerModeUpdated?.Invoke(this, new ControllerModeUpdateEventArgs(_status));
+                ControlStateChanged?.Invoke(this, new ControlStateModelChangedEventArgs(_status));
                 _updateRequired = false;
             }
         }

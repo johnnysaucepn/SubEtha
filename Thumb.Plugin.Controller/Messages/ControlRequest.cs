@@ -1,4 +1,4 @@
-﻿namespace Thumb.Plugin.Controller
+﻿namespace Thumb.Plugin.Controller.Messages
 {
     public class ControlRequest
     {

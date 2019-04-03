@@ -11,6 +11,6 @@ namespace Thumb.Plugin.SubEtha
         public string CommanderName { get; set; }
         public string GameMode { get; set; }
         public string Group { get; set; }
-        
+
     }
 }

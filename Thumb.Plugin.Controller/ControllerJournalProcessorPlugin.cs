@@ -1,11 +1,11 @@
 ﻿using System;
 using Autofac;
-using Howatworks.PlayerJournal.Serialization;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Thumb.Plugin.Controller.Messages;
 
 namespace Thumb.Plugin.Controller
 {
@@ -46,10 +46,17 @@ namespace Thumb.Plugin.Controller
 
             var host = hostBuilder.Build();
 
-            _statusManager.ControllerModeUpdated += (sender, args) =>
+            _connectionManager.MessageReceived += (sender, args) =>
             {
-                _notifier.UpdatedService(args.Status);
-                _connectionManager.SendStatusToAllClients(args.Status);
+                var structuredMessage = JsonConvert.DeserializeObject<ControlRequest>(args.Message);
+                _statusManager.ActivateBinding(structuredMessage);
+            };
+
+            _statusManager.ControlStateChanged += (sender, args) =>
+            {
+                _notifier.UpdatedService(args.State);
+                var serializedMessage = JsonConvert.SerializeObject(args.State.CreateControlStateMessage(), Formatting.Indented);
+                _connectionManager.SendMessageToAllClients(serializedMessage);
             };
 
             host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
