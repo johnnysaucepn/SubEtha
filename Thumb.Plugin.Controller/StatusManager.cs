@@ -1,12 +1,15 @@
 ﻿using System;
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization.Status;
+using log4net;
 using Thumb.Plugin.Controller.Messages;
 
 namespace Thumb.Plugin.Controller
 {
     public class StatusManager : IJournalProcessor
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StatusManager));
+
         private readonly ControlStateModel _status = new ControlStateModel();
         private bool _updateRequired;
 
@@ -48,7 +51,7 @@ namespace Thumb.Plugin.Controller
 
         public void ActivateBinding(ControlRequest controlRequest)
         {
-            Console.WriteLine($"Pressed a key: {controlRequest.BindingName}");
+            Log.Info($"Pressed a key: {controlRequest.BindingName}");
         }
 
 

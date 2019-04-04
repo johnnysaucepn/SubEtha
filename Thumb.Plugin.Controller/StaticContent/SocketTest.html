@@ -16,8 +16,12 @@
             output = document.getElementById("output");
             testWebSocket();
 
-            document.getElementById("sendup").onclick = function (evt) { doSend("{'BindingName':'Up'}"); }
-            document.getElementById("senddown").onclick = function (evt) { doSend("{'BindingName':'Down'}"); }
+            document.getElementById("sendup").onclick = function(evt) {
+                sendKeyBindingRequest({ 'BindingName': 'Up' });
+            }
+            document.getElementById("senddown").onclick = function(evt) {
+                sendKeyBindingRequest({ 'BindingName': 'Down' });
+            }
             document.getElementById("disconnect").onclick = function (evt) { websocket.close(); }
         }
 
@@ -50,10 +54,12 @@
             writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
         }
 
-        function doSend(message)
-        {
-            writeToScreen("SENT: " + message);
-            websocket.send(message);
+        function sendKeyBindingRequest(message) {
+            var wrappedMessage = { MessageType: 'ActivateBinding', MessageContent: message };
+            var stringifiedMessage = JSON.stringify(wrappedMessage);
+
+            writeToScreen("SENT: " + stringifiedMessage);
+            websocket.send(stringifiedMessage);
         }
 
         function writeToScreen(message)

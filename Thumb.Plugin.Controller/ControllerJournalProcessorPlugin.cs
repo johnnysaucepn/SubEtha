@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Thumb.Plugin.Controller.Messages;
 
 namespace Thumb.Plugin.Controller
@@ -48,14 +49,28 @@ namespace Thumb.Plugin.Controller
 
             _connectionManager.MessageReceived += (sender, args) =>
             {
-                var structuredMessage = JsonConvert.DeserializeObject<ControlRequest>(args.Message);
-                _statusManager.ActivateBinding(structuredMessage);
+                var messageWrapper = JObject.Parse(args.Message);
+                switch (messageWrapper["MessageType"].Value<string>())
+                {
+                    case "ActivateBinding":
+                        var controlRequest = messageWrapper["MessageContent"].ToObject<ControlRequest>();
+                        _statusManager.ActivateBinding(controlRequest);
+                        break;
+                    default:
+                        Log.Warn($"Unrecognised message format :{args.Message}");
+                        break;
+                }
+
             };
 
             _statusManager.ControlStateChanged += (sender, args) =>
             {
                 _notifier.UpdatedService(args.State);
-                var serializedMessage = JsonConvert.SerializeObject(args.State.CreateControlStateMessage(), Formatting.Indented);
+                var serializedMessage = JsonConvert.SerializeObject(new
+                    {
+                        MessageType = "ControlState", MessageContent = args.State.CreateControlStateMessage()
+                    },
+                    Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
 
@@ -68,4 +83,5 @@ namespace Thumb.Plugin.Controller
             FlushedJournalProcessor?.Invoke(this, new FlushedJournalProcessorEventArgs());
         }
     }
+
 }
