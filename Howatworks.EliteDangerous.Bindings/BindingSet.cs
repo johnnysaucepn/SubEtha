@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Howatworks.EliteDangerous.Bindings
 {
     [Serializable]
-    public class Binding
+    public class BindingSet
     {
 
         [XmlAttribute]

@@ -96,12 +96,12 @@ namespace Howatworks.EliteDangerous.Bindings.Test
 
         }
 
-        private static Binding DeserializeSampleBindingFile(string path)
+        private static BindingSet DeserializeSampleBindingFile(string path)
         {
-            var serializer = new XmlSerializer(typeof(Binding), new XmlRootAttribute("Root"));
+            var serializer = new XmlSerializer(typeof(BindingSet), new XmlRootAttribute("Root"));
             using (var file = File.OpenRead(path))
             {
-                var binding = (Binding)serializer.Deserialize(file);
+                var binding = (BindingSet)serializer.Deserialize(file);
                 return binding;
             }
         }

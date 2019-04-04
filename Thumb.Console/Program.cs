@@ -17,12 +17,19 @@ namespace Thumb.Console
                 "..", "Saved Games", "Frontier Developments", "Elite Dangerous"
             );
 
+            var defaultBindingsFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Frontier Developments", "Elite Dangerous", "Options", "Bindings"
+            );
+
             var defaultConfig = new Dictionary<string, string>
             {
                 ["JournalFolder"] = defaultJournalFolder,
                 ["JournalPattern"] = "Journal.*.log",
                 ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json",
-                ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString()
+                ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString(),
+                ["BindingsFolder"] = defaultBindingsFolder,
+                ["BindingsFilename"] = "Custom.binds"
             };
 
             var config = new ConfigurationBuilder()

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Xml.Serialization;
 using Autofac;
+using Howatworks.EliteDangerous.Bindings;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +22,8 @@ namespace Thumb.Plugin.Controller
         private readonly IJournalMonitorNotifier _notifier;
         private readonly WebSocketConnectionManager _connectionManager;
         private readonly StatusManager _statusManager;
+        private BindingSet _bindings;
+        private BindingMapper _bindingMapper;
         public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
         public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
         public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Skip;
@@ -37,6 +42,10 @@ namespace Thumb.Plugin.Controller
 
         public void Startup()
         {
+            var bindingsPath = Path.Combine(_configuration["BindingsFolder"], _configuration["BindingsFilename"]);
+
+            _bindingMapper = BindingMapper.FromFile(bindingsPath);
+
             var hostBuilder = new WebHostBuilder()
                 .UseConfiguration(_configuration)
                 // Use our existing Autofac context in the web app services

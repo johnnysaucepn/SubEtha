@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Howatworks.EliteDangerous.Bindings\Howatworks.EliteDangerous.Bindings.csproj" />
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
   </ItemGroup>
 
