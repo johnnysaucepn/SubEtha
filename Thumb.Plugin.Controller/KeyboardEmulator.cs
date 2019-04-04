@@ -43,17 +43,20 @@ namespace Thumb.Plugin.Controller
             var modifiers = MapModifiers(selectedButtonBinding).ToArray();
             var mainKey = MapKey(selectedButtonBinding).ToArray();
 
-            var hwnd = FindWindow(null, _activeWindowTitle);
-            if (hwnd != IntPtr.Zero)
+            if (DoesWindowHaveFocus(_activeWindowTitle))
             {
-                if (GetForegroundWindow() == hwnd)
-                {
-                    Press(modifiers);
-                    PressAndRelease(mainKey);
-                    Release(modifiers);
-                }
+                Press(modifiers);
+                PressAndRelease(mainKey);
+                Release(modifiers);
             }
 
+        }
+
+        private static bool DoesWindowHaveFocus(string windowTitle)
+        {
+            var hwnd = FindWindow(null, windowTitle);
+            if (hwnd == IntPtr.Zero) return false;
+            return GetForegroundWindow() == hwnd;
         }
 
         private IEnumerable<ScanCode> MapKey(Button.ButtonBinding selectedButtonBinding)
@@ -72,30 +75,34 @@ namespace Thumb.Plugin.Controller
 
         private static void PressAndRelease(params ScanCode[] scanCodes)
         {
+            Press(scanCodes);
+            Thread.Sleep(100);
+            Release(scanCodes);
+        }
+
+        private static void PressAndRelease(params VirtualKey[] virtualKeys)
+        {
+            Press(virtualKeys);
+            Thread.Sleep(100);
+            Release(virtualKeys);
+        }
+
+        private static void Press(params ScanCode[] scanCodes)
+        {
             foreach (var scanCode in scanCodes)
             {
                 SendKeyAction(true, scanCode, true);
             }
+        }
 
-            Thread.Sleep(100);
-
+        private static void Release(params ScanCode[] scanCodes)
+        {
             foreach (var scanCode in scanCodes)
             {
                 SendKeyAction(false, scanCode, true);
             }
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        private static void PressAndRelease(params VirtualKey[] virtualKeys)
-        {
-            Press(virtualKeys);
-
-            Thread.Sleep(100);
-
-            Release(virtualKeys);
-        }
-
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private static void Press(params VirtualKey[] virtualKeys)
         {
             foreach (var virtualKey in virtualKeys)
@@ -104,7 +111,6 @@ namespace Thumb.Plugin.Controller
             }
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private static void Release(params VirtualKey[] virtualKeys)
         {
             foreach (var virtualKey in virtualKeys)
