@@ -16,11 +16,17 @@
             output = document.getElementById("output");
             testWebSocket();
 
-            document.getElementById("sendup").onclick = function(evt) {
-                sendKeyBindingRequest({ 'BindingName': 'Up' });
+            document.getElementById("sendeng").onclick = function(evt) {
+                sendKeyBindingRequest({ 'BindingName': 'IncreaseEnginesPower' });
             }
-            document.getElementById("senddown").onclick = function(evt) {
-                sendKeyBindingRequest({ 'BindingName': 'Down' });
+            document.getElementById("sendsys").onclick = function(evt) {
+                sendKeyBindingRequest({ 'BindingName': 'IncreaseSystemsPower' });
+            }
+            document.getElementById("sendwep").onclick = function (evt) {
+                sendKeyBindingRequest({ 'BindingName': 'IncreaseWeaponsPower' });
+            }
+            document.getElementById("sendreset").onclick = function (evt) {
+                sendKeyBindingRequest({ 'BindingName': 'ResetPowerDistribution' });
             }
             document.getElementById("disconnect").onclick = function (evt) { websocket.close(); }
         }
@@ -78,8 +84,10 @@
 
     <h2>WebSocket Test</h2>
 
-    <button type="button" id="sendup">Send Up</button>
-    <button type="button" id="senddown">Send Down</button>
+    <button type="button" id="sendeng">ENG</button>
+    <button type="button" id="sendsys">SYS</button>
+    <button type="button" id="sendwep">WEP</button>
+    <button type="button" id="sendreset">Reset</button>
     <button type="button" id="disconnect">Disconnect</button>
     <div id="output"></div>
 </body>

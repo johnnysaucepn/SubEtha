@@ -32,7 +32,7 @@ namespace Thumb.Plugin.Controller
                 });
         }
 
-        public BindingMapper FromFile(string bindingsPath)
+        public static BindingMapper FromFile(string bindingsPath)
         {
             var serializer = new XmlSerializer(typeof(BindingSet), new XmlRootAttribute("Root"));
             using (var file = File.OpenRead(bindingsPath))

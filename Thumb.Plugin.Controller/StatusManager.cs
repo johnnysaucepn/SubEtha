@@ -49,11 +49,5 @@ namespace Thumb.Plugin.Controller
             }
         }
 
-        public void ActivateBinding(ControlRequest controlRequest)
-        {
-            Log.Info($"Pressed a key: {controlRequest.BindingName}");
-        }
-
-
     }
 }

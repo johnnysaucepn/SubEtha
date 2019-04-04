@@ -2,7 +2,6 @@
 using System.IO;
 using System.Xml.Serialization;
 using Autofac;
-using Howatworks.EliteDangerous.Bindings;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +21,7 @@ namespace Thumb.Plugin.Controller
         private readonly IJournalMonitorNotifier _notifier;
         private readonly WebSocketConnectionManager _connectionManager;
         private readonly StatusManager _statusManager;
-        private BindingSet _bindings;
+        private readonly KeyboardEmulator _keyboard;
         private BindingMapper _bindingMapper;
         public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
         public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
@@ -31,13 +30,20 @@ namespace Thumb.Plugin.Controller
         //public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
-        public ControllerJournalProcessorPlugin(IConfiguration configuration, IComponentContext context, IJournalMonitorNotifier notifier, WebSocketConnectionManager connectionManager, StatusManager statusManager)
+        public ControllerJournalProcessorPlugin(
+            IConfiguration configuration,
+            IComponentContext context,
+            IJournalMonitorNotifier notifier,
+            WebSocketConnectionManager connectionManager,
+            StatusManager statusManager,
+            KeyboardEmulator keyboard)
         {
             _configuration = configuration;
             _context = context;
             _notifier = notifier;
             _connectionManager = connectionManager;
             _statusManager = statusManager;
+            _keyboard = keyboard;
         }
 
         public void Startup()
@@ -63,7 +69,7 @@ namespace Thumb.Plugin.Controller
                 {
                     case "ActivateBinding":
                         var controlRequest = messageWrapper["MessageContent"].ToObject<ControlRequest>();
-                        _statusManager.ActivateBinding(controlRequest);
+                        ActivateBinding(controlRequest);
                         break;
                     default:
                         Log.Warn($"Unrecognised message format :{args.Message}");
@@ -91,6 +97,18 @@ namespace Thumb.Plugin.Controller
             _statusManager.Flush();
             FlushedJournalProcessor?.Invoke(this, new FlushedJournalProcessorEventArgs());
         }
-    }
 
+        private void ActivateBinding(ControlRequest controlRequest)
+        {
+            Log.Info($"Activated a control: {controlRequest.BindingName}");
+
+            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
+            if (button == null)
+            {
+                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
+            }
+
+            _keyboard.TriggerKeyCombination(button);
+        }
+    }
 }

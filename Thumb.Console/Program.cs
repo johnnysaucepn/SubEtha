@@ -29,7 +29,8 @@ namespace Thumb.Console
                 ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json",
                 ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString(),
                 ["BindingsFolder"] = defaultBindingsFolder,
-                ["BindingsFilename"] = "Custom.binds"
+                ["BindingsFilename"] = "Custom.binds",
+                ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)"
             };
 
             var config = new ConfigurationBuilder()
