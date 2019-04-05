@@ -13,8 +13,10 @@ namespace Thumb.Plugin.Controller
 {
     public class KeyboardEmulator
     {
-        private readonly string _activeWindowTitle;
         private static readonly ILog Log = LogManager.GetLogger(typeof(KeyboardEmulator));
+
+        private readonly string _activeWindowTitle;
+        private readonly KeyMappingTable _keyMapping = new KeyMappingTable();
 
         public KeyboardEmulator(IConfiguration configuration)
         {
@@ -41,7 +43,7 @@ namespace Thumb.Plugin.Controller
             var modifierNames = selectedButtonBinding.Modifier.Select(x => x.Key).ToList();
             Log.Info($"Pressing {selectedButtonBinding.Key} with {(modifierNames.Any() ? string.Join(", ", modifierNames) : "no")} modifiers");
             var modifiers = MapModifiers(selectedButtonBinding).ToArray();
-            var mainKey = MapKey(selectedButtonBinding).ToArray();
+            var mainKey = MapKey(selectedButtonBinding);
 
             if (DoesWindowHaveFocus(_activeWindowTitle))
             {
@@ -59,18 +61,14 @@ namespace Thumb.Plugin.Controller
             return GetForegroundWindow() == hwnd;
         }
 
-        private IEnumerable<ScanCode> MapKey(Button.ButtonBinding selectedButtonBinding)
+        private ScanCode MapKey(Button.ButtonBinding selectedButtonBinding)
         {
-            //throw new NotImplementedException();
-            Log.Error("NOT IMPLEMENTED");
-            return new List<ScanCode>();
+            return _keyMapping.GetScanCode(selectedButtonBinding.Key);
         }
 
         private IEnumerable<VirtualKey> MapModifiers(Button.ButtonBinding selectedButtonBinding)
         {
-            //throw new NotImplementedException();
-            Log.Error("NOT IMPLEMENTED");
-            return new List<VirtualKey>();
+            return selectedButtonBinding.Modifier.Select(x => _keyMapping.GetVirtualKey(x.Key));
         }
 
         private static void PressAndRelease(params ScanCode[] scanCodes)
@@ -91,7 +89,14 @@ namespace Thumb.Plugin.Controller
         {
             foreach (var scanCode in scanCodes)
             {
+                if (scanCode == ScanCode.NONAME)
+                {
+                    Log.Error($"Invalid ScanCode {scanCode}");
+                    continue;
+                }
+
                 SendKeyAction(true, scanCode, true);
+
             }
         }
 
@@ -99,6 +104,15 @@ namespace Thumb.Plugin.Controller
         {
             foreach (var scanCode in scanCodes)
             {
+                if (scanCode == ScanCode.NONAME)
+                {
+                    if (scanCode == ScanCode.NONAME)
+                    {
+                        Log.Error($"Invalid ScanCode {scanCode}");
+                        continue;
+                    }
+                }
+
                 SendKeyAction(false, scanCode, true);
             }
         }
@@ -107,6 +121,12 @@ namespace Thumb.Plugin.Controller
         {
             foreach (var virtualKey in virtualKeys)
             {
+                if (virtualKey == VirtualKey.VK_NONAME)
+                {
+                    Log.Error($"Invalid VirtualKey {virtualKey}");
+                    continue;
+                }
+
                 SendKeyAction(true, virtualKey);
             }
         }
@@ -115,6 +135,12 @@ namespace Thumb.Plugin.Controller
         {
             foreach (var virtualKey in virtualKeys)
             {
+                if (virtualKey == VirtualKey.VK_NONAME)
+                {
+                    Log.Error($"Invalid VirtualKey {virtualKey}");
+                    continue;
+                }
+
                 SendKeyAction(false, virtualKey);
             }
         }

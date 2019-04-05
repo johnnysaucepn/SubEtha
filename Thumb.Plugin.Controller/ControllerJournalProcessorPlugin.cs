@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Xml.Serialization;
 using Autofac;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
@@ -58,7 +57,7 @@ namespace Thumb.Plugin.Controller
                 .ConfigureServices(services => { services.AddSingleton(_context); })
                 .UseStartup<Startup>()
                 .UseKestrel()
-                .UseUrls("http://localhost:5984");
+                .UseUrls("http://*:5984");
 
             var host = hostBuilder.Build();
 
