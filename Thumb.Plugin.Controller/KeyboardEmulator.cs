@@ -57,8 +57,19 @@ namespace Thumb.Plugin.Controller
         private static bool DoesWindowHaveFocus(string windowTitle)
         {
             var hwnd = FindWindow(null, windowTitle);
-            if (hwnd == IntPtr.Zero) return false;
-            return GetForegroundWindow() == hwnd;
+            if (hwnd == IntPtr.Zero)
+            {
+                Log.Debug($"Window '{windowTitle}' not found");
+                return false;
+            }
+
+            if (GetForegroundWindow() == hwnd)
+            {
+                return true;
+            }
+
+            Log.Debug($"Window '{windowTitle}' not in foreground");
+            return false;
         }
 
         private ScanCode MapKey(Button.ButtonBinding selectedButtonBinding)

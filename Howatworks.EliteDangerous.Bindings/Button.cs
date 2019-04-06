@@ -17,7 +17,7 @@ namespace Howatworks.EliteDangerous.Bindings
             public string Key { get; set; }
 
             [XmlElement]
-            public List<ButtonModifier> Modifier { get; set; }
+            public List<ButtonModifier> Modifier { get; set; } = new List<ButtonModifier>();
         }
 
         [Serializable]
