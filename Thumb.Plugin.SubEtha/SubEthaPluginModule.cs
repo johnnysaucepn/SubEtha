@@ -10,16 +10,7 @@ namespace Thumb.Plugin.SubEtha
         {
             builder.RegisterType<HttpUploadClient>().AsSelf().SingleInstance();
 
-            builder.Register(c =>
-            {
-                var reader = c.Resolve<IConfiguration>();
-                var router = c.Resolve<JournalEntryRouter>();
-
-                return new SubEthaJournalProcessorPlugin(reader.GetSection("Thumb.Shared"), reader.GetSection("Thumb.Plugin.SubEtha"), router);
-            }).As<IJournalProcessorPlugin>().SingleInstance();
-
-
+            builder.RegisterType<SubEthaJournalProcessorPlugin>().As<IJournalProcessorPlugin>().SingleInstance();
         }
-
     }
 }

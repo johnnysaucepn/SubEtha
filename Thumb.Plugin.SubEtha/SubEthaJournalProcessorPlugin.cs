@@ -24,10 +24,10 @@ namespace Thumb.Plugin.SubEtha
         //public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
-        public SubEthaJournalProcessorPlugin(IConfiguration sharedConfig, IConfiguration pluginConfig, JournalEntryRouter router)
+        public SubEthaJournalProcessorPlugin(IConfiguration config, JournalEntryRouter router)
         {
-            _user = sharedConfig["User"];
-            _pluginConfig = pluginConfig;
+            _user = config.GetSection("Thumb.Shared")["User"];
+            _pluginConfig = config.GetSection("Thumb.Plugin.SubEtha");
             _router = router;
         }
 

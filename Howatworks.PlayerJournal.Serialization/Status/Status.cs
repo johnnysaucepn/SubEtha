@@ -4,12 +4,18 @@ namespace Howatworks.PlayerJournal.Serialization.Status
 {
     public class Status : JournalEntryBase
     {
+        public class FuelItem
+        {
+            public decimal FuelMain { get; set; }
+            public decimal FuelReservoir { get; set; }
+        }
+
         public StatusFlags Flags { get; set; }
         public List<int> Pips { get; set; } // TODO: measured in half-pips, consider converting
         public int Firegroup { get; set; } // TODO: check spelling
 
         public int GuiFocus { get; set; }
-        public decimal? Fuel { get; set; }
+        public FuelItem Fuel { get; set; }
         public decimal? Cargo { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Altitude { get; set; }

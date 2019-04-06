@@ -8,26 +8,26 @@
 
         // Original test URI and source of this code
         //var wsUri = "wss://echo.websocket.org/";
-        var wsUri = "ws://localhost:5984/Controller";
+        var wsUri = "ws://" + window.location.hostname+ ":5984/Controller";
         var output;
+        var connected = false;
 
         function init()
         {
             output = document.getElementById("output");
             testWebSocket();
 
-            document.getElementById("sendeng").onclick = function(evt) {
-                sendKeyBindingRequest({ 'BindingName': 'IncreaseEnginesPower' });
+            var allButtons = document.getElementsByClassName("edbutton");
+
+            for (var i = 0; i < allButtons.length; i++) {
+                allButtons.item(i).addEventListener("click", function () {
+                    console.log("clicked " + this.getAttribute('data-edbutton'));
+                    if (connected) {
+                        sendKeyBindingRequest({ 'BindingName': this.getAttribute('data-edbutton') });
+                    }
+                });
             }
-            document.getElementById("sendsys").onclick = function(evt) {
-                sendKeyBindingRequest({ 'BindingName': 'IncreaseSystemsPower' });
-            }
-            document.getElementById("sendwep").onclick = function (evt) {
-                sendKeyBindingRequest({ 'BindingName': 'IncreaseWeaponsPower' });
-            }
-            document.getElementById("sendreset").onclick = function (evt) {
-                sendKeyBindingRequest({ 'BindingName': 'ResetPowerDistribution' });
-            }
+
             document.getElementById("disconnect").onclick = function (evt) { websocket.close(); }
         }
 
@@ -42,11 +42,13 @@
 
         function onOpen(evt)
         {
+            connected = true;
             writeToScreen("CONNECTED");
         }
 
         function onClose(evt)
         {
+            connected = false;
             writeToScreen("DISCONNECTED");
         }
 
@@ -84,10 +86,12 @@
 
     <h2>WebSocket Test</h2>
 
-    <button type="button" id="sendeng">ENG</button>
-    <button type="button" id="sendsys">SYS</button>
-    <button type="button" id="sendwep">WEP</button>
-    <button type="button" id="sendreset">Reset</button>
+    <button type="button" class="edbutton" data-edbutton="IncreaseEnginesPower">ENG</button>
+    <button type="button" class="edbutton" data-edbutton="IncreaseSystemsPower">SYS</button>
+    <button type="button" class="edbutton" data-edbutton="IncreaseWeaponsPower">WEP</button>
+    <button type="button" class="edbutton" data-edbutton="ResetPowerDistribution">Reset</button>
+    <button type="button" class="edbutton" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
+    <button type="button" class="edbutton" data-edbutton="LandingGearToggle">LandingGearToggle</button>
     <button type="button" id="disconnect">Disconnect</button>
     <div id="output"></div>
 </body>
