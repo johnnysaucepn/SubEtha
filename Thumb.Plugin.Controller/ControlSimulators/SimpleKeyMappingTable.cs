@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using static PInvoke.User32;
 
-namespace Thumb.Plugin.Controller
+namespace Thumb.Plugin.Controller.ControlSimulators
 {
-    public class KeyMappingTable
+    public class SimpleKeyMappingTable
     {
         /// <summary>
         /// Sourced from https://github.com/richardbuckle/EDRefCard/blob/1f1d65c3f55eda18d1923ee8175026125fd65e44/bindings/testCases/Help.txt

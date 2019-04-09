@@ -5,13 +5,14 @@ using System.IO;
 using System.Text;
 using Howatworks.EliteDangerous.Bindings;
 using Microsoft.Extensions.Configuration;
+using Thumb.Plugin.Controller.ControlSimulators;
 using Xunit;
 
 namespace Thumb.Plugin.Controller.Test
 {
-    public class KeyboardEmulatorTests
+    public class KeyboardSimulatorTests
     {
-        public KeyboardEmulatorTests()
+        public KeyboardSimulatorTests()
         {
 
         }
@@ -29,16 +30,13 @@ namespace Thumb.Plugin.Controller.Test
                 })
                 .Build();
 
-            var keyboard = new KeyboardEmulator(config);
-            var table = new KeyMappingTable();
-
-
+            var controls = new GameControlBridge(config, new SimpleKeyboardSimulator(), new NullMouseSimulator());
 
             using (var process = Process.Start("notepad.exe", fileName))
             {
                 foreach (var keyId in new[]{"Key_A","Key_B","Key_Home"})
                 {
-                    TriggerKey(keyboard, keyId);
+                    TriggerKey(controls, keyId);
                 }
 
                 process.WaitForExit();
@@ -46,7 +44,7 @@ namespace Thumb.Plugin.Controller.Test
             }
         }
 
-        private static void TriggerKey(KeyboardEmulator keyboard, string keyId)
+        private static void TriggerKey(GameControlBridge keyboard, string keyId)
         {
             var button = new Button()
             {

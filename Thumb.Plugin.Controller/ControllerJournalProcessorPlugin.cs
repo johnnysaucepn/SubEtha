@@ -20,7 +20,7 @@ namespace Thumb.Plugin.Controller
         private readonly IJournalMonitorNotifier _notifier;
         private readonly WebSocketConnectionManager _connectionManager;
         private readonly StatusManager _statusManager;
-        private readonly KeyboardEmulator _keyboard;
+        private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
         public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
         public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
@@ -35,7 +35,7 @@ namespace Thumb.Plugin.Controller
             IJournalMonitorNotifier notifier,
             WebSocketConnectionManager connectionManager,
             StatusManager statusManager,
-            KeyboardEmulator keyboard)
+            GameControlBridge keyboard)
         {
             _configuration = configuration;
             _context = context;
