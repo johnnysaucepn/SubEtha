@@ -4,16 +4,20 @@
 <head>
     <meta charset="utf-8" />
     <title>Thumb.Plugin.Controller WebSocket Test</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
     <script language="javascript" type="text/javascript">
 
         // Original test URI and source of this code
         //var wsUri = "wss://echo.websocket.org/";
-        var wsUri = "ws://" + window.location.hostname+ ":5984/Controller";
+        var wsUri = "ws://" + window.location.hostname + ":5984/Controller";
         var output;
         var connected = false;
 
-        function init()
-        {
+        function init() {
             output = document.getElementById("output");
             testWebSocket();
 
@@ -31,34 +35,29 @@
             document.getElementById("disconnect").onclick = function (evt) { websocket.close(); }
         }
 
-        function testWebSocket()
-        {
+        function testWebSocket() {
             websocket = new WebSocket(wsUri);
-            websocket.onopen = function(evt) { onOpen(evt) };
-            websocket.onclose = function(evt) { onClose(evt) };
-            websocket.onmessage = function(evt) { onMessage(evt) };
-            websocket.onerror = function(evt) { onError(evt) };
+            websocket.onopen = function (evt) { onOpen(evt) };
+            websocket.onclose = function (evt) { onClose(evt) };
+            websocket.onmessage = function (evt) { onMessage(evt) };
+            websocket.onerror = function (evt) { onError(evt) };
         }
 
-        function onOpen(evt)
-        {
+        function onOpen(evt) {
             connected = true;
             writeToScreen("CONNECTED");
         }
 
-        function onClose(evt)
-        {
+        function onClose(evt) {
             connected = false;
             writeToScreen("DISCONNECTED");
         }
 
-        function onMessage(evt)
-        {
-            writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
+        function onMessage(evt) {
+            writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
         }
 
-        function onError(evt)
-        {
+        function onError(evt) {
             writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
         }
 
@@ -70,8 +69,7 @@
             websocket.send(stringifiedMessage);
         }
 
-        function writeToScreen(message)
-        {
+        function writeToScreen(message) {
             var pre = document.createElement("p");
             pre.style.wordWrap = "break-word";
             pre.innerHTML = message;
@@ -84,15 +82,38 @@
 </head>
 <body>
 
-    <h2>WebSocket Test</h2>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="edbutton btn btn-primary btn-block" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
 
-    <button type="button" class="edbutton" data-edbutton="IncreaseEnginesPower">ENG</button>
-    <button type="button" class="edbutton" data-edbutton="IncreaseSystemsPower">SYS</button>
-    <button type="button" class="edbutton" data-edbutton="IncreaseWeaponsPower">WEP</button>
-    <button type="button" class="edbutton" data-edbutton="ResetPowerDistribution">Reset</button>
-    <button type="button" class="edbutton" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
-    <button type="button" class="edbutton" data-edbutton="LandingGearToggle">LandingGearToggle</button>
-    <button type="button" id="disconnect">Disconnect</button>
-    <div id="output"></div>
+            </div>
+            <div class="col">
+                <button type="button" class="edbutton btn btn-primary btn-block" data-edbutton="LandingGearToggle">LandingGearToggle</button>
+
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-danger btn-block" id="disconnect">Disconnect</button>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-2 offset-2"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="IncreaseEnginesPower">ENG</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-2"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="IncreaseSystemsPower">SYS</button></div>
+                    <div class="col-2"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="ResetPowerDistribution">Reset</button></div>
+                    <div class="col-2"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button></div>
+                </div>
+            </div>
+            <div class="col-6"></div>
+        </div>
+        <div class="row align-items-end">
+            <div class="col-12" id="output"></div>
+        </div>
+    </div>
+
 </body>
 </html>

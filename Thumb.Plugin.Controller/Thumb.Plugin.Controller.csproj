@@ -7,9 +7,49 @@
 
   <ItemGroup>
     <None Remove="SocketTest.html" />
+    <None Remove="StaticContent\css\bootstrap-grid.css" />
+    <None Remove="StaticContent\css\bootstrap-grid.css.map" />
+    <None Remove="StaticContent\css\bootstrap-grid.min.css" />
+    <None Remove="StaticContent\css\bootstrap-grid.min.css.map" />
+    <None Remove="StaticContent\css\bootstrap-reboot.css" />
+    <None Remove="StaticContent\css\bootstrap-reboot.css.map" />
+    <None Remove="StaticContent\css\bootstrap-reboot.min.css" />
+    <None Remove="StaticContent\css\bootstrap-reboot.min.css.map" />
+    <None Remove="StaticContent\css\bootstrap.css" />
+    <None Remove="StaticContent\css\bootstrap.css.map" />
+    <None Remove="StaticContent\css\bootstrap.min.css" />
+    <None Remove="StaticContent\css\bootstrap.min.css.map" />
+    <None Remove="StaticContent\js\bootstrap.bundle.js" />
+    <None Remove="StaticContent\js\bootstrap.bundle.js.map" />
+    <None Remove="StaticContent\js\bootstrap.bundle.min.js" />
+    <None Remove="StaticContent\js\bootstrap.bundle.min.js.map" />
+    <None Remove="StaticContent\js\bootstrap.js" />
+    <None Remove="StaticContent\js\bootstrap.js.map" />
+    <None Remove="StaticContent\js\bootstrap.min.js" />
+    <None Remove="StaticContent\js\bootstrap.min.js.map" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="StaticContent\css\bootstrap-grid.css" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap-grid.css.map" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap-grid.min.css" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap-grid.min.css.map" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap-reboot.css" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap-reboot.css.map" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap-reboot.min.css" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap-reboot.min.css.map" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap.css" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap.css.map" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap.min.css" />
+    <EmbeddedResource Include="StaticContent\css\bootstrap.min.css.map" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.bundle.js" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.bundle.js.map" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.bundle.min.js" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.bundle.min.js.map" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.js" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.js.map" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.min.js" />
+    <EmbeddedResource Include="StaticContent\js\bootstrap.min.js.map" />
     <EmbeddedResource Include="StaticContent\SocketTest.html" />
   </ItemGroup>
 

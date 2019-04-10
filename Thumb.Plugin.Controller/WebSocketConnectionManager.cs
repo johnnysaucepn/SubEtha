@@ -4,12 +4,15 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
 using Newtonsoft.Json;
 
 namespace Thumb.Plugin.Controller
 {
     public class WebSocketConnectionManager
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WebSocketConnectionManager));
+
         private static readonly ConcurrentBag<WebSocket> WebSockets = new ConcurrentBag<WebSocket>();
 
         public event EventHandler<MessageReceivedArgs> MessageReceived = delegate { };
@@ -59,7 +62,14 @@ namespace Thumb.Plugin.Controller
             var statusBytes = Encoding.UTF8.GetBytes(message);
             foreach (var socket in WebSockets)
             {
-                await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                try
+                {
+                    await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+                catch (WebSocketException e)
+                {
+                    Log.Error(e);
+                }
             }
 
             Console.WriteLine(message);
