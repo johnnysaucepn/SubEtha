@@ -14,10 +14,10 @@ namespace Thumb.Plugin.Controller
 
         private readonly string _activeWindowTitle;
 
-        private readonly IKeyboardSimulator _keyboard;
-        private readonly IMouseSimulator _mouse;
+        private readonly IVirtualKeyboardSimulator _keyboard;
+        private readonly IVirtualMouseSimulator _mouse;
 
-        public GameControlBridge(IConfiguration configuration, IKeyboardSimulator keyboard, IMouseSimulator mouse)
+        public GameControlBridge(IConfiguration configuration, IVirtualKeyboardSimulator keyboard, IVirtualMouseSimulator mouse)
         {
             _keyboard = keyboard;
             _mouse = mouse;
@@ -26,6 +26,10 @@ namespace Thumb.Plugin.Controller
 
         public void TriggerKeyCombination(Button button)
         {
+            if (DoesWindowHaveFocus(_activeWindowTitle))
+            {
+                return;
+            }
 
             Button.ButtonBinding selectedButtonBinding;
             if (button.Primary.Device == "Keyboard")
@@ -36,19 +40,32 @@ namespace Thumb.Plugin.Controller
             {
                 selectedButtonBinding = button.Secondary;
             }
+            else if (button.Primary.Device == "Mouse")
+            {
+                selectedButtonBinding = button.Primary;
+            }
+            else if (button.Secondary.Device == "Mouse")
+            {
+                selectedButtonBinding = button.Secondary;
+            }
             else
             {
-                Log.Warn($"Neither primary or secondary bindings are for keyboard (found {button.Primary.Device}, {button.Primary.Device}");
+                Log.Warn($"Neither primary or secondary bindings are for keyboard or mouse (found {button.Primary.Device}, {button.Secondary.Device}");
                 return;
             }
 
             var modifierNames = selectedButtonBinding.Modifier.Select(x => x.Key).ToArray();
             Log.Info($"Pressing {selectedButtonBinding.Key} with {(modifierNames.Any() ? string.Join(", ", modifierNames) : "no")} modifiers");
-            if (DoesWindowHaveFocus(_activeWindowTitle))
+
+            if (selectedButtonBinding.Device == "Keyboard")
             {
                 _keyboard.Activate(selectedButtonBinding.Key, modifierNames);
             }
-
+            else if (selectedButtonBinding.Device == "Mouse")
+            {
+                // Expect no modifiers for mouse controls - change if required
+                _mouse.Activate(selectedButtonBinding.Key);
+            }
         }
 
         private static bool DoesWindowHaveFocus(string windowTitle)

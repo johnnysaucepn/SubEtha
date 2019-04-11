@@ -1,6 +1,11 @@
-﻿namespace Thumb.Plugin.Controller.ControlSimulators
+﻿using InputSimulatorStandard;
+
+namespace Thumb.Plugin.Controller.ControlSimulators
 {
-    public class NullMouseSimulator : IMouseSimulator
+    public class NullMouseSimulator : IVirtualMouseSimulator
     {
+        public void Activate(string button)
+        {
+        }
     }
 }

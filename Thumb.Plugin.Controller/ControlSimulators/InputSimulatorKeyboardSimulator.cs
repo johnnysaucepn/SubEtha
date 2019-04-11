@@ -6,11 +6,11 @@ using log4net;
 
 namespace Thumb.Plugin.Controller.ControlSimulators
 {
-    public class InputSimulatorKeyboardSimulator : IKeyboardSimulator
+    public class InputSimulatorKeyboardSimulator : IVirtualKeyboardSimulator
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(InputSimulatorKeyboardSimulator));
 
-        private readonly InputSimulatorStandard.IKeyboardSimulator _keyboard = new KeyboardSimulator();
+        private readonly IKeyboardSimulator _keyboard = new KeyboardSimulator();
 
         private readonly Dictionary<string, VirtualKeyCode> _mapping = new Dictionary<string, VirtualKeyCode>
         {

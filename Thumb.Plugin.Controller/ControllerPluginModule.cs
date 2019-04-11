@@ -11,8 +11,8 @@ namespace Thumb.Plugin.Controller
             builder.RegisterType<StatusManager>().AsSelf().SingleInstance();
             builder.RegisterType<WebSocketConnectionManager>().AsSelf().SingleInstance();
             builder.RegisterType<GameControlBridge>().AsSelf().SingleInstance();
-            builder.RegisterType<InputSimulatorKeyboardSimulator>().As<IKeyboardSimulator>().SingleInstance();
-            builder.RegisterType<NullMouseSimulator>().As<IMouseSimulator>().SingleInstance();
+            builder.RegisterType<InputSimulatorKeyboardSimulator>().As<IVirtualKeyboardSimulator>().SingleInstance();
+            builder.RegisterType<InputSimulatorMouseSimulator>().As<IVirtualMouseSimulator>().SingleInstance();
         }
     }
 }

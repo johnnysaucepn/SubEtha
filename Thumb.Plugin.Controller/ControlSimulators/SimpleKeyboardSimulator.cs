@@ -8,7 +8,7 @@ using PInvoke;
 
 namespace Thumb.Plugin.Controller.ControlSimulators
 {
-    public class SimpleKeyboardSimulator : IKeyboardSimulator
+    public class SimpleKeyboardSimulator : IVirtualKeyboardSimulator
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SimpleKeyboardSimulator));
 
