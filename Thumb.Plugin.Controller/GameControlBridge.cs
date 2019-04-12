@@ -26,7 +26,7 @@ namespace Thumb.Plugin.Controller
 
         public void TriggerKeyCombination(Button button)
         {
-            if (DoesWindowHaveFocus(_activeWindowTitle))
+            if (!DoesWindowHaveFocus(_activeWindowTitle))
             {
                 return;
             }
