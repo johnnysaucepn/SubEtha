@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Howatworks.PlayerJournal.Parser\Howatworks.PlayerJournal.Parser.csproj" />
+    <ProjectReference Include="..\Howatworks.PlayerJournal.Serialization\Howatworks.PlayerJournal.Serialization.csproj" />
     <ProjectReference Include="..\SubEtha.Domain\SubEtha.Domain.csproj" />
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
   </ItemGroup>

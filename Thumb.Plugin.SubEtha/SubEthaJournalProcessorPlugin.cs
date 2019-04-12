@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Howatworks.PlayerJournal.Parser;
-using Howatworks.PlayerJournal.Serialization;
 using log4net;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 namespace Thumb.Plugin.SubEtha
 {

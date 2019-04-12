@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj">
       <Private>true</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Thumb.Plugin.SubEtha\Thumb.Plugin.SubEtha.csproj" />
     <ProjectReference Include="..\Thumb.Plugin\Thumb.Plugin.csproj" />
   </ItemGroup>
 

@@ -2,7 +2,6 @@
 using Howatworks.PlayerJournal.Parser;
 using Howatworks.PlayerJournal.Serialization.Status;
 using log4net;
-using Thumb.Plugin.Controller.Messages;
 
 namespace Thumb.Plugin.Controller
 {

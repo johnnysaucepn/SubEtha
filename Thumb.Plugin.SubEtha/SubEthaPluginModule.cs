@@ -1,6 +1,4 @@
 ﻿using Autofac;
-using Howatworks.PlayerJournal.Parser;
-using Microsoft.Extensions.Configuration;
 
 namespace Thumb.Plugin.SubEtha
 {

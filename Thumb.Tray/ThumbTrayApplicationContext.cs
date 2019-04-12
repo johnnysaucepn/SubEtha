@@ -55,12 +55,20 @@ namespace Thumb.Tray
             // TODO: In tray, we can use the Win32 package that exposes KnownFolders to retrieve SavedGames directly
             var defaultJournalFolder = Path.Combine(KnownFolders.SavedGames.Path, "Frontier Developments", "Elite Dangerous");
 
+            var defaultBindingsFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Frontier Developments", "Elite Dangerous", "Options", "Bindings"
+            );
+
             var defaultConfig = new Dictionary<string, string>
             {
                 ["JournalFolder"] = defaultJournalFolder,
                 ["JournalPattern"] = "Journal.*.log",
                 ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json",
-                ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString()
+                ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString(),
+                ["BindingsFolder"] = defaultBindingsFolder,
+                ["BindingsFilename"] = "Custom.3.0.binds",
+                ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)"
             };
 
             var config = new ConfigurationBuilder()

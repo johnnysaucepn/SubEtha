@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Thumb.Core\Thumb.Core.csproj" />
-    <ProjectReference Include="..\Thumb.Plugin.Controller\Thumb.Plugin.Controller.csproj" />
   </ItemGroup>
 
   <ItemGroup>
