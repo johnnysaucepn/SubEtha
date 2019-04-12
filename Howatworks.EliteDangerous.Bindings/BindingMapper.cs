@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using Howatworks.EliteDangerous.Bindings;
 
-namespace Thumb.Plugin.Controller
+namespace Howatworks.EliteDangerous.Bindings
 {
     public class BindingMapper
     {

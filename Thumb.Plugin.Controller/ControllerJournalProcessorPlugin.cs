@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Autofac;
+using Howatworks.EliteDangerous.Bindings;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
