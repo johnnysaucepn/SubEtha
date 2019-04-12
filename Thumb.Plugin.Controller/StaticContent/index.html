@@ -6,6 +6,7 @@
     <title>Thumb.Plugin.Controller WebSocket Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/theme-ed.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -71,7 +72,8 @@
         }
 
         function writeToScreen(message) {
-            var pre = document.createElement("p");
+            var pre = document.createElement("div");
+            pre.className = "alert alert-info";
             pre.style.wordWrap = "break-word";
             pre.innerHTML = message;
             output.appendChild(pre);
@@ -81,14 +83,16 @@
 
     </script>
 </head>
-<body>
+<body class="vh-100">
 
+    <div class="navbar navbar-expand-lg">
 <nav class="nav nav-pills nav-justified" role="tablist">
     <a class="nav-item nav-link active" data-toggle="tab" role="tab" href="#navigation-panel">Navigation</a>
     <a class="nav-item nav-link" data-toggle="tab" role="tab" href="#supercruise-panel">Supercruise</a>
     <a class="nav-item nav-link" data-toggle="tab" role="tab" href="#combat-panel">Combat</a>
     <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#analysis-panel">Analysis</a>
 </nav>
+</div>
 
 
 <div class="container-fluid">
@@ -98,34 +102,42 @@
         <div class="tab-pane fade show active" id="navigation-panel" role="tabpanel">
 
             <div class="row">
-                <div class="col px-1">
-                    <button type="button" class="edbutton btn btn-primary btn-block" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
+                <div class="col p-3">
+                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
 
                 </div>
-                <div class="col px-1">
-                    <button type="button" class="edbutton btn btn-primary btn-block" data-edbutton="LandingGearToggle">LandingGearToggle</button>
+                <div class="col p-3">
+                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="LandingGearToggle">Landing Gear</button>
 
                 </div>
-                <div class="col px-1">
-                    <button type="button" class="btn btn-danger btn-block" id="disconnect">Disconnect</button>
+                <div class="col p-3">
+
+
+                </div>
+                <div class="col p-3">
+
 
                 </div>
             </div>
             <div class="row">
-                <div class="col-6 px-1">
-                    <div class="row">
-                        <div class="col-2 offset-2 px-1"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="IncreaseEnginesPower">ENG</button></div>
+                <div class="col-6">
+                    <div class="row mx-0">
+                        <div class="col-4 offset-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button></div>
                     </div>
-                    <div class="row">
-                        <div class="col-2 px-1"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="IncreaseSystemsPower">SYS</button></div>
-                        <div class="col-2 px-1"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="ResetPowerDistribution">Reset</button></div>
-                        <div class="col-2 px-1"><button type="button" class="edbutton btn btn-secondary btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button></div>
+                    <div class="row mx-0">
+                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button></div>
+                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="ResetPowerDistribution">Reset</button></div>
+                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button></div>
                     </div>
                 </div>
-                <div class="col-6 px-1"></div>
+                <div class="col-6"></div>
             </div>
-            <div class="row align-items-end">
-                <div class="col-12 px-1" id="output"></div>
+            <div class="row">
+                <div class="col-6 overflow-auto" style="max-height:10em" id="output"></div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
+                </div>
+
             </div>
         </div>
         <div class="tab-pane fade" id="supercruise-panel" role="tabpanel">...Some Supercruise stuff here...</div>

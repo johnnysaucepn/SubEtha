@@ -34,21 +34,21 @@ namespace Thumb.Plugin.Controller.Test
         [Fact]
         public void GetFileInfo_SocketTest_FileFound()
         {
-            var file = _provider.GetFileInfo(@"StaticContent\SocketTest.html");
+            var file = _provider.GetFileInfo(@"StaticContent\index.html");
             Assert.True(file.Exists);
         }
 
         [Fact]
         public void GetFileInfo_SocketTest_FileNotFound()
         {
-            var file = _provider.GetFileInfo(@"StaticContent\SocketMissing.html");
+            var file = _provider.GetFileInfo(@"StaticContent\indexmissing.html");
             Assert.False(file.Exists);
         }
 
         [Fact]
         public void GetFileInfo_SocketTest_FileLoaded()
         {
-            var file = _provider.GetFileInfo(@"StaticContent\SocketTest.html");
+            var file = _provider.GetFileInfo(@"StaticContent\index.html");
             var content = new StreamReader(file.CreateReadStream(), Encoding.UTF8).ReadToEnd();
             Assert.Contains("websocket.onmessage", content);
         }

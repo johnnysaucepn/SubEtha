@@ -19,6 +19,9 @@
     <None Remove="StaticContent\css\bootstrap.css.map" />
     <None Remove="StaticContent\css\bootstrap.min.css" />
     <None Remove="StaticContent\css\bootstrap.min.css.map" />
+    <None Remove="StaticContent\css\theme-ed.css" />
+    <None Remove="StaticContent\fonts\EUROCAPS.TTF" />
+    <None Remove="StaticContent\fonts\Sintony-Regular.ttf" />
     <None Remove="StaticContent\js\bootstrap.bundle.js" />
     <None Remove="StaticContent\js\bootstrap.bundle.js.map" />
     <None Remove="StaticContent\js\bootstrap.bundle.min.js" />
@@ -42,6 +45,9 @@
     <EmbeddedResource Include="StaticContent\css\bootstrap.css.map" />
     <EmbeddedResource Include="StaticContent\css\bootstrap.min.css" />
     <EmbeddedResource Include="StaticContent\css\bootstrap.min.css.map" />
+    <EmbeddedResource Include="StaticContent\css\theme-ed.css" />
+    <EmbeddedResource Include="StaticContent\fonts\EUROCAPS.TTF" />
+    <EmbeddedResource Include="StaticContent\fonts\Sintony-Regular.ttf" />
     <EmbeddedResource Include="StaticContent\js\bootstrap.bundle.js" />
     <EmbeddedResource Include="StaticContent\js\bootstrap.bundle.js.map" />
     <EmbeddedResource Include="StaticContent\js\bootstrap.bundle.min.js" />
@@ -50,7 +56,7 @@
     <EmbeddedResource Include="StaticContent\js\bootstrap.js.map" />
     <EmbeddedResource Include="StaticContent\js\bootstrap.min.js" />
     <EmbeddedResource Include="StaticContent\js\bootstrap.min.js.map" />
-    <EmbeddedResource Include="StaticContent\SocketTest.html" />
+    <EmbeddedResource Include="StaticContent\index.html" />
   </ItemGroup>
 
   <ItemGroup>
