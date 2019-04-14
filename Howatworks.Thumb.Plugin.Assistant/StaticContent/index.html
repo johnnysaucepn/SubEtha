@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Howatworks.Thumb.Plugin.Assistant WebSocket Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/theme-ed.css" />
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script language="javascript" type="text/javascript">
+
+        // Original test URI and source of this code
+        //var wsUri = "wss://echo.websocket.org/";
+        var wsUri = "ws://" + window.location.hostname + ":5984/Assistant";
+        var output;
+        var connected = false;
+
+        function init() {
+            output = document.getElementById("output");
+            testWebSocket();
+
+            var allButtons = document.getElementsByClassName("edbutton");
+
+            for (var i = 0; i < allButtons.length; i++) {
+                allButtons.item(i).addEventListener("click", function () {
+                    console.log("clicked " + this.getAttribute('data-edbutton'));
+                    if (connected) {
+                        sendKeyBindingRequest({ 'BindingName': this.getAttribute('data-edbutton') });
+                    }
+                });
+            }
+
+            document.getElementById("disconnect").onclick = function (evt) { websocket.close(); }
+        }
+
+        function testWebSocket() {
+            websocket = new WebSocket(wsUri);
+            websocket.onopen = function (evt) { onOpen(evt) };
+            websocket.onclose = function (evt) { onClose(evt) };
+            websocket.onmessage = function (evt) { onMessage(evt) };
+            websocket.onerror = function (evt) { onError(evt) };
+        }
+
+        function onOpen(evt) {
+            connected = true;
+            writeToScreen("CONNECTED");
+        }
+
+        function onClose(evt) {
+            connected = false;
+            writeToScreen("DISCONNECTED");
+        }
+
+        function onMessage(evt) {
+            writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+        }
+
+        function onError(evt) {
+            writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+        }
+
+        function sendKeyBindingRequest(message) {
+            var wrappedMessage = { MessageType: 'ActivateBinding', MessageContent: message };
+            var stringifiedMessage = JSON.stringify(wrappedMessage);
+
+            writeToScreen("SENT: " + stringifiedMessage);
+            websocket.send(stringifiedMessage);
+        }
+
+        function writeToScreen(message) {
+            var pre = document.createElement("pre");
+            pre.style.wordWrap = "break-word";
+            pre.innerHTML = message;
+            output.appendChild(pre);
+        }
+
+        window.addEventListener("load", init, false);
+
+    </script>
+</head>
+<body class="vh-100">
+
+    <div class="navbar navbar-expand-lg">
+<nav class="nav nav-pills nav-justified" role="tablist">
+    <a class="nav-item nav-link active" data-toggle="tab" role="tab" href="#navigation-panel">Navigation</a>
+    <a class="nav-item nav-link" data-toggle="tab" role="tab" href="#supercruise-panel">Supercruise</a>
+    <a class="nav-item nav-link" data-toggle="tab" role="tab" href="#combat-panel">Combat</a>
+    <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#analysis-panel">Analysis</a>
+</nav>
+</div>
+
+
+<div class="container-fluid">
+
+
+    <div class="tab-content" id="mode-panels">
+        <div class="tab-pane fade show active" id="navigation-panel" role="tabpanel">
+
+            <div class="row">
+                <div class="col p-3">
+                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
+
+                </div>
+                <div class="col p-3">
+                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="LandingGearToggle">Landing Gear</button>
+
+                </div>
+                <div class="col p-3">
+
+
+                </div>
+                <div class="col p-3">
+
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="row mx-0">
+                        <div class="col-4 offset-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button></div>
+                    </div>
+                    <div class="row mx-0">
+                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button></div>
+                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="ResetPowerDistribution">Reset</button></div>
+                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button></div>
+                    </div>
+                </div>
+                <div class="col-6"></div>
+            </div>
+            <div class="row">
+                <div class="col-9 overflow-auto" style="max-height:10em" id="output"></div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="tab-pane fade" id="supercruise-panel" role="tabpanel">...Some Supercruise stuff here...</div>
+        <div class="tab-pane fade" id="combat-panel" role="tabpanel">...Some combat stuff here...</div>
+        <div class="tab-pane fade" id="analysis-panel" role="tabpanel">...Some analysis stuff here...</div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,5 +1,0 @@
-﻿{
-  "SubEtha.Service": {
-    "ServiceBinding": "http://+:8984/SubEtha/Service"
-  }
-}

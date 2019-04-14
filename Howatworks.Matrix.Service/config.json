@@ -1,0 +1,5 @@
+﻿{
+  "Howatworks.Matrix.Service": {
+    "ServiceBinding": "http://+:8984/Matrix/Service"
+  }
+}

@@ -38,10 +38,10 @@ Task("Package")
             Zip(projectDetails.OutputPath, zipName, files);
         });
 
-        packageApp("SubEtha.Service/SubEtha.Service.csproj", "SubEtha.Service.zip");
-        packageApp("SubEtha.Site/SubEtha.Site.csproj", "SubEtha.Site.zip");
-        packageApp("Thumb.Console/Thumb.Console.csproj", "Thumb.Console.zip");
-        packageApp("Thumb.Tray/Thumb.Tray.csproj", "Thumb.Tray.zip");
+        packageApp("Howatworks.Matrix.Service/Howatworks.Matrix.Service.csproj", "Howatworks.Matrix.Service.zip");
+        packageApp("Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", "Howatworks.Matrix.Site.zip");
+        packageApp("Howatworks.Thumb.Console/Howatworks.Thumb.Console.csproj", "Howatworks.Thumb.Console.zip");
+        packageApp("Howatworks.Thumb.Tray/Howatworks.Thumb.Tray.csproj", "Howatworks.Thumb.Tray.zip");
 
     });
 

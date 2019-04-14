@@ -1,9 +1,0 @@
-﻿{
-    "Thumb.Shared": {
-        "User": "osbyte"
-    },
-
-    "Thumb.Plugin.SubEtha": {
-        "ServiceUri": "http://localhost:8984/SubEtha/Service/"
-    }
-}
