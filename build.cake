@@ -71,7 +71,7 @@ Task("Test")
             OutputDirectory = "./TestResults"
     };
 
-    CreateDirectory(testSettings.OutputDirectory);    
+    CreateDirectory(testSettings.OutputDirectory);
         XUnit2(GetFiles("**/bin/**/*Test.dll"), testSettings);
     });
 
