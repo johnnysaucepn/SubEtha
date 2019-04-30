@@ -21,6 +21,7 @@
         var output;
         var connected = false;
 
+        var websocket;
         function init() {
             output = document.getElementById("output");
             testWebSocket();
@@ -86,68 +87,202 @@
 </head>
 <body class="vh-100">
 
-    <div class="navbar navbar-expand-lg">
-<nav class="nav nav-pills nav-justified" role="tablist">
-    <a class="nav-item nav-link active" data-toggle="tab" role="tab" href="#navigation-panel">Navigation</a>
-    <a class="nav-item nav-link" data-toggle="tab" role="tab" href="#supercruise-panel">Supercruise</a>
-    <a class="nav-item nav-link" data-toggle="tab" role="tab" href="#combat-panel">Combat</a>
-    <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#analysis-panel">Analysis</a>
-</nav>
-</div>
-
-
 <div class="container-fluid">
 
+    <div class="navbar navbar-expand-lg">
+        <nav class="nav nav-pills nav-justified" role="tablist">
+            <a class="nav-item nav-link active" data-toggle="tab" role="tab" href="#general-panel">General</a>
+            <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#wing-panel">Wing</a>
+            <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#camera-panel">Camera</a>
+            <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#settings-panel">Settings</a>
+        </nav>
+    </div>
 
     <div class="tab-content" id="mode-panels">
-        <div class="tab-pane fade show active" id="navigation-panel" role="tabpanel">
 
-            <div class="row">
-                <div class="col p-3">
-                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
+        <div class="tab-pane fade show active" id="general-panel" role="tabpanel">
 
-                </div>
-                <div class="col p-3">
-                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="LandingGearToggle">Landing Gear</button>
+            <div class="d-block" id="power-panel">
 
-                </div>
-                <div class="col p-3">
-
-
-                </div>
-                <div class="col p-3">
-
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="row mx-0">
-                        <div class="col-4 offset-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button></div>
-                    </div>
-                    <div class="row mx-0">
-                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button></div>
-                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="ResetPowerDistribution">Reset</button></div>
-                        <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button></div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row mx-0">
+                            <div class="col-4 offset-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button></div>
+                        </div>
+                        <div class="row mx-0">
+                            <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button></div>
+                            <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="ResetPowerDistribution">Reset</button></div>
+                            <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button></div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-6"></div>
             </div>
-            <div class="row">
-                <div class="col-9 overflow-auto" style="max-height:10em" id="output"></div>
-                <div class="col-3">
-                    <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
+
+            <div class="d-block" id="navigation-panel">
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">GAL MAP</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">SYS MAP</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">JUMP</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">&gt;SYSTEM</button>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">TARGET</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">&gt;TARGET</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">&lt;TARGET</button>
+                    </div>
                 </div>
 
             </div>
+
+
+            <div class="d-block" id="realspace-panel">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="">FL/ASSIST</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="">BOOST</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="">CRUISE</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="LandingGearToggle">Landing Gear</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="">SILENT</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="">HEATSINK</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none" id="supercruise-panel">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">SPEED0</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">SPEED75</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">SPEED100</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">FSSENTER</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-block" id="combat-panel">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">THREAT</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">&gt;THREAT</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">&lt;THREAT</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">&gt;SUBSYS</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">&lt;SUBSYS</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">SHIELD</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">CHAFF</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="">ECM</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none" id="fss-panel">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">&gt;TUNING</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">&lt;TUNING</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">FSSHONK</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">FSSHELP</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">FSSQUIT</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none" id="saa-panel">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">SAAFLIP</button>
+                    </div>
+                    <div class="col-4 p-2">
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="">SAAQUIT</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div class="tab-pane fade" id="supercruise-panel" role="tabpanel">...Some Supercruise stuff here...</div>
-        <div class="tab-pane fade" id="combat-panel" role="tabpanel">...Some combat stuff here...</div>
-        <div class="tab-pane fade" id="analysis-panel" role="tabpanel">...Some analysis stuff here...</div>
+    </div>
+
+    <div class="row">
+        <div class="col-9 overflow-auto" style="max-height: 10em" id="output"></div>
+        <div class="col-3">
+            <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
+        </div>
 
     </div>
-</div>
 
+</div>
 
 </body>
 </html>
