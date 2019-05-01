@@ -71,6 +71,16 @@ namespace Howatworks.Thumb.Plugin.Assistant
                         var controlRequest = messageWrapper["MessageContent"].ToObject<ControlRequest>();
                         ActivateBinding(controlRequest);
                         break;
+                    case "GetAvailableBindings":
+                        var bindingList = _bindingMapper.GetBoundButtons("Keyboard", "Mouse");
+                        var serializedMessage = JsonConvert.SerializeObject(new
+                            {
+                                MessageType = "AvailableBindings",
+                                MessageContent = bindingList
+                            },
+                            Formatting.Indented);
+                        _connectionManager.SendMessageToAllClients(serializedMessage);
+                        break;
                     default:
                         Log.Warn($"Unrecognised message format :{args.Message}");
                         break;

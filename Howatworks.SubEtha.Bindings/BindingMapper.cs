@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
 namespace Howatworks.SubEtha.Bindings
@@ -43,6 +44,28 @@ namespace Howatworks.SubEtha.Bindings
         public Button GetButtonBindingByName(string name)
         {
             return _buttonLookup.Value.ContainsKey(name) ? _buttonLookup.Value[name] : null;
+        }
+
+        public IReadOnlyCollection<string> GetBoundButtons(params string[] devices)
+        {
+            var bindings =
+                _buttonLookup.Value.Where(x =>
+                    IsBound(devices, x));
+
+            var bindingNames = bindings.Select(y => y.Key);
+
+            return bindingNames.ToList();
+        }
+
+        private static bool IsBound(string[] devices, KeyValuePair<string, Button> buttonBinding)
+        {
+            if (buttonBinding.Value == null)
+            {
+                // Incorrectly-defined or missing bindings may return a null Button object when parsed
+                return false;
+            }
+            return devices.Contains(buttonBinding.Value.Primary?.Device)
+                   || devices.Contains(buttonBinding.Value.Secondary?.Device);
         }
     }
 }

@@ -51,6 +51,7 @@
         function onOpen(evt) {
             connected = true;
             writeToScreen("CONNECTED");
+            sendAvailableBindingsRequest();
         }
 
         function onClose(evt) {
@@ -60,6 +61,21 @@
 
         function onMessage(evt) {
             writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+            var parsedMessage = JSON.parse(evt.data);
+
+            if (parsedMessage.MessageType === "AvailableBindings") {
+                var bindingList = parsedMessage.MessageContent;
+                $(".edbutton").each(function(i) {
+                    var button = $(this);
+                    var bindingName = button.attr("data-edbutton");
+                    if (bindingList.indexOf(bindingName) >= 0) {
+                        button.removeClass("disabled");
+                    } else {
+                        button.addClass("disabled");
+                    }
+                });
+
+            }
         }
 
         function onError(evt) {
@@ -68,6 +84,14 @@
 
         function sendKeyBindingRequest(message) {
             var wrappedMessage = { MessageType: 'ActivateBinding', MessageContent: message };
+            var stringifiedMessage = JSON.stringify(wrappedMessage);
+
+            writeToScreen("SENT: " + stringifiedMessage);
+            websocket.send(stringifiedMessage);
+        }
+
+        function sendAvailableBindingsRequest(message) {
+            var wrappedMessage = { MessageType: 'GetAvailableBindings' };
             var stringifiedMessage = JSON.stringify(wrappedMessage);
 
             writeToScreen("SENT: " + stringifiedMessage);
@@ -134,7 +158,7 @@
                         <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="Meta-HyperSuperCombination">JUMP</button>
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="TargetNextRouteSystem">&gt;SYSTEM</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="TargetNextRouteSystem">&gt; SYSTEM</button>
                     </div>
 
                 </div>
@@ -144,10 +168,10 @@
                         <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SelectTarget">TARGET</button>
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CyclePreviousTarget">&gt;TARGET</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CyclePreviousTarget">&lt; TARGET</button>
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CycleNextTarget">&lt;TARGET</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CycleNextTarget">&gt; TARGET</button>
                     </div>
                 </div>
 
@@ -209,20 +233,20 @@
                         <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="SelectHighestThreat">THREAT</button>
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousHostileTarget">&gt;HOSTILE</button>
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousHostileTarget">&lt; HOSTILE</button>
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextHostileTarget">&lt;HOSTILE</button>
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextHostileTarget">&gt; HOSTILE</button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-4 p-2">
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousSubsystem">&gt;SUBSYS</button>
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousSubsystem">&lt; SUBSYS</button>
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextSubsystem">&lt;SUBSYS</button>
+                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextSubsystem">&gt; SUBSYS</button>
                     </div>
                 </div>
                 <div class="row">
@@ -241,10 +265,10 @@
             <div class="d-none" id="fss-panel">
                 <div class="row">
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Decrease">&gt;TUNING</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Decrease">&lt; TUNING</button>
                     </div>
                     <div class="col-4 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Increase">&lt;TUNING</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Increase">&gt; TUNING</button>
                     </div>
                 </div>
                 <div class="row">

@@ -139,7 +139,7 @@ namespace Howatworks.SubEtha.Bindings
 
         public Button ToggleButtonUpInput { get; set; }
         public Button DeployHeatSink { get; set; }
-        public Button ShipSpotlightToggle { get; set; }
+        public Button ShipSpotLightToggle { get; set; }
 
         public Axis RadarRangeAxis { get; set; }
         public Button RadarIncreaseRange { get; set; }
