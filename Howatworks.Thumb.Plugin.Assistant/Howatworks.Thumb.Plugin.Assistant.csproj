@@ -10,6 +10,7 @@
     <None Remove="StaticContent\css\theme-ed.css" />
     <None Remove="StaticContent\fonts\EUROCAPS.TTF" />
     <None Remove="StaticContent\fonts\Sintony-Regular.ttf" />
+    <None Remove="StaticContent\js\assistant.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
     <EmbeddedResource Include="StaticContent\fonts\EUROCAPS.TTF" />
     <EmbeddedResource Include="StaticContent\fonts\Sintony-Regular.ttf" />
     <EmbeddedResource Include="StaticContent\index.html" />
+    <EmbeddedResource Include="StaticContent\js\assistant.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,10 +38,6 @@
     <ProjectReference Include="..\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj" />
     <ProjectReference Include="..\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Plugin\Howatworks.Thumb.Plugin.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="StaticContent\js\" />
   </ItemGroup>
 
 </Project>
