@@ -1,48 +1,80 @@
 ﻿
-// Original test URI and source of this code
-//var wsUri = "wss://echo.websocket.org/";
 var wsUri = "ws://" + window.location.hostname + ":5984/Assistant";
-var output;
-var connected = false;
 
-var websocket;
+var AssistantConnection = function (uri) {
+    this.uri = uri;
+    this.websocket = null;
+    this.isOpen = function () {
+        return this.websocket != null && this.websocket.readyState == this.websocket.OPEN;
+    }
+
+    this.open = function () {
+        this.websocket = new WebSocket(this.uri);
+        this.websocket.onopen = function (evt) { onOpen(evt); }
+        this.websocket.onclose = function (evt) { onClose(evt); }
+        this.websocket.onmessage = function (evt) { onMessage(evt); }
+        this.websocket.onerror = function (evt) { onError(evt); }
+    }
+
+    this.close = function () {
+        this.websocket.close();
+    }
+
+    this.sendKeyBindingRequest = function (message) {
+        if (!this.isOpen) return;
+        var wrappedMessage = { MessageType: 'ActivateBinding', MessageContent: message };
+        var stringifiedMessage = JSON.stringify(wrappedMessage);
+
+        writeToScreen("SENT: " + stringifiedMessage);
+        this.websocket.send(stringifiedMessage);
+    }
+
+    this.sendAvailableBindingsRequest = function (message) {
+        if (!this.isOpen) return;
+
+        var wrappedMessage = { MessageType: 'GetAvailableBindings' };
+        var stringifiedMessage = JSON.stringify(wrappedMessage);
+
+        writeToScreen("SENT: " + stringifiedMessage);
+        this.websocket.send(stringifiedMessage);
+    }
+}
+
+var connection = new AssistantConnection(wsUri);
+
 function init() {
-    testWebSocket();
+    connection.open();
 
     $(".edbutton").each(function(i) {
         $(this).click(function() {
             var bindingName = $(this).attr('data-edbutton');
             console.log("clicked " + bindingName);
-            if (connected) {
-                sendKeyBindingRequest({ 'BindingName': bindingName });
+            if (connection.isOpen()) {
+                connection.sendKeyBindingRequest({ 'BindingName': bindingName });
             }
         });
     });
 
-    $("#disconnect").click(function() { websocket.close(); });
-}
+    $(window).focus(function () {
+        if (!connection.isOpen()) {
+            connection.open();
+        }
+    })
 
-function testWebSocket() {
-    websocket = new WebSocket(wsUri);
-    websocket.onopen = function (evt) { onOpen(evt) };
-    websocket.onclose = function (evt) { onClose(evt) };
-    websocket.onmessage = function (evt) { onMessage(evt) };
-    websocket.onerror = function (evt) { onError(evt) };
+    $("#disconnect").click(function() { connection.close(); });
 }
 
 function onOpen(evt) {
-    connected = true;
     writeToScreen("CONNECTED");
-    sendAvailableBindingsRequest();
+    connection.sendAvailableBindingsRequest();
 }
 
 function onClose(evt) {
-    connected = false;
     writeToScreen("DISCONNECTED");
 }
 
 function onMessage(evt) {
-    writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+    writeToScreen('RESPONSE: ' + evt.data + '');
     var parsedMessage = JSON.parse(evt.data);
 
     if (parsedMessage.MessageType === "AvailableBindings") {
@@ -61,27 +93,13 @@ function onMessage(evt) {
 }
 
 function onError(evt) {
-    writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+    writeToScreen('ERROR: ' + evt.data);
 }
 
-function sendKeyBindingRequest(message) {
-    var wrappedMessage = { MessageType: 'ActivateBinding', MessageContent: message };
-    var stringifiedMessage = JSON.stringify(wrappedMessage);
 
-    writeToScreen("SENT: " + stringifiedMessage);
-    websocket.send(stringifiedMessage);
-}
-
-function sendAvailableBindingsRequest(message) {
-    var wrappedMessage = { MessageType: 'GetAvailableBindings' };
-    var stringifiedMessage = JSON.stringify(wrappedMessage);
-
-    writeToScreen("SENT: " + stringifiedMessage);
-    websocket.send(stringifiedMessage);
-}
 
 function writeToScreen(message) {
-    var pre = $("<pre/>").text(message).css("wordWrap", "break-word");
+    var pre = $("<pre/>").text(message);
     $("#output").append(pre);
 }
 
