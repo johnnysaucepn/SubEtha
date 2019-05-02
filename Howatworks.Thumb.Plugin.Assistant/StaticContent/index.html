@@ -143,8 +143,6 @@
                 </div>
                 <div class="row">
                     <div class="col-3 p-2">
-                    </div>
-                    <div class="col-3 p-2">
                         <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousSubsystem">&lt; SUBSYS</button>
                     </div>
                     <div class="col-3 p-2">
@@ -191,7 +189,11 @@
     </div>
 
     <div class="row">
-        <div class="col-9 overflow-auto" style="max-height: 10em" id="output"></div>
+        <div class="col-9">
+            <div class="card overflow-auto w-100" style="max-height: 10em">
+                <div class="card-body" id="output"></div>
+            </div>
+        </div>
         <div class="col-3">
             <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
         </div>
