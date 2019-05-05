@@ -79,10 +79,22 @@ function onMessage(evt) {
 
     if (parsedMessage.MessageType === "AvailableBindings") {
         var bindingList = parsedMessage.MessageContent;
+
+        // Special case for Jump button: activate HyperSuperCombination if possible, plain Hyperspace otherwise
+        // As long as you have one of those, you should be able to hyper-jump.
+        $("#meta-jump").each(function (i) {
+            var button = $(this);
+            if (isInList(bindingList, "HyperSuperCombination")) {
+                button.attr("data-edbutton", "HyperSuperCombination");
+            } else if (isInList(bindingList, "Hyperspace")) {
+                button.attr("data-edbutton", "Hyperspace");
+            }
+        });
+
         $(".edbutton").each(function (i) {
             var button = $(this);
             var bindingName = button.attr("data-edbutton");
-            if (bindingList.indexOf(bindingName) >= 0) {
+            if (isInList(bindingList, bindingName)) {
                 button.removeClass("disabled");
             } else {
                 button.addClass("disabled");
@@ -92,11 +104,17 @@ function onMessage(evt) {
     }
 }
 
+function isInList(list, element) {
+    if (list === null) return false;
+    if (element === null) return false;
+    if (list.length === 0) return false;
+    
+    return list.indexOf(element) >= 0;
+}
+
 function onError(evt) {
     writeToScreen('ERROR: ' + evt.data);
 }
-
-
 
 function writeToScreen(message) {
     var pre = $("<pre/>").text(message);
