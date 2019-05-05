@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Howatworks.Thumb.Plugin.Assistant WebSocket Test</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="css/theme-ed.css" />
@@ -17,190 +17,222 @@
 </head>
 <body class="vh-100">
 
-<div class="container-fluid">
+    <div class="container-fluid px-0">
 
-    <div class="navbar navbar-expand-lg">
-        <nav class="nav nav-pills nav-justified" role="tablist">
-            <a class="nav-item nav-link active" data-toggle="tab" role="tab" href="#general-panel">General</a>
-            <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#wing-panel">Wing</a>
-            <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#camera-panel">Camera</a>
-            <a class="nav-item nav-link disabled" data-toggle="tab" role="tab" href="#settings-panel">Settings</a>
+        <nav class="nav nav-tabs nav-justified" role="tablist">
+            <a class="nav-link active" data-toggle="tab" role="tab" href="#general-panel">General</a>
+            <a class="nav-link disabled" data-toggle="tab" role="tab" href="#wing-panel">Wing</a>
+            <a class="nav-link disabled" data-toggle="tab" role="tab" href="#camera-panel">Camera</a>
+            <a class="nav-link disabled" data-toggle="tab" role="tab" href="#settings-panel">Settings</a>
         </nav>
-    </div>
 
-    <div class="tab-content" id="mode-panels">
+        <div class="tab-content" id="mode-panels">
 
-        <div class="tab-pane fade show active" id="general-panel" role="tabpanel">
+            <div class="tab-pane fade show active" id="general-panel" role="tabpanel">
 
-            <div class="d-block" id="power-panel">
+                <div id="power-panel">
 
-                <div class="row">
-                    <div class="col-6">
-                        <div class="row mx-0">
-                            <div class="col-4 offset-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button></div>
+                    <div class="row no-gutters">
+                        <div class="col-6 p-0">
+                            <div class="row no-gutters">
+                                <div class="col-4 offset-4 p-1">
+                                    <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button>
+                                </div>
+                            </div>
+                            <div class="row no-gutters">
+                                <div class="col-4 p-1">
+                                    <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="ResetPowerDistribution">Reset</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row mx-0">
-                            <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button></div>
-                            <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="ResetPowerDistribution">Reset</button></div>
-                            <div class="col-4 p-1"><button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button></div>
+                        <div class="col-3 p-1">
+                            <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="GalaxyMapOpen">GAL&nbsp;MAP</button>
+                        </div>
+                        <div class="col-3 p-1">
+                            <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="SystemMapOpen">SYS&nbsp;MAP</button>
                         </div>
                     </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="GalaxyMapOpen">GAL MAP</button>
+                </div>
+
+                <div id="navigation-panel">
+
+                    <div class="row no-gutters">
+                        <div class="col-3 p-1">
+                            <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" id="meta-jump">JUMP</button>
+                        </div>
+                        <div class="col-3 p-1">
+                            <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="TargetNextRouteSystem">&gt;&nbsp;SYSTEM</button>
+                        </div>
+
                     </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SystemMapOpen">SYS MAP</button>
+
+                    <div class="row no-gutters">
+                        <div class="col-3 p-1">
+                            <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SelectTarget">TARGET</button>
+                        </div>
+                        <div class="col-3 p-1">
+                            <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CyclePreviousTarget">&lt;&nbsp;TARGET</button>
+                        </div>
+                        <div class="col-3 p-1">
+                            <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CycleNextTarget">&gt;&nbsp;TARGET</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="carousel slide" id="transit-carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" id="transit-realspace">
+
+                            <div id="realspace-panel">
+                                <div class="row no-gutters">
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="UseBoostJuice">BOOST</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="Supercruise">CRUISE</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleCargoScoop">SCOOP</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="LandingGearToggle">LANDING</button>
+                                    </div>
+                                </div>
+                                <div class="row no-gutters">
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleFlightAssist">FL/ASSIST</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleButtonUpInput">SILENT</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="DeployHeatSink">HEATSINK</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="carousel-item" id="transit-supercruise">
+                            <div id="supercruise-panel">
+                                <div class="row no-gutters">
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SetSpeedZero">SPEED&nbsp;0</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SetSpeed75">SPEED&nbsp;75</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SetSpeed100">SPEED&nbsp;100</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSEnter">FSS</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="carousel slide" id="mode-carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" id="mode-combat">
+
+
+                            <div id="combat-panel">
+                                <div class="row no-gutters">
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="SelectHighestThreat">THREAT</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousHostileTarget">&lt;&nbsp;HOSTILE</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextHostileTarget">&gt;&nbsp;HOSTILE</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="FireChaffLauncher">CHAFF</button>
+                                    </div>
+                                </div>
+                                <div class="row no-gutters">
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousSubsystem">&lt;&nbsp;SUBSYS</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextSubsystem">&gt;&nbsp;SUBSYS</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="UseShieldCell">SHIELD</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="ChargeECM">ECM</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item" id="mode-fss">
+
+                            <div id="fss-panel">
+                                <div class="row no-gutters">
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Decrease">&lt;&nbsp;TUNING</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Increase">&gt;&nbsp;TUNING</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSDiscoveryScan">FSS&nbsp;HONK</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSQuit">FSS&nbsp;QUIT</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item" id="mode-saa">
+
+                            <div id="saa-panel">
+                                <div class="row no-gutters">
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationSAAChangeScannedAreaViewToggle">SAA&nbsp;FLIP</button>
+                                    </div>
+                                    <div class="col-3 p-1">
+                                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationSAAExitThirdPerson">SAA&nbsp;QUIT</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
-            <div class="d-block" id="navigation-panel">
-
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" id="meta-jump">JUMP</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="TargetNextRouteSystem">&gt; SYSTEM</button>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SelectTarget">TARGET</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CyclePreviousTarget">&lt; TARGET</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="CycleNextTarget">&gt; TARGET</button>
-                    </div>
-                </div>
-
-            </div>
 
 
-            <div class="d-block" id="realspace-panel">
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="UseBoostJuice">BOOST</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="Supercruise">CRUISE</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleCargoScoop">Cargo Scoop</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="LandingGearToggle">Landing Gear</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleFlightAssist">FL/ASSIST</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleButtonUpInput">SILENT</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="DeployHeatSink">HEATSINK</button>
-                    </div>
+            <div class="row no-gutters">
+
+                <div class="card overflow-auto" style="max-height: 10em">
+                    <div class="card-body" id="output"></div>
                 </div>
             </div>
-
-            <div class="d-none" id="supercruise-panel">
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SetSpeedZero">SPEED0</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SetSpeed75">SPEED75</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SetSpeed100">SPEED100</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSEnter">FSSENTER</button>
-                    </div>
-                </div>
+            <div class="row no-gutters">
+                <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
             </div>
 
-            <div class="d-block" id="combat-panel">
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="SelectHighestThreat">THREAT</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousHostileTarget">&lt; HOSTILE</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextHostileTarget">&gt; HOSTILE</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="FireChaffLauncher">CHAFF</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousSubsystem">&lt; SUBSYS</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CycleNextSubsystem">&gt; SUBSYS</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="UseShieldCell">SHIELD</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="ChargeECM">ECM</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-none" id="fss-panel">
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Decrease">&lt; TUNING</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSRadioTuningX_Increase">&gt; TUNING</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSDiscoveryScan">FSSHONK</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSQuit">FSSQUIT</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-none" id="saa-panel">
-                <div class="row">
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationSAAChangeScannedAreaViewToggle">SAAFLIP</button>
-                    </div>
-                    <div class="col-3 p-2">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationSAAExitThirdPerson">SAAQUIT</button>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-9">
-            <div class="card overflow-auto w-100" style="max-height: 10em">
-                <div class="card-body" id="output"></div>
-            </div>
-        </div>
-        <div class="col-3">
-            <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
-        </div>
-
-    </div>
-
-</div>
 
 </body>
 </html>
