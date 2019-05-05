@@ -1,13 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using InputSimulatorStandard;
 using InputSimulatorStandard.Native;
 using log4net;
+using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Plugin.Assistant.ControlSimulators
 {
     public class InputSimulatorKeyboardSimulator : IVirtualKeyboardSimulator
     {
+        private readonly TimeSpan KeyDownTime = TimeSpan.FromMilliseconds(500);
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(InputSimulatorKeyboardSimulator));
 
         private readonly IKeyboardSimulator _keyboard = new KeyboardSimulator();
@@ -162,6 +167,15 @@ namespace Howatworks.Thumb.Plugin.Assistant.ControlSimulators
             ["Key_OrangeModifier"] = VirtualKeyCode.NONAME, // TODO: ???
         };
 
+        public InputSimulatorKeyboardSimulator(IConfiguration config)
+        {
+            var ms = config.GetValue<int?>("Howatworks.Thumb.Plugin.Assistant:KeyDownTimeMs");
+            if (ms.HasValue)
+            {
+                KeyDownTime = TimeSpan.FromMilliseconds(ms.Value);
+            }
+        }
+
         public void Activate(string key, params string[] modifierNames)
         {
             var modifiers = modifierNames.Select(MapKey).Where(x => x.HasValue).Select(x => x.Value).ToList();
@@ -171,7 +185,14 @@ namespace Howatworks.Thumb.Plugin.Assistant.ControlSimulators
                 Log.Warn($"No mapped key for '{key}'");
                 return;
             }
-            _keyboard.ModifiedKeyStroke(modifiers, keyCode.Value);
+
+            // IKeyboardSimulator.ModifiedKeyStroke is the standard way to do this, but something about the speed of execution
+            // means Elite doesn't always react. Instead, control the sequence of events manually, and add a custom delay.
+            foreach (var mod in modifiers) _keyboard.KeyDown(mod);
+            _keyboard.KeyDown(keyCode.Value);
+            Thread.Sleep(KeyDownTime);
+            _keyboard.KeyUp(keyCode.Value);
+            foreach (var mod in modifiers) _keyboard.KeyUp(mod);
         }
 
         private VirtualKeyCode? MapKey(string key)

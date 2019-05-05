@@ -2,5 +2,8 @@
   "Howatworks.Thumb.Plugin.Matrix": {
     "ServiceUri": "http://localhost:8984/Matrix/Service/",
     "User": "osbyte"
+  },
+  "Howatworks.Thumb.Plugin.Assistant": {
+    "KeyDownTimeMs": "50"
   }
 }

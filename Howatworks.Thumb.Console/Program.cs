@@ -35,7 +35,7 @@ namespace Howatworks.Thumb.Console
 
             var config = new ConfigurationBuilder()
                 .AddInMemoryCollection(defaultConfig)
-                .AddJsonFile("journalmonitor.json")
+                .AddJsonFile("config.json")
                 .Build();
 
             var builder = new ContainerBuilder();
