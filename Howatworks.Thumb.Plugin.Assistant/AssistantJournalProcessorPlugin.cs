@@ -128,8 +128,10 @@ namespace Howatworks.Thumb.Plugin.Assistant
             {
                 Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
             }
-
-            _keyboard.TriggerKeyCombination(button);
+            else
+            {
+                _keyboard.TriggerKeyCombination(button);
+            }
         }
     }
 }
