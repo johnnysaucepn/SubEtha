@@ -46,7 +46,7 @@ function init() {
     connection.open();
 
     $(".edbutton").each(function(i) {
-        $(this).click(function() {
+        $(this).on("click", function() {
             var bindingName = $(this).attr('data-edbutton');
             console.log("clicked " + bindingName);
             if (connection.isOpen()) {
@@ -55,19 +55,19 @@ function init() {
         });
     });
 
-    $(window).focus(function () {
+    $(window).on("focus", function () {
         if (!connection.isOpen()) {
             connection.open();
         }
     });
 
-    $(window).unload(function () {
+    $(window).on("unload", function () {
         if (connection.isOpen()) {
             connection.close();
         }
     });
 
-    $("#disconnect").click(function () {
+    $("#disconnect").on("click", function () {
         if (connection.isOpen()) {
             connection.close();
         }

@@ -13,13 +13,17 @@ namespace Howatworks.Thumb.Plugin.Assistant
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebSocketConnectionManager));
 
-        private static readonly ConcurrentBag<WebSocket> WebSockets = new ConcurrentBag<WebSocket>();
+        private static readonly ConcurrentDictionary<Guid, WebSocket> WebSockets = new ConcurrentDictionary<Guid, WebSocket>();
 
         public event EventHandler<MessageReceivedArgs> MessageReceived = delegate { };
 
         public async Task Connect(WebSocket socket)
         {
-            WebSockets.Add(socket);
+            Guid newConnectionId = Guid.NewGuid();
+            if (!WebSockets.TryAdd(newConnectionId, socket))
+            {
+                throw new Exception("Could not add new websocket connection");
+            }
 
             while (socket.State == WebSocketState.Open)
             {
@@ -47,24 +51,45 @@ namespace Howatworks.Thumb.Plugin.Assistant
                         break;
                 }
             }
+            if (socket.State == WebSocketState.Aborted)
+            {
+                socket.Abort();
+            }
         }
 
         public void DisconnectAll()
         {
-            while (WebSockets.TryTake(out var socket))
+            var attempts = 0;
+            while (WebSockets.Count > 0 && attempts < 3)
             {
-                socket.Abort();
+                foreach (var id in WebSockets.Keys)
+                {
+                    if (WebSockets.TryRemove(id, out var socket))
+                    {
+                        socket.Abort();
+                    }
+                }
+            }
+            if (attempts >= 3)
+            {
+                throw new Exception("Failed to abort all sockets");
             }
         }
 
         public async void SendMessageToAllClients(string message)
         {
             var statusBytes = Encoding.UTF8.GetBytes(message);
-            foreach (var socket in WebSockets)
+            foreach (var id in WebSockets.Keys)
             {
                 try
                 {
-                    await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                    if (WebSockets.TryGetValue(id, out var socket))
+                    {
+                        if (socket.State == WebSocketState.Open)
+                        {
+                            await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                        }
+                    }
                 }
                 catch (WebSocketException e)
                 {
