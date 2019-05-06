@@ -8,6 +8,7 @@
     <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <Description>Plain .NET object representations of control bindings for the game Elite: Dangerous</Description>
+    <Version>3.3.1</Version>
   </PropertyGroup>
 
 </Project>

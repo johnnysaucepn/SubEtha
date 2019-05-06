@@ -13,6 +13,8 @@ namespace Howatworks.Thumb.Plugin.Assistant
         private bool _cargoScoopDeployed;
         private bool _nightVision;
         private bool _hudAnalysisMode;
+        private bool _fssMode;
+        private bool _saaMode;
 
         public event EventHandler Changed;
 
@@ -58,6 +60,18 @@ namespace Howatworks.Thumb.Plugin.Assistant
             set => UpdateProperty(ref _hudAnalysisMode, value);
         }
 
+        public bool FssMode
+        {
+            get => _fssMode;
+            set => UpdateProperty(ref _fssMode, value);
+        }
+
+        public bool SaaMode
+        {
+            get => _saaMode;
+            set => UpdateProperty(ref _saaMode, value);
+        }
+
         public ControlState CreateControlStateMessage()
         {
             return new ControlState
@@ -68,7 +82,9 @@ namespace Howatworks.Thumb.Plugin.Assistant
                 LandingGearDown = LandingGearDown,
                 LightsOn = LightsOn,
                 NightVision = NightVision,
-                Supercruise = Supercruise
+                Supercruise = Supercruise,
+                FssMode = FssMode,
+                SaaMode = SaaMode
             };
         }
 

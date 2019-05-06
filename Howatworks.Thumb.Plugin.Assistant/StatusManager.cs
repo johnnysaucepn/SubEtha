@@ -35,6 +35,8 @@ namespace Howatworks.Thumb.Plugin.Assistant
             _status.CargoScoopDeployed = status.HasFlag(StatusFlags.CargoScoopDeployed);
             _status.NightVision = status.HasFlag(StatusFlags.NightVision);
             _status.HudAnalysisMode = status.HasFlag(StatusFlags.HudAnalysisMode);
+            _status.FssMode = status.GuiFocus == GuiFocus.FssMode;
+            _status.SaaMode = status.GuiFocus == GuiFocus.SaaMode;
 
             return true;
         }

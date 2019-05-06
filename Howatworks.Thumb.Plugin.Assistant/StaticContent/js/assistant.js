@@ -59,9 +59,19 @@ function init() {
         if (!connection.isOpen()) {
             connection.open();
         }
-    })
+    });
 
-    $("#disconnect").click(function() { connection.close(); });
+    $(window).unload(function () {
+        if (connection.isOpen()) {
+            connection.close();
+        }
+    });
+
+    $("#disconnect").click(function () {
+        if (connection.isOpen()) {
+            connection.close();
+        }
+    });
 }
 
 function onOpen(evt) {

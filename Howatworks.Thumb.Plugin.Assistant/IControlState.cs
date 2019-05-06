@@ -9,5 +9,7 @@
         bool CargoScoopDeployed { get; set; }
         bool NightVision { get; set; }
         bool HudAnalysisMode { get; set; }
+        bool FssMode { get; set; }
+        bool SaaMode { get; set; }
     }
 }

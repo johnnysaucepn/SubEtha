@@ -14,9 +14,10 @@ namespace Howatworks.SubEtha.Journal.Status
         public List<int> Pips { get; set; } // TODO: measured in half-pips, consider converting
         public int Firegroup { get; set; } // TODO: check spelling
 
-        public int GuiFocus { get; set; }
+        public GuiFocus GuiFocus { get; set; }
         public FuelItem Fuel { get; set; }
         public decimal? Cargo { get; set; }
+        public string LegalState { get; set; } // TODO: enum?
         public decimal? Latitude { get; set; }
         public decimal? Altitude { get; set; }
         public decimal? Longitude { get; set; }

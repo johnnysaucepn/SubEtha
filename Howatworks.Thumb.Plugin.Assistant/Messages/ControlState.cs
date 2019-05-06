@@ -24,5 +24,11 @@ namespace Howatworks.Thumb.Plugin.Assistant.Messages
 
         [JsonProperty]
         public bool HudAnalysisMode { get; set; }
+
+        [JsonProperty]
+        public bool FssMode { get; set; }
+
+        [JsonProperty]
+        public bool SaaMode { get; set; }
     }
 }

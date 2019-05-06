@@ -33,8 +33,7 @@ namespace Howatworks.SubEtha.Journal.Status
         InFighter = 1 << 25,
         InSrv = 1 << 26,
         HudAnalysisMode = 1 << 27,
-        NightVision = 1 << 28
-
-
+        NightVision = 1 << 28,
+        AltitudeFromAverageRadius = 1 << 29
     }
 }
