@@ -1,6 +1,7 @@
 ﻿using System;
 using Howatworks.SubEtha.Journal.Status;
 using Howatworks.SubEtha.Parser;
+using Howatworks.Thumb.Plugin.Assistant.Messages;
 using log4net;
 
 namespace Howatworks.Thumb.Plugin.Assistant
@@ -39,6 +40,27 @@ namespace Howatworks.Thumb.Plugin.Assistant
             _status.SaaMode = status.GuiFocus == GuiFocus.SaaMode;
 
             return true;
+        }
+
+        public ControlState CreateControlStateMessage()
+        {
+            return CreateControlStateMessage(_status);
+        }
+
+        public ControlState CreateControlStateMessage(ControlStateModel model)
+        {
+            return new ControlState
+            {
+                CargoScoopDeployed = model.CargoScoopDeployed,
+                HardpointsDeployed = model.HardpointsDeployed,
+                HudAnalysisMode = model.HudAnalysisMode,
+                LandingGearDown = model.LandingGearDown,
+                LightsOn = model.LightsOn,
+                NightVision = model.NightVision,
+                Supercruise = model.Supercruise,
+                FssMode = model.FssMode,
+                SaaMode = model.SaaMode
+            };
         }
 
         public void Flush()

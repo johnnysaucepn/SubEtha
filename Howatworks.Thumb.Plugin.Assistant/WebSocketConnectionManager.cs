@@ -16,6 +16,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
         private static readonly ConcurrentDictionary<Guid, WebSocket> WebSockets = new ConcurrentDictionary<Guid, WebSocket>();
 
         public event EventHandler<MessageReceivedArgs> MessageReceived = delegate { };
+        public event EventHandler<ClientConnectedArgs> ClientConnected = delegate { };
 
         public async Task Connect(WebSocket socket)
         {
@@ -24,6 +25,8 @@ namespace Howatworks.Thumb.Plugin.Assistant
             {
                 throw new Exception("Could not add new websocket connection");
             }
+
+            ClientConnected(this, new ClientConnectedArgs(newConnectionId));
 
             while (socket.State == WebSocketState.Open)
             {

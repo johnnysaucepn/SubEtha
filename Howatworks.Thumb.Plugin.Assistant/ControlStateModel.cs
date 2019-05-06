@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Howatworks.Thumb.Plugin.Assistant.Messages;
 
 namespace Howatworks.Thumb.Plugin.Assistant
 {
@@ -70,22 +69,6 @@ namespace Howatworks.Thumb.Plugin.Assistant
         {
             get => _saaMode;
             set => UpdateProperty(ref _saaMode, value);
-        }
-
-        public ControlState CreateControlStateMessage()
-        {
-            return new ControlState
-            {
-                CargoScoopDeployed = CargoScoopDeployed,
-                HardpointsDeployed = HardpointsDeployed,
-                HudAnalysisMode = HudAnalysisMode,
-                LandingGearDown = LandingGearDown,
-                LightsOn = LightsOn,
-                NightVision = NightVision,
-                Supercruise = Supercruise,
-                FssMode = FssMode,
-                SaaMode = SaaMode
-            };
         }
 
         private void UpdateProperty<T>(ref T originalValue, T newValue)

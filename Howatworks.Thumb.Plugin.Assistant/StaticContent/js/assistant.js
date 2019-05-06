@@ -72,6 +72,8 @@ function init() {
             connection.close();
         }
     });
+
+    $(".carousel").carousel({ interval: false }).carousel(0);
 }
 
 function onOpen(evt) {
@@ -111,6 +113,17 @@ function onMessage(evt) {
             }
         });
 
+    } else if (parsedMessage.MessageType === "ControlState") {
+        var supercruise = parsedMessage.MessageContent.Supercruise === true;
+        var analysis = parsedMessage.MessageContent.HudAnalysisMode === true;
+        var fssMode = parsedMessage.MessageContent.FssMode === true;
+        var saaMode = parsedMessage.MessageContent.SaaMode === true;
+
+        // open slide 0 if real-space, 1 if supercruise
+        $("#travel-carousel").carousel(supercruise ? 1 : 0);
+
+        // open slide 2 if surface analysis, 1 for system scan, 0 for combat otherwise
+        $("#mode-carousel").carousel(saaMode ? 2 : fssMode ? 1 : 0);
     }
 }
 
@@ -118,7 +131,7 @@ function isInList(list, element) {
     if (list === null) return false;
     if (element === null) return false;
     if (list.length === 0) return false;
-    
+
     return list.indexOf(element) >= 0;
 }
 

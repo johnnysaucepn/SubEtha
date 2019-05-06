@@ -25,7 +25,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
         private BindingMapper _bindingMapper;
         public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
         public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
-        public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Skip;
+        public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Process;
 
         //public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
         public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
@@ -88,12 +88,23 @@ namespace Howatworks.Thumb.Plugin.Assistant
 
             };
 
+            _connectionManager.ClientConnected += (sender, args) =>
+            {
+                var serializedMessage = JsonConvert.SerializeObject(new
+                    {
+                        MessageType = "ControlState",
+                        MessageContent = _statusManager.CreateControlStateMessage()
+                    },
+                    Formatting.Indented);
+                _connectionManager.SendMessageToAllClients(serializedMessage);
+            };
+
             _statusManager.ControlStateChanged += (sender, args) =>
             {
                 _notifier.UpdatedService(args.State);
                 var serializedMessage = JsonConvert.SerializeObject(new
                     {
-                        MessageType = "ControlState", MessageContent = args.State.CreateControlStateMessage()
+                        MessageType = "ControlState", MessageContent = _statusManager.CreateControlStateMessage(args.State)
                     },
                     Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);
