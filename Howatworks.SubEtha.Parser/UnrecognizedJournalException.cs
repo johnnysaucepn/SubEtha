@@ -20,7 +20,7 @@ namespace Howatworks.SubEtha.Parser
         }
 
         public UnrecognizedJournalException(string entryType, string fragment)
-            : this()
+            : this($"Found unrecognized journal entry type '{entryType}'")
         {
             EntryType = entryType;
             JournalFragment = fragment;

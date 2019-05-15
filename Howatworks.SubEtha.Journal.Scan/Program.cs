@@ -37,8 +37,7 @@ namespace Howatworks.SubEtha.Journal.Scan
                 .Build();
 
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            logRepository.Threshold = Level.Warn;
-            BasicConfigurator.Configure(logRepository);
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             Log.Info("Started");
 
             var parser = new JournalParser();

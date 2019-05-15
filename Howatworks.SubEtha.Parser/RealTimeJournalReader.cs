@@ -50,12 +50,12 @@ namespace Howatworks.SubEtha.Parser
                 }
                 catch (JournalParseException e)
                 {
-                    Log.Error(e.JournalFragment);
-                    Log.Error(e.Message, e.InnerException);
+                    Log.Error($"{FilePath}: {e.JournalFragment}");
+                    Log.Error(e.Message);
                 }
                 catch (UnrecognizedJournalException e)
                 {
-                    Log.Warn(e.JournalFragment);
+                    Log.Warn($"{FilePath}: {e.JournalFragment}");
                     Log.Warn(e.Message);
                 }
 

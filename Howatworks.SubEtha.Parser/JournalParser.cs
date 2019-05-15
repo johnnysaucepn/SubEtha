@@ -78,17 +78,17 @@ namespace Howatworks.SubEtha.Parser
             }
             catch (JsonSerializationException e)
             {
-                throw new JournalParseException("JSON deserialisation failure", line, e);
+                throw new JournalParseException($"JSON deserialisation failure - {e.Message}", line, e);
             }
             catch (FormatException e)
             {
-                throw new JournalParseException("Failure in type conversion", line, e);
+                throw new JournalParseException($"Failure in type conversion - {e.Message}", line, e);
             }
             catch (Exception e)
             {
-                throw new JournalParseException("Unexpected exception parsing", line, e);
+                throw new JournalParseException($"Unexpected exception when parsing - {e.Message}", line, e);
             }
-            
+
             return null;
 
         }
