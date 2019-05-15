@@ -67,8 +67,7 @@ namespace Howatworks.SubEtha.Parser
         {
             if (!_entryTypeLookup.Value.ContainsKey(eventType))
             {
-                Log.Warn($"Found unrecognised journal event type {eventType}: {line}");
-                return null;
+                throw new UnrecognizedJournalException(eventType, line);
             }
             var mappedType = _entryTypeLookup.Value[eventType];
 
@@ -79,18 +78,17 @@ namespace Howatworks.SubEtha.Parser
             }
             catch (JsonSerializationException e)
             {
-                Log.Error($"JSON deserialisation failure: {e.Message}");
+                throw new JournalParseException("JSON deserialisation failure", line, e);
             }
             catch (FormatException e)
             {
-                Log.Error("Failure in type conversion", e);
+                throw new JournalParseException("Failure in type conversion", line, e);
             }
             catch (Exception e)
             {
-                Log.Error("Unexpected exception parsing", e);
+                throw new JournalParseException("Unexpected exception parsing", line, e);
             }
-            Log.Error($"Failed to parse: {line}");
-
+            
             return null;
 
         }

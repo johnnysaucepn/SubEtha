@@ -43,7 +43,21 @@ namespace Howatworks.SubEtha.Parser
 
                 Log.Debug(content);
 
-                var journalEntry = _parser.Parse(eventType, content);
+                IJournalEntry journalEntry = null;
+                try
+                {
+                    journalEntry = _parser.Parse(eventType, content);
+                }
+                catch (JournalParseException e)
+                {
+                    Log.Error(e.JournalFragment);
+                    Log.Error(e.Message, e.InnerException);
+                }
+                catch (UnrecognizedJournalException e)
+                {
+                    Log.Warn(e.JournalFragment);
+                    Log.Warn(e.Message);
+                }
 
                 // TODO: remove this check once we're confident we should recognise all types
                 if (journalEntry != null)

@@ -98,7 +98,21 @@ namespace Howatworks.SubEtha.Parser
 
                 if (timestamp <= since) continue;
 
-                var journalEntry = _parser.Parse(eventType, line);
+                IJournalEntry journalEntry = null;
+                try
+                {
+                    journalEntry = _parser.Parse(eventType, line);
+                }
+                catch (JournalParseException e)
+                {
+                    Log.Error(e.JournalFragment);
+                    Log.Error(e.Message);
+                }
+                catch (UnrecognizedJournalException e)
+                {
+                    Log.Warn(e.JournalFragment);
+                    Log.Warn(e.Message);
+                }
 
                 // TODO: remove this check once we're confident we should recognise all types
                 if (journalEntry != null)

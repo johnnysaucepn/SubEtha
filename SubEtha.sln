@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Thumb", "Thumb", "{3C7A3739-DFB0-4F98-9909-4FBD05A35E26}"
 EndProject
@@ -60,6 +60,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Plugin.Assistant.Test", "Howatworks.Thumb.Plugin.Assistant.Test\Howatworks.Thumb.Plugin.Assistant.Test.csproj", "{6559D314-04BF-455B-AB09-E18449C58589}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Plugin.Assistant", "Howatworks.Thumb.Plugin.Assistant\Howatworks.Thumb.Plugin.Assistant.csproj", "{51D58D45-64DE-4388-8735-2744EB0CE320}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.SubEtha.Journal.Scan", "Howatworks.SubEtha.Journal.Scan\Howatworks.SubEtha.Journal.Scan.csproj", "{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -221,6 +223,14 @@ Global
 		{51D58D45-64DE-4388-8735-2744EB0CE320}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51D58D45-64DE-4388-8735-2744EB0CE320}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51D58D45-64DE-4388-8735-2744EB0CE320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.CoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.CoreDebug|Any CPU.Build.0 = Debug|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.CoreRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.CoreRelease|Any CPU.Build.0 = Release|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -245,6 +255,7 @@ Global
 		{ECE7740C-E4C6-433F-B829-DB16BC238527} = {6D488EE5-C695-42D9-943A-5CBA6D8346F2}
 		{6559D314-04BF-455B-AB09-E18449C58589} = {6FB77D82-7ED9-4F39-B902-21C15FFFCECA}
 		{51D58D45-64DE-4388-8735-2744EB0CE320} = {6FB77D82-7ED9-4F39-B902-21C15FFFCECA}
+		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83C552C3-FA11-4510-8F9F-B6BC1641E4A2}
