@@ -40,14 +40,17 @@ namespace Howatworks.SubEtha.Journal.Exploration
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int BodyID { get; set; }
         public decimal DistanceFromArrivalLS { get; set; }
-        public decimal Radius { get; set; } // WARNING: docs say star-only, definitely appears for planets 
+        public decimal Radius { get; set; } // WARNING: docs say star-only, definitely appears for planets
         public decimal SurfaceTemperature { get; set; }
         public List<RingItem> Rings { get; set; }
+        public bool WasDiscovered { get; set; } // TODO: docs list this for stars only - suspect maybe for other bodies?
+        public bool WasMapped { get; set; } // TODO: docs list this for stars only - suspect maybe for other bodies as stars can't be mapped?
         #endregion
 
 
         #region Stars only
         public string StarType { get; set; }
+        public int Subclass { get; set; } // TODO: 0-9 - enum if there are names?
         public decimal? StellarMass { get; set; }
         public decimal? AbsoluteMagnitude { get; set; }
         public decimal? RotationalPeriod { get; set; }

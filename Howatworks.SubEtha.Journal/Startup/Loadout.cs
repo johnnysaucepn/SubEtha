@@ -44,6 +44,12 @@ namespace Howatworks.SubEtha.Journal.Startup
             public int LessIsGood { get; set; } // NOTE: not bool, 0 or 1
         }
 
+        public class FuelCapacityItem
+        {
+            public decimal Main { get; set; } // TODO: check type
+            public decimal Reserve { get; set; } // TODO: check type
+        }
+
         public string Ship { get; set; } // NOTE: Ship type
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int ShipID { get; set; }
@@ -52,6 +58,10 @@ namespace Howatworks.SubEtha.Journal.Startup
         public long? HullValue { get; set; }
         public long? ModulesValue { get; set; }
         public decimal HullHealth { get; set; }
+        public decimal UnladenMass { get; set; } // TODO: check type
+        public FuelCapacityItem FuelCapacity { get; set; }
+        public int CargoCapacity { get; set; } // TODO: check type
+        public decimal MaxJumpRange { get; set; } // TODO: check type
         public long Rebuy { get; set; }
         public bool Hot { get; set; }
 
