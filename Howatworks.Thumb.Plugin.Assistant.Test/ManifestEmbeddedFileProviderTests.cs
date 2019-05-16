@@ -50,7 +50,7 @@ namespace Howatworks.Thumb.Plugin.Assistant.Test
         {
             var file = _provider.GetFileInfo(@"StaticContent\index.html");
             var content = new StreamReader(file.CreateReadStream(), Encoding.UTF8).ReadToEnd();
-            Assert.Contains("websocket.onmessage", content);
+            Assert.Contains("Howatworks.Thumb.Plugin.Assistant", content);
         }
     }
 }

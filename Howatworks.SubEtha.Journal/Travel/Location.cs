@@ -68,7 +68,6 @@ namespace Howatworks.SubEtha.Journal.Travel
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long? MarketID { get; set; }
         public SystemFactionItem SystemFaction { get; set; }
-        public string FactionState { get; set; } // TODO: enum?
         public string SystemAllegiance { get; set; } // TODO: enum?
         public string SystemEconomy { get; set; }
         public string SystemEconomy_Localised { get; set; }
