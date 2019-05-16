@@ -12,8 +12,8 @@ namespace Howatworks.SubEtha.Journal.Travel
             public string Government { get; set; } // TODO: consider enum?
             public decimal Influence { get; set; }
             public string Allegiance { get; set; } // WARNING: not in docs // TODO: enum?
-            public string Happiness { get; set; } // WARNING: not in docs
-            public string Happiness_Localised { get; set; } // WARNING: not in docs
+            public string Happiness { get; set; } // TODO: consider enum - (Elated, Happy, Discontented, Unhappy, Despondent)
+            public string Happiness_Localised { get; set; }
             public decimal MyReputation { get; set; }
             public List<FactionItemStateItem> PendingStates { get; set; }
             public List<FactionItemStateItem> RecoveringStates { get; set; } // TODO: check spelling?
@@ -29,6 +29,27 @@ namespace Howatworks.SubEtha.Journal.Travel
             public decimal Trend { get; set; } // TODO: check data type
         }
 
+        public class SystemFactionItem
+        {
+            public string Name { get; set; }
+            public string FactionState { get; set; } // TODO: consider enum?
+        }
+
+        public class ConflictItem
+        {
+            public string WarType { get; set; } // TODO: consider enum?
+            public string Status { get; set; } // TODO: check data type?
+            public ConflictItemFactionItem Faction1 { get; set; }
+            public ConflictItemFactionItem Faction2 { get; set; }
+        }
+
+        public class ConflictItemFactionItem
+        {
+            public string Name { get; set; }
+            public string Stake { get; set; } // TODO: check data type?
+            public int WonDays { get; set; } // TODO: check data type?
+        }
+
         public string StarSystem { get; set; }
         public long SystemAddress { get; set; }
         public List<decimal> StarPos { get; set; }
@@ -38,7 +59,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         public decimal FuelUsed { get; set; }
         public decimal FuelLevel { get; set; }
         public bool BoostUsed { get; set; }
-        public string SystemFaction { get; set; }
+        public SystemFactionItem SystemFaction { get; set; }
         public string FactionState { get; set; }
         public string SystemAllegiance { get; set; }
         public string SystemEconomy { get; set; }
@@ -52,6 +73,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         public long Population { get; set; }
         public bool Wanted { get; set; } // TODO: check data type
         public List<FactionItem> Factions { get; set; }
+        public List<ConflictItem> Conflicts { get; set; }
         public List<string> Powers { get; set; }
         // TODO: consider enum -  ("InPrepareRadius", "Prepared", "Exploited", "Contested", "Controlled", "Turmoil", "HomeSystem")
         public string PowerplayState { get; set; }

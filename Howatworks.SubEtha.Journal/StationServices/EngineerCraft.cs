@@ -24,7 +24,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public string Engineer { get; set; } // Note: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long EngineerID { get; set; } // TODO: check datatype
-        public string Blueprint { get; set; } // Note: name
+        public string BlueprintName { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long BlueprintID { get; set; } // TODO: check datatype
         public int Level { get; set; }

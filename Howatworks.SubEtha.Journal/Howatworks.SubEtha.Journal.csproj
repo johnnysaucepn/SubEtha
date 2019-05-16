@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,7 +12,7 @@
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <PackageTags>elite dangerous player journal</PackageTags>
     <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
-    <Version>3.3.1</Version>
+    <Version>3.3.02</Version>
   </PropertyGroup>
 
 </Project>

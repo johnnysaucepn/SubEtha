@@ -7,7 +7,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         public string StationName { get; set; }
         public string StationType { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public long MarketID { get; set; } // TODO: check data type
+        public long MarketID { get; set; }
         // TODO: consider enum - NoSpace, TooLarge, Hostile, Offences, Distance, ActiveFighter, NoReason
         public string Reason { get; set; }
     }

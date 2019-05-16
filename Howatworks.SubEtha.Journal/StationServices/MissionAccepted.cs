@@ -6,7 +6,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
     public class MissionAccepted : JournalEntryBase
     {
         public string Name { get; set; }
-        public string LocalisedName { get; set; } // WARNING: not Name_Localised
+        public string LocalisedName { get; set; } // NOTE: not Name_Localised
         public string Faction { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long MissionID { get; set; }

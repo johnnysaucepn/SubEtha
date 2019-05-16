@@ -13,8 +13,8 @@ namespace Howatworks.SubEtha.Journal.Travel
             public string Government { get; set; } // TODO: consider enum?
             public decimal Influence { get; set; }
             public string Allegiance { get; set; } // WARNING: not in docs // TODO: enum?
-            public string Happiness { get; set; } // WARNING: not in docs
-            public string Happiness_Localised { get; set; } // WARNING: not in docs
+            public string Happiness { get; set; } // TODO: consider enum - (Elated, Happy, Discontented, Unhappy, Despondent)
+            public string Happiness_Localised { get; set; }
             public decimal MyReputation { get; set; }
             public List<FactionItemStateItem> PendingStates { get; set; }
             public List<FactionItemStateItem> RecoveringStates { get; set; } // TODO: check spelling?
@@ -30,21 +30,44 @@ namespace Howatworks.SubEtha.Journal.Travel
             public string Trend { get; set; } // TODO: check data type?
         }
 
+        public class SystemFactionItem
+        {
+            public string Name { get; set; }
+            public string FactionState { get; set; } // TODO: consider enum?
+        }
+
+        public class ConflictItem
+        {
+            public string WarType { get; set; } // TODO: consider enum?
+            public string Status { get; set; } // TODO: check data type?
+            public ConflictItemFactionItem Faction1 { get; set; }
+            public ConflictItemFactionItem Faction2 { get; set; }
+        }
+
+        public class ConflictItemFactionItem
+        {
+            public string Name { get; set; }
+            public string Stake { get; set; } // TODO: check data type?
+            public int WonDays { get; set; } // TODO: check data type?
+        }
+
         public string StarSystem { get; set; }
         public long SystemAddress { get; set; }
         public List<decimal> StarPos { get; set; }
         public string Body { get; set; } // Note: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int BodyID { get; set; }
+
         public string BodyType { get; set; }
+        public decimal? DistFromStarLS { get; set; }
         public bool Docked { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public string StationName { get; set; }
         public string StationType { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public long MarketID { get; set; } // TODO: check data type
-        public string SystemFaction { get; set; }
+        public long? MarketID { get; set; }
+        public SystemFactionItem SystemFaction { get; set; }
         public string FactionState { get; set; } // TODO: enum?
         public string SystemAllegiance { get; set; } // TODO: enum?
         public string SystemEconomy { get; set; }
@@ -58,6 +81,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         public long Population { get; set; } // WARNING: not in docs
         public bool Wanted { get; set; } // TODO: check data type
         public List<FactionItem> Factions { get; set; }
+        public List<ConflictItem> Conflicts { get; set; }
         public List<string> Powers { get; set; }
         // TODO: consider enum -  ("InPrepareRadius", "Prepared", "Exploited", "Contested", "Controlled", "Turmoil", "HomeSystem")
         public string PowerplayState { get; set; }
