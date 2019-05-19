@@ -15,6 +15,6 @@ namespace Howatworks.SubEtha.Bindings
 
         public AxisBinding Binding { get; set; }
         public Setting<bool> Inverted { get; set; }
-        public Setting<float> Deadzone { get; set; }
+        public Setting<decimal> Deadzone { get; set; }
     }
 }

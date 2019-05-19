@@ -18,18 +18,18 @@ namespace Howatworks.SubEtha.Bindings
         public string KeyboardLayout { get; set; }
 
         public Setting<string> MouseXMode { get; set; } // TODO: check data type
-        public Setting<float> MouseXDecay { get; set; } // TODO: check data type
+        public Setting<decimal> MouseXDecay { get; set; } // TODO: check data type
         public Setting<string> MouseYMode { get; set; } // TODO: check data type
-        public Setting<float> MouseYDecay { get; set; } // TODO: check data type
+        public Setting<decimal> MouseYDecay { get; set; } // TODO: check data type
         public Button MouseReset { get; set; }
-        public Setting<float> MouseSensitivity { get; set; }
-        public Setting<float> MouseDecayRate { get; set; }
-        public Setting<float> MouseDeadZone { get; set; }
-        public Setting<float> MouseLinearity { get; set; }
+        public Setting<decimal> MouseSensitivity { get; set; }
+        public Setting<decimal> MouseDecayRate { get; set; }
+        public Setting<decimal> MouseDeadZone { get; set; }
+        public Setting<decimal> MouseLinearity { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Setting<int> MouseGUI { get; set; } // TODO: check data type
 
-        public Setting<float> YawToRollSensitivity { get; set; }
+        public Setting<decimal> YawToRollSensitivity { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Setting<string> YawToRollMode_FAOff { get; set; } // TODO: check data type
         public Button YawToRollButton { get; set; }
@@ -69,7 +69,7 @@ namespace Howatworks.SubEtha.Bindings
         public Button ForwardKey { get; set; }
         public Button BackwardKey { get; set; }
 
-        public Setting<float> ThrottleIncrement { get; set; }
+        public Setting<decimal> ThrottleIncrement { get; set; }
         public Button SetSpeedMinus100 { get; set; }
         public Button SetSpeedMinus75 { get; set; }
         public Button SetSpeedMinus50 { get; set; }
@@ -223,12 +223,12 @@ namespace Howatworks.SubEtha.Bindings
 
         public Setting<bool> MouseHeadlook { get; set; }
         public Setting<bool> MouseHeadlookInvert { get; set; }
-        public Setting<float> MouseHeadlookSensitivity { get; set; }
+        public Setting<decimal> MouseHeadlookSensitivity { get; set; }
         public Setting<bool> HeadlookDefault { get; set; }
-        public Setting<float> HeadlookIncrement { get; set; }
+        public Setting<decimal> HeadlookIncrement { get; set; }
         public Setting<string> HeadlookMode { get; set; } // TODO: enum?
         public Setting<bool> HeadlookResetOnToggle { get; set; }
-        public Setting<float> HeadlookSensitivity { get; set; }
+        public Setting<decimal> HeadlookSensitivity { get; set; }
 
         public Setting<bool> HeadlookSmoothing { get; set; }
 
