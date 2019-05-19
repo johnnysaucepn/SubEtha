@@ -28,18 +28,34 @@ namespace Howatworks.SubEtha.Parser
 
             });
 
-        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
+        private readonly JsonSerializerSettings _serializerSettings;
+
+        private static readonly JsonSerializerSettings Strict = new JsonSerializerSettings
         {
             // Enable strict reporting where event properties are provided that don't exist on the class
             // TODO: Remember to return this to MissingMemberHandling.Ignore when localisation check complete!
-            MissingMemberHandling = MissingMemberHandling.Error,
+            MissingMemberHandling = MissingMemberHandling.Error,             
+            NullValueHandling = NullValueHandling.Include,
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            DateParseHandling = DateParseHandling.DateTimeOffset,
+            MaxDepth = 7
+        };
+
+        private static readonly JsonSerializerSettings Loose = new JsonSerializerSettings
+        {
+            MissingMemberHandling = MissingMemberHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore,
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
             DateParseHandling = DateParseHandling.DateTimeOffset,
             MaxDepth = 7
-
         };
+
+        public JournalParser(bool strict = false)
+        {
+            _serializerSettings = strict ? Strict : Loose;
+        }
 
         /// <summary>
         /// Parse the absolute minimum required for an entry - saves time in deserialising

@@ -40,16 +40,25 @@ namespace Howatworks.SubEtha.Journal.Scan
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             Log.Info("Started");
 
-            var parser = new JournalParser();
+            var parser = new JournalParser(true);  // Use strict parsing
 
             var basePath = config["JournalFolder"];
+
             var incrementalPattern = config["JournalPattern"];
             var incrementalFiles = Directory.EnumerateFiles(basePath, incrementalPattern, SearchOption.TopDirectoryOnly);
-
             foreach (var file in incrementalFiles)
             {
                 Log.Info($"Parsing file {file}...");
                 var reader = new IncrementalJournalReader(file, parser);
+                // Read all entries from all files
+                var allEntries = reader.ReadAll(DateTimeOffset.MinValue).ToList();
+            }
+
+            var realTimeFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
+            foreach (var file in realTimeFiles)
+            {
+                Log.Info($"Parsing file {file}...");
+                var reader = new RealTimeJournalReader(file, parser);
                 // Read all entries from all files
                 var allEntries = reader.ReadAll(DateTimeOffset.MinValue).ToList();
             }
