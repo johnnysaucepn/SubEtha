@@ -7,5 +7,7 @@
         public decimal Progress { get; set; }
         public int BodyCount { get; set; }
         public int NonBodyCount { get; set; }
+        public string SystemName { get; set; } // WARN: undocumented
+        public long SystemAddress { get; set; } // WARN: undocumented
     }
 }

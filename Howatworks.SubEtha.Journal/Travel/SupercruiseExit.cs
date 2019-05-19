@@ -9,6 +9,6 @@ namespace Howatworks.SubEtha.Journal.Travel
         public string Body { get; set; } // Note: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int BodyID { get; set; }
-        public string BodyType { get; set; }
+        public string BodyType { get; set; } // TODO: enum?
     }
 }

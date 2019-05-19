@@ -16,7 +16,7 @@ namespace Howatworks.SubEtha.Journal.Travel
             public string Happiness_Localised { get; set; }
             public decimal MyReputation { get; set; }
             public List<FactionItemStateItem> PendingStates { get; set; }
-            public List<FactionItemStateItem> RecoveringStates { get; set; } // TODO: check spelling?
+            public List<FactionItemStateItem> RecoveringStates { get; set; } // WARN: misspelled in docs
             public List<FactionItemStateItem> ActiveStates { get; set; } // TODO: No trend value, check this is okay
             public bool? SquadronFaction { get; set; }
             public bool? HappiestSystem { get; set; }
@@ -26,7 +26,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         public class FactionItemStateItem
         {
             public string State { get; set; } // TODO: enum?
-            public decimal Trend { get; set; } // TODO: check data type
+            public decimal Trend { get; set; } // TODO: seems to be numeric, but all values zero
         }
 
         public class SystemFactionItem
@@ -55,6 +55,8 @@ namespace Howatworks.SubEtha.Journal.Travel
         public List<decimal> StarPos { get; set; }
         // TODO: Report that Body is never populated
         public string Body { get; set; } // Note: name
+        public int BodyID { get; set; } // WARN: Undocumented
+        public string BodyType { get; set; } // TODO: enum? // WARN: Undocumented
         public decimal JumpDist { get; set; }
         public decimal FuelUsed { get; set; }
         public decimal FuelLevel { get; set; }
