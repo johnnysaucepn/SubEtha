@@ -76,7 +76,7 @@ namespace Howatworks.SubEtha.Bindings.Test
         {
             var binding = DeserializeSampleBindingFile(DefaultBindingsFilename);
 
-            Assert.Equal(0.40000001f, binding.YawToRollSensitivity.Value, 8);
+            Assert.Equal(0.40000001m, binding.YawToRollSensitivity.Value, 8);
         }
 
         [Fact]

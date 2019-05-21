@@ -20,7 +20,7 @@ namespace Howatworks.SubEtha.Bindings.Test
             var bindingMapper = new BindingMapper(bindings);
             var foundBindings = bindingMapper.GetBoundButtons("Keyboard");
 
-            Assert.Equal(69, foundBindings.Count);
+            Assert.Equal(81, foundBindings.Count);
 
         }
 
@@ -46,7 +46,7 @@ namespace Howatworks.SubEtha.Bindings.Test
             var bindingMapper = new BindingMapper(bindings);
             var foundBindings = bindingMapper.GetBoundButtons("Keyboard", "Mouse");
 
-            Assert.Equal(72, foundBindings.Count);
+            Assert.Equal(84, foundBindings.Count);
         }
 
         private static BindingSet DeserializeSampleBindingFile(string path)
