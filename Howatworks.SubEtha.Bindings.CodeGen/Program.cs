@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace Howatworks.SubEtha.Bindings.CodeGen
@@ -19,11 +18,12 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
             var xmlFilePath = config["src"];
             var csFilePath = config["dest"];
 
+            var dedupeList = new List<string>();
+
             var xmlReader = XDocument.Load(xmlFilePath);
             using (var csWriter = new StreamWriter(csFilePath, false, Encoding.UTF8))
             {
-                csWriter.Write(@"
-using System;
+                csWriter.Write(@"using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
@@ -46,9 +46,19 @@ namespace Howatworks.SubEtha.Bindings
 
                 foreach (var item in xmlReader.Root.Elements())
                 {
-                    var controlType = "object";
+                    if (dedupeList.Contains(item.Name.ToString()))
+                    {
+                        continue;
+                    }
+
                     var controlName = item.Name;
+                    var controlType = "object";
                     var controlComment = "";
+
+                    if (item.Name == "KeyboardLayout")
+                    {
+                        controlType = "string";
+                    }
 
                     var valueAttr = item.Attributes().FirstOrDefault(x => x.Name == "Value");
                     if (valueAttr != null)
@@ -56,13 +66,13 @@ namespace Howatworks.SubEtha.Bindings
                         if (string.IsNullOrWhiteSpace(valueAttr.Value))
                         {
                             controlType = "Setting<string>";
-                            controlComment = "TODO: check type";
+                            controlComment = "TODO: check data type";
                         }
                         else if (int.TryParse(valueAttr.Value, out _))
                         {
                             // Int values are probably bools
                             controlType = "Setting<bool>";
-                            controlComment = "TODO: check type";
+                            controlComment = "TODO: check data type";
                         }
                         else if (decimal.TryParse(valueAttr.Value, out _))
                         {
@@ -96,6 +106,8 @@ namespace Howatworks.SubEtha.Bindings
                     {
                         csWriter.WriteLine($"public {controlType} {controlName} {{ get; set; }} // {controlComment}");
                     }
+
+                    dedupeList.Add(controlName.ToString());
                 }
                 csWriter.Write(@"}
 }
