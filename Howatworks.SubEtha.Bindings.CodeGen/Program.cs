@@ -16,33 +16,19 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                 .Build();
 
             var xmlFilePath = config["src"];
-            var csFilePath = config["dest"];
+            var csFilePath = config["dest"] ?? Path.Combine(Path.GetDirectoryName(xmlFilePath), "BindingSet.generated.cs");
 
             var dedupeList = new List<string>();
 
             var xmlReader = XDocument.Load(xmlFilePath);
             using (var csWriter = new StreamWriter(csFilePath, false, Encoding.UTF8))
             {
-                csWriter.Write(@"using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Xml.Serialization;
-
-namespace Howatworks.SubEtha.Bindings
+                csWriter.Write(@"namespace Howatworks.SubEtha.Bindings
 {
-    [Serializable]
-    [SuppressMessage(""ReSharper"", ""InconsistentNaming"")]
-    public class GeneratedBindingSet
-        {
-
-            [XmlAttribute]
-            public string PresetName { get; set; }
-            [XmlAttribute]
-            public int MajorVersion { get; set; }
-            [XmlAttribute]
-            public int MinorVersion { get; set; }
-            [XmlAttribute]
-            public int SortOrder { get; set; }
-            ");
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(""ReSharper"", ""InconsistentNaming"")]
+    public partial class BindingSet
+    {
+");
 
                 foreach (var item in xmlReader.Root.Elements())
                 {
@@ -57,7 +43,7 @@ namespace Howatworks.SubEtha.Bindings
 
                     if (item.Name == "KeyboardLayout")
                     {
-                        controlType = "string";
+                        continue;
                     }
 
                     var valueAttr = item.Attributes().FirstOrDefault(x => x.Name == "Value");
@@ -100,16 +86,16 @@ namespace Howatworks.SubEtha.Bindings
 
                     if (string.IsNullOrWhiteSpace(controlComment))
                     {
-                        csWriter.WriteLine($"public {controlType} {controlName} {{ get; set; }}");
+                        csWriter.WriteLine($"       public {controlType} {controlName} {{ get; set; }}");
                     }
                     else
                     {
-                        csWriter.WriteLine($"public {controlType} {controlName} {{ get; set; }} // {controlComment}");
+                        csWriter.WriteLine($"       public {controlType} {controlName} {{ get; set; }} // {controlComment}");
                     }
 
                     dedupeList.Add(controlName.ToString());
                 }
-                csWriter.Write(@"}
+                csWriter.Write(@"   }
 }
 ");
 
