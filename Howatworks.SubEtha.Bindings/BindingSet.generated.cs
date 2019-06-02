@@ -3,9 +3,9 @@
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
     public partial class BindingSet
     {
-       public Setting<string> MouseXMode { get; set; } // TODO: check data type
+       public Setting<string> MouseXMode { get; set; } // TODO: enum?
        public Setting<bool> MouseXDecay { get; set; } // TODO: check data type
-       public Setting<string> MouseYMode { get; set; } // TODO: check data type
+       public Setting<string> MouseYMode { get; set; } // TODO: enum?
        public Setting<bool> MouseYDecay { get; set; } // TODO: check data type
        public Button MouseReset { get; set; }
        public Setting<decimal> MouseSensitivity { get; set; }
@@ -18,7 +18,7 @@
        public Button YawRightButton { get; set; }
        public Setting<string> YawToRollMode { get; set; } // TODO: enum?
        public Setting<decimal> YawToRollSensitivity { get; set; }
-       public Setting<string> YawToRollMode_FAOff { get; set; } // TODO: check data type
+       public Setting<string> YawToRollMode_FAOff { get; set; } // TODO: enum?
        public Button YawToRollButton { get; set; }
        public Axis RollAxisRaw { get; set; }
        public Button RollLeftButton { get; set; }
@@ -42,7 +42,7 @@
        public Axis LateralThrustAlternate { get; set; }
        public Axis VerticalThrustAlternate { get; set; }
        public Axis ThrottleAxis { get; set; }
-       public Setting<string> ThrottleRange { get; set; } // TODO: check data type
+       public Setting<string> ThrottleRange { get; set; } // TODO: enum?
        public Button ToggleReverseThrottleInput { get; set; }
        public Button ForwardKey { get; set; }
        public Button BackwardKey { get; set; }
@@ -59,7 +59,7 @@
        public Axis YawAxis_Landing { get; set; }
        public Button YawLeftButton_Landing { get; set; }
        public Button YawRightButton_Landing { get; set; }
-       public Setting<string> YawToRollMode_Landing { get; set; } // TODO: check data type
+       public Setting<string> YawToRollMode_Landing { get; set; } // TODO: enum?
        public Axis PitchAxis_Landing { get; set; }
        public Button PitchUpButton_Landing { get; set; }
        public Button PitchDownButton_Landing { get; set; }
@@ -135,10 +135,10 @@
        public Button QuickCommsPanel { get; set; }
        public Button FocusRadarPanel { get; set; }
        public Button FocusRightPanel { get; set; }
-       public Setting<string> LeftPanelFocusOptions { get; set; } // TODO: check data type
-       public Setting<string> CommsPanelFocusOptions { get; set; } // TODO: check data type
-       public Setting<string> RolePanelFocusOptions { get; set; } // TODO: check data type
-       public Setting<string> RightPanelFocusOptions { get; set; } // TODO: check data type
+       public Setting<string> LeftPanelFocusOptions { get; set; } // TODO: enum?
+       public Setting<string> CommsPanelFocusOptions { get; set; } // TODO: enum?
+       public Setting<string> RolePanelFocusOptions { get; set; } // TODO: enum?
+       public Setting<string> RightPanelFocusOptions { get; set; } // TODO: enum?
        public Setting<bool> EnableCameraLockOn { get; set; } // TODO: check data type
        public Button GalaxyMapOpen { get; set; }
        public Button SystemMapOpen { get; set; }
@@ -201,11 +201,11 @@
        public Button GalaxyMapHome { get; set; }
        public Button ToggleDriveAssist { get; set; }
        public Setting<bool> DriveAssistDefault { get; set; } // TODO: check data type
-       public Setting<string> MouseBuggySteeringXMode { get; set; } // TODO: check data type
+       public Setting<string> MouseBuggySteeringXMode { get; set; } // TODO: enum?
        public Setting<bool> MouseBuggySteeringXDecay { get; set; } // TODO: check data type
-       public Setting<string> MouseBuggyRollingXMode { get; set; } // TODO: check data type
+       public Setting<string> MouseBuggyRollingXMode { get; set; } // TODO: enum?
        public Setting<bool> MouseBuggyRollingXDecay { get; set; } // TODO: check data type
-       public Setting<string> MouseBuggyYMode { get; set; } // TODO: check data type
+       public Setting<string> MouseBuggyYMode { get; set; } // TODO: enum?
        public Setting<bool> MouseBuggyYDecay { get; set; } // TODO: check data type
        public Axis SteeringAxis { get; set; }
        public Button SteerLeftButton { get; set; }
@@ -225,9 +225,9 @@
        public Button BuggyCycleFireGroupNext { get; set; }
        public Button BuggyCycleFireGroupPrevious { get; set; }
        public Button SelectTarget_Buggy { get; set; }
-       public Setting<string> MouseTurretXMode { get; set; } // TODO: check data type
+       public Setting<string> MouseTurretXMode { get; set; } // TODO: enum?
        public Setting<bool> MouseTurretXDecay { get; set; } // TODO: check data type
-       public Setting<string> MouseTurretYMode { get; set; } // TODO: check data type
+       public Setting<string> MouseTurretYMode { get; set; } // TODO: enum?
        public Setting<bool> MouseTurretYDecay { get; set; } // TODO: check data type
        public Axis BuggyTurretYawAxisRaw { get; set; }
        public Button BuggyTurretYawLeftButton { get; set; }
@@ -269,9 +269,9 @@
        public Button MultiCrewSecondaryFire { get; set; }
        public Button MultiCrewPrimaryUtilityFire { get; set; }
        public Button MultiCrewSecondaryUtilityFire { get; set; }
-       public Setting<string> MultiCrewThirdPersonMouseXMode { get; set; } // TODO: check data type
+       public Setting<string> MultiCrewThirdPersonMouseXMode { get; set; } // TODO: enum?
        public Setting<bool> MultiCrewThirdPersonMouseXDecay { get; set; } // TODO: check data type
-       public Setting<string> MultiCrewThirdPersonMouseYMode { get; set; } // TODO: check data type
+       public Setting<string> MultiCrewThirdPersonMouseYMode { get; set; } // TODO: enum?
        public Setting<bool> MultiCrewThirdPersonMouseYDecay { get; set; } // TODO: check data type
        public Axis MultiCrewThirdPersonYawAxisRaw { get; set; }
        public Button MultiCrewThirdPersonYawLeftButton { get; set; }
@@ -311,7 +311,7 @@
        public Button FreeCamSpeedInc { get; set; }
        public Button FreeCamSpeedDec { get; set; }
        public Axis MoveFreeCamY { get; set; }
-       public Setting<string> ThrottleRangeFreeCam { get; set; } // TODO: check data type
+       public Setting<string> ThrottleRangeFreeCam { get; set; } // TODO: enum?
        public Button ToggleReverseThrottleInputFreeCam { get; set; }
        public Button MoveFreeCamForward { get; set; }
        public Button MoveFreeCamBackwards { get; set; }
@@ -323,8 +323,8 @@
        public Axis MoveFreeCamDownAxis { get; set; }
        public Button MoveFreeCamUp { get; set; }
        public Button MoveFreeCamDown { get; set; }
-       public Setting<string> PitchCameraMouse { get; set; } // TODO: check data type
-       public Setting<string> YawCameraMouse { get; set; } // TODO: check data type
+       public Setting<string> PitchCameraMouse { get; set; } // TODO: enum?
+       public Setting<string> YawCameraMouse { get; set; } // TODO: enum?
        public Axis PitchCamera { get; set; }
        public Setting<decimal> FreeCamMouseSensitivity { get; set; }
        public Setting<bool> FreeCamMouseYDecay { get; set; } // TODO: check data type
@@ -371,9 +371,9 @@
        public Setting<decimal> FSSTuningSensitivity { get; set; }
        public Button ExplorationFSSDiscoveryScan { get; set; }
        public Button ExplorationFSSQuit { get; set; }
-       public Setting<string> FSSMouseXMode { get; set; } // TODO: check data type
+       public Setting<string> FSSMouseXMode { get; set; } // TODO: enum?
        public Setting<bool> FSSMouseXDecay { get; set; } // TODO: check data type
-       public Setting<string> FSSMouseYMode { get; set; } // TODO: check data type
+       public Setting<string> FSSMouseYMode { get; set; } // TODO: enum?
        public Setting<bool> FSSMouseYDecay { get; set; } // TODO: check data type
        public Setting<decimal> FSSMouseSensitivity { get; set; }
        public Setting<decimal> FSSMouseDeadzone { get; set; }
@@ -382,9 +382,9 @@
        public Button ExplorationFSSShowHelp { get; set; }
        public Button ExplorationSAAChangeScannedAreaViewToggle { get; set; }
        public Button ExplorationSAAExitThirdPerson { get; set; }
-       public Setting<string> SAAThirdPersonMouseXMode { get; set; } // TODO: check data type
+       public Setting<string> SAAThirdPersonMouseXMode { get; set; } // TODO: enum?
        public Setting<bool> SAAThirdPersonMouseXDecay { get; set; } // TODO: check data type
-       public Setting<string> SAAThirdPersonMouseYMode { get; set; } // TODO: check data type
+       public Setting<string> SAAThirdPersonMouseYMode { get; set; } // TODO: enum?
        public Setting<bool> SAAThirdPersonMouseYDecay { get; set; } // TODO: check data type
        public Setting<decimal> SAAThirdPersonMouseSensitivity { get; set; }
        public Axis SAAThirdPersonYawAxisRaw { get; set; }

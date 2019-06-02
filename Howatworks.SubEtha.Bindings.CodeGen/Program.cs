@@ -49,12 +49,7 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                     var valueAttr = item.Attributes().FirstOrDefault(x => x.Name == "Value");
                     if (valueAttr != null)
                     {
-                        if (string.IsNullOrWhiteSpace(valueAttr.Value))
-                        {
-                            controlType = "Setting<string>";
-                            controlComment = "TODO: check data type";
-                        }
-                        else if (int.TryParse(valueAttr.Value, out _))
+                        if (int.TryParse(valueAttr.Value, out _))
                         {
                             // Int values are probably bools
                             controlType = "Setting<bool>";
@@ -64,7 +59,6 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                         {
                             controlType = "Setting<decimal>";
                         }
-                        
                         else
                         {
                             controlType = "Setting<string>";
