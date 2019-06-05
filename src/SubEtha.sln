@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.156
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Thumb", "Thumb", "{3C7A3739-DFB0-4F98-9909-4FBD05A35E26}"
 EndProject
@@ -9,19 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Matrix", "Matrix", "{7F6A62
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SubEtha", "SubEtha", "{B79142DD-2167-49CF-88CD-7E6A886F0B0F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F28FF1B3-4315-40DC-9976-807B4C86D84F}"
-	ProjectSection(SolutionItems) = preProject
-		build.cake = build.cake
-		build.ps1 = build.ps1
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{28AFE659-D17C-435C-A237-75CF5845CC6F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputSimulatorPlusPrototype", "Prototypes\InputSimulatorPlusPrototype\InputSimulatorPlusPrototype.csproj", "{89F1804A-48C6-4CAC-A93C-C58E6002A900}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prototypes", "Prototypes", "{06D00426-0FDE-494B-8081-1A809E8AC356}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputPrototype", "Prototypes\InputPrototype\InputPrototype.csproj", "{731367D2-C16C-4636-A49A-923AF5ACE5DF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings", "Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj", "{B54C322E-15EB-465C-82A7-8D92759DB2F1}"
 EndProject
@@ -63,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Plugin.Ass
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal.Scan", "Howatworks.SubEtha.Journal.Scan\Howatworks.SubEtha.Journal.Scan.csproj", "{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.SubEtha.Bindings.CodeGen", "Howatworks.SubEtha.Bindings.CodeGen\Howatworks.SubEtha.Bindings.CodeGen.csproj", "{B4B30D01-F97A-403E-A2A1-D211334EDF88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.CodeGen", "Howatworks.SubEtha.Bindings.CodeGen\Howatworks.SubEtha.Bindings.CodeGen.csproj", "{B4B30D01-F97A-403E-A2A1-D211334EDF88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,22 +61,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.CoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.CoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.CoreRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.CoreRelease|Any CPU.Build.0 = Release|Any CPU
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900}.Release|Any CPU.Build.0 = Release|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.CoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.CoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.CoreRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.CoreRelease|Any CPU.Build.0 = Release|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B54C322E-15EB-465C-82A7-8D92759DB2F1}.CoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B54C322E-15EB-465C-82A7-8D92759DB2F1}.CoreDebug|Any CPU.Build.0 = Debug|Any CPU
 		{B54C322E-15EB-465C-82A7-8D92759DB2F1}.CoreRelease|Any CPU.ActiveCfg = Release|Any CPU
@@ -246,8 +218,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{89F1804A-48C6-4CAC-A93C-C58E6002A900} = {06D00426-0FDE-494B-8081-1A809E8AC356}
-		{731367D2-C16C-4636-A49A-923AF5ACE5DF} = {06D00426-0FDE-494B-8081-1A809E8AC356}
 		{B54C322E-15EB-465C-82A7-8D92759DB2F1} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}
 		{48DB843F-DF61-40C1-8C8E-B4F0DA91C85A} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}
 		{73E1E2D5-1099-4144-9648-92960F99F5C8} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}

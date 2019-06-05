@@ -21,8 +21,8 @@ var target = Argument("target", "Default");
 Task("Build")
     .Does(() =>
     {
-        NuGetRestore("SubEtha.sln");
-        DotNetCoreBuild("SubEtha.sln", new DotNetCoreBuildSettings
+        NuGetRestore("src/SubEtha.sln");
+        DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
         {
             Configuration = configuration
         });
@@ -38,10 +38,10 @@ Task("Package")
             Zip(projectDetails.OutputPath, zipName, files);
         });
 
-        packageApp("Howatworks.Matrix.Service/Howatworks.Matrix.Service.csproj", "Howatworks.Matrix.Service.zip");
-        packageApp("Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", "Howatworks.Matrix.Site.zip");
-        packageApp("Howatworks.Thumb.Console/Howatworks.Thumb.Console.csproj", "Howatworks.Thumb.Console.zip");
-        packageApp("Howatworks.Thumb.Tray/Howatworks.Thumb.Tray.csproj", "Howatworks.Thumb.Tray.zip");
+        packageApp("src/Howatworks.Matrix.Service/Howatworks.Matrix.Service.csproj", "Howatworks.Matrix.Service.zip");
+        packageApp("src/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", "Howatworks.Matrix.Site.zip");
+        packageApp("src/Howatworks.Thumb.Console/Howatworks.Thumb.Console.csproj", "Howatworks.Thumb.Console.zip");
+        packageApp("src/Howatworks.Thumb.Tray/Howatworks.Thumb.Tray.csproj", "Howatworks.Thumb.Tray.zip");
 
     });
 
