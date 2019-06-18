@@ -19,6 +19,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
         public StatusManager(JournalEntryRouter router)
         {
             router.RegisterFor<Status>(ApplyStatus);
+
             router.RegisterEndBatch(BatchComplete);
 
             _status.Changed += Status_Changed;
@@ -65,15 +66,13 @@ namespace Howatworks.Thumb.Plugin.Assistant
             };
         }
 
-        public bool BatchComplete(BatchMode mode)
+        private bool BatchComplete(BatchMode mode)
         {
-            if (_updateRequired)
-            {
-                ControlStateChanged?.Invoke(this, new ControlStateModelChangedEventArgs(_status));
-                _updateRequired = false;
-                return true;
-            }
-            return false;
+            if (!_updateRequired) return false;
+
+            ControlStateChanged?.Invoke(this, new ControlStateModelChangedEventArgs(_status));
+            _updateRequired = false;
+            return true;
         }
 
     }

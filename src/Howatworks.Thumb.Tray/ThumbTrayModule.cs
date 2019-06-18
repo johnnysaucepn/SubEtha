@@ -7,7 +7,7 @@ namespace Howatworks.Thumb.Tray
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WindowsJournalMonitorNotifier>().As<IJournalMonitorNotifier>().SingleInstance();
+            builder.RegisterType<WindowsThumbNotifier>().As<IThumbNotifier>().SingleInstance();
         }
     }
 }

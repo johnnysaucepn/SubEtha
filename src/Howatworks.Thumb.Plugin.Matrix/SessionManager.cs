@@ -25,6 +25,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             router.RegisterFor<ClearSavedGame>(ApplyClearSavedGame);
             router.RegisterFor<FileHeader>(ApplyFileHeader);
 
+            router.RegisterEndBatch(BatchComplete);
         }
 
         private bool ApplyLoadGame(LoadGame loadGame, BatchMode mode)
@@ -72,7 +73,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             _isDirty = true;
         }
 
-        public bool BatchComplete(BatchMode mode)
+        private bool BatchComplete(BatchMode mode)
         {
             if (!_isDirty) return false;
 

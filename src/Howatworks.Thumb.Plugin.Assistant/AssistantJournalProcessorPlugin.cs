@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Autofac;
 using Howatworks.SubEtha.Bindings;
 using log4net;
@@ -18,7 +17,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
 
         private readonly IConfiguration _configuration;
         private readonly IComponentContext _context;
-        private readonly IJournalMonitorNotifier _notifier;
+        private readonly IThumbNotifier _notifier;
         private readonly WebSocketConnectionManager _connectionManager;
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
@@ -29,7 +28,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
         public AssistantJournalProcessorPlugin(
             IConfiguration configuration,
             IComponentContext context,
-            IJournalMonitorNotifier notifier,
+            IThumbNotifier notifier,
             WebSocketConnectionManager connectionManager,
             StatusManager statusManager,
             GameControlBridge keyboard)
@@ -97,7 +96,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
 
             _statusManager.ControlStateChanged += (sender, args) =>
             {
-                _notifier.UpdatedService(args.State);
+                _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated ship status");
                 var serializedMessage = JsonConvert.SerializeObject(new
                     {
                         MessageType = "ControlState", MessageContent = _statusManager.CreateControlStateMessage(args.State)

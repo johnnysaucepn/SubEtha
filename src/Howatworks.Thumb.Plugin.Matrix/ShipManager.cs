@@ -29,6 +29,8 @@ namespace Howatworks.Thumb.Plugin.Matrix
             router.RegisterFor<HullDamage>(ApplyHullDamage);
             router.RegisterFor<Repair>(ApplyRepair);
             router.RegisterFor<RepairAll>(ApplyRepairAll);
+
+            router.RegisterEndBatch(BatchComplete);
         }
 
         private bool ApplyLoadGame(LoadGame loadGame, BatchMode mode)
@@ -100,7 +102,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        public bool BatchComplete(BatchMode mode)
+        private bool BatchComplete(BatchMode mode)
         {
             if (!_isDirty) return false;
 

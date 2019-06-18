@@ -7,7 +7,7 @@ namespace Howatworks.Thumb.Console
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ConsoleJournalMonitorNotifier>().As<IJournalMonitorNotifier>().SingleInstance();
+            builder.RegisterType<ConsoleThumbNotifier>().As<IThumbNotifier>().SingleInstance();
         }
     }
 }

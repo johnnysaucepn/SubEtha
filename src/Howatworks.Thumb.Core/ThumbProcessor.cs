@@ -14,7 +14,7 @@ namespace Howatworks.Thumb.Core
         private readonly JournalEntryRouter _router;
         private readonly IList<IJournalProcessorPlugin> _plugins;
 
-        public ThumbProcessor(IEnumerable<IJournalProcessorPlugin> plugins, IJournalMonitorNotifier notifier, JournalEntryRouter router)
+        public ThumbProcessor(IEnumerable<IJournalProcessorPlugin> plugins, JournalEntryRouter router)
         {
             _router = router;
             _plugins = plugins.ToList();
@@ -22,7 +22,6 @@ namespace Howatworks.Thumb.Core
             foreach (var plugin in _plugins)
             {
                 plugin.Startup();
-                //plugin.FlushedJournalProcessor += (sender, args) => { notifier.UpdatedService(sender); };
             }
         }
 
@@ -42,28 +41,9 @@ namespace Howatworks.Thumb.Core
                 {
                     Log.Info($"No handler applied for event type {journalEntry.Event}");
                 }
-
-                // Notify on every entry if required
-                foreach (var plugin in _plugins)
-                {
-                    //plugin.OnAppliedJournalEntry(new AppliedJournalEntryEventArgs());
-                    /*if (plugin.FlushBehaviour == FlushBehaviour.OnEveryAppliedEntry)
-                    {
-                        plugin.Flush();
-                    }*/
-                }
             }
 
-            var somethingFlushed = _router.BatchComplete(mode);
-
-            foreach (var plugin in _plugins)
-            {
-                //plugin.OnAppliedJournalEntryBatch(new AppliedJournalEntryBatchEventArgs());
-                /*if (plugin.FlushBehaviour == FlushBehaviour.OnEveryBatch)
-                {
-                    plugin.Flush();
-                }*/
-            }
+            var batchProcessed = _router.BatchComplete(mode);
         }
 
     }

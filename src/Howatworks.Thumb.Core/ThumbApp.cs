@@ -14,11 +14,11 @@ namespace Howatworks.Thumb.Core
         private readonly JournalMonitorScheduler _monitor;
 
         [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
-        private readonly IJournalMonitorNotifier _notifier;
+        private readonly IThumbNotifier _notifier;
 
         public ThumbApp(
             JournalMonitorScheduler monitor,
-            IJournalMonitorNotifier notifier,
+            IThumbNotifier notifier,
             ThumbProcessor processor
         )
         {
@@ -29,9 +29,15 @@ namespace Howatworks.Thumb.Core
                 if (args == null) return;
                 processor.Apply(args.Entries, args.BatchMode);
             };
-            _monitor.JournalFileWatchingStarted += (sender, args) => { _notifier.StartedWatchingFile(args.Path); };
+            _monitor.JournalFileWatchingStarted += (sender, args) =>
+            {
+                _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
+            };
 
-            _monitor.JournalFileWatchingStopped += (sender, args) => { _notifier.StoppedWatchingFile(args.Path); };
+            _monitor.JournalFileWatchingStopped += (sender, args) =>
+            {
+                _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
+            };
 
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var workingFolder = Path.Combine(appDataFolder, "Howatworks", "Thumb");

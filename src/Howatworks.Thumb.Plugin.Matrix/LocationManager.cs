@@ -30,6 +30,8 @@ namespace Howatworks.Thumb.Plugin.Matrix
             router.RegisterFor<SupercruiseExit>(ApplySupercruiseExit);
             router.RegisterFor<UssDrop>(ApplyUssDrop);
             router.RegisterFor<Died>(ApplyDied);
+
+            router.RegisterEndBatch(BatchComplete);
         }
 
         private bool ApplyLocation(Location location, BatchMode mode)
@@ -146,7 +148,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             _isDirty = true;
         }
 
-        public bool BatchComplete(BatchMode mode)
+        private bool BatchComplete(BatchMode mode)
         {
             if (!_isDirty) return false;
 
