@@ -1,6 +1,6 @@
 ﻿using System;
 using Howatworks.SubEtha.Journal.Status;
-using Howatworks.SubEtha.Parser;
+using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Plugin.Assistant.Messages;
 using log4net;

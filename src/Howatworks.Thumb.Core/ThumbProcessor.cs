@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Howatworks.SubEtha.Parser;
 using Howatworks.SubEtha.Journal;
+using Howatworks.SubEtha.Monitor;
 using log4net;
 using Howatworks.Thumb.Plugin;
 

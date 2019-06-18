@@ -1,4 +1,4 @@
-﻿namespace Howatworks.SubEtha.Parser
+﻿namespace Howatworks.SubEtha.Monitor
 {
     public enum BatchMode
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Howatworks.SubEtha.Journal;
-using Howatworks.SubEtha.Parser;
+using Howatworks.SubEtha.Monitor;
 using log4net;
 
 namespace Howatworks.Thumb.Core
@@ -10,7 +10,7 @@ namespace Howatworks.Thumb.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(JournalEntryRouter));
 
-        public delegate bool JournalEntryHandler<T>(T journal, BatchMode mode);
+        public delegate bool JournalEntryHandler<in T>(T journal, BatchMode mode);
         public delegate bool JournalEntryBatchComplete(BatchMode mode);
 
         private readonly Dictionary<Type, List<Delegate>> _handlers = new Dictionary<Type, List<Delegate>>();
@@ -41,7 +41,7 @@ namespace Howatworks.Thumb.Core
             foreach (var handler in _handlers[t])
             {
                 Log.Info($"Applying journal event {t.Name} to {GetType().Name}");
-                bool thisApplied = (bool)handler.DynamicInvoke(entry, mode);
+                var thisApplied = (bool)handler.DynamicInvoke(entry, mode);
                 applied = applied || thisApplied;
 
             }
@@ -50,7 +50,7 @@ namespace Howatworks.Thumb.Core
 
         public bool BatchComplete(BatchMode mode)
         {
-            var applied = true;
+            var applied = false;
             foreach (var handler in _batchComplete)
             {
                 if (!handler.Invoke(mode)) continue;

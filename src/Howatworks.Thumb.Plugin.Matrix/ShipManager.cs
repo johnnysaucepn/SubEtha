@@ -4,7 +4,7 @@ using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Journal.StationServices;
-using Howatworks.SubEtha.Parser;
+using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix

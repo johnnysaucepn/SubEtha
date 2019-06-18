@@ -2,8 +2,8 @@
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Other;
 using Howatworks.SubEtha.Journal;
-using Howatworks.SubEtha.Parser;
 using Howatworks.SubEtha.Journal.Travel;
+using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
