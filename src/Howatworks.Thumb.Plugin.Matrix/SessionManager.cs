@@ -1,10 +1,11 @@
 ﻿using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Parser;
+using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {
-    public class SessionManager : IJournalProcessor
+    public class SessionManager
     {
         private readonly IUploader<SessionState> _client;
         // ReSharper disable once UnusedMember.Local
@@ -26,7 +27,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         }
 
-        private bool ApplyLoadGame(LoadGame loadGame)
+        private bool ApplyLoadGame(LoadGame loadGame, BatchMode mode)
         {
             _session = new SessionState
             {
@@ -38,7 +39,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyNewCommander(NewCommander newCommander)
+        private bool ApplyNewCommander(NewCommander newCommander, BatchMode mode)
         {
             _session = new SessionState
             {
@@ -48,7 +49,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyClearSavedGame(ClearSavedGame clearSavedGame)
+        private bool ApplyClearSavedGame(ClearSavedGame clearSavedGame, BatchMode mode)
         {
             _session = new SessionState
             {
@@ -58,7 +59,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyFileHeader(FileHeader fileHeader)
+        private bool ApplyFileHeader(FileHeader fileHeader, BatchMode mode)
         {
             _session.Build = fileHeader.Build;
             // Not worth an update on its own
@@ -71,12 +72,13 @@ namespace Howatworks.Thumb.Plugin.Matrix
             _isDirty = true;
         }
 
-        public void Flush()
+        public bool BatchComplete(BatchMode mode)
         {
-            if (!_isDirty) return;
+            if (!_isDirty) return false;
 
             _client.Upload(_session);
             _isDirty = false;
+            return true;
         }
 
     }

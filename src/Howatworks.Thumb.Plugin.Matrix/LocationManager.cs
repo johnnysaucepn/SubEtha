@@ -4,10 +4,11 @@ using Howatworks.SubEtha.Journal.Other;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Parser;
 using Howatworks.SubEtha.Journal.Travel;
+using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {
-    public class LocationManager : IJournalProcessor
+    public class LocationManager
     {
         private readonly IUploader<LocationState> _client;
         private LocationState _location;
@@ -31,7 +32,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             router.RegisterFor<Died>(ApplyDied);
         }
 
-        private bool ApplyLocation(Location location)
+        private bool ApplyLocation(Location location, BatchMode mode)
         {
             // Ignore previous information, return new location
 
@@ -47,7 +48,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyFsdJump(FsdJump fsdJump)
+        private bool ApplyFsdJump(FsdJump fsdJump, BatchMode mode)
         {
             // Ignore previous information, return new location
             _location = new LocationState
@@ -60,7 +61,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyDocked(Docked docked)
+        private bool ApplyDocked(Docked docked, BatchMode mode)
         {
             if (_location.Body != null) _location.Body.Docked = true;
             _location.SurfaceLocation = null;
@@ -70,7 +71,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyUndocked(Undocked undocked)
+        private bool ApplyUndocked(Undocked undocked, BatchMode mode)
         {
             if (_location.Body != null) _location.Body.Docked = false;
             _location.SurfaceLocation = null;
@@ -80,7 +81,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyTouchdown(Touchdown touchdown)
+        private bool ApplyTouchdown(Touchdown touchdown, BatchMode mode)
         {
             _location.Body = new Body(_location.Body.Name, _location.Body.Type);
             _location.SurfaceLocation = new SurfaceLocation(true, touchdown.Latitude, touchdown.Longitude);
@@ -90,7 +91,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyLiftoff(Liftoff liftoff)
+        private bool ApplyLiftoff(Liftoff liftoff, BatchMode mode)
         {
             _location.Body = new Body(_location.Body.Name, _location.Body.Type);
             _location.SurfaceLocation = new SurfaceLocation(false, liftoff.Latitude, liftoff.Longitude);
@@ -100,7 +101,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplySuperCruiseEntry(SupercruiseEntry entry)
+        private bool ApplySuperCruiseEntry(SupercruiseEntry entry, BatchMode mode)
         {
             _location.Body = null;
             _location.SurfaceLocation = null;
@@ -110,7 +111,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplySupercruiseExit(SupercruiseExit exit)
+        private bool ApplySupercruiseExit(SupercruiseExit exit, BatchMode mode)
         {
             _location.Body = new Body(exit.Body, exit.BodyType);
             _location.SurfaceLocation = null;
@@ -120,7 +121,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyUssDrop(UssDrop ussDrop)
+        private bool ApplyUssDrop(UssDrop ussDrop, BatchMode mode)
         {
             _location.Body = null;
             _location.SurfaceLocation = null;
@@ -130,7 +131,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyDied(Died died)
+        private bool ApplyDied(Died died, BatchMode mode)
         {
             // Ignore previous information, return new location
 
@@ -145,12 +146,13 @@ namespace Howatworks.Thumb.Plugin.Matrix
             _isDirty = true;
         }
 
-        public void Flush()
+        public bool BatchComplete(BatchMode mode)
         {
-            if (!_isDirty) return;
+            if (!_isDirty) return false;
 
             _client.Upload(_location);
             _isDirty = false;
+            return true;
         }
 
     }

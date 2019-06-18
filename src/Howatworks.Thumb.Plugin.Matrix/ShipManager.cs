@@ -5,10 +5,11 @@ using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Journal.StationServices;
 using Howatworks.SubEtha.Parser;
+using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {
-    public class ShipManager : IJournalProcessor
+    public class ShipManager
     {
         private readonly IUploader<ShipState> _client;
         // ReSharper disable once UnusedMember.Local
@@ -30,7 +31,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             router.RegisterFor<RepairAll>(ApplyRepairAll);
         }
 
-        private bool ApplyLoadGame(LoadGame loadGame)
+        private bool ApplyLoadGame(LoadGame loadGame, BatchMode mode)
         {
             return Apply(loadGame, ship =>
             {
@@ -42,7 +43,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyShipyardNew(ShipyardNew shipyardNew)
+        private bool ApplyShipyardNew(ShipyardNew shipyardNew, BatchMode mode)
         {
             return Replace(shipyardNew, () => new ShipState
             {
@@ -51,7 +52,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap)
+        private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap, BatchMode mode)
         {
             return Apply(shipyardSwap, ship =>
             {
@@ -61,7 +62,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyHullDamage(HullDamage hullDamage)
+        private bool ApplyHullDamage(HullDamage hullDamage, BatchMode mode)
         {
             return Apply(hullDamage, ship =>
             {
@@ -70,7 +71,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyShieldState(ShieldState shieldState)
+        private bool ApplyShieldState(ShieldState shieldState, BatchMode mode)
         {
             return Apply(shieldState, ship =>
             {
@@ -80,7 +81,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyRepair(Repair repair)
+        private bool ApplyRepair(Repair repair, BatchMode mode)
         {
             return Apply(repair, ship =>
             {
@@ -90,7 +91,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyRepairAll(RepairAll repair)
+        private bool ApplyRepairAll(RepairAll repair, BatchMode mode)
         {
             return Apply(repair, ship =>
             {
@@ -99,9 +100,9 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        public void Flush()
+        public bool BatchComplete(BatchMode mode)
         {
-            if (!_isDirty) return;
+            if (!_isDirty) return false;
 
             foreach (ShipState ship in _ships.Values)
             {
@@ -109,6 +110,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             }
 
             _isDirty = false;
+            return true;
         }
 
         private bool Apply(IJournalEntry entry, Func<ShipState, bool> action)

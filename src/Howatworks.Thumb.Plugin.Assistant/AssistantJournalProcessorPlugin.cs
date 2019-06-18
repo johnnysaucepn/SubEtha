@@ -23,12 +23,8 @@ namespace Howatworks.Thumb.Plugin.Assistant
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
-        public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
         public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
         public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Process;
-
-        //public event EventHandler<AppliedJournalEntriesEventArgs> AppliedJournalEntries;
-        public event EventHandler<FlushedJournalProcessorEventArgs> FlushedJournalProcessor;
 
         public AssistantJournalProcessorPlugin(
             IConfiguration configuration,
@@ -111,12 +107,6 @@ namespace Howatworks.Thumb.Plugin.Assistant
             };
 
             host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
-        }
-
-        public void Flush()
-        {
-            _statusManager.Flush();
-            FlushedJournalProcessor?.Invoke(this, new FlushedJournalProcessorEventArgs());
         }
 
         private void ActivateBinding(ControlRequest controlRequest)

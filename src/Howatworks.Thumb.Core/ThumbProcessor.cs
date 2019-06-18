@@ -22,18 +22,18 @@ namespace Howatworks.Thumb.Core
             foreach (var plugin in _plugins)
             {
                 plugin.Startup();
-                plugin.FlushedJournalProcessor += (sender, args) => { notifier.UpdatedService(sender); };
+                //plugin.FlushedJournalProcessor += (sender, args) => { notifier.UpdatedService(sender); };
             }
         }
 
         public void Apply(IList<IJournalEntry> entries, BatchMode mode)
         {
-            foreach (var plugin in _plugins)
+            /*foreach (var plugin in _plugins)
             {
                 // Skip all existing log files on first run
                 if (mode == BatchMode.FirstRun && plugin.FirstRunBehaviour == CatchupBehaviour.Skip) return;
                 if (mode == BatchMode.Catchup && plugin.CatchupBehaviour == CatchupBehaviour.Skip) return;
-            }
+            }*/
 
             foreach (var journalEntry in entries)
             {
@@ -43,22 +43,26 @@ namespace Howatworks.Thumb.Core
                     Log.Info($"No handler applied for event type {journalEntry.Event}");
                 }
 
-                // Upload on every entry if required
+                // Notify on every entry if required
                 foreach (var plugin in _plugins)
                 {
-                    if (plugin.FlushBehaviour == FlushBehaviour.OnEveryAppliedEntry)
+                    //plugin.OnAppliedJournalEntry(new AppliedJournalEntryEventArgs());
+                    /*if (plugin.FlushBehaviour == FlushBehaviour.OnEveryAppliedEntry)
                     {
                         plugin.Flush();
-                    }
+                    }*/
                 }
             }
 
+            var somethingFlushed = _router.BatchComplete(mode);
+
             foreach (var plugin in _plugins)
             {
-                if (plugin.FlushBehaviour == FlushBehaviour.OnEveryBatch)
+                //plugin.OnAppliedJournalEntryBatch(new AppliedJournalEntryBatchEventArgs());
+                /*if (plugin.FlushBehaviour == FlushBehaviour.OnEveryBatch)
                 {
                     plugin.Flush();
-                }
+                }*/
             }
         }
 
