@@ -12,20 +12,18 @@ namespace Howatworks.Thumb.Core
         private static readonly ILog Log = LogManager.GetLogger(typeof(ThumbProcessor));
 
         private readonly JournalEntryRouter _router;
-        private readonly IList<IJournalProcessorPlugin> _plugins;
 
         public ThumbProcessor(IEnumerable<IJournalProcessorPlugin> plugins, JournalEntryRouter router)
         {
             _router = router;
-            _plugins = plugins.ToList();
 
-            foreach (var plugin in _plugins)
+            foreach (var plugin in plugins)
             {
                 plugin.Startup();
             }
         }
 
-        public void Apply(IList<IJournalEntry> entries, BatchMode mode)
+        public void Apply(IEnumerable<IJournalEntry> entries, BatchMode mode)
         {
             /*foreach (var plugin in _plugins)
             {
@@ -43,7 +41,7 @@ namespace Howatworks.Thumb.Core
                 }
             }
 
-            var batchProcessed = _router.BatchComplete(mode);
+            var batchProcessed = _router.ApplyBatchComplete(mode);
         }
 
     }

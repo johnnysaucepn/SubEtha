@@ -10,9 +10,6 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private readonly IConfiguration _pluginConfig;
         private readonly string _user;
-        public FlushBehaviour FlushBehaviour => FlushBehaviour.OnEveryBatch;
-        public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Process;
-        public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Process;
 
         public LocationManager Location { get; }
         public ShipManager Ship { get; set; }

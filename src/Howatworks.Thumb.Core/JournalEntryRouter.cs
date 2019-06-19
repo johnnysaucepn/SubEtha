@@ -10,55 +10,55 @@ namespace Howatworks.Thumb.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(JournalEntryRouter));
 
-        public delegate bool JournalEntryHandler<in T>(T journal, BatchMode mode);
-        public delegate bool JournalEntryBatchComplete(BatchMode mode);
+        private readonly Dictionary<Type, List<JournalEntryHandler>> _journalHandlers = new Dictionary<Type, List<JournalEntryHandler>>();
+        private readonly List<JournalEntryBatchCompleteHandler> _batchHandlers = new List<JournalEntryBatchCompleteHandler>();
 
-        private readonly Dictionary<Type, List<Delegate>> _handlers = new Dictionary<Type, List<Delegate>>();
-        private readonly List<JournalEntryBatchComplete> _batchComplete = new List<JournalEntryBatchComplete>();
-
-        public void RegisterFor<T>(JournalEntryHandler<T> handler) where T : IJournalEntry
+        public void RegisterFor<T>(Func<T, bool> action, IBatchPolicy policy = null) where T : IJournalEntry
         {
+            policy = policy ?? BatchPolicy.All;
+
+            var handler = JournalEntryHandler.Create(action, policy);
             var t = typeof(T);
-            if (!_handlers.ContainsKey(t))
+            if (!_journalHandlers.ContainsKey(t))
             {
-                var newHandlerList = new List<Delegate>();
-                _handlers[t] = newHandlerList;
+                _journalHandlers[t] = new List<JournalEntryHandler>();
             }
-            _handlers[t].Add(handler);
+            _journalHandlers[t].Add(handler);
         }
 
-        public void RegisterEndBatch(JournalEntryBatchComplete handler)
+        public void RegisterForBatchComplete(Func<bool> action, IBatchPolicy policy = null)
         {
-            _batchComplete.Add(handler);
+            _batchHandlers.Add(new JournalEntryBatchCompleteHandler(action, policy));
         }
 
         public bool Apply<T>(T entry, BatchMode mode) where T : IJournalEntry
         {
             var t = entry.GetType();
-            if (!_handlers.ContainsKey(t)) return false;
+            if (!_journalHandlers.ContainsKey(t)) return false;
 
             var applied = false;
-            foreach (var handler in _handlers[t])
+            Log.Info($"Applying journal event {t.Name}");
+            foreach (var handler in _journalHandlers[t])
             {
-                Log.Info($"Applying journal event {t.Name} to {GetType().Name}");
-                var thisApplied = (bool)handler.DynamicInvoke(entry, mode);
-                applied = applied || thisApplied;
+                if (!handler.Policy.Accepts(mode)) continue;
 
+                applied = applied || handler.Invoke(entry);
             }
             return applied;
         }
 
-        public bool BatchComplete(BatchMode mode)
+        public bool ApplyBatchComplete(BatchMode mode)
         {
             var applied = false;
-            foreach (var handler in _batchComplete)
+            Log.Info("Applying end of batch");
+            foreach (var handler in _batchHandlers)
             {
-                if (!handler.Invoke(mode)) continue;
-                applied = true;
+                if (!handler.Policy.Accepts(mode)) continue;
+
+                applied = applied || handler.Invoke();
             }
             return applied;
         }
-
 
     }
 }

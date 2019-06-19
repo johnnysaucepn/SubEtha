@@ -22,8 +22,6 @@ namespace Howatworks.Thumb.Plugin.Assistant
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
-        public CatchupBehaviour FirstRunBehaviour => CatchupBehaviour.Skip;
-        public CatchupBehaviour CatchupBehaviour => CatchupBehaviour.Process;
 
         public AssistantJournalProcessorPlugin(
             IConfiguration configuration,

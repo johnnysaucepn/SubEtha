@@ -1,6 +1,5 @@
 ﻿using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
-using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
@@ -25,10 +24,10 @@ namespace Howatworks.Thumb.Plugin.Matrix
             router.RegisterFor<ClearSavedGame>(ApplyClearSavedGame);
             router.RegisterFor<FileHeader>(ApplyFileHeader);
 
-            router.RegisterEndBatch(BatchComplete);
+            router.RegisterForBatchComplete(BatchComplete);
         }
 
-        private bool ApplyLoadGame(LoadGame loadGame, BatchMode mode)
+        private bool ApplyLoadGame(LoadGame loadGame)
         {
             _session = new SessionState
             {
@@ -40,7 +39,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyNewCommander(NewCommander newCommander, BatchMode mode)
+        private bool ApplyNewCommander(NewCommander newCommander)
         {
             _session = new SessionState
             {
@@ -50,7 +49,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyClearSavedGame(ClearSavedGame clearSavedGame, BatchMode mode)
+        private bool ApplyClearSavedGame(ClearSavedGame clearSavedGame)
         {
             _session = new SessionState
             {
@@ -60,7 +59,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return true;
         }
 
-        private bool ApplyFileHeader(FileHeader fileHeader, BatchMode mode)
+        private bool ApplyFileHeader(FileHeader fileHeader)
         {
             _session.Build = fileHeader.Build;
             // Not worth an update on its own
@@ -73,7 +72,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             _isDirty = true;
         }
 
-        private bool BatchComplete(BatchMode mode)
+        private bool BatchComplete()
         {
             if (!_isDirty) return false;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using Howatworks.SubEtha.Journal.Status;
-using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Plugin.Assistant.Messages;
 using log4net;
@@ -18,9 +17,9 @@ namespace Howatworks.Thumb.Plugin.Assistant
 
         public StatusManager(JournalEntryRouter router)
         {
-            router.RegisterFor<Status>(ApplyStatus);
+            router.RegisterFor<Status>(ApplyStatus, BatchPolicy.OnlyOngoing);
 
-            router.RegisterEndBatch(BatchComplete);
+            router.RegisterForBatchComplete(BatchComplete, BatchPolicy.OnlyOngoing);
 
             _status.Changed += Status_Changed;
         }
@@ -30,7 +29,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
             _updateRequired = true;
         }
 
-        private bool ApplyStatus(Status status, BatchMode batchMode)
+        private bool ApplyStatus(Status status)
         {
             _status.LandingGearDown = status.HasFlag(StatusFlags.LandingGearDown);
             _status.Supercruise = status.HasFlag(StatusFlags.Supercruise);
@@ -66,7 +65,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
             };
         }
 
-        private bool BatchComplete(BatchMode mode)
+        private bool BatchComplete()
         {
             if (!_updateRequired) return false;
 

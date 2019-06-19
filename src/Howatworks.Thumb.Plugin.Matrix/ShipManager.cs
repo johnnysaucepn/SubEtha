@@ -4,7 +4,6 @@ using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Journal.StationServices;
-using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
@@ -30,10 +29,10 @@ namespace Howatworks.Thumb.Plugin.Matrix
             router.RegisterFor<Repair>(ApplyRepair);
             router.RegisterFor<RepairAll>(ApplyRepairAll);
 
-            router.RegisterEndBatch(BatchComplete);
+            router.RegisterForBatchComplete(BatchComplete);
         }
 
-        private bool ApplyLoadGame(LoadGame loadGame, BatchMode mode)
+        private bool ApplyLoadGame(LoadGame loadGame)
         {
             return Apply(loadGame, ship =>
             {
@@ -45,7 +44,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyShipyardNew(ShipyardNew shipyardNew, BatchMode mode)
+        private bool ApplyShipyardNew(ShipyardNew shipyardNew)
         {
             return Replace(shipyardNew, () => new ShipState
             {
@@ -54,7 +53,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap, BatchMode mode)
+        private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap)
         {
             return Apply(shipyardSwap, ship =>
             {
@@ -64,7 +63,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyHullDamage(HullDamage hullDamage, BatchMode mode)
+        private bool ApplyHullDamage(HullDamage hullDamage)
         {
             return Apply(hullDamage, ship =>
             {
@@ -73,7 +72,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyShieldState(ShieldState shieldState, BatchMode mode)
+        private bool ApplyShieldState(ShieldState shieldState)
         {
             return Apply(shieldState, ship =>
             {
@@ -83,7 +82,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyRepair(Repair repair, BatchMode mode)
+        private bool ApplyRepair(Repair repair)
         {
             return Apply(repair, ship =>
             {
@@ -93,7 +92,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool ApplyRepairAll(RepairAll repair, BatchMode mode)
+        private bool ApplyRepairAll(RepairAll repair)
         {
             return Apply(repair, ship =>
             {
@@ -102,7 +101,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             });
         }
 
-        private bool BatchComplete(BatchMode mode)
+        private bool BatchComplete()
         {
             if (!_isDirty) return false;
 
