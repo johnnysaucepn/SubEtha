@@ -34,7 +34,7 @@ namespace Howatworks.SubEtha.Parser
         {
             // Enable strict reporting where event properties are provided that don't exist on the class
             // TODO: Remember to return this to MissingMemberHandling.Ignore when localisation check complete!
-            MissingMemberHandling = MissingMemberHandling.Error,             
+            MissingMemberHandling = MissingMemberHandling.Error,
             NullValueHandling = NullValueHandling.Include,
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,

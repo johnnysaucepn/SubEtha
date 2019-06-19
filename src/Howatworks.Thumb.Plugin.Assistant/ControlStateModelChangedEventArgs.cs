@@ -1,6 +1,4 @@
-﻿using Howatworks.Thumb.Plugin.Assistant.Messages;
-
-namespace Howatworks.Thumb.Plugin.Assistant
+﻿namespace Howatworks.Thumb.Plugin.Assistant
 {
     public class ControlStateModelChangedEventArgs
     {

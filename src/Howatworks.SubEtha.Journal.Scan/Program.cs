@@ -1,8 +1,6 @@
 ﻿using Howatworks.SubEtha.Parser;
 using log4net;
-using log4net.Appender;
 using log4net.Config;
-using log4net.Core;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -51,7 +49,7 @@ namespace Howatworks.SubEtha.Journal.Scan
                 Log.Info($"Parsing file {file}...");
                 var reader = new IncrementalJournalReader(file, parser);
                 // Read all entries from all files
-                var allEntries = reader.ReadAll(DateTimeOffset.MinValue).ToList();
+                var _ = reader.ReadAll(DateTimeOffset.MinValue).ToList();
             }
 
             var realTimeFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
@@ -60,7 +58,7 @@ namespace Howatworks.SubEtha.Journal.Scan
                 Log.Info($"Parsing file {file}...");
                 var reader = new RealTimeJournalReader(file, parser);
                 // Read all entries from all files
-                var allEntries = reader.ReadAll(DateTimeOffset.MinValue).ToList();
+                var _ = reader.ReadAll(DateTimeOffset.MinValue).ToList();
             }
         }
     }

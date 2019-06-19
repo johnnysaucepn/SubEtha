@@ -1,5 +1,4 @@
-﻿using System;
-using log4net;
+﻿using log4net;
 using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Plugin.Matrix

@@ -1,6 +1,4 @@
-﻿using InputSimulatorStandard;
-
-namespace Howatworks.Thumb.Plugin.Assistant.ControlSimulators
+﻿namespace Howatworks.Thumb.Plugin.Assistant.ControlSimulators
 {
     public class NullMouseSimulator : IVirtualMouseSimulator
     {

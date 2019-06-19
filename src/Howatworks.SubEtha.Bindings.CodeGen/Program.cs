@@ -67,7 +67,7 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                     }
                     else
                     {
-                        var children = item.Elements();
+                        var children = item.Elements().ToList();
                         if (children.Any(x => x.Name == "Primary") && children.Any(x => x.Name == "Secondary"))
                         {
                             controlType = "Button";

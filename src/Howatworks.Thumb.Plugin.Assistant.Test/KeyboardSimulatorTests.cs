@@ -10,11 +10,6 @@ namespace Howatworks.Thumb.Plugin.Assistant.Test
 {
     public class KeyboardSimulatorTests
     {
-        public KeyboardSimulatorTests()
-        {
-
-        }
-
         [Trait("Category","Disabled")]
         [Fact(Skip="Requires External Application")]
         public void TriggerKeyCombination_AllKeyCodes_GeneratedFileConsistent()
