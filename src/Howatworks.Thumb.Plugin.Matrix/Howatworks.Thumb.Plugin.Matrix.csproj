@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Howatworks.Matrix.Domain\Howatworks.Matrix.Domain.csproj" />
-    <ProjectReference Include="..\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Plugin\Howatworks.Thumb.Plugin.csproj" />
   </ItemGroup>
