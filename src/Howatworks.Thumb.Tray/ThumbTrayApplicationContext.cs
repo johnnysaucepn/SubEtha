@@ -78,7 +78,7 @@ namespace Howatworks.Thumb.Tray
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
-            builder.RegisterModule(new ThumbTrayModule());
+            builder.RegisterModule(new ThumbTrayModule(config));
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())

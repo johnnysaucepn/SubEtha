@@ -40,7 +40,7 @@ namespace Howatworks.Thumb.Console
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
-            builder.RegisterModule(new ThumbConsoleModule());
+            builder.RegisterModule(new ThumbConsoleModule(config));
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())

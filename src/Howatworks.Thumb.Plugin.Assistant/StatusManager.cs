@@ -49,7 +49,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
             return CreateControlStateMessage(_status);
         }
 
-        public ControlState CreateControlStateMessage(ControlStateModel model)
+        public static ControlState CreateControlStateMessage(ControlStateModel model)
         {
             return new ControlState
             {

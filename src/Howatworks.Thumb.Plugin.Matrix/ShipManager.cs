@@ -37,9 +37,9 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return Apply(loadGame, ship =>
             {
                 ship.Type = loadGame.Ship;
-                ship.ShipID = loadGame.ShipID;
-                //ship.Name = loadGame.ShipName;
-                //ship.Ident = loadGame.ShipIdent;
+                ship.ShipId = loadGame.ShipID;
+                ship.Name = loadGame.ShipName;
+                ship.Ident = loadGame.ShipIdent;
                 return true;
             });
         }
@@ -49,7 +49,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return Replace(shipyardNew, () => new ShipState
             {
                 Type = shipyardNew.ShipType,
-                ShipID = shipyardNew.NewShipID
+                ShipId = shipyardNew.NewShipID
             });
         }
 
@@ -58,7 +58,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             return Apply(shipyardSwap, ship =>
             {
                 ship.Type = shipyardSwap.ShipType;
-                ship.ShipID = shipyardSwap.ShipID;
+                ship.ShipId = shipyardSwap.ShipID;
                 return true;
             });
         }
@@ -105,7 +105,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             if (!_isDirty) return false;
 
-            foreach (ShipState ship in _ships.Values)
+            foreach (var ship in _ships.Values)
             {
                 _client.Upload(ship);
             }
@@ -124,30 +124,24 @@ namespace Howatworks.Thumb.Plugin.Matrix
             var ship = _ships[entry.GameVersionDiscriminator];
 
             // If handler didn't apply the change, don't update state
-            if (action(ship))
-            {
-                ship.TimeStamp = entry.Timestamp;
-                _isDirty = true;
-                return true;
-            }
+            if (!action(ship)) return false;
 
-            return false;
+            ship.TimeStamp = entry.Timestamp;
+            _isDirty = true;
+            return true;
         }
 
         private bool Replace(IJournalEntry entry, Func<ShipState> action)
         {
             // If handler didn't apply the change, don't update state
             var newState = action();
-            if (newState != null)
-            {
-                newState.TimeStamp = entry.Timestamp;
-                _isDirty = true;
+            if (newState == null) return false;
 
-                _ships[entry.GameVersionDiscriminator] = newState;
-                return true;
-            }
+            newState.TimeStamp = entry.Timestamp;
+            _isDirty = true;
 
-            return false;
+            _ships[entry.GameVersionDiscriminator] = newState;
+            return true;
         }
 
     }

@@ -98,7 +98,7 @@ namespace Howatworks.Thumb.Plugin.Assistant
                 _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated ship status");
                 var serializedMessage = JsonConvert.SerializeObject(new
                     {
-                        MessageType = "ControlState", MessageContent = _statusManager.CreateControlStateMessage(args.State)
+                        MessageType = "ControlState", MessageContent = StatusManager.CreateControlStateMessage(args.State)
                     },
                     Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);

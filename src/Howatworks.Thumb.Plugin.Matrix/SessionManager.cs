@@ -9,7 +9,6 @@ namespace Howatworks.Thumb.Plugin.Matrix
         private readonly IUploader<SessionState> _client;
         // ReSharper disable once UnusedMember.Local
 
-
         private SessionState _session;
         private bool _isDirty;
 

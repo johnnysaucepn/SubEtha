@@ -7,6 +7,5 @@
         StarSystem StarSystem { get; set; }
         Station Station { get; set; }
         SurfaceLocation SurfaceLocation { get; set; }
-        
     }
 }

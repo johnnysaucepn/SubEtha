@@ -20,8 +20,6 @@ namespace Howatworks.Thumb.Plugin.Assistant
             var staticContentAssembly = Assembly.GetExecutingAssembly();
             var staticContentFileProvider = new ManifestEmbeddedFileProvider(staticContentAssembly, "StaticContent");
 
-
-            var statusManager = autofacContext.Resolve<StatusManager>();
             var webSocketConnectionManager = autofacContext.Resolve<WebSocketConnectionManager>();
 
             app

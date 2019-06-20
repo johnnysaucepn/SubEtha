@@ -11,7 +11,7 @@ namespace Howatworks.Matrix.Core.Entities
 
         public DateTimeOffset TimeStamp { get; set; }
 
-        public int ShipID { get; set; }
+        public int ShipId { get; set; }
         public string Type { get; set; }
 
         public string Name { get; set; }
