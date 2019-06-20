@@ -1,5 +1,5 @@
 using Autofac;
-using Howatworks.Thumb.Plugin;
+using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Tray
 {

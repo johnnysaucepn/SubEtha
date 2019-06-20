@@ -130,10 +130,6 @@
       <Project>{51d58d45-64de-4388-8735-2744eb0ce320}</Project>
       <Name>Howatworks.Thumb.Plugin.Assistant</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Howatworks.Thumb.Plugin\Howatworks.Thumb.Plugin.csproj">
-      <Project>{3F7F0CC9-5273-4356-B272-477C3F787EFD}</Project>
-      <Name>Howatworks.Thumb.Plugin</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

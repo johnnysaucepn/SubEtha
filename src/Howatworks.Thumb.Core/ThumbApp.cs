@@ -5,7 +5,6 @@ using System.Reflection;
 using Howatworks.SubEtha.Monitor;
 using log4net;
 using log4net.Config;
-using Howatworks.Thumb.Plugin;
 
 namespace Howatworks.Thumb.Core
 {
