@@ -24,13 +24,6 @@ namespace Howatworks.Thumb.Core
 
         public void Apply(IEnumerable<IJournalEntry> entries, BatchMode mode)
         {
-            /*foreach (var plugin in _plugins)
-            {
-                // Skip all existing log files on first run
-                if (mode == BatchMode.FirstRun && plugin.FirstRunBehaviour == CatchupBehaviour.Skip) return;
-                if (mode == BatchMode.Catchup && plugin.CatchupBehaviour == CatchupBehaviour.Skip) return;
-            }*/
-
             foreach (var journalEntry in entries)
             {
                 var somethingApplied = _router.Apply(journalEntry, mode);
