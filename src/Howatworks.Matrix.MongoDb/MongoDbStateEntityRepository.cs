@@ -9,7 +9,7 @@ using Howatworks.Matrix.Domain;
 namespace Howatworks.Matrix.MongoDb
 {
     public class MongoDbStateEntityRepository<T> : MongoDbRepository<T>, IStateEntityRepository<T>
-        where T : IEntity, IState, IGameContextEntity
+        where T : MatrixEntity, IState, IGameContextEntity
     {
         public MongoDbStateEntityRepository(MongoDbContext<T> db) : base(db)
         {

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Howatworks.Matrix.EntityFramework
 {
     public class EntityFrameworkStateEntityRepository<T> : EntityFrameworkRepository<T>, IStateEntityRepository<T>
-        where T : class, IEntity, IState, IGameContextEntity
+        where T : MatrixEntity, IState, IGameContextEntity
     {
         public EntityFrameworkStateEntityRepository(DbContext db) : base(db)
         {

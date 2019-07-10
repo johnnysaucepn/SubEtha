@@ -38,7 +38,7 @@ namespace Howatworks.Matrix.Site
             });
 
             services.AddDbContext<MatrixDbContext>();
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<MatrixIdentityUser>()
                 .AddEntityFrameworkStores<MatrixDbContext>();
 
             services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

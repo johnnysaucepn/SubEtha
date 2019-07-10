@@ -33,10 +33,10 @@ namespace Howatworks.Matrix.Site.Controllers
             var results = new List<dynamic>();
             foreach (var user in group.Users)
             {
-                var location = _locationRepoz.GetMostRecent(user, gameVersion);
+                var location = _locationRepoz.GetMostRecent(user.UserName, gameVersion);
                 if (location == null) continue;
-                var cmdr = _sessionRepoz.GetAtDateTime(user, gameVersion, location.TimeStamp);
-                var ship = _shipRepository.GetAtDateTime(user, gameVersion, location.TimeStamp);
+                var cmdr = _sessionRepoz.GetAtDateTime(user.UserName, gameVersion, location.TimeStamp);
+                var ship = _shipRepository.GetAtDateTime(user.UserName, gameVersion, location.TimeStamp);
                 results.Add(ToTrackingRepresentation(cmdr, location, ship));
             }
 

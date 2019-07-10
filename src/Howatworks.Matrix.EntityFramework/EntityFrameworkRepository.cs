@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Howatworks.Matrix.EntityFramework
 {
-    public abstract class EntityFrameworkRepository<T> : IRepository<T> where T : class, IEntity
+    public abstract class EntityFrameworkRepository<T> : IRepository<T, long> where T : MatrixEntity
     {
         protected readonly DbContext Db;
 
@@ -20,12 +20,12 @@ namespace Howatworks.Matrix.EntityFramework
             Db.Add(entity);
         }
 
-        public virtual T Get(Guid id)
+        public virtual T Get(long id)
         {
             return Db.Find<T>(id);
         }
 
-        public virtual void Remove(Guid id)
+        public virtual void Remove(long id)
         {
             Db.Remove(Get(id));
         }

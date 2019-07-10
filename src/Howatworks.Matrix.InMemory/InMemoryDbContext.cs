@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Howatworks.Matrix.Core.Entities;
 
 namespace Howatworks.Matrix.InMemory
 {
-    public class InMemoryDbContext<T> where T : IEntity
+    public class InMemoryDbContext<T> where T : MatrixEntity
     {
-        private readonly Dictionary<Guid, T> _storage = new Dictionary<Guid, T>();
+        [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+        private static long _nextId = 1;
+        [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+        private static readonly object _nextIdLock;
+
+        private readonly Dictionary<long, T> _storage = new Dictionary<long, T>();
 
         public void Create(T entity)
         {
@@ -21,23 +27,23 @@ namespace Howatworks.Matrix.InMemory
 
         private static void EnsureUniqueId(T entity)
         {
-            if (entity.Id == default(Guid))
+            if (entity.Id == default(long))
             {
-                entity.Id = Guid.NewGuid();
+                entity.Id = GetNextId();
             }
         }
 
-        public T Read(Guid id)
+        public T Read(long id)
         {
             return _storage.ContainsKey(id) ? _storage[id] : default(T);
         }
 
-        public IEnumerable<T> Read(IEnumerable<Guid> ids)
+        public IEnumerable<T> Read(IEnumerable<long> ids)
         {
             return ids.Select(x => _storage.ContainsKey(x) ? _storage[x] : default(T));
         }
 
-        public IEnumerable<T> Read(params Guid[] ids)
+        public IEnumerable<T> Read(params long[] ids)
         {
             return Read(ids.AsEnumerable());
         }
@@ -82,7 +88,7 @@ namespace Howatworks.Matrix.InMemory
             Delete(entities.AsEnumerable());
         }
 
-        public void Delete(IEnumerable<Guid> ids)
+        public void Delete(IEnumerable<long> ids)
         {
             foreach (var id in ids)
             {
@@ -97,7 +103,7 @@ namespace Howatworks.Matrix.InMemory
             }
         }
 
-        public void Delete(params Guid[] ids)
+        public void Delete(params long[] ids)
         {
             Delete(ids.AsEnumerable());
         }
@@ -129,6 +135,14 @@ namespace Howatworks.Matrix.InMemory
             return _storage.Values.AsQueryable();
         }
 
-
+        private static long GetNextId()
+        {
+            lock (_nextIdLock)
+            {
+                var nextId = _nextId;
+                _nextId++;
+                return nextId;
+            }
+        }
     }
 }

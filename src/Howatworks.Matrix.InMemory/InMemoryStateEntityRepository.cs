@@ -9,7 +9,7 @@ using Howatworks.Matrix.Domain;
 namespace Howatworks.Matrix.InMemory
 {
     public class InMemoryStateEntityRepository<T> : InMemoryRepository<T>, IStateEntityRepository<T>
-        where T : IEntity, IState, IGameContextEntity
+        where T : MatrixEntity, IState, IGameContextEntity
     {
         public InMemoryStateEntityRepository(InMemoryDbContext<T> db) : base(db)
         {

@@ -1,7 +1,9 @@
+@using Howatworks.Matrix.Core.Entities
+@using Howatworks.Matrix.EntityFramework
 @using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<MatrixIdentityUser> SignInManager
+@inject UserManager<MatrixIdentityUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {

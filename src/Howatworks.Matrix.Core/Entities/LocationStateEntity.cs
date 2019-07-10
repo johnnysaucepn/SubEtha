@@ -3,10 +3,8 @@ using Howatworks.Matrix.Domain;
 
 namespace Howatworks.Matrix.Core.Entities
 {
-    public class LocationStateEntity : IEntity, IGameContextEntity, ILocationState
+    public class LocationStateEntity : MatrixEntity, IGameContextEntity, ILocationState
     {
-        public Guid Id { get; set; }
-
         public GameContext GameContext { get; set; }
 
         public DateTimeOffset TimeStamp { get; set; }

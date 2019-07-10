@@ -27,13 +27,14 @@ namespace Howatworks.Matrix.EntityFramework
             return GetByName(Group.DefaultGroupName);
         }
 
-        public IEnumerable<Group> GetByUser(string user)
+        public IEnumerable<Group> GetByUser(string userName)
         {
-            return Db.Set<Group>().Where(x => x.Users.Contains(user));
+            return Db.Set<Group>().Where(x => x.Users.Select(y => y.UserName).Contains(userName));
         }
 
-        public void AddUserToGroup(Group group, string user)
+        public void AddUserToGroup(Group group, string userName)
         {
+            var user = Db.Set<MatrixIdentityUser>().First(x => x.UserName == userName);
             group.Users.Add(user);
             Db.Update(group);
         }

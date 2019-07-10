@@ -5,7 +5,7 @@ using Howatworks.Matrix.Core.Repositories;
 
 namespace Howatworks.Matrix.MongoDb
 {
-    public abstract class MongoDbRepository<T> : IRepository<T> where T : IEntity
+    public abstract class MongoDbRepository<T> : IRepository<T, long> where T : MatrixEntity
     {
         protected readonly MongoDbContext<T> Db;
 
@@ -19,12 +19,12 @@ namespace Howatworks.Matrix.MongoDb
             Db.Create(entity);
         }
 
-        public virtual T Get(Guid id)
+        public virtual T Get(long id)
         {
             return Db.Read(id);
         }
 
-        public virtual void Remove(Guid id)
+        public virtual void Remove(long id)
         {
             Db.Delete(id);
         }

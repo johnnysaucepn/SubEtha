@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace Howatworks.Matrix.MongoDb
 {
-    public class MongoDbContext<T> where T : IEntity
+    public class MongoDbContext<T> where T : MatrixEntity
     {
         private readonly IMongoDatabase _db;
 
@@ -25,18 +25,18 @@ namespace Howatworks.Matrix.MongoDb
             GetCollection().InsertOne(entity);
         }
 
-        public T Read(Guid id)
+        public T Read(long id)
         {
             return GetCollection().Find(x => x.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<T> Read(IEnumerable<Guid> ids)
+        public IEnumerable<T> Read(IEnumerable<long> ids)
         {
             //TODO: check implementation of this
             return GetCollection().AsQueryable().Where(x => ids.Contains(x.Id));
         }
 
-        public IEnumerable<T> Read(params Guid[] ids)
+        public IEnumerable<T> Read(params long[] ids)
         {
             return Read(ids.AsEnumerable());
         }
@@ -70,12 +70,12 @@ namespace Howatworks.Matrix.MongoDb
             Delete(entities.AsEnumerable());
         }
 
-        public void Delete(IEnumerable<Guid> ids)
+        public void Delete(IEnumerable<long> ids)
         {
             GetCollection().DeleteMany(x => ids.Contains(x.Id));
         }
 
-        public void Delete(params Guid[] ids)
+        public void Delete(params long[] ids)
         {
             Delete(ids.AsEnumerable());
         }

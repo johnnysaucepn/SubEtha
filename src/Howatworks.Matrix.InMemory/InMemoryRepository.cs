@@ -5,7 +5,7 @@ using Howatworks.Matrix.Core.Repositories;
 
 namespace Howatworks.Matrix.InMemory
 {
-    public abstract class InMemoryRepository<T> : IRepository<T> where T : IEntity
+    public abstract class InMemoryRepository<T> : IRepository<T, long> where T : MatrixEntity
     {
         protected readonly InMemoryDbContext<T> Db;
 
@@ -19,12 +19,12 @@ namespace Howatworks.Matrix.InMemory
             Db.Create(entity);
         }
 
-        public virtual T Get(Guid id)
+        public virtual T Get(long id)
         {
             return Db.Read(id);
         }
 
-        public virtual void Remove(Guid id)
+        public virtual void Remove(long id)
         {
             Db.Delete(id);
         }

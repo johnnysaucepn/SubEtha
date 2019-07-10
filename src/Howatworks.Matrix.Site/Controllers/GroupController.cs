@@ -6,6 +6,7 @@ using Howatworks.Matrix.Core.Repositories;
 using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Howatworks.Matrix.Site.Controllers
@@ -16,7 +17,6 @@ namespace Howatworks.Matrix.Site.Controllers
         private static readonly ILog Log = LogManager.GetLogger(typeof(GroupController));
 
         private readonly IGroupRepository _groupRepoz;
-        //private readonly UserManager<IdentityUser> _userManager;
 
         public GroupController(IGroupRepository groupRepoz)
         {
