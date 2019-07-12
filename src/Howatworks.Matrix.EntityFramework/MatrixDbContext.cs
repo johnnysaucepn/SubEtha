@@ -30,8 +30,8 @@ namespace Howatworks.Matrix.EntityFramework
 
             builder.Entity<Group>().HasData(new Group(Group.DefaultGroupName) {Id = 1});
 
-            builder.Entity<CommanderGroup>().HasKey(ug => new {ug.CommanderName, ug.GroupId});
-            builder.Entity<CommanderGroup>().HasOne(ug => ug.Group).WithMany(g => g.CommanderGroups).HasForeignKey(ug => ug.GroupId);
+            builder.Entity<CommanderGroup>().HasKey(cg => new {cg.CommanderName, cg.GroupId});
+            builder.Entity<CommanderGroup>().HasOne(cg => cg.Group).WithMany(g => g.CommanderGroups).HasForeignKey(ug => ug.GroupId);
 
             builder.Entity<LocationStateEntity>().OwnsOne(x => x.Body);
             builder.Entity<LocationStateEntity>().OwnsOne(x => x.GameContext);

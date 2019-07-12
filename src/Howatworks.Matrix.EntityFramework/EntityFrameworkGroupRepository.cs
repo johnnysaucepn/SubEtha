@@ -30,7 +30,7 @@ namespace Howatworks.Matrix.EntityFramework
         public IList<Group> GetByCommander(string cmdrName)
         {
             var groupIds = Db.CommanderGroups
-                .Where(ug => ug.CommanderName == cmdrName)
+                .Where(cg => cg.CommanderName == cmdrName)
                 .Select(g => g.GroupId).ToList();
 
             var groups = Db.Groups

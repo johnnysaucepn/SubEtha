@@ -32,7 +32,7 @@ namespace Howatworks.Matrix.InMemory
         public IList<Group> GetByCommander(string cmdrName)
         {
             return Db.AsQueryable()
-                .Where(g => g.CommanderGroups.Select(ug => ug.CommanderName).Contains(cmdrName))
+                .Where(g => g.CommanderGroups.Select(cg => cg.CommanderName).Contains(cmdrName))
                 .ToList();
         }
 
