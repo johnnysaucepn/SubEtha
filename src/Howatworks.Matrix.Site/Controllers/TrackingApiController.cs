@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Howatworks.Matrix.Site.Controllers
 {
-    public class TrackingController : Controller
+    public class TrackingApiController : Controller
     {
         private readonly ISessionEntityRepository _sessionRepoz;
         private readonly ILocationEntityRepository _locationRepoz;
-        private readonly IStateEntityRepository<ShipStateEntity> _shipRepository;
+        private readonly IShipEntityRepository _shipRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public TrackingController(ILocationEntityRepository locationRepoz, IStateEntityRepository<ShipStateEntity> shipRepository, IGroupRepository groupRepository, ISessionEntityRepository sessionRepoz)
+        public TrackingApiController(ILocationEntityRepository locationRepoz, IShipEntityRepository shipRepository, IGroupRepository groupRepository, ISessionEntityRepository sessionRepoz)
         {
             _locationRepoz = locationRepoz;
             _shipRepository = shipRepository;
@@ -31,13 +31,13 @@ namespace Howatworks.Matrix.Site.Controllers
 
 
             var results = new List<dynamic>();
-            foreach (var user in group.Users)
+            foreach (var cmdr in group.CommanderGroups.Select(x => x.CommanderName))
             {
-                var location = _locationRepoz.GetMostRecent(user.UserName, gameVersion);
+                var location = _locationRepoz.GetMostRecent(cmdr, gameVersion);
                 if (location == null) continue;
-                var cmdr = _sessionRepoz.GetAtDateTime(user.UserName, gameVersion, location.TimeStamp);
-                var ship = _shipRepository.GetAtDateTime(user.UserName, gameVersion, location.TimeStamp);
-                results.Add(ToTrackingRepresentation(cmdr, location, ship));
+                var session = _sessionRepoz.GetAtDateTime(cmdr, gameVersion, location.TimeStamp);
+                var ship = _shipRepository.GetAtDateTime(cmdr, gameVersion, location.TimeStamp);
+                results.Add(ToTrackingRepresentation(session, location, ship));
             }
 
             return Ok(new {

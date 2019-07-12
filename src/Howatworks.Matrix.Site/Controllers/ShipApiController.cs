@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 
 namespace Howatworks.Matrix.Site.Controllers
 {
-    public class ShipController : Controller
+    public class ShipApiController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ShipController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ShipApiController));
 
         private readonly IStateEntityRepository<ShipStateEntity> _shipRepoz;
 
-        public ShipController(IStateEntityRepository<ShipStateEntity> shipRepoz)
+        public ShipApiController(IStateEntityRepository<ShipStateEntity> shipRepoz)
         {
             _shipRepoz = shipRepoz;
         }

@@ -9,12 +9,12 @@ namespace Howatworks.Matrix.Core.Entities
 
         public string Name { get; set; }
 
-        public List<MatrixIdentityUser> Users { get; set; }
+        public ICollection<CommanderGroup> CommanderGroups { get; set; }
 
         public Group(string name)
         {
             Name = name;
-            Users = new List<MatrixIdentityUser>();
+            CommanderGroups = new List<CommanderGroup>();
         }
     }
 }

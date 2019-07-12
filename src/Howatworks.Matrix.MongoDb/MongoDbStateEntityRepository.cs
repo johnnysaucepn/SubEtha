@@ -15,18 +15,18 @@ namespace Howatworks.Matrix.MongoDb
         {
         }
 
-        public IEnumerable<T> GetRange(string user, string gameVersion, int skip, int take)
+        public IEnumerable<T> GetRange(string cmdrName, string gameVersion, int skip, int take)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
             return Db.AsQueryable()
                 .Where(expression)
                 .Skip(skip)
                 .Take(take);
         }
 
-        public T GetMostRecent(string user, string gameVersion)
+        public T GetMostRecent(string cmdrName, string gameVersion)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
 
             return Db.AsQueryable()
                 .Where(expression)
@@ -34,9 +34,9 @@ namespace Howatworks.Matrix.MongoDb
                 .FirstOrDefault();
         }
 
-        public T GetAtDateTime(string user, string gameVersion, DateTimeOffset at)
+        public T GetAtDateTime(string cmdrName, string gameVersion, DateTimeOffset at)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
 
             return Db.AsQueryable()
                 .Where(expression)
@@ -45,9 +45,9 @@ namespace Howatworks.Matrix.MongoDb
                 .FirstOrDefault();
         }
 
-        public IEnumerable<DateTimeOffset> GetTimestamps(string user, string gameVersion)
+        public IEnumerable<DateTimeOffset> GetTimestamps(string cmdrName, string gameVersion)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
 
             return Db.AsQueryable()
                 .Where(expression)
@@ -69,9 +69,9 @@ namespace Howatworks.Matrix.MongoDb
             return expression;
         }
 
-        private static Expression<Func<T, bool>> QuerySpecificVersion(string user, string gameVersion) => e => e.GameContext.User == user && e.GameContext.GameVersion == gameVersion;
+        private static Expression<Func<T, bool>> QuerySpecificVersion(string user, string gameVersion) => e => e.GameContext.CommanderName == user && e.GameContext.GameVersion == gameVersion;
 
-        private static Expression<Func<T, bool>> QueryLive(string user) => e => e.GameContext.User == user && e.GameContext.IsLive;
+        private static Expression<Func<T, bool>> QueryLive(string user) => e => e.GameContext.CommanderName == user && e.GameContext.IsLive;
     }
 
 }

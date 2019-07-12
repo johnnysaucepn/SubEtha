@@ -5,29 +5,28 @@ using System.Linq.Expressions;
 using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
 using Howatworks.Matrix.Domain;
-using Microsoft.EntityFrameworkCore;
 
 namespace Howatworks.Matrix.EntityFramework
 {
     public class EntityFrameworkStateEntityRepository<T> : EntityFrameworkRepository<T>, IStateEntityRepository<T>
         where T : MatrixEntity, IState, IGameContextEntity
     {
-        public EntityFrameworkStateEntityRepository(DbContext db) : base(db)
+        public EntityFrameworkStateEntityRepository(MatrixDbContext db) : base(db)
         {
         }
 
-        public IEnumerable<T> GetRange(string user, string gameVersion, int skip, int take)
+        public IEnumerable<T> GetRange(string cmdrName, string gameVersion, int skip, int take)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
             return Db.Set<T>()
                 .Where(expression)
                 .Skip(skip)
                 .Take(take);
         }
 
-        public T GetMostRecent(string user, string gameVersion)
+        public T GetMostRecent(string cmdrName, string gameVersion)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
 
             return Db.Set<T>()
                 .Where(expression)
@@ -35,9 +34,9 @@ namespace Howatworks.Matrix.EntityFramework
                 .FirstOrDefault();
         }
 
-        public T GetAtDateTime(string user, string gameVersion, DateTimeOffset at)
+        public T GetAtDateTime(string cmdrName, string gameVersion, DateTimeOffset at)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
 
             return Db.Set<T>()
                 .Where(expression)
@@ -46,33 +45,33 @@ namespace Howatworks.Matrix.EntityFramework
                 .FirstOrDefault();
         }
 
-        public IEnumerable<DateTimeOffset> GetTimestamps(string user, string gameVersion)
+        public IEnumerable<DateTimeOffset> GetTimestamps(string cmdrName, string gameVersion)
         {
-            var expression = QueryByVersion(user, gameVersion);
+            var expression = QueryByVersion(cmdrName, gameVersion);
 
             return Db.Set<T>()
                 .Where(expression)
                 .Select(x => x.TimeStamp);
         }
 
-        private static Expression<Func<T, bool>> QueryByVersion(string user, string gameVersion)
+        private static Expression<Func<T, bool>> QueryByVersion(string cmdrName, string gameVersion)
         {
             Expression<Func<T, bool>> expression;
             switch (gameVersion)
             {
                 case "Live":
-                    expression = QueryLive(user);
+                    expression = QueryLive(cmdrName);
                     break;
                 default:
-                    expression = QuerySpecificVersion(user, gameVersion);
+                    expression = QuerySpecificVersion(cmdrName, gameVersion);
                     break;
             }
             return expression;
         }
 
-        private static Expression<Func<T, bool>> QuerySpecificVersion(string user, string gameVersion) => e => e.GameContext.User == user && e.GameContext.GameVersion == gameVersion;
+        private static Expression<Func<T, bool>> QuerySpecificVersion(string cmdrName, string gameVersion) => e => e.GameContext.CommanderName == cmdrName && e.GameContext.GameVersion == gameVersion;
 
-        private static Expression<Func<T, bool>> QueryLive(string user) => e => e.GameContext.User == user && e.GameContext.IsLive;
+        private static Expression<Func<T, bool>> QueryLive(string cmdrName) => e => e.GameContext.CommanderName == cmdrName && e.GameContext.IsLive;
     }
 
 }

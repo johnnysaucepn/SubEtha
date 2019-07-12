@@ -5,7 +5,7 @@ namespace Howatworks.Matrix.Core.Repositories
 {
     public interface ISessionEntityRepository : IStateEntityRepository<SessionStateEntity>
     {
-        IEnumerable<string> EnumerateGameVersions(string user);
+        IEnumerable<string> EnumerateGameVersions(string cmdrName);
         IEnumerable<string> EnumerateUsers();
     }
 }

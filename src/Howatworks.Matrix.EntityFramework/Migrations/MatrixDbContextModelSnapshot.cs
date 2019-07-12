@@ -20,6 +20,23 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.CommanderGroup", b =>
+                {
+                    b.Property<string>("CommanderName");
+
+                    b.Property<long>("GroupId");
+
+                    b.Property<long>("Id");
+
+                    b.HasKey("CommanderName", "GroupId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("CommanderGroups");
+
+                    b.HasDiscriminator().HasValue("CommanderGroup");
+                });
+
             modelBuilder.Entity("Howatworks.Matrix.Core.Entities.Group", b =>
                 {
                     b.Property<long>("Id")
@@ -50,6 +67,58 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("Locations");
 
                     b.HasDiscriminator().HasValue("LocationStateEntity");
+                });
+
+            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.MatrixIdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("CommanderName");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Howatworks.Matrix.Core.Entities.SessionStateEntity", b =>
@@ -142,61 +211,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -262,17 +276,12 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.MatrixIdentityUser", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.CommanderGroup", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<long?>("GroupId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("MatrixIdentityUser");
-
-                    b.HasDiscriminator().HasValue("MatrixIdentityUser");
+                    b.HasOne("Howatworks.Matrix.Core.Entities.Group", "Group")
+                        .WithMany("CommanderGroups")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Howatworks.Matrix.Core.Entities.LocationStateEntity", b =>
@@ -379,11 +388,11 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                         {
                             b1.Property<long>("LocationStateEntityId");
 
+                            b1.Property<string>("CommanderName");
+
                             b1.Property<string>("GameVersion");
 
                             b1.Property<bool>("IsLive");
-
-                            b1.Property<string>("User");
 
                             b1.ToTable("Locations","public");
 
@@ -400,11 +409,11 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                         {
                             b1.Property<long>("SessionStateEntityId");
 
+                            b1.Property<string>("CommanderName");
+
                             b1.Property<string>("GameVersion");
 
                             b1.Property<bool>("IsLive");
-
-                            b1.Property<string>("User");
 
                             b1.ToTable("Sessions","public");
 
@@ -421,11 +430,11 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                         {
                             b1.Property<long>("ShipStateEntityId");
 
+                            b1.Property<string>("CommanderName");
+
                             b1.Property<string>("GameVersion");
 
                             b1.Property<bool>("IsLive");
-
-                            b1.Property<string>("User");
 
                             b1.ToTable("Ships","public");
 
@@ -446,7 +455,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -454,7 +463,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -467,7 +476,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -475,17 +484,10 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.MatrixIdentityUser", b =>
-                {
-                    b.HasOne("Howatworks.Matrix.Core.Entities.Group")
-                        .WithMany("Users")
-                        .HasForeignKey("GroupId");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,13 +8,13 @@ namespace Howatworks.Matrix.EntityFramework
 {
     public class EntityFrameworkGroupRepository: EntityFrameworkRepository<Group>, IGroupRepository
     {
-        public EntityFrameworkGroupRepository(DbContext db) : base(db)
+        public EntityFrameworkGroupRepository(MatrixDbContext db) : base(db)
         {
         }
 
-        public IEnumerable<Group> GetRange(int skip, int take)
+        public IList<Group> GetRange(int skip, int take)
         {
-            return Db.Set<Group>().Skip(skip).Take(take);
+            return Db.Set<Group>().Skip(skip).Take(take).ToList();
         }
 
         public Group GetByName(string name)
@@ -27,16 +27,29 @@ namespace Howatworks.Matrix.EntityFramework
             return GetByName(Group.DefaultGroupName);
         }
 
-        public IEnumerable<Group> GetByUser(string userName)
+        public IList<Group> GetByCommander(string cmdrName)
         {
-            return Db.Set<Group>().Where(x => x.Users.Select(y => y.UserName).Contains(userName));
+            var groupIds = Db.CommanderGroups
+                .Where(ug => ug.CommanderName == cmdrName)
+                .Select(g => g.GroupId).ToList();
+
+            var groups = Db.Groups
+                .Where(g => groupIds.Contains(g.Id))
+                .ToList();
+
+            return groups.ToList();
         }
 
-        public void AddUserToGroup(Group group, string userName)
+        public void AddCommanderToGroup(Group group, string cmdrName)
         {
-            var user = Db.Set<MatrixIdentityUser>().First(x => x.UserName == userName);
-            group.Users.Add(user);
-            Db.Update(group);
+            var newUserGroup = new CommanderGroup
+            {
+                GroupId = group.Id,
+                Group = group,
+                CommanderName = cmdrName
+            };
+            group.CommanderGroups.Add(newUserGroup);
+            Db.CommanderGroups.Add(newUserGroup);
         }
     }
 }

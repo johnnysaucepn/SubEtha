@@ -1,16 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Howatworks.Matrix.EntityFramework
 {
     public abstract class EntityFrameworkRepository<T> : IRepository<T, long> where T : MatrixEntity
     {
-        protected readonly DbContext Db;
+        protected readonly MatrixDbContext Db;
 
-        protected EntityFrameworkRepository(DbContext db)
+        protected EntityFrameworkRepository(MatrixDbContext db)
         {
             Db = db;
         }

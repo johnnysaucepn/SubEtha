@@ -10,13 +10,13 @@ using Newtonsoft.Json;
 
 namespace Howatworks.Matrix.Site.Controllers
 {
-    public class LocationController : Controller
+    public class LocationApiController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationApiController));
 
         private readonly ILocationEntityRepository _locationRepoz;
 
-        public LocationController(ILocationEntityRepository locationRepoz)
+        public LocationApiController(ILocationEntityRepository locationRepoz)
         {
             _locationRepoz = locationRepoz;
         }

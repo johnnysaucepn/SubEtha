@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Howatworks.Matrix.Core.Entities
 {
     public class MatrixIdentityUser : IdentityUser
     {
+        public string CommanderName { get; set; }
+
         public MatrixIdentityUser()
         {
         }

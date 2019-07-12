@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Howatworks.Matrix.EntityFramework
 {
-    public class MatrixDbContext : IdentityDbContext
+    public class MatrixDbContext : IdentityDbContext<MatrixIdentityUser>
     {
         public DbSet<Group> Groups { get; set; }
+        public DbSet<CommanderGroup> CommanderGroups { get; set; }
         public DbSet<LocationStateEntity> Locations { get; set; }
         public DbSet<SessionStateEntity> Sessions { get; set; }
         public DbSet<ShipStateEntity> Ships { get; set; }
@@ -20,12 +21,17 @@ namespace Howatworks.Matrix.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.HasDefaultSchema("public");
 
             builder.Entity<MatrixEntity>().Property(x => x.Id).ValueGeneratedOnAdd().UseNpgsqlIdentityColumn();
             builder.Ignore<MatrixEntity>();
 
             builder.Entity<Group>().HasData(new Group(Group.DefaultGroupName) {Id = 1});
+
+            builder.Entity<CommanderGroup>().HasKey(ug => new {ug.CommanderName, ug.GroupId});
+            builder.Entity<CommanderGroup>().HasOne(ug => ug.Group).WithMany(g => g.CommanderGroups).HasForeignKey(ug => ug.GroupId);
 
             builder.Entity<LocationStateEntity>().OwnsOne(x => x.Body);
             builder.Entity<LocationStateEntity>().OwnsOne(x => x.GameContext);
@@ -37,8 +43,6 @@ namespace Howatworks.Matrix.EntityFramework
             builder.Entity<SessionStateEntity>().OwnsOne(x => x.GameContext);
 
             builder.Entity<ShipStateEntity>().OwnsOne(x => x.GameContext);
-
-            base.OnModelCreating(builder);
         }
     }
 }

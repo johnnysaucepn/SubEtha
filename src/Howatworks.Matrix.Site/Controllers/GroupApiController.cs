@@ -5,20 +5,18 @@ using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
 using log4net;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Howatworks.Matrix.Site.Controllers
 {
-    public class GroupController : Controller
+    public class GroupApiController : Controller
     {
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GroupController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GroupApiController));
 
         private readonly IGroupRepository _groupRepoz;
 
-        public GroupController(IGroupRepository groupRepoz)
+        public GroupApiController(IGroupRepository groupRepoz)
         {
             _groupRepoz = groupRepoz;
         }
@@ -31,14 +29,22 @@ namespace Howatworks.Matrix.Site.Controllers
         }
 
         [HttpGet]
-        [Route("{user}/Groups")]
-        public IActionResult GetUsersGroups(string user)
+        [Route("{cmdrName}/Groups")]
+        public IActionResult GetCommandersGroups(string cmdrName)
         {
-            var existingGroups = _groupRepoz.GetByUser(user).ToList();
-            if (existingGroups.Any()) return Ok(existingGroups);
+            if (string.IsNullOrWhiteSpace(cmdrName))
+            {
+                return NotFound();
+            }
+
+            var existingGroups = _groupRepoz.GetByCommander(cmdrName).ToList();
+            if (existingGroups.Any())
+            {
+                return Ok(existingGroups);
+            }
 
             var defaultGroup = _groupRepoz.GetDefaultGroup();
-            _groupRepoz.AddUserToGroup(defaultGroup, user);
+            _groupRepoz.AddCommanderToGroup(defaultGroup, cmdrName);
 
             return Ok(new List<Group> {defaultGroup});
         }
@@ -79,14 +85,20 @@ namespace Howatworks.Matrix.Site.Controllers
 
         [HttpPost]
         [Route("Groups/{group}")]
-        public IActionResult AddUserToGroup(string group)
+        public IActionResult AddCommanderToGroup(string group, string cmdrName)
         {
+            if (string.IsNullOrWhiteSpace(cmdrName))
+            {
+                return NotFound();
+            }
+
             var existingGroup = _groupRepoz.GetByName(group);
             if (existingGroup == null)
             {
                 return NotFound();
             }
-            _groupRepoz.Remove(existingGroup);
+
+            _groupRepoz.AddCommanderToGroup(existingGroup, cmdrName);
             return Ok();
         }
     }

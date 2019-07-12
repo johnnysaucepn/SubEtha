@@ -5,10 +5,10 @@ namespace Howatworks.Matrix.Core.Repositories
 {
     public interface IGroupRepository : IRepository<Group, long>
     {
-        IEnumerable<Group> GetRange(int skip, int take);
+        IList<Group> GetRange(int skip, int take);
         Group GetByName(string name);
         Group GetDefaultGroup();
-        IEnumerable<Group> GetByUser(string user);
-        void AddUserToGroup(Group group, string user);
+        IList<Group> GetByCommander(string cmdrName);
+        void AddCommanderToGroup(Group group, string cmdrName);
     }
 }

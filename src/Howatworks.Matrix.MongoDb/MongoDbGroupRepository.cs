@@ -13,9 +13,9 @@ namespace Howatworks.Matrix.MongoDb
         {
         }
 
-        public IEnumerable<Group> GetRange(int skip, int take)
+        public IList<Group> GetRange(int skip, int take)
         {
-            return Db.AsQueryable().Skip(skip).Take(take);
+            return Db.AsQueryable().Skip(skip).Take(take).ToList();
         }
 
         public Group GetByName(string name)
@@ -28,16 +28,22 @@ namespace Howatworks.Matrix.MongoDb
             return GetByName(DefaultGroupName);
         }
 
-        public IEnumerable<Group> GetByUser(string userName)
+        public IList<Group> GetByCommander(string cmdrName)
         {
-            return Db.AsQueryable().Where(x => x.Users.Select(y => y.UserName).Contains(userName));
+            return Db.AsQueryable()
+                .Where(g => g.CommanderGroups.Select(cg => cg.CommanderName).Contains(cmdrName))
+                .ToList();
         }
 
-        public void AddUserToGroup(Group group, string userName)
+        public void AddCommanderToGroup(Group group, string cmdrName)
         {
-            // TODO: this won't really work, we need to tie user objects, not strings
-            var user = new MatrixIdentityUser(userName);
-            group.Users.Add(user);
+            var newUserGroup = new CommanderGroup
+            {
+                GroupId = group.Id,
+                Group = group,
+                CommanderName = cmdrName
+            };
+            group.CommanderGroups.Add(newUserGroup);
             Db.CreateOrUpdate(group);
         }
     }

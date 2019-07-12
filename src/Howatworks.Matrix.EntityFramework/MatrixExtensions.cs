@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,10 +11,10 @@ namespace Howatworks.Matrix.EntityFramework
     {
         public static IServiceCollection AddMatrix(this IServiceCollection services)
         {
-            services.AddSingleton<ILocationEntityRepository, EntityFrameworkLocationEntityRepository>();
-            services.AddSingleton<ISessionEntityRepository, EntityFrameworkSessionEntityRepository>();
-            services.AddSingleton<IShipEntityRepository, EntityFrameworkShipEntityRepository>();
-            services.AddSingleton<IGroupRepository, EntityFrameworkGroupRepository>();
+            services.AddScoped<ILocationEntityRepository, EntityFrameworkLocationEntityRepository>();
+            services.AddScoped<ISessionEntityRepository, EntityFrameworkSessionEntityRepository>();
+            services.AddScoped<IShipEntityRepository, EntityFrameworkShipEntityRepository>();
+            services.AddScoped<IGroupRepository, EntityFrameworkGroupRepository>();
             return services;
         }
     }

@@ -7,13 +7,13 @@ namespace Howatworks.Matrix.Domain
     public class GameContext
     {
         public string GameVersion { get; set; }
-        public string User { get; set; }
+        public string CommanderName { get; set; }
         public bool IsLive { get; set; }
 
-        public GameContext(string gameVersion, string user)
+        public GameContext(string gameVersion, string commanderName)
         {
             GameVersion = gameVersion;
-            User = user;
+            CommanderName = commanderName;
             IsLive = !gameVersion.Contains("Beta");
         }
     }

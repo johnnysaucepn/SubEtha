@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Plugin.Assistant\Howatworks.Thumb.Plugin.Assistant.csproj" />
+    <ProjectReference Include="..\Howatworks.Thumb.Plugin.Matrix\Howatworks.Thumb.Plugin.Matrix.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 
 namespace Howatworks.Matrix.Site
 {
@@ -41,9 +42,11 @@ namespace Howatworks.Matrix.Site
             services.AddDefaultIdentity<MatrixIdentityUser>()
                 .AddEntityFrameworkStores<MatrixDbContext>();
 
-            services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+                .AddControllersAsServices()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<DbContext, MatrixDbContext>();
             services.AddMatrix();
         }
 

@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 
 namespace Howatworks.Matrix.Site.Controllers
 {
-    public class SessionController : Controller
+    public class SessionApiController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SessionController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SessionApiController));
 
         private readonly ISessionEntityRepository _sessionRepoz;
 
-        public SessionController(ISessionEntityRepository sessionRepoz)
+        public SessionApiController(ISessionEntityRepository sessionRepoz)
         {
             _sessionRepoz = sessionRepoz;
         }
