@@ -74,8 +74,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    GameContext_GameVersion = table.Column<string>(nullable: true),
-                    GameContext_CommanderName = table.Column<string>(nullable: true),
                     GameContext_IsLive = table.Column<bool>(nullable: false),
                     TimeStamp = table.Column<DateTimeOffset>(nullable: false),
                     Body_Name = table.Column<string>(nullable: true),
@@ -104,8 +102,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    GameContext_GameVersion = table.Column<string>(nullable: true),
-                    GameContext_CommanderName = table.Column<string>(nullable: true),
                     GameContext_IsLive = table.Column<bool>(nullable: false),
                     TimeStamp = table.Column<DateTimeOffset>(nullable: false),
                     Build = table.Column<string>(nullable: true),
@@ -125,8 +121,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    GameContext_GameVersion = table.Column<string>(nullable: true),
-                    GameContext_CommanderName = table.Column<string>(nullable: true),
                     GameContext_IsLive = table.Column<bool>(nullable: false),
                     TimeStamp = table.Column<DateTimeOffset>(nullable: false),
                     ShipId = table.Column<int>(nullable: false),

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Howatworks.Matrix.EntityFramework.Migrations
 {
     [DbContext(typeof(MatrixDbContext))]
-    [Migration("20190712154312_Initial")]
+    [Migration("20190715142624_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -390,10 +390,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                         {
                             b1.Property<long>("LocationStateEntityId");
 
-                            b1.Property<string>("CommanderName");
-
-                            b1.Property<string>("GameVersion");
-
                             b1.Property<bool>("IsLive");
 
                             b1.ToTable("Locations","public");
@@ -411,10 +407,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                         {
                             b1.Property<long>("SessionStateEntityId");
 
-                            b1.Property<string>("CommanderName");
-
-                            b1.Property<string>("GameVersion");
-
                             b1.Property<bool>("IsLive");
 
                             b1.ToTable("Sessions","public");
@@ -431,10 +423,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.OwnsOne("Howatworks.Matrix.Domain.GameContext", "GameContext", b1 =>
                         {
                             b1.Property<long>("ShipStateEntityId");
-
-                            b1.Property<string>("CommanderName");
-
-                            b1.Property<string>("GameVersion");
 
                             b1.Property<bool>("IsLive");
 

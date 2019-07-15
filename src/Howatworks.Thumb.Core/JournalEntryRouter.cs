@@ -28,6 +28,8 @@ namespace Howatworks.Thumb.Core
 
         public void RegisterForBatchComplete(Func<bool> action, IBatchPolicy policy = null)
         {
+            policy = policy ?? BatchPolicy.All;
+
             _batchHandlers.Add(new JournalEntryBatchCompleteHandler(action, policy));
         }
 
