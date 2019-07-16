@@ -50,6 +50,7 @@ namespace Howatworks.Matrix.EntityFramework
             };
             group.CommanderGroups.Add(newUserGroup);
             Db.CommanderGroups.Add(newUserGroup);
+            Db.SaveChanges();
         }
     }
 }

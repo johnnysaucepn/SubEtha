@@ -5,15 +5,16 @@ using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Howatworks.Matrix.Site.Controllers
+namespace Howatworks.Matrix.Site.Api
 {
-    public class SessionApiController : Controller
+    [Route("Api")]
+    public class SessionController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SessionApiController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SessionController));
 
         private readonly ISessionEntityRepository _sessionRepoz;
 
-        public SessionApiController(ISessionEntityRepository sessionRepoz)
+        public SessionController(ISessionEntityRepository sessionRepoz)
         {
             _sessionRepoz = sessionRepoz;
         }

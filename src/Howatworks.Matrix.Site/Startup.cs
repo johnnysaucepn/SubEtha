@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Howatworks.Matrix.Core.Entities;
-using Howatworks.Matrix.Core.Repositories;
+﻿using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.EntityFramework;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -43,7 +35,12 @@ namespace Howatworks.Matrix.Site
                 .AddEntityFrameworkStores<MatrixDbContext>();
 
             services.AddMvc()
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    // Without the following, returning data objects as application/json results in the serializer breaking on complex relationships
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -57,6 +54,8 @@ namespace Howatworks.Matrix.Site
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseCors(builder =>
+                    builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
             }
             else
             {
@@ -76,37 +75,9 @@ namespace Howatworks.Matrix.Site
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
         }
 
-        /*public ContainerBuilder ConfigureContainerBuilder()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterType<MatrixDbContext>().As<DbContext>().InstancePerLifetimeScope();
-            builder.RegisterModule(new EntityFrameworkModule());
-            //builder.RegisterModule(new InMemoryModule());
-            //builder.RegisterModule(new MongoModule());
-            builder.RegisterModule(new ServiceModule(Configuration));
-            //builderRegisterApiControllers(typeof(ServiceModule).Assembly);
-            builder.RegisterBuildCallback(x =>
-            {
-
-                var groupRepo = x.Resolve<IGroupRepository>();
-                // Seed data
-                if (groupRepo.GetDefaultGroup() == null)
-                {
-                    groupRepo.Add(new Group(EntityFrameworkGroupRepository.DefaultGroupName));
-                }
-            });
-            return builder;
-        }*/
-
-        /*public IContainer ConfigureContainer(IServiceCollection services)
-        {
-            var builder = ConfigureContainerBuilder();
-
-            builder.Populate(services);
-            return builder.Build();
-        }*/
     }
 }

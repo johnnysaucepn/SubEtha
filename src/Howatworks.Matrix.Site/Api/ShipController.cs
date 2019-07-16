@@ -5,15 +5,16 @@ using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Howatworks.Matrix.Site.Controllers
+namespace Howatworks.Matrix.Site.Api
 {
-    public class ShipApiController : Controller
+    [Route("Api")]
+    public class ShipController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ShipApiController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ShipController));
 
         private readonly IStateEntityRepository<ShipStateEntity> _shipRepoz;
 
-        public ShipApiController(IStateEntityRepository<ShipStateEntity> shipRepoz)
+        public ShipController(IStateEntityRepository<ShipStateEntity> shipRepoz)
         {
             _shipRepoz = shipRepoz;
         }

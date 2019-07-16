@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
 using Howatworks.Matrix.Domain;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Howatworks.Matrix.Site.Controllers
+namespace Howatworks.Matrix.Site.Api
 {
-    public class TrackingApiController : Controller
+    [Route("Api")]
+    public class TrackingController : Controller
     {
         private readonly ISessionEntityRepository _sessionRepoz;
         private readonly ILocationEntityRepository _locationRepoz;
         private readonly IShipEntityRepository _shipRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public TrackingApiController(ILocationEntityRepository locationRepoz, IShipEntityRepository shipRepository, IGroupRepository groupRepository, ISessionEntityRepository sessionRepoz)
+        public TrackingController(ILocationEntityRepository locationRepoz, IShipEntityRepository shipRepository, IGroupRepository groupRepository, ISessionEntityRepository sessionRepoz)
         {
             _locationRepoz = locationRepoz;
             _shipRepository = shipRepository;

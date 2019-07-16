@@ -16,6 +16,7 @@ namespace Howatworks.Matrix.EntityFramework
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(@"host=localhost;database=Matrix;username=matrix;password=matrix;");
+            optionsBuilder.EnableSensitiveDataLogging();
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -30,15 +31,21 @@ namespace Howatworks.Matrix.EntityFramework
 
             builder.Entity<Group>().HasData(new Group(Group.DefaultGroupName) {Id = 1});
 
-            builder.Entity<CommanderGroup>().HasKey(cg => new {cg.CommanderName, cg.GroupId});
-            builder.Entity<CommanderGroup>().HasOne(cg => cg.Group).WithMany(g => g.CommanderGroups).HasForeignKey(ug => ug.GroupId);
+            builder.Entity<CommanderGroup>(e =>
+            {
+                e.HasKey(cg => new {cg.CommanderName, cg.GroupId});
+                e.HasOne(cg => cg.Group).WithMany(g => g.CommanderGroups).HasForeignKey(ug => ug.GroupId);
+            });
 
-            builder.Entity<LocationStateEntity>().OwnsOne(x => x.Body);
-            builder.Entity<LocationStateEntity>().OwnsOne(x => x.GameContext);
-            builder.Entity<LocationStateEntity>().OwnsOne(x => x.SignalSource).OwnsOne(x => x.Type);
-            builder.Entity<LocationStateEntity>().OwnsOne(x => x.StarSystem);
-            builder.Entity<LocationStateEntity>().OwnsOne(x => x.Station);
-            builder.Entity<LocationStateEntity>().OwnsOne(x => x.SurfaceLocation);
+            builder.Entity<LocationStateEntity>(e =>
+            {
+                e.OwnsOne(x => x.Body);
+                e.OwnsOne(x => x.GameContext);
+                e.OwnsOne(x => x.SignalSource).OwnsOne(s => s.Type);
+                e.OwnsOne(x => x.StarSystem);
+                e.OwnsOne(x => x.Station);
+                e.OwnsOne(x => x.SurfaceLocation);
+            });
 
             builder.Entity<SessionStateEntity>().OwnsOne(x => x.GameContext);
 

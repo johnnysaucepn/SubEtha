@@ -7,16 +7,17 @@ using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Howatworks.Matrix.Site.Controllers
+namespace Howatworks.Matrix.Site.Api
 {
-    public class GroupApiController : Controller
+    [Route("Api")]
+    public class GroupController : Controller
     {
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GroupApiController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GroupController));
 
         private readonly IGroupRepository _groupRepoz;
 
-        public GroupApiController(IGroupRepository groupRepoz)
+        public GroupController(IGroupRepository groupRepoz)
         {
             _groupRepoz = groupRepoz;
         }

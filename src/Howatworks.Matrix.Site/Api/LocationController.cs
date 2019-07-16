@@ -8,15 +8,16 @@ using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Howatworks.Matrix.Site.Controllers
+namespace Howatworks.Matrix.Site.Api
 {
-    public class LocationApiController : Controller
+    [Route("Api")]
+    public class LocationController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationApiController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationController));
 
         private readonly ILocationEntityRepository _locationRepoz;
 
-        public LocationApiController(ILocationEntityRepository locationRepoz)
+        public LocationController(ILocationEntityRepository locationRepoz)
         {
             _locationRepoz = locationRepoz;
         }

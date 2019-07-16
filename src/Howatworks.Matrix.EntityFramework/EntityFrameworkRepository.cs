@@ -16,6 +16,7 @@ namespace Howatworks.Matrix.EntityFramework
         public virtual void Add(T entity)
         {
             Db.Add(entity);
+            Db.SaveChanges();
         }
 
         public virtual T Get(long id)
@@ -26,16 +27,19 @@ namespace Howatworks.Matrix.EntityFramework
         public virtual void Remove(long id)
         {
             Db.Remove(Get(id));
+            Db.SaveChanges();
         }
 
         public virtual void Remove(T entity)
         {
             Db.Remove(entity);
+            Db.SaveChanges();
         }
 
         public virtual void Update(T entity)
         {
             Db.Update(entity);
+            Db.SaveChanges();
         }
 
         public virtual IQueryable<T> Query()
