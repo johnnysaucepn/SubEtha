@@ -1,6 +1,0 @@
-﻿{
-  "Howatworks.Matrix.Site": {
-    "SiteBinding": "http://+:8985/Matrix/Site",
-    "ServiceUri": "http://localhost:8984/Matrix/Service"
-  }
-}

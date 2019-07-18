@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Matrix", "Matrix", "{7F6A62
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SubEtha", "SubEtha", "{B79142DD-2167-49CF-88CD-7E6A886F0B0F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{28AFE659-D17C-435C-A237-75CF5845CC6F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings", "Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj", "{B54C322E-15EB-465C-82A7-8D92759DB2F1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.Test", "Howatworks.SubEtha.Bindings.Test\Howatworks.SubEtha.Bindings.Test.csproj", "{48DB843F-DF61-40C1-8C8E-B4F0DA91C85A}"
