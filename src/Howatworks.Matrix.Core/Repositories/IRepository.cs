@@ -4,7 +4,7 @@ using Howatworks.Matrix.Core.Entities;
 
 namespace Howatworks.Matrix.Core.Repositories
 {
-    public interface IRepository<T, in TId> where T : MatrixEntity
+    public interface IRepository<T, in TId> where T : IMatrixEntity
     {
         void Add(T entity);
 

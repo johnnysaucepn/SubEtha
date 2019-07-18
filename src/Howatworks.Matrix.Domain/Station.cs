@@ -13,7 +13,7 @@ namespace Howatworks.Matrix.Domain
         {
         }
 
-        private Station(string name, string type)
+        public Station(string name, string type)
         {
             Name = name;
             Type = type;

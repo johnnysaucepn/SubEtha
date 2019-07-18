@@ -4,7 +4,7 @@ using Howatworks.Matrix.Core.Repositories;
 
 namespace Howatworks.Matrix.EntityFramework
 {
-    public abstract class EntityFrameworkRepository<T> : IRepository<T, long> where T : MatrixEntity
+    public abstract class EntityFrameworkRepository<T> : IRepository<T, long> where T : class, IMatrixEntity
     {
         protected readonly MatrixDbContext Db;
 

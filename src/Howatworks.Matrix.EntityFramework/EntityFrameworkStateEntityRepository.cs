@@ -4,12 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
-using Howatworks.Matrix.Domain;
 
 namespace Howatworks.Matrix.EntityFramework
 {
     public class EntityFrameworkStateEntityRepository<T> : EntityFrameworkRepository<T>, IStateEntityRepository<T>
-        where T : MatrixEntity, IState, IGameContextEntity
+        where T : class, IMatrixEntity, IGameContextEntity
     {
         public EntityFrameworkStateEntityRepository(MatrixDbContext db) : base(db)
         {
@@ -69,9 +68,14 @@ namespace Howatworks.Matrix.EntityFramework
             return expression;
         }
 
-        private static Expression<Func<T, bool>> QuerySpecificVersion(string cmdrName, string gameVersion) => e => e.GameContext.CommanderName == cmdrName && e.GameContext.GameVersion == gameVersion;
+        private static Expression<Func<T, bool>> QuerySpecificVersion(string cmdrName, string gameVersion) => e => e.CommanderName == cmdrName && e.GameVersion == gameVersion;
 
-        private static Expression<Func<T, bool>> QueryLive(string cmdrName) => e => e.GameContext.CommanderName == cmdrName && e.GameContext.IsLive;
+        private static Expression<Func<T, bool>> QueryLive(string cmdrName) => e => e.CommanderName == cmdrName && IsLive(e.GameVersion);
+
+        private static bool IsLive(string gameVersion)
+        {
+            return !gameVersion.Contains("Beta");
+        }
     }
 
 }

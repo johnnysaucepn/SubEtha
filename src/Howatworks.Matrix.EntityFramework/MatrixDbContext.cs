@@ -23,33 +23,14 @@ namespace Howatworks.Matrix.EntityFramework
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.ForNpgsqlUseIdentityColumns();
 
             builder.HasDefaultSchema("public");
 
-            builder.Entity<MatrixEntity>().Property(x => x.Id).ValueGeneratedOnAdd().UseNpgsqlIdentityColumn();
-            builder.Ignore<MatrixEntity>();
-
-            builder.Entity<Group>().HasData(new Group(Group.DefaultGroupName) {Id = 1});
-
-            builder.Entity<CommanderGroup>(e =>
+            builder.Entity<Group>(e =>
             {
-                e.HasKey(cg => new {cg.CommanderName, cg.GroupId});
-                e.HasOne(cg => cg.Group).WithMany(g => g.CommanderGroups).HasForeignKey(ug => ug.GroupId);
+                e.HasData(new Group(Group.DefaultGroupName) {Id = 1});
             });
-
-            builder.Entity<LocationStateEntity>(e =>
-            {
-                e.OwnsOne(x => x.Body);
-                e.OwnsOne(x => x.GameContext);
-                e.OwnsOne(x => x.SignalSource).OwnsOne(s => s.Type);
-                e.OwnsOne(x => x.StarSystem);
-                e.OwnsOne(x => x.Station);
-                e.OwnsOne(x => x.SurfaceLocation);
-            });
-
-            builder.Entity<SessionStateEntity>().OwnsOne(x => x.GameContext);
-
-            builder.Entity<ShipStateEntity>().OwnsOne(x => x.GameContext);
         }
     }
 }

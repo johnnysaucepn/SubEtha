@@ -6,13 +6,13 @@
 @{
     ViewData["Title"] = "LiveTracking";
     var user = await UserManager.GetUserAsync(User);
-    var commanderName = user?.CommanderName;
+    var commanderName = "Osbyte";//user?.CommanderName;
 }
 
 @section Scripts
     {
     <script src="~/js/TrackingViewModel.js" asp-append-version="true"></script>
-    <script>var tracking = new TrackingViewModel("@(Url.Content("~"))", "@commanderName");</script>
+    <script>var tracking = new TrackingViewModel("@(Url.Content("~/Api/"))", "@commanderName");</script>
 }
     <h2>LiveTracking @commanderName</h2>
 

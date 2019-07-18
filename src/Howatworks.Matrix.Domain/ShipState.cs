@@ -1,7 +1,6 @@
 ﻿using System;
-using Howatworks.Matrix.Domain;
 
-namespace Howatworks.Thumb.Plugin.Matrix
+namespace Howatworks.Matrix.Domain
 {
     public class ShipState : IShipState
     {

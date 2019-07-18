@@ -35,15 +35,33 @@ namespace Howatworks.Matrix.Site.Api
 
         [HttpPost]
         [Route("{user}/{gameVersion}/Ship")]
-        public IActionResult PostShip(string user, string gameVersion, [FromBody]ShipStateEntity ship)
+        public IActionResult PostShip(string user, string gameVersion, [FromBody]ShipState ship)
         {
-            ship.GameContext = new GameContext(gameVersion, user);
+            var shipEntity = ToEntity(ship, user, gameVersion);
 
-            _shipRepoz.Add(ship);
+            _shipRepoz.Add(shipEntity);
 
             Log.Info(JsonConvert.SerializeObject(ship));
 
-            return Ok(ship);
+            return Ok();
+        }
+
+        private static ShipStateEntity ToEntity(IShipState ship, string cmdrName, string version)
+        {
+            return new ShipStateEntity
+            {
+                CommanderName = cmdrName,
+                GameVersion = version,
+                TimeStamp = ship.TimeStamp,
+
+                ShipId = ship.ShipId,
+                Type = ship.Type,
+                Ident = ship.Ident,
+                Name = ship.Name,
+                HullIntegrity = ship.HullIntegrity,
+                ShieldsUp = ship.ShieldsUp
+            };
+
         }
     }
 }

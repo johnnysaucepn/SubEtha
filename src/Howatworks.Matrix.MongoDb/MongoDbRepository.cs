@@ -5,7 +5,7 @@ using Howatworks.Matrix.Core.Repositories;
 
 namespace Howatworks.Matrix.MongoDb
 {
-    public abstract class MongoDbRepository<T> : IRepository<T, long> where T : MatrixEntity
+    public abstract class MongoDbRepository<T> : IRepository<T, long> where T : IMatrixEntity
     {
         protected readonly MongoDbContext<T> Db;
 

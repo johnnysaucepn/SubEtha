@@ -49,15 +49,29 @@ namespace Howatworks.Matrix.Site.Api
 
         [HttpPost]
         [Route("{user}/{gameVersion}/Session")]
-        public IActionResult PostSession(string user, string gameVersion, [FromBody]SessionStateEntity session)
+        public IActionResult PostSession(string user, string gameVersion, [FromBody]SessionState session)
         {
-            session.GameContext = new GameContext(gameVersion, user);
+            var sessionEntity = ToEntity(session, user, gameVersion);
+            _sessionRepoz.Add(sessionEntity);
 
-            _sessionRepoz.Add(session);
+            Log.Info(JsonConvert.SerializeObject(sessionEntity));
 
-            Log.Info(JsonConvert.SerializeObject(session));
+            return Ok();
+        }
 
-            return Ok(session);
+        private static SessionStateEntity ToEntity(ISessionState session, string cmdrName, string version)
+        {
+            return new SessionStateEntity
+            {
+                CommanderName = cmdrName,
+                GameVersion = version,
+                TimeStamp = session.TimeStamp,
+
+                Build = session.Build,
+                GameMode = session.GameMode,
+                Group = session.Group
+            };
+
         }
     }
 }

@@ -39,12 +39,16 @@ namespace Howatworks.Matrix.MongoDb
         {
             var newUserGroup = new CommanderGroup
             {
-                GroupId = group.Id,
                 Group = group,
                 CommanderName = cmdrName
             };
             group.CommanderGroups.Add(newUserGroup);
             Db.CreateOrUpdate(group);
+        }
+
+        public IEnumerable<string> GetCommandersInGroup(Group @group)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

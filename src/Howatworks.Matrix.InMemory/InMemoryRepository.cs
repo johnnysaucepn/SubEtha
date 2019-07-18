@@ -5,7 +5,7 @@ using Howatworks.Matrix.Core.Repositories;
 
 namespace Howatworks.Matrix.InMemory
 {
-    public abstract class InMemoryRepository<T> : IRepository<T, long> where T : MatrixEntity
+    public abstract class InMemoryRepository<T> : IRepository<T, long> where T : IMatrixEntity
     {
         protected readonly InMemoryDbContext<T> Db;
 

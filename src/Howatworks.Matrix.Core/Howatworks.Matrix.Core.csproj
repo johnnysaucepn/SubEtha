@@ -9,8 +9,4 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.1.6" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Matrix.Domain\Howatworks.Matrix.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

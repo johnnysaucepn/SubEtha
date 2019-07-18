@@ -39,16 +39,16 @@ namespace Howatworks.Matrix.Site.Api
             return Ok(ToLocationRepresentation(user, gameVersion, entities));
         }
 
-        private static dynamic ToLocationRepresentation(string user, string gameVersion, IEnumerable<ILocationState> entities)
+        private static dynamic ToLocationRepresentation(string user, string gameVersion, IEnumerable<LocationStateEntity> entities)
         {
             return new
             {
                 GameContext = new GameContext(gameVersion, user),
-                Locations = entities.Select(x => ToLocationRepresentation(x))
+                Locations = entities.Select(x => ToLocationRepresentation(user, gameVersion, x))
             };
         }
 
-        private static dynamic ToLocationRepresentation(string user, string gameVersion, ILocationState entity)
+        private static dynamic ToLocationRepresentation(string user, string gameVersion, LocationStateEntity entity)
         {
             return new
             {
@@ -57,34 +57,37 @@ namespace Howatworks.Matrix.Site.Api
             };
         }
 
-        private static dynamic ToLocationRepresentation(ILocationState entity)
+        private static ILocationState ToLocationRepresentation(LocationStateEntity entity)
         {
-            return new
+            if (entity is null) return null;
+            return new LocationState
             {
-                entity?.TimeStamp,
-                entity?.Body,
-                entity?.SignalSource,
-                entity?.StarSystem,
-                entity?.Station,
-                entity?.SurfaceLocation
+                TimeStamp = entity.TimeStamp,
+                Body = new Body(entity.Body_Name, entity.Body_Type, entity.Body_Docked.GetValueOrDefault(false)),
+                SignalSource =
+                    new SignalSource(new LocalisedString(entity.SignalSource_Type_Symbol, entity.SignalSource_Type_Text), entity.SignalSource_Threat),
+                StarSystem = new StarSystem(entity.StarSystem_Name, entity.StarSystem_Coords),
+                Station = new Station(entity.Station_Name, entity.Station_Type),
+                SurfaceLocation = new SurfaceLocation(entity.SurfaceLocation_Landed.GetValueOrDefault(false), entity.SurfaceLocation_Latitude, entity.SurfaceLocation_Longitude)
             };
         }
 
-        private static dynamic ToSystemRepresentation(string user, string gameVersion, IEnumerable<ILocationState> entities)
+        private static dynamic ToSystemRepresentation(string user, string gameVersion, IEnumerable<LocationStateEntity> entities)
         {
             return new
             {
                 GameContext = new GameContext(gameVersion, user),
-                Systems = entities?.RemoveSequentialRepeats(new StarSystemComparer()).Select(x => ToSystemRepresentation(x))
+                Systems = entities?.RemoveSequentialRepeats(new StarSystemEntityComparer()).Select(x => ToSystemRepresentation(x))
             };
         }
 
-        private static dynamic ToSystemRepresentation(ILocationState entity)
+        private static dynamic ToSystemRepresentation(LocationStateEntity entity)
         {
             return new
             {
                 entity?.TimeStamp,
-                entity?.StarSystem
+                Name = entity?.StarSystem_Name,
+                Coords = entity?.StarSystem_Coords
             };
         }
 
@@ -97,16 +100,45 @@ namespace Howatworks.Matrix.Site.Api
         }
 
         [HttpPost]
-        [Route("{user}/{gameVersion}/Location")]
-        public IActionResult PostLocation(string user, string gameVersion, [FromBody]LocationStateEntity location)
+        [Route("{cmdrName}/{gameVersion}/Location")]
+        public IActionResult PostLocation(string cmdrName, string gameVersion, [FromBody]LocationState location)
         {
-            location.GameContext = new GameContext(gameVersion, user);
+            var locationEntity = ToEntity(location, cmdrName, gameVersion);
 
-            _locationRepoz.Add(location);
+            _locationRepoz.Add(locationEntity);
 
-            Log.Info(JsonConvert.SerializeObject(location));
+            Log.Info(JsonConvert.SerializeObject(locationEntity));
 
-            return Ok(location);
+            return Ok();
+        }
+
+        private static LocationStateEntity ToEntity(ILocationState location, string cmdrName, string version)
+        {
+            return new LocationStateEntity
+            {
+                CommanderName = cmdrName,
+                GameVersion = version,
+                TimeStamp = location.TimeStamp,
+
+                StarSystem_Name = location.StarSystem?.Name,
+                StarSystem_Coords = location.StarSystem?.Coords,
+
+                Body_Name = location.Body?.Name,
+                Body_Type = location.Body?.Type,
+                Body_Docked = location.Body?.Docked,
+
+                SurfaceLocation_Landed = location.SurfaceLocation?.Landed,
+                SurfaceLocation_Latitude = location.SurfaceLocation?.Latitude,
+                SurfaceLocation_Longitude = location.SurfaceLocation?.Longitude,
+
+                Station_Name = location.Station?.Name,
+                Station_Type = location.Station?.Type,
+
+                SignalSource_Threat = location.SignalSource?.Threat,
+                SignalSource_Type_Symbol = location.SignalSource?.Type.Symbol,
+                SignalSource_Type_Text = location.SignalSource?.Type.Text
+            };
+
         }
     }
 }

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Howatworks.Matrix.EntityFramework.Migrations
 {
     [DbContext(typeof(MatrixDbContext))]
-    [Migration("20190715142624_Initial")]
+    [Migration("20190718150053_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,25 +18,24 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Howatworks.Matrix.Core.Entities.CommanderGroup", b =>
                 {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
                     b.Property<string>("CommanderName");
 
-                    b.Property<long>("GroupId");
+                    b.Property<long?>("GroupId");
 
-                    b.Property<long>("Id");
-
-                    b.HasKey("CommanderName", "GroupId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
                     b.ToTable("CommanderGroups");
-
-                    b.HasDiscriminator().HasValue("CommanderGroup");
                 });
 
             modelBuilder.Entity("Howatworks.Matrix.Core.Entities.Group", b =>
@@ -50,8 +49,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
                     b.ToTable("Groups");
 
-                    b.HasDiscriminator().HasValue("Group");
-
                     b.HasData(
                         new { Id = 1L, Name = "Default" }
                     );
@@ -62,13 +59,41 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool?>("Body_Docked");
+
+                    b.Property<string>("Body_Name");
+
+                    b.Property<string>("Body_Type");
+
+                    b.Property<string>("CommanderName");
+
+                    b.Property<string>("GameVersion");
+
+                    b.Property<int?>("SignalSource_Threat");
+
+                    b.Property<string>("SignalSource_Type_Symbol");
+
+                    b.Property<string>("SignalSource_Type_Text");
+
+                    b.Property<decimal[]>("StarSystem_Coords");
+
+                    b.Property<string>("StarSystem_Name");
+
+                    b.Property<string>("Station_Name");
+
+                    b.Property<string>("Station_Type");
+
+                    b.Property<bool?>("SurfaceLocation_Landed");
+
+                    b.Property<decimal?>("SurfaceLocation_Latitude");
+
+                    b.Property<decimal?>("SurfaceLocation_Longitude");
+
                     b.Property<DateTimeOffset>("TimeStamp");
 
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
-
-                    b.HasDiscriminator().HasValue("LocationStateEntity");
                 });
 
             modelBuilder.Entity("Howatworks.Matrix.Core.Entities.MatrixIdentityUser", b =>
@@ -134,6 +159,8 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
                     b.Property<string>("GameMode");
 
+                    b.Property<string>("GameVersion");
+
                     b.Property<string>("Group");
 
                     b.Property<DateTimeOffset>("TimeStamp");
@@ -141,14 +168,16 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sessions");
-
-                    b.HasDiscriminator().HasValue("SessionStateEntity");
                 });
 
             modelBuilder.Entity("Howatworks.Matrix.Core.Entities.ShipStateEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CommanderName");
+
+                    b.Property<string>("GameVersion");
 
                     b.Property<decimal?>("HullIntegrity");
 
@@ -167,8 +196,6 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ships");
-
-                    b.HasDiscriminator().HasValue("ShipStateEntity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -282,157 +309,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 {
                     b.HasOne("Howatworks.Matrix.Core.Entities.Group", "Group")
                         .WithMany("CommanderGroups")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.LocationStateEntity", b =>
-                {
-                    b.OwnsOne("Howatworks.Matrix.Domain.Body", "Body", b1 =>
-                        {
-                            b1.Property<long?>("LocationStateEntityId");
-
-                            b1.Property<bool>("Docked");
-
-                            b1.Property<string>("Name");
-
-                            b1.Property<string>("Type");
-
-                            b1.ToTable("Locations","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.LocationStateEntity")
-                                .WithOne("Body")
-                                .HasForeignKey("Howatworks.Matrix.Domain.Body", "LocationStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("Howatworks.Matrix.Domain.SignalSource", "SignalSource", b1 =>
-                        {
-                            b1.Property<long?>("LocationStateEntityId");
-
-                            b1.Property<int>("Threat");
-
-                            b1.ToTable("Locations","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.LocationStateEntity")
-                                .WithOne("SignalSource")
-                                .HasForeignKey("Howatworks.Matrix.Domain.SignalSource", "LocationStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-
-                            b1.OwnsOne("Howatworks.Matrix.Domain.LocalisedString", "Type", b2 =>
-                                {
-                                    b2.Property<long?>("SignalSourceLocationStateEntityId");
-
-                                    b2.Property<string>("Symbol");
-
-                                    b2.Property<string>("Text");
-
-                                    b2.ToTable("Locations","public");
-
-                                    b2.HasOne("Howatworks.Matrix.Domain.SignalSource")
-                                        .WithOne("Type")
-                                        .HasForeignKey("Howatworks.Matrix.Domain.LocalisedString", "SignalSourceLocationStateEntityId")
-                                        .OnDelete(DeleteBehavior.Cascade);
-                                });
-                        });
-
-                    b.OwnsOne("Howatworks.Matrix.Domain.StarSystem", "StarSystem", b1 =>
-                        {
-                            b1.Property<long?>("LocationStateEntityId");
-
-                            b1.Property<decimal[]>("Coords");
-
-                            b1.Property<string>("Name");
-
-                            b1.ToTable("Locations","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.LocationStateEntity")
-                                .WithOne("StarSystem")
-                                .HasForeignKey("Howatworks.Matrix.Domain.StarSystem", "LocationStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("Howatworks.Matrix.Domain.Station", "Station", b1 =>
-                        {
-                            b1.Property<long?>("LocationStateEntityId");
-
-                            b1.Property<string>("Name");
-
-                            b1.Property<string>("Type");
-
-                            b1.ToTable("Locations","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.LocationStateEntity")
-                                .WithOne("Station")
-                                .HasForeignKey("Howatworks.Matrix.Domain.Station", "LocationStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("Howatworks.Matrix.Domain.SurfaceLocation", "SurfaceLocation", b1 =>
-                        {
-                            b1.Property<long?>("LocationStateEntityId");
-
-                            b1.Property<bool>("Landed");
-
-                            b1.Property<decimal?>("Latitude");
-
-                            b1.Property<decimal?>("Longitude");
-
-                            b1.ToTable("Locations","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.LocationStateEntity")
-                                .WithOne("SurfaceLocation")
-                                .HasForeignKey("Howatworks.Matrix.Domain.SurfaceLocation", "LocationStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("Howatworks.Matrix.Domain.GameContext", "GameContext", b1 =>
-                        {
-                            b1.Property<long>("LocationStateEntityId");
-
-                            b1.Property<bool>("IsLive");
-
-                            b1.ToTable("Locations","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.LocationStateEntity")
-                                .WithOne("GameContext")
-                                .HasForeignKey("Howatworks.Matrix.Domain.GameContext", "LocationStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-                });
-
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.SessionStateEntity", b =>
-                {
-                    b.OwnsOne("Howatworks.Matrix.Domain.GameContext", "GameContext", b1 =>
-                        {
-                            b1.Property<long>("SessionStateEntityId");
-
-                            b1.Property<bool>("IsLive");
-
-                            b1.ToTable("Sessions","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.SessionStateEntity")
-                                .WithOne("GameContext")
-                                .HasForeignKey("Howatworks.Matrix.Domain.GameContext", "SessionStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-                });
-
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.ShipStateEntity", b =>
-                {
-                    b.OwnsOne("Howatworks.Matrix.Domain.GameContext", "GameContext", b1 =>
-                        {
-                            b1.Property<long>("ShipStateEntityId");
-
-                            b1.Property<bool>("IsLive");
-
-                            b1.ToTable("Ships","public");
-
-                            b1.HasOne("Howatworks.Matrix.Core.Entities.ShipStateEntity")
-                                .WithOne("GameContext")
-                                .HasForeignKey("Howatworks.Matrix.Domain.GameContext", "ShipStateEntityId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+                        .HasForeignKey("GroupId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

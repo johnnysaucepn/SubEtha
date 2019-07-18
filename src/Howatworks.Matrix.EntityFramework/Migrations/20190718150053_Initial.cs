@@ -59,7 +59,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -73,20 +73,21 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    GameContext_IsLive = table.Column<bool>(nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TimeStamp = table.Column<DateTimeOffset>(nullable: false),
+                    GameVersion = table.Column<string>(nullable: true),
+                    CommanderName = table.Column<string>(nullable: true),
                     Body_Name = table.Column<string>(nullable: true),
                     Body_Type = table.Column<string>(nullable: true),
-                    Body_Docked = table.Column<bool>(nullable: false),
+                    Body_Docked = table.Column<bool>(nullable: true),
                     SignalSource_Type_Symbol = table.Column<string>(nullable: true),
                     SignalSource_Type_Text = table.Column<string>(nullable: true),
-                    SignalSource_Threat = table.Column<int>(nullable: false),
+                    SignalSource_Threat = table.Column<int>(nullable: true),
                     StarSystem_Name = table.Column<string>(nullable: true),
                     StarSystem_Coords = table.Column<decimal[]>(nullable: true),
                     Station_Name = table.Column<string>(nullable: true),
                     Station_Type = table.Column<string>(nullable: true),
-                    SurfaceLocation_Landed = table.Column<bool>(nullable: false),
+                    SurfaceLocation_Landed = table.Column<bool>(nullable: true),
                     SurfaceLocation_Longitude = table.Column<decimal>(nullable: true),
                     SurfaceLocation_Latitude = table.Column<decimal>(nullable: true)
                 },
@@ -101,11 +102,11 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    GameContext_IsLive = table.Column<bool>(nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TimeStamp = table.Column<DateTimeOffset>(nullable: false),
-                    Build = table.Column<string>(nullable: true),
+                    GameVersion = table.Column<string>(nullable: true),
                     CommanderName = table.Column<string>(nullable: true),
+                    Build = table.Column<string>(nullable: true),
                     GameMode = table.Column<string>(nullable: true),
                     Group = table.Column<string>(nullable: true)
                 },
@@ -120,9 +121,10 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    GameContext_IsLive = table.Column<bool>(nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TimeStamp = table.Column<DateTimeOffset>(nullable: false),
+                    GameVersion = table.Column<string>(nullable: true),
+                    CommanderName = table.Column<string>(nullable: true),
                     ShipId = table.Column<int>(nullable: false),
                     Type = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
@@ -141,7 +143,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -164,7 +166,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -257,20 +259,21 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 schema: "public",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false),
-                    CommanderName = table.Column<string>(nullable: false),
-                    GroupId = table.Column<long>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CommanderName = table.Column<string>(nullable: true),
+                    GroupId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommanderGroups", x => new { x.CommanderName, x.GroupId });
+                    table.PrimaryKey("PK_CommanderGroups", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CommanderGroups_Groups_GroupId",
                         column: x => x.GroupId,
                         principalSchema: "public",
                         principalTable: "Groups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(

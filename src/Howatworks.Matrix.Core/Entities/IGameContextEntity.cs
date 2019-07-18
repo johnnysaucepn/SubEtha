@@ -1,9 +1,11 @@
-﻿using Howatworks.Matrix.Domain;
+﻿using System;
 
 namespace Howatworks.Matrix.Core.Entities
 {
     public interface IGameContextEntity
     {
-        GameContext GameContext { get; }
+        DateTimeOffset TimeStamp { get; set; }
+        string GameVersion { get; }
+        string CommanderName { get; }
     }
 }

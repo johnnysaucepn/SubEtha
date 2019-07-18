@@ -15,8 +15,8 @@ namespace Howatworks.Matrix.EntityFramework
         public IEnumerable<string> EnumerateGameVersions(string cmdrName)
         {
             return Db.Set<SessionStateEntity>()
-                .Where(x => x.GameContext.CommanderName == cmdrName)
-                .Select(x => x.GameContext.GameVersion)
+                .Where(x => x.CommanderName == cmdrName)
+                .Select(x => x.GameVersion)
                 .Distinct()
                 //.AsEnumerable() // MongoDB doesn't support re-ordering after the query
                 //.OrderBy(x => x, StringComparer.OrdinalIgnoreCase);
@@ -26,7 +26,7 @@ namespace Howatworks.Matrix.EntityFramework
         public IEnumerable<string> EnumerateUsers()
         {
             return Db.Set<SessionStateEntity>()
-                .Select(x => x.GameContext.CommanderName)
+                .Select(x => x.CommanderName)
                 .Distinct()
                 //.AsEnumerable() // MongoDB doesn't support re-ordering after the query
                 //.OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);

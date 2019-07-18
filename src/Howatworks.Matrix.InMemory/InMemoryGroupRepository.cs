@@ -40,7 +40,6 @@ namespace Howatworks.Matrix.InMemory
         {
             var newUserGroup = new CommanderGroup
             {
-                GroupId = group.Id,
                 Group = group,
                 CommanderName = cmdrName
             };
@@ -48,5 +47,9 @@ namespace Howatworks.Matrix.InMemory
             Db.CreateOrUpdate(group);
         }
 
+        public IEnumerable<string> GetCommandersInGroup(Group @group)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

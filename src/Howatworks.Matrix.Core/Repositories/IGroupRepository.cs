@@ -10,5 +10,6 @@ namespace Howatworks.Matrix.Core.Repositories
         Group GetDefaultGroup();
         IList<Group> GetByCommander(string cmdrName);
         void AddCommanderToGroup(Group group, string cmdrName);
+        IEnumerable<string> GetCommandersInGroup(Group group);
     }
 }

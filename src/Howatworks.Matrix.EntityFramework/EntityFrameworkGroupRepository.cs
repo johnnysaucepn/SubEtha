@@ -29,28 +29,39 @@ namespace Howatworks.Matrix.EntityFramework
 
         public IList<Group> GetByCommander(string cmdrName)
         {
-            var groupIds = Db.CommanderGroups
-                .Where(cg => cg.CommanderName == cmdrName)
-                .Select(g => g.GroupId).ToList();
-
             var groups = Db.Groups
-                .Where(g => groupIds.Contains(g.Id))
+                .Include(g => g.CommanderGroups)
+                .SelectMany(g => g.CommanderGroups)
+                .Where(cg => cg.CommanderName == cmdrName)
+                .Select(cg => cg.Group)
                 .ToList();
 
-            return groups.ToList();
+            return groups;
         }
 
         public void AddCommanderToGroup(Group group, string cmdrName)
         {
             var newUserGroup = new CommanderGroup
             {
-                GroupId = group.Id,
                 Group = group,
                 CommanderName = cmdrName
             };
             group.CommanderGroups.Add(newUserGroup);
             Db.CommanderGroups.Add(newUserGroup);
             Db.SaveChanges();
+        }
+
+        public IEnumerable<string> GetCommandersInGroup(Group group)
+        {
+            var cmdrs = Db.Groups
+                .Include(g => g.CommanderGroups)
+                .Where(g=>g == group)
+                .SelectMany(g => g.CommanderGroups)
+                .Select(cg => cg.CommanderName)
+                .Distinct()
+                .ToList();
+
+            return cmdrs;
         }
     }
 }

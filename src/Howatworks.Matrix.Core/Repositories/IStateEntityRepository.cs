@@ -4,7 +4,7 @@ using Howatworks.Matrix.Core.Entities;
 
 namespace Howatworks.Matrix.Core.Repositories
 {
-    public interface IStateEntityRepository<T> : IRepository<T, long> where T : MatrixEntity
+    public interface IStateEntityRepository<T> : IRepository<T, long> where T : IMatrixEntity
     {
         IEnumerable<T> GetRange(string cmdrName, string gameVersion, int skip, int take);
         T GetMostRecent(string cmdrName, string gameVersion);

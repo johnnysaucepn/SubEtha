@@ -6,7 +6,7 @@ using Howatworks.Matrix.Core.Entities;
 
 namespace Howatworks.Matrix.InMemory
 {
-    public class InMemoryDbContext<T> where T : MatrixEntity
+    public class InMemoryDbContext<T> where T : IMatrixEntity
     {
         [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
         private static long _nextId = 1;

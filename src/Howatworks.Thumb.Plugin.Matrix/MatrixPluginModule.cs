@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Howatworks.Matrix.Domain;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {

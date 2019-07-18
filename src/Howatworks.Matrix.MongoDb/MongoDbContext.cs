@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace Howatworks.Matrix.MongoDb
 {
-    public class MongoDbContext<T> where T : MatrixEntity
+    public class MongoDbContext<T> where T : IMatrixEntity
     {
         private readonly IMongoDatabase _db;
 
