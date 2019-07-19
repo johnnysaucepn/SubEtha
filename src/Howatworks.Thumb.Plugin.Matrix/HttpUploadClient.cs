@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Mime;
+using System.Text;
 using log4net;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -19,14 +21,14 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             _client = new HttpClient();
 
-            BaseUri = new Uri(config["ServiceUri"]);
+            BaseUri = new Uri(config["Howatworks.Thumb.Plugin.Matrix:ServiceUri"]);
         }
 
         public void Upload(Uri uri, IState state)
         {
             var targetUri = uri.IsAbsoluteUri ? uri : new Uri(BaseUri, uri);
 
-            var response = _client.PostAsync(targetUri.AbsoluteUri, new StringContent(JsonConvert.SerializeObject(state))).Result;
+            var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
             Log.Info($"HTTP {response.StatusCode}");
         }
 

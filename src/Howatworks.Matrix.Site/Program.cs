@@ -1,61 +1,47 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Autofac;
 using log4net;
 using log4net.Config;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Owin.Hosting;
-using Owin;
 
 namespace Howatworks.Matrix.Site
 {
-    internal class Program
+    public class Program
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+        private static string _appDataFolder;
+        private static string _workingFolder;
+        private static string _logFolder;
 
-        private static void Main()
+        public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                //.AddInMemoryCollection(defaultConfig)
-                .AddJsonFile("config.json")
-                .Build();
+            _appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            _workingFolder = Path.Combine(_appDataFolder, "Howatworks", "Matrix");
+            _logFolder = Path.Combine(_workingFolder, "Logs");
+            Directory.CreateDirectory(_logFolder);
 
-            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var workingFolder = Path.Combine(appDataFolder, "Howatworks", "Matrix");
-            var logFolder = Path.Combine(workingFolder, "Logs");
-            Directory.CreateDirectory(logFolder);
-
-            GlobalContext.Properties["logfolder"] = logFolder;
+            GlobalContext.Properties["logfolder"] = _logFolder;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
 
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new SiteAutofacModule(config));
-            var container = builder.Build();
 
-            var section = config.GetSection("Howatworks.Matrix.Site");
-            var url = section["SiteBinding"] ?? "http://+:8984/Matrix/Site";
-
-            // Start OWIN host
-            using (WebApp.Start(new StartOptions(url), app =>
-            {
-                //app
-                //.UseFacebookAuthentication(ConfigurationManager.AppSettings["facebookAppID"], ConfigurationManager.AppSettings["facebookAppSecret"])
-                //.UseStaticFiles("/HalBrowser");
-
-                app
-                    .UseAutofacMiddleware(container)
-                    .UseNancy(c => {
-                        c.Bootstrapper = new MatrixBootstrapper();
-                    });
-            }))
-            {
-                Log.Info($"{url} started");
-                Console.WriteLine($"{url} started");
-                Console.ReadLine();
-
-            }
+            CreateWebHostBuilder(args).Build().Run();
         }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    IHostingEnvironment env = builderContext.HostingEnvironment;
+
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                        //.AddInMemoryCollection(defaultConfig)
+                        .AddJsonFile("config.json");
+                })
+                .UseStartup<Startup>();
+
     }
 }

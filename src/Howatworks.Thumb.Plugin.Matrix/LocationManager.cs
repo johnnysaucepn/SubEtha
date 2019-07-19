@@ -1,4 +1,6 @@
-﻿using Howatworks.Matrix.Domain;
+﻿using System;
+using System.Collections.Generic;
+using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Other;
 using Howatworks.SubEtha.Journal;
@@ -9,15 +11,15 @@ namespace Howatworks.Thumb.Plugin.Matrix
 {
     public class LocationManager
     {
+        private readonly CommanderTracker _commander;
         private readonly IUploader<LocationState> _client;
-        private LocationState _location;
+        private readonly Dictionary<GameContext, LocationState> _locations = new Dictionary<GameContext, LocationState>();
         private bool _isDirty;
 
-        public LocationManager(JournalEntryRouter router, IUploader<LocationState> client)
+        public LocationManager(JournalEntryRouter router, CommanderTracker commander, IUploader<LocationState> client)
         {
+            _commander = commander;
             _client = client;
-
-            _location = new LocationState();
 
             router.RegisterFor<Location>(ApplyLocation);
             router.RegisterFor<FsdJump>(ApplyFsdJump);
@@ -37,14 +39,13 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             // Ignore previous information, return new location
 
-            _location = new LocationState
+            Replace(location, new LocationState
             {
                 StarSystem = new StarSystem(location.StarSystem, location.StarPos),
                 Body = new Body(location.Body, location.BodyType, location.Docked),
                 Station = Station.Create(location.StationName, location.StationType)
                 // All other items set to default
-            };
-            Updated(location);
+            });
 
             return true;
         }
@@ -52,83 +53,103 @@ namespace Howatworks.Thumb.Plugin.Matrix
         private bool ApplyFsdJump(FsdJump fsdJump)
         {
             // Ignore previous information, return new location
-            _location = new LocationState
+            Replace(fsdJump, new LocationState
             {
                 StarSystem = new StarSystem(fsdJump.StarSystem, fsdJump.StarPos)
                 // All other items set to default
-            };
-            Updated(fsdJump);
+            });
 
             return true;
         }
 
         private bool ApplyDocked(Docked docked)
         {
-            if (_location.Body != null) _location.Body.Docked = true;
-            _location.SurfaceLocation = null;
-            _location.Station = Station.Create(docked.StationName, docked.StationType);
-            _location.SignalSource = null;
-            Updated(docked);
+            Modify(docked, x =>
+            {
+                if (x.Body != null) x.Body.Docked = true;
+                x.SurfaceLocation = null;
+                x.Station = Station.Create(docked.StationName, docked.StationType);
+                x.SignalSource = null;
+                return true;
+            });
             return true;
         }
 
         private bool ApplyUndocked(Undocked undocked)
         {
-            if (_location.Body != null) _location.Body.Docked = false;
-            _location.SurfaceLocation = null;
-            _location.Station = null;
-            _location.SignalSource = null;
-            Updated(undocked);
+            Modify(undocked, x =>
+            {
+                if (x.Body != null) x.Body.Docked = false;
+                x.SurfaceLocation = null;
+                x.Station = null;
+                x.SignalSource = null;
+                return true;
+            });
             return true;
         }
 
         private bool ApplyTouchdown(Touchdown touchdown)
         {
-            _location.Body = new Body(_location.Body.Name, _location.Body.Type);
-            _location.SurfaceLocation = new SurfaceLocation(true, touchdown.Latitude, touchdown.Longitude);
-            _location.Station = null;
-            _location.SignalSource = null;
-            Updated(touchdown);
+            Modify(touchdown, x =>
+            {
+                x.Body = new Body(x.Body.Name, x.Body.Type);
+                x.SurfaceLocation = new SurfaceLocation(true, touchdown.Latitude, touchdown.Longitude);
+                x.Station = null;
+                x.SignalSource = null;
+                return true;
+            });
             return true;
         }
 
         private bool ApplyLiftoff(Liftoff liftoff)
         {
-            _location.Body = new Body(_location.Body.Name, _location.Body.Type);
-            _location.SurfaceLocation = new SurfaceLocation(false, liftoff.Latitude, liftoff.Longitude);
-            _location.Station = null;
-            _location.SignalSource = null;
-            Updated(liftoff);
+            Modify(liftoff, x =>
+            {
+                x.Body = new Body(x.Body.Name, x.Body.Type);
+                x.SurfaceLocation = new SurfaceLocation(false, liftoff.Latitude, liftoff.Longitude);
+                x.Station = null;
+                x.SignalSource = null;
+                return true;
+            });
             return true;
         }
 
         private bool ApplySuperCruiseEntry(SupercruiseEntry entry)
         {
-            _location.Body = null;
-            _location.SurfaceLocation = null;
-            _location.Station = null;
-            _location.SignalSource = null;
-            Updated(entry);
+            Modify(entry, x =>
+            {
+                x.Body = null;
+                x.SurfaceLocation = null;
+                x.Station = null;
+                x.SignalSource = null;
+                return true;
+            });
             return true;
         }
 
         private bool ApplySupercruiseExit(SupercruiseExit exit)
         {
-            _location.Body = new Body(exit.Body, exit.BodyType);
-            _location.SurfaceLocation = null;
-            _location.Station = null;
-            _location.SignalSource = null;
-            Updated(exit);
+            Modify(exit, x =>
+            {
+                x.Body = new Body(exit.Body, exit.BodyType);
+                x.SurfaceLocation = null;
+                x.Station = null;
+                x.SignalSource = null;
+                return true;
+            });
             return true;
         }
 
         private bool ApplyUssDrop(UssDrop ussDrop)
         {
-            _location.Body = null;
-            _location.SurfaceLocation = null;
-            _location.Station = null;
-            _location.SignalSource = new SignalSource(new LocalisedString(ussDrop.USSType, ussDrop.USSType_Localised), ussDrop.USSThreat);
-            Updated(ussDrop);
+            Modify(ussDrop, x =>
+            {
+                x.Body = null;
+                x.SurfaceLocation = null;
+                x.Station = null;
+                x.SignalSource = new SignalSource(new LocalisedString(ussDrop.USSType, ussDrop.USSType_Localised), ussDrop.USSThreat);
+                return true;
+            });
             return true;
         }
 
@@ -136,14 +157,30 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             // Ignore previous information, return new location
 
-            _location = new LocationState();
-            Updated(died);
+            Replace(died, new LocationState());
             return true;
         }
 
-        private void Updated(IJournalEntry entry)
+        private void Replace(IJournalEntry entry, LocationState newState)
         {
-            _location.TimeStamp = entry.Timestamp;
+            var discriminator = _commander.Context;
+
+            newState.TimeStamp = entry.Timestamp;
+            _locations[discriminator] = newState;
+            _isDirty = true;
+        }
+
+        private void Modify(IJournalEntry entry, Func<LocationState, bool> stateChange)
+        {
+            var discriminator = _commander.Context;
+
+            var state = !_locations.ContainsKey(discriminator) ? new LocationState() : _locations[discriminator];
+
+            // If handler didn't apply the change, don't update state
+            if (!stateChange(state)) return;
+
+            state.TimeStamp = entry.Timestamp;
+            _locations[discriminator] = state;
             _isDirty = true;
         }
 
@@ -151,7 +188,14 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             if (!_isDirty) return false;
 
-            _client.Upload(_location);
+            foreach (var context in _locations.Keys)
+            {
+                if (!string.IsNullOrWhiteSpace(context.CommanderName))
+                {
+                    _client.Upload(context, _locations[context]);
+                }
+            }
+
             _isDirty = false;
             return true;
         }

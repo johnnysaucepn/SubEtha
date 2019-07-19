@@ -26,28 +26,5 @@ namespace Howatworks.Thumb.Plugin.Matrix
         public void Startup()
         {
         }
-
-        /*public void Apply(IJournalEntry journalEntry)
-        {
-            var gameVersion = journalEntry.GameVersionDiscriminator;
-
-            if (!_processors.ContainsKey(gameVersion))
-            {
-                _processors[gameVersion] = new MatrixJournalProcessor(_pluginConfig, _user, gameVersion, _router);
-            }
-            var game = _processors[gameVersion];
-            Log.Debug(JsonConvert.SerializeObject(journalEntry));
-
-            //game.Apply(journalEntry);
-            AppliedJournalEntries?.Invoke(this, new AppliedJournalEntriesEventArgs());
-        }*/
-
-        /*public void Flush()
-        {
-            foreach (var game in _processors.Values)
-            {
-                game.BatchComplete();
-            }
-        }*/
     }
 }

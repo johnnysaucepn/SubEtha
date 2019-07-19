@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
@@ -10,14 +11,14 @@ namespace Howatworks.Thumb.Plugin.Matrix
 {
     public class ShipManager
     {
+        private readonly CommanderTracker _commander;
         private readonly IUploader<ShipState> _client;
-        // ReSharper disable once UnusedMember.Local
-
-        private readonly Dictionary<string, ShipState> _ships = new Dictionary<string, ShipState>();
+        private readonly Dictionary<GameContext, ShipState> _ships = new Dictionary<GameContext, ShipState>();
         private bool _isDirty;
 
-        public ShipManager(JournalEntryRouter router, IUploader<ShipState> client)
+        public ShipManager(JournalEntryRouter router, CommanderTracker commander, IUploader<ShipState> client)
         {
+            _commander = commander;
             _client = client;
 
             router.RegisterFor<LoadGame>(ApplyLoadGame);
@@ -34,7 +35,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private bool ApplyLoadGame(LoadGame loadGame)
         {
-            return Apply(loadGame, ship =>
+            return Apply(loadGame.Timestamp, ship =>
             {
                 ship.Type = loadGame.Ship;
                 ship.ShipId = loadGame.ShipID;
@@ -46,7 +47,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private bool ApplyShipyardNew(ShipyardNew shipyardNew)
         {
-            return Replace(shipyardNew, () => new ShipState
+            return Replace(shipyardNew.Timestamp, new ShipState
             {
                 Type = shipyardNew.ShipType,
                 ShipId = shipyardNew.NewShipID
@@ -55,7 +56,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap)
         {
-            return Apply(shipyardSwap, ship =>
+            return Apply(shipyardSwap.Timestamp, ship =>
             {
                 ship.Type = shipyardSwap.ShipType;
                 ship.ShipId = shipyardSwap.ShipID;
@@ -65,7 +66,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private bool ApplyHullDamage(HullDamage hullDamage)
         {
-            return Apply(hullDamage, ship =>
+            return Apply(hullDamage.Timestamp, ship =>
             {
                 ship.HullIntegrity = hullDamage.Health;
                 return true;
@@ -74,7 +75,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private bool ApplyShieldState(ShieldState shieldState)
         {
-            return Apply(shieldState, ship =>
+            return Apply(shieldState.Timestamp, ship =>
             {
                 // If shield state was unknown before (i.e. null) we know it now
                 ship.ShieldsUp = shieldState.ShieldsUp;
@@ -84,7 +85,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private bool ApplyRepair(Repair repair)
         {
-            return Apply(repair, ship =>
+            return Apply(repair.Timestamp, ship =>
             {
                 if (repair.Item != "hull" && repair.Item != "all") return false;
                 ship.HullIntegrity = 1;
@@ -94,7 +95,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private bool ApplyRepairAll(RepairAll repair)
         {
-            return Apply(repair, ship =>
+            return Apply(repair.Timestamp, ship =>
             {
                 ship.HullIntegrity = 1;
                 return true;
@@ -105,42 +106,41 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             if (!_isDirty) return false;
 
-            foreach (var ship in _ships.Values)
+            foreach (var context in _ships.Keys)
             {
-                _client.Upload(ship);
+                _client.Upload(context, _ships[context]);
             }
 
             _isDirty = false;
             return true;
         }
 
-        private bool Apply(IJournalEntry entry, Func<ShipState, bool> action)
+        private bool Apply(DateTimeOffset timestamp, Func<ShipState, bool> action)
         {
-            if (!_ships.ContainsKey(entry.GameVersionDiscriminator))
-            {
-                _ships[entry.GameVersionDiscriminator] = new ShipState();
-            }
+            var discriminator = _commander.Context;
 
-            var ship = _ships[entry.GameVersionDiscriminator];
+            var ship = _ships.ContainsKey(discriminator) ? _ships[discriminator] : new ShipState();
 
             // If handler didn't apply the change, don't update state
             if (!action(ship)) return false;
 
-            ship.TimeStamp = entry.Timestamp;
+            ship.TimeStamp = timestamp;
+            _ships[discriminator] = ship;
             _isDirty = true;
             return true;
         }
 
-        private bool Replace(IJournalEntry entry, Func<ShipState> action)
+        private bool Replace(DateTimeOffset timestamp, ShipState newState)
         {
+            var discriminator = _commander.Context;
+
             // If handler didn't apply the change, don't update state
-            var newState = action();
             if (newState == null) return false;
 
-            newState.TimeStamp = entry.Timestamp;
+            newState.TimeStamp = timestamp;
             _isDirty = true;
 
-            _ships[entry.GameVersionDiscriminator] = newState;
+            _ships[discriminator] = newState;
             return true;
         }
 

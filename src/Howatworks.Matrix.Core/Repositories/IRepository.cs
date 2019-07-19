@@ -4,16 +4,16 @@ using Howatworks.Matrix.Core.Entities;
 
 namespace Howatworks.Matrix.Core.Repositories
 {
-    public interface IRepository<T> where T: IEntity
+    public interface IRepository<T, in TId> where T : IMatrixEntity
     {
         void Add(T entity);
 
-        T Get(Guid id);
+        T Get(TId id);
 
         void Update(T entity);
 
         void Remove(T entity);
-        void Remove(Guid id);
+        void Remove(TId id);
 
         IQueryable<T> Query();
     }

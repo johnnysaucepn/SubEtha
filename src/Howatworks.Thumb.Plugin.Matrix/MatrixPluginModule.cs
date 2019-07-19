@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Howatworks.Matrix.Domain;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {
@@ -10,13 +11,14 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
             builder.RegisterType<MatrixJournalProcessorPlugin>().As<IJournalProcessorPlugin>().SingleInstance();
 
+            builder.RegisterType<CommanderTracker>().AsSelf().SingleInstance();
             builder.RegisterType<LocationManager>().AsSelf().SingleInstance();
             builder.RegisterType<ShipManager>().AsSelf().SingleInstance();
             builder.RegisterType<SessionManager>().AsSelf().SingleInstance();
 
-            builder.RegisterType<LocationHttpUploader>().As<IUploader<LocationState>>().SingleInstance();
-            builder.RegisterType<ShipHttpUploader>().As<IUploader<ShipState>>().SingleInstance();
-            builder.RegisterType<SessionHttpUploader>().As<IUploader<SessionState>>().SingleInstance();
+            builder.RegisterType<LocationUploader>().As<IUploader<LocationState>>().SingleInstance();
+            builder.RegisterType<ShipUploader>().As<IUploader<ShipState>>().SingleInstance();
+            builder.RegisterType<SessionUploader>().As<IUploader<SessionState>>().SingleInstance();
         }
     }
 }

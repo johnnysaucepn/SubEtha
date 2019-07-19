@@ -4,11 +4,11 @@ using Howatworks.Matrix.Core.Entities;
 
 namespace Howatworks.Matrix.Core.Repositories
 {
-    public interface IStateEntityRepository<T> : IRepository<T> where T : IEntity
-    { 
-        IEnumerable<T> GetRange(string user, string gameVersion, int skip, int take);
-        T GetMostRecent(string user, string gameVersion);
-        T GetAtDateTime(string user, string gameVersion, DateTimeOffset at);
-        IEnumerable<DateTimeOffset> GetTimestamps(string user, string gameVersion);
+    public interface IStateEntityRepository<T> : IRepository<T, long> where T : IMatrixEntity
+    {
+        IEnumerable<T> GetRange(string cmdrName, string gameVersion, int skip, int take);
+        T GetMostRecent(string cmdrName, string gameVersion);
+        T GetAtDateTime(string cmdrName, string gameVersion, DateTimeOffset at);
+        IEnumerable<DateTimeOffset> GetTimestamps(string cmdrName, string gameVersion);
     }
 }

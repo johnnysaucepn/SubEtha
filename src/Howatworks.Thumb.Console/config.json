@@ -1,6 +1,6 @@
 ﻿{
   "Howatworks.Thumb.Plugin.Matrix": {
-    "ServiceUri": "http://localhost:8984/Matrix/Service/",
+    "ServiceUri": "https://localhost:44384/Api/",
     "User": "osbyte"
   },
   "Howatworks.Thumb.Plugin.Assistant": {
