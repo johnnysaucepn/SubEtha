@@ -89,7 +89,7 @@
 
 
                 //Ed3d.init({
-                //    basePath: "Content/ED3D/",
+                //    basePath: "lib/ED3D/",
                 //    container: 'graph',
                 //    //camera: referencePoints[0].coords,
                 //    json: content
@@ -109,7 +109,7 @@
         $("#graphcontent").html(JSON.stringify(referencePoints));
 
         Ed3d.init({
-            basePath: "Content/ED3D/",
+            basePath: "lib/ED3D/",
             container: "graph",
             jsonContainer: "graphcontent"
             //camera: referencePoints[0].coords,

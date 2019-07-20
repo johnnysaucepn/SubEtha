@@ -44,7 +44,7 @@ namespace Howatworks.Thumb.Core
             {
                 if (!handler.Policy.Accepts(mode)) continue;
 
-                applied = applied || handler.Invoke(entry);
+                applied = handler.Invoke(entry) || applied;
             }
             return applied;
         }

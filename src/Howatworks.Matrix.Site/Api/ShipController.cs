@@ -12,9 +12,9 @@ namespace Howatworks.Matrix.Site.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ShipController));
 
-        private readonly IStateEntityRepository<ShipStateEntity> _shipRepoz;
+        private readonly IShipEntityRepository _shipRepoz;
 
-        public ShipController(IStateEntityRepository<ShipStateEntity> shipRepoz)
+        public ShipController(IShipEntityRepository shipRepoz)
         {
             _shipRepoz = shipRepoz;
         }
