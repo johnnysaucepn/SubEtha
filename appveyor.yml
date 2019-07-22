@@ -8,6 +8,7 @@ before_build:
   - ps: gitversion /l console /output buildserver /updateAssemblyInfo
 
 build:
+  publish_nuget: true
   project: src/SubEtha.sln
 
 test:
