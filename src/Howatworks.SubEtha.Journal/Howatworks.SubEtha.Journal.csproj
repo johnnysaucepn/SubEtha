@@ -12,7 +12,7 @@
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <PackageTags>elite dangerous player journal</PackageTags>
     <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
-    <Version>3.4.0</Version>
+    <Version>3.4.$(GitVersion_Patch)$(GitVersion_PreReleaseTag)</Version>
   </PropertyGroup>
 
 </Project>
