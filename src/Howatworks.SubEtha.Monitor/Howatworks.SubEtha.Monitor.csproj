@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(GitVersion_NuGetVersion)' != ''" >
+    <Version>$(GitVersion_NuGetVersion)</Version>
+  </PropertyGroup>
+
 </Project>

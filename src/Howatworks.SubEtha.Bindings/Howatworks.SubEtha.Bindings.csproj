@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,6 +7,10 @@
     <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <Description>Plain .NET object representations of control bindings for the game Elite: Dangerous</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GitVersion_NuGetVersion)' != ''" >
+    <Version>$(GitVersion_NuGetVersion)</Version>
   </PropertyGroup>
 
 </Project>

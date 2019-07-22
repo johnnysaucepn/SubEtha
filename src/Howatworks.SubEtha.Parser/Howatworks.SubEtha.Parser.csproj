@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(GitVersion_NuGetVersion)' != ''" >
+    <Version>$(GitVersion_NuGetVersion)</Version>
+  </PropertyGroup>
+
 </Project>

@@ -12,4 +12,8 @@
     <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(GitVersion_NuGetVersion)' != ''" >
+    <Version>$(GitVersion_NuGetVersion)</Version>
+  </PropertyGroup>
+
 </Project>
