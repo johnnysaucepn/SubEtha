@@ -4,11 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>James Howat</Authors>
-    <Company>Howatworks</Company>
     <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <Description>Plain .NET object representations of control bindings for the game Elite: Dangerous</Description>
-    <Version>3.4.$(GitVersion_Patch)$(GitVersion_PreReleaseTag)</Version>
   </PropertyGroup>
 
 </Project>

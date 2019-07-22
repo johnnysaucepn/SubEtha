@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>James Howat</Authors>
-    <Company>Howatworks</Company>
     <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <Description>An API for quick and easy monitoring of Player Journal log entries in the game Elite: Dangerous</Description>

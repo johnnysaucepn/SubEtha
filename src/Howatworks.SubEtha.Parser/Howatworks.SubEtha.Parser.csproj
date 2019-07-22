@@ -7,7 +7,6 @@
     <Description>An API for quick and easy parsing of Player Journal log entries in the game Elite: Dangerous</Description>
     <PackageTags>elite dangerous player journal parser</PackageTags>
     <Authors>James Howat</Authors>
-    <Company>Howatworks</Company>
     <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>

@@ -7,7 +7,6 @@ using log4net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAPICodePack.Shell;
 using Howatworks.Thumb.Core;
-using Howatworks.Thumb.Tray.Properties;
 
 namespace Howatworks.Thumb.Tray
 {

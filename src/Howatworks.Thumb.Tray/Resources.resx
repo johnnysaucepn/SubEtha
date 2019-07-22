@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ThumbIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Hitchhiker-Symbol-16.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ExitLabel" xml:space="preserve">
+    <value>Exit</value>
   </data>
   <data name="NotifyIconDefaultLabel" xml:space="preserve">
     <value>SubEtha Thumb</value>
-  </data>
-  <data name="ExitLabel" xml:space="preserve">
-    <value>Exit</value>
   </data>
   <data name="NotifyIconLastUpdatedLabel" xml:space="preserve">
     <value>Last entry {0}\nLast checked {1}</value>
   </data>
   <data name="NotifyIconNeverUpdatedLabel" xml:space="preserve">
     <value>Never updated</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ThumbIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Hitchhiker-Symbol-16.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

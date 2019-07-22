@@ -5,3 +5,4 @@ tools/
 packages/
 .vs/
 *.user
+src/VersionAssemblyInfo.cs

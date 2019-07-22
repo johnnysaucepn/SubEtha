@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyCopyrightVersionAttribute>false</GenerateAssemblyCopyrightVersionAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <Version Condition="'$(GitVersion_NuVersion)' != ''">$(GitVersion_NuVersion)</Version>
+    <Company>Howatworks</Company>
+    <Copyright>Copyright (c) 2019 James Howat</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)\VersionAssemblyInfo.cs" Condition="Exists('$(SolutionDir)\VersionAssemblyInfo.cs')">
+      <Link>VersionAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+</Project>
