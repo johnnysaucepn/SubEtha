@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://bitbucket.org/johnnysaucepn/subetha</PackageProjectUrl>
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>

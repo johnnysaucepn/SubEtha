@@ -10,6 +10,7 @@
     <RepositoryUrl>https://bitbucket.org/johnnysaucepn/subetha</RepositoryUrl>
     <PackageTags>elite dangerous player journal</PackageTags>
     <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GitVersion_NuGetVersion)' != ''" >
