@@ -1,9 +1,17 @@
-﻿install:
+﻿image: Visual Studio 2017
+
+install:
   - choco install gitversion.portable -pre -y
 
 before_build:
-  - nuget restore src
+  - ps: nuget restore src
   - ps: gitversion /l console /output buildserver /updateAssemblyInfo
 
 build:
   project: src/SubEtha.sln
+
+test:
+  assemblies:
+    only:
+    - '*.Tests.dll'
+    
