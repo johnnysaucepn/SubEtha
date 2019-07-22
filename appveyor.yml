@@ -14,5 +14,5 @@ build:
 test:
   assemblies:
     only:
-    - '*.Tests.dll'
+    - '*.Test.dll'
     
