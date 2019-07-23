@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/25t6x52w4r3gw6vr/branch/master?svg=true)](https://ci.appveyor.com/project/johnnysaucepn/subetha/branch/master)
+
 # README #
 
 ### What is this repository for? ###
