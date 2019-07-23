@@ -2,20 +2,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyCopyrightVersionAttribute>false</GenerateAssemblyCopyrightVersionAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <Version Condition="'$(GitVersion_NuVersion)' != ''">$(GitVersion_NuVersion)</Version>
+    <Version Condition="'$(GitVersion_NuGetVersion)' != ''">$(GitVersion_NuGetVersion)</Version>
     <Company>Howatworks</Company>
-    <Copyright>Copyright (c) 2019 James Howat</Copyright>
+    <Copyright>Copyright (c) $([System.DateTime]::Now.Year) James Howat</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="$(SolutionDir)\VersionAssemblyInfo.cs" Condition="Exists('$(SolutionDir)\VersionAssemblyInfo.cs')">
-      <Link>VersionAssemblyInfo.cs</Link>
-    </Compile>
+    <PackageReference Include="GitVersionTask" Version="5.0.0-beta5.44"  PrivateAssets="All"/>
+    <PackageReference Include="UtilPack.NuGet.MSBuild" Version="2.9.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
