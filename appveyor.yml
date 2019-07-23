@@ -11,8 +11,5 @@ build:
   publish_nuget: true
   project: src/SubEtha.sln
 
-#test:
-#  assemblies:
-#    only:
-#    - '*.Test.dll'
-    
+test_script:
+  - ps: dotnet test src
