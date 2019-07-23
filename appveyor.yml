@@ -10,11 +10,6 @@ build:
 test_script:
   - ps: dotnet test src
 
-deploy:
-- provider: NuGet
-  api_key:
-    secure: ylFO0fIRGkqsQ3S5lf7yCh52Pzmj23LfDyH2Y7za6ByJYj9i4+msaZJuKFbIbVtS
-
 notifications:
 - provider: Email
   to:
