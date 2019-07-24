@@ -2,7 +2,6 @@
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Monitor;
 using log4net;
-using Howatworks.Thumb.Plugin;
 
 namespace Howatworks.Thumb.Core
 {
