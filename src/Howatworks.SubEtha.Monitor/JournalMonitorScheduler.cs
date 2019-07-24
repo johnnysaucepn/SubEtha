@@ -42,11 +42,11 @@ namespace Howatworks.SubEtha.Monitor
             var updateInterval = TimeSpan.Parse(config["UpdateInterval"]);
 
             _triggerUpdate = new Timer(updateInterval.TotalMilliseconds);
-            _triggerUpdate.Elapsed += _triggerUpdate_Elapsed;
+            _triggerUpdate.Elapsed += TriggerUpdate_Elapsed;
             _triggerUpdate.AutoReset = true;
         }
 
-        private void _triggerUpdate_Elapsed(object sender, ElapsedEventArgs e)
+        private void TriggerUpdate_Elapsed(object sender, ElapsedEventArgs e)
         {
             Update(_journalMonitorState.LastRead, BatchMode.Ongoing);
         }
@@ -55,7 +55,7 @@ namespace Howatworks.SubEtha.Monitor
         {
             foreach (var monitor in _journalMonitors)
             {
-                var entries = monitor.Update(lastRead.GetValueOrDefault(DateTimeOffset.MinValue));
+                var entries = monitor.Update(lastRead ?? DateTimeOffset.MinValue);
                 ProcessEntries(entries, batchMode);
             }
         }
@@ -63,7 +63,7 @@ namespace Howatworks.SubEtha.Monitor
         public void Start()
         {
             var firstRun = !_journalMonitorState.LastRead.HasValue;
-            var lastRead = _journalMonitorState.LastRead.GetValueOrDefault(DateTimeOffset.MinValue);
+            var lastRead = _journalMonitorState.LastRead ?? DateTimeOffset.MinValue;
             foreach (var monitor in _journalMonitors)
             {
                 var firstEntries = monitor.Start(firstRun, lastRead);
@@ -96,7 +96,7 @@ namespace Howatworks.SubEtha.Monitor
 
         private void ProcessEntries(IList<IJournalEntry> journalEntries, BatchMode mode)
         {
-            if (!journalEntries.Any()) return;
+            if (journalEntries.Count == 0) return;
 
             JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(journalEntries, mode));
             _journalMonitorState.LastRead = journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp;

@@ -11,7 +11,7 @@ namespace Howatworks.Matrix.InMemory
         [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
         private static long _nextId = 1;
         [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-        private static readonly object _nextIdLock;
+        private static readonly object _nextIdLock = new object();
 
         private readonly Dictionary<long, T> _storage = new Dictionary<long, T>();
 
