@@ -7,10 +7,15 @@
     <Version Condition="'$(GitVersion_NuGetVersion)' != ''">$(GitVersion_NuGetVersion)</Version>
     <Company>Howatworks</Company>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) James Howat</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.0.0-beta5.44"  PrivateAssets="All"/>
+    <None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="GitVersionTask" Version="5.0.0-beta5.44"  PrivateAssets="All" />
     <PackageReference Include="UtilPack.NuGet.MSBuild" Version="2.9.1" PrivateAssets="All" />
   </ItemGroup>
 
