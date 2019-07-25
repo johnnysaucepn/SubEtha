@@ -21,7 +21,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             _client = new HttpClient();
 
-            BaseUri = new Uri(config["Howatworks.Thumb.Plugin.Matrix:ServiceUri"]);
+            BaseUri = new Uri(config["Plugins:Howatworks.Thumb.Plugin.Matrix:ServiceUri"]);
         }
 
         public void Upload(Uri uri, IState state)

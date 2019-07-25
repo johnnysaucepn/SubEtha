@@ -1,10 +1,14 @@
 ﻿{
-  "Howatworks.Thumb.Plugin.Matrix": {
-    "ServiceUri": "https://localhost:44384/Matrix/Service/",
-    "User": "osbyte"
-  },
-  "Howatworks.Thumb.Plugin.Assistant": {
-    "KeyDownTimeMs": "50"
+  "Plugins":
+  {
+    "Howatworks.Thumb.Plugin.Matrix": {
+      "Enabled": true,
+      "ServiceUri": "https://localhost:44384/Matrix/Service/"
+    },
+    "Howatworks.Thumb.Plugin.Assistant": {
+      "Enabled": true,
+      "KeyDownTimeMs": "50"
+    }
   },
   "AudioNotifications": true
 }

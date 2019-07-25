@@ -8,7 +8,6 @@ namespace Howatworks.Thumb.Plugin.Matrix
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixJournalProcessorPlugin));
 
         private readonly IConfiguration _pluginConfig;
-        private readonly string _user;
 
         public LocationManager Location { get; }
         public ShipManager Ship { get; set; }
@@ -16,8 +15,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         public MatrixJournalProcessorPlugin(IConfiguration config, LocationManager location, ShipManager ship, SessionManager session)
         {
-            _pluginConfig = config.GetSection("Howatworks.Thumb.Plugin.Matrix");
-            _user = _pluginConfig["User"];
+            _pluginConfig = config.GetSection("Plugins:Howatworks.Thumb.Plugin.Matrix");
             Location = location;
             Ship = ship;
             Session = session;

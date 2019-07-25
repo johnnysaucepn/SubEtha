@@ -31,7 +31,12 @@ namespace Howatworks.Thumb.Core
             builder.RegisterType<ThumbProcessor>().AsSelf().SingleInstance();
             builder.RegisterType<JournalEntryRouter>().AsSelf().SingleInstance();
 
-            var plugins = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "Howatworks.Thumb.Plugin.*.dll")
+            var enabledPlugins = _config.GetSection("Plugins")
+                .GetChildren()
+                .Where(p => p.GetValue<bool>("Enabled"));
+
+            var plugins = enabledPlugins
+                .SelectMany(e => Directory.EnumerateFiles(Directory.GetCurrentDirectory(), $"{e.Key}.dll"))
                 .Select(Assembly.LoadFile);
 
             builder.RegisterAssemblyModules(plugins.ToArray());

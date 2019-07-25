@@ -9,7 +9,6 @@ namespace Howatworks.Thumb.Core
 {
     public class ThumbConfigBuilder
     {
-        private readonly string _savedGamesPath;
         private readonly string _defaultJournalPath;
         private readonly string _defaultBindingsPath;
 
@@ -17,18 +16,19 @@ namespace Howatworks.Thumb.Core
         {
             // In Windows, we can use the P/Invoke Shell32 package that exposes KnownFolders to retrieve SavedGames directly
 
+            string savedGamesPath;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                _savedGamesPath = Shell32.SHGetKnownFolderPath(PInvoke.Shell32.KNOWNFOLDERID.FOLDERID_SavedGames);
+                savedGamesPath = Shell32.SHGetKnownFolderPath(PInvoke.Shell32.KNOWNFOLDERID.FOLDERID_SavedGames);
             }
             else
             {
-                _savedGamesPath = Path.Combine(
+                savedGamesPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                     "..", "Saved Games"
                     );
             }
-            _defaultJournalPath = Path.Combine(_savedGamesPath, "Frontier Developments", "Elite Dangerous");
+            _defaultJournalPath = Path.Combine(savedGamesPath, "Frontier Developments", "Elite Dangerous");
 
             _defaultBindingsPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
