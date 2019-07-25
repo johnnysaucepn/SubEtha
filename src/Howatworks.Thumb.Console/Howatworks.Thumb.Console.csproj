@@ -20,9 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="journalmonitor.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
