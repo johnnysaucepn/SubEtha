@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 using Autofac;
 using log4net;
-using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAPICodePack.Shell;
 using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Tray
@@ -22,13 +18,13 @@ namespace Howatworks.Thumb.Tray
 
         public ThumbTrayApplicationContext()
         {
-            Application.ApplicationExit += Exit;
+            Application.ApplicationExit += Cleanup;
             InitializeComponent();
         }
 
         private void InitializeComponent()
         {
-            var exitMenuItem = new MenuItem(Resources.ExitLabel, (sender, args) => { Application.Exit(); });
+            var exitMenuItem = new MenuItem(Resources.ExitLabel, (sender, args) => Application.Exit());
 
             // Initialize Tray Icon
             _trayIcon = new NotifyIcon
@@ -41,7 +37,7 @@ namespace Howatworks.Thumb.Tray
 
             _progressHandler = new Progress<DateTimeOffset?>(_ =>
             {
-                var lastChecked = _thumbApp.LastChecked().GetValueOrDefault(DateTimeOffset.UtcNow);
+                var lastChecked = _thumbApp.LastChecked() ?? DateTimeOffset.UtcNow;
                 var lastEntry = _thumbApp.LastEntry();
                 _trayIcon.Text = lastEntry.HasValue
                     ? string.Format(
@@ -51,29 +47,7 @@ namespace Howatworks.Thumb.Tray
                     : Resources.NotifyIconNeverUpdatedLabel;
             });
 
-            // TODO: In tray, we can use the Win32 package that exposes KnownFolders to retrieve SavedGames directly
-            var defaultJournalFolder = Path.Combine(KnownFolders.SavedGames.Path, "Frontier Developments", "Elite Dangerous");
-
-            var defaultBindingsFolder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Frontier Developments", "Elite Dangerous", "Options", "Bindings"
-            );
-
-            var defaultConfig = new Dictionary<string, string>
-            {
-                ["JournalFolder"] = defaultJournalFolder,
-                ["JournalPattern"] = "Journal.*.log",
-                ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json",
-                ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString(),
-                ["BindingsFolder"] = defaultBindingsFolder,
-                ["BindingsFilename"] = "Custom.3.0.binds",
-                ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)"
-            };
-
-            var config = new ConfigurationBuilder()
-                .AddInMemoryCollection(defaultConfig)
-                .AddJsonFile("config.json")
-                .Build();
+            var config = new ThumbConfigBuilder().Build();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
@@ -94,11 +68,10 @@ namespace Howatworks.Thumb.Tray
                 catch (Exception ex)
                 {
                     Log.Error(ex.Message, ex);
-                    Application.Exit();
+                    Cleanup(this, null);
+                    throw;
                 }
             }
-
-
         }
 
         private void UpdateProgress(object state)
@@ -106,7 +79,7 @@ namespace Howatworks.Thumb.Tray
             _progressHandler.Report(_thumbApp.LastEntry());
         }
 
-        private void Exit(object sender, EventArgs e)
+        private void Cleanup(object sender, EventArgs e)
         {
             _thumbApp?.Stop();
             _updateTimer?.Dispose();

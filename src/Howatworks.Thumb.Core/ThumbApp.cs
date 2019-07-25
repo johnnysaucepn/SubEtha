@@ -28,15 +28,9 @@ namespace Howatworks.Thumb.Core
                 if (args == null) return;
                 processor.Apply(args.Entries, args.BatchMode);
             };
-            _monitor.JournalFileWatchingStarted += (sender, args) =>
-            {
-                _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
-            };
+            _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
 
-            _monitor.JournalFileWatchingStopped += (sender, args) =>
-            {
-                _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
-            };
+            _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
 
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var workingFolder = Path.Combine(appDataFolder, "Howatworks", "Thumb");
@@ -67,6 +61,5 @@ namespace Howatworks.Thumb.Core
         {
             return _monitor.LastChecked();
         }
-
     }
 }

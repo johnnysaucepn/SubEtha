@@ -143,6 +143,5 @@ namespace Howatworks.Thumb.Plugin.Matrix
             _ships[discriminator] = newState;
             return true;
         }
-
     }
 }

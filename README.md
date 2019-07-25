@@ -2,7 +2,8 @@
 
 ## SubEtha for Elite: Dangerous
 
-[![Build status](https://ci.appveyor.com/api/projects/status/25t6x52w4r3gw6vr/branch/master?svg=true)](https://ci.appveyor.com/project/johnnysaucepn/subetha/branch/master)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/25t6x52w4r3gw6vr/branch/master?svg=true)](https://ci.appveyor.com/project/johnnysaucepn/subetha/branch/master)
+[![AppVeyor tests](https://img.shields.io/appveyor/tests/johnnysaucepn/subetha.svg)](https://ci.appveyor.com/project/johnnysaucepn/subetha/build/tests)
 
 At its core, this is a set of .NET (Core and Framework) packages and tools for parsing and consuming Elite: Dangerous Player's Journal log events, allowing the creation of new tools for tracking player progress.
 

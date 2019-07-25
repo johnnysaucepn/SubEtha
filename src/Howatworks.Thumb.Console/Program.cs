@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Autofac;
-using Microsoft.Extensions.Configuration;
+﻿using Autofac;
 using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Console
@@ -11,32 +7,7 @@ namespace Howatworks.Thumb.Console
     {
         private static void Main()
         {
-            // TODO: In tray, we can use the Win32 add-on package that extends SpecialFolder to retrieve SavedGames directly
-            var defaultJournalFolder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "..", "Saved Games", "Frontier Developments", "Elite Dangerous"
-            );
-
-            var defaultBindingsFolder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Frontier Developments", "Elite Dangerous", "Options", "Bindings"
-            );
-
-            var defaultConfig = new Dictionary<string, string>
-            {
-                ["JournalFolder"] = defaultJournalFolder,
-                ["JournalPattern"] = "Journal.*.log",
-                ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json",
-                ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString(),
-                ["BindingsFolder"] = defaultBindingsFolder,
-                ["BindingsFilename"] = "Custom.3.0.binds",
-                ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)"
-            };
-
-            var config = new ConfigurationBuilder()
-                .AddInMemoryCollection(defaultConfig)
-                .AddJsonFile("config.json")
-                .Build();
+            var config = new ThumbConfigBuilder().Build();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
@@ -50,7 +21,6 @@ namespace Howatworks.Thumb.Console
                 System.Console.ReadKey();
                 app.Stop();
             }
-
         }
     }
 }
