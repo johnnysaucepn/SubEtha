@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Howatworks.Matrix.EntityFramework.Migrations
 {
     [DbContext(typeof(MatrixDbContext))]
-    [Migration("20190718150053_Initial")]
+    [Migration("20190725103427_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,7 +75,11 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
                     b.Property<string>("SignalSource_Type_Text");
 
-                    b.Property<decimal[]>("StarSystem_Coords");
+                    b.Property<decimal>("StarSystem_Coords_X");
+
+                    b.Property<decimal>("StarSystem_Coords_Y");
+
+                    b.Property<decimal>("StarSystem_Coords_Z");
 
                     b.Property<string>("StarSystem_Name");
 
@@ -261,9 +265,11 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("ProviderKey");
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -294,9 +300,11 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value");
 

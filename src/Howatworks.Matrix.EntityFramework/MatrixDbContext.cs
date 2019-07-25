@@ -1,5 +1,4 @@
-﻿using System;
-using Howatworks.Matrix.Core.Entities;
+﻿using Howatworks.Matrix.Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +12,9 @@ namespace Howatworks.Matrix.EntityFramework
         public DbSet<SessionStateEntity> Sessions { get; set; }
         public DbSet<ShipStateEntity> Ships { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public MatrixDbContext(DbContextOptions options)
+            : base(options)
         {
-            optionsBuilder.UseNpgsql(@"host=localhost;database=Matrix;username=matrix;password=matrix;");
-            optionsBuilder.EnableSensitiveDataLogging();
-            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

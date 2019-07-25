@@ -84,7 +84,9 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     SignalSource_Type_Text = table.Column<string>(nullable: true),
                     SignalSource_Threat = table.Column<int>(nullable: true),
                     StarSystem_Name = table.Column<string>(nullable: true),
-                    StarSystem_Coords = table.Column<decimal[]>(nullable: true),
+                    StarSystem_Coords_X = table.Column<decimal>(nullable: false),
+                    StarSystem_Coords_Y = table.Column<decimal>(nullable: false),
+                    StarSystem_Coords_Z = table.Column<decimal>(nullable: false),
                     Station_Name = table.Column<string>(nullable: true),
                     Station_Type = table.Column<string>(nullable: true),
                     SurfaceLocation_Landed = table.Column<bool>(nullable: true),
@@ -188,8 +190,8 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 schema: "public",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -238,8 +240,8 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

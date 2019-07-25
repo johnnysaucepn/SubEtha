@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
+using Npgsql;
 
 namespace Howatworks.Matrix.Site
 {
@@ -30,7 +32,12 @@ namespace Howatworks.Matrix.Site
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<MatrixDbContext>();
+            services.AddDbContext<MatrixDbContext>(options =>
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                //options.UseInMemoryDatabase("InMemoryDb");
+            });
+
             services.AddDefaultIdentity<MatrixIdentityUser>()
                 .AddEntityFrameworkStores<MatrixDbContext>();
 
@@ -61,6 +68,12 @@ namespace Howatworks.Matrix.Site
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
+            }
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<MatrixDbContext>();
+                context.Database.EnsureCreated();
             }
 
             app.UseHttpsRedirection();
