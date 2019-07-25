@@ -64,9 +64,8 @@ namespace Howatworks.Matrix.Site.Api
             {
                 TimeStamp = entity.TimeStamp,
                 Body = new Body(entity.Body_Name, entity.Body_Type, entity.Body_Docked.GetValueOrDefault(false)),
-                SignalSource =
-                    new SignalSource(new LocalisedString(entity.SignalSource_Type_Symbol, entity.SignalSource_Type_Text), entity.SignalSource_Threat),
-                StarSystem = new StarSystem(entity.StarSystem_Name, entity.StarSystem_Coords),
+                SignalSource = new SignalSource(new LocalisedString(entity.SignalSource_Type_Symbol, entity.SignalSource_Type_Text),entity.SignalSource_Threat),
+                StarSystem = new StarSystem(entity.StarSystem_Name, new[] {entity.StarSystem_Coords_X, entity.StarSystem_Coords_Y, entity.StarSystem_Coords_Z}),
                 Station = new Station(entity.Station_Name, entity.Station_Type),
                 SurfaceLocation = new SurfaceLocation(entity.SurfaceLocation_Landed.GetValueOrDefault(false), entity.SurfaceLocation_Latitude, entity.SurfaceLocation_Longitude)
             };
@@ -87,7 +86,7 @@ namespace Howatworks.Matrix.Site.Api
             {
                 entity?.TimeStamp,
                 Name = entity?.StarSystem_Name,
-                Coords = entity?.StarSystem_Coords
+                Coords = new[] {entity?.StarSystem_Coords_X, entity?.StarSystem_Coords_Y, entity?.StarSystem_Coords_Z}
             };
         }
 
@@ -121,7 +120,9 @@ namespace Howatworks.Matrix.Site.Api
                 TimeStamp = location.TimeStamp,
 
                 StarSystem_Name = location.StarSystem?.Name,
-                StarSystem_Coords = location.StarSystem?.Coords,
+                StarSystem_Coords_X = location.StarSystem?.Coords[0] ?? 0,
+                StarSystem_Coords_Y = location.StarSystem?.Coords[1] ?? 0,
+                StarSystem_Coords_Z = location.StarSystem?.Coords[2] ?? 0,
 
                 Body_Name = location.Body?.Name,
                 Body_Type = location.Body?.Type,

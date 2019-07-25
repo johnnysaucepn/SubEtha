@@ -23,7 +23,9 @@ namespace Howatworks.Matrix.Core.Entities
         public int? SignalSource_Threat { get; set; }
 
         public string StarSystem_Name { get; set; }
-        public decimal[] StarSystem_Coords { get; set; }
+        public decimal StarSystem_Coords_X { get; set; }
+        public decimal StarSystem_Coords_Y { get; set; }
+        public decimal StarSystem_Coords_Z { get; set; }
 
         public string Station_Name { get; set; }
         public string Station_Type { get; set; }
