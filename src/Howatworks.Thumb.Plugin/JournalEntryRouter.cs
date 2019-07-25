@@ -4,7 +4,7 @@ using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Monitor;
 using log4net;
 
-namespace Howatworks.Thumb.Core
+namespace Howatworks.Thumb.Plugin
 {
     public class JournalEntryRouter
     {

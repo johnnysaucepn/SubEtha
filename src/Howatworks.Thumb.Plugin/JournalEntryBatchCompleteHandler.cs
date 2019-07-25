@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Howatworks.Thumb.Core
+namespace Howatworks.Thumb.Plugin
 {
     public class JournalEntryBatchCompleteHandler
     {

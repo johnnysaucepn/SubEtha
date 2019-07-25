@@ -1,4 +1,4 @@
-﻿namespace Howatworks.Thumb.Core
+﻿namespace Howatworks.Thumb.Plugin
 {
     public interface IJournalProcessorPlugin
     {

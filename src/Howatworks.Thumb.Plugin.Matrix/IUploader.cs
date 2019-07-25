@@ -1,5 +1,4 @@
 ﻿using Howatworks.Matrix.Domain;
-using Howatworks.SubEtha.Journal;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {

@@ -20,6 +20,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Howatworks.SubEtha.Monitor\Howatworks.SubEtha.Monitor.csproj" />
     <ProjectReference Include="..\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
+    <ProjectReference Include="..\Howatworks.Thumb.Plugin.Assistant\Howatworks.Thumb.Plugin.Assistant.csproj" />
+    <ProjectReference Include="..\Howatworks.Thumb.Plugin.Matrix\Howatworks.Thumb.Plugin.Matrix.csproj" />
+    <ProjectReference Include="..\Howatworks.Thumb.Plugin\Howatworks.Thumb.Plugin.csproj" />
   </ItemGroup>
 
   <ItemGroup>

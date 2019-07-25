@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Howatworks.Matrix.Domain;
-using Howatworks.SubEtha.Journal;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {

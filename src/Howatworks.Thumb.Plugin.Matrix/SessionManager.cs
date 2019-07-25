@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
-using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {

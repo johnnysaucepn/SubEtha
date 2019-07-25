@@ -1,5 +1,5 @@
 ﻿using System.Media;
-using Howatworks.Thumb.Core;
+using Howatworks.Thumb.Plugin;
 
 namespace Howatworks.Thumb.Tray
 {

@@ -1,6 +1,6 @@
 ﻿using Howatworks.SubEtha.Monitor;
 
-namespace Howatworks.Thumb.Core
+namespace Howatworks.Thumb.Plugin
 {
     public static class BatchPolicy
     {

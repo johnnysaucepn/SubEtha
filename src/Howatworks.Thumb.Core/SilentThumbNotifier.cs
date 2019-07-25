@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using Howatworks.Thumb.Plugin;
+using log4net;
 
 namespace Howatworks.Thumb.Core
 {

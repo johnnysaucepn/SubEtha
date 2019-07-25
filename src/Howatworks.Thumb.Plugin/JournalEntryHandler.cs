@@ -1,7 +1,7 @@
 ﻿using System;
 using Howatworks.SubEtha.Journal;
 
-namespace Howatworks.Thumb.Core
+namespace Howatworks.Thumb.Plugin
 {
     public class JournalEntryHandler
     {
@@ -16,7 +16,7 @@ namespace Howatworks.Thumb.Core
 
         public static JournalEntryHandler Create<T>(Func<T, bool> invocation, IBatchPolicy policy) where T : IJournalEntry
         {
-            return new JournalEntryHandler(x => invocation(x), policy);
+            return new JournalEntryHandler(x => invocation.Invoke(x), policy);
         }
     }
 }
