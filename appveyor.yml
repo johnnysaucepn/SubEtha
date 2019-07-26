@@ -9,6 +9,11 @@ build:
 
 test_script:
   - ps: dotnet test src
+  
+artifacts:
+  - path: '**/*.msi'
+    name: Installers
+    type: file
 
 notifications:
 - provider: Email
