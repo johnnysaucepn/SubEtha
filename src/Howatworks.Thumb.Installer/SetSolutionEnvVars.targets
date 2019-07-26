@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <UsingTask
+    TaskName="SetEnvironmentVariableTask"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+
+    <ParameterGroup>
+      <Name ParameterType="System.String" Required="true" />
+      <Value ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+
+    <Task>
+      <Using Namespace="System" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        Environment.SetEnvironmentVariable(Name, Value, EnvironmentVariableTarget.User);
+      ]]>
+      </Code>
+    </Task>
+
+  </UsingTask>
+
+  <UsingTask
+    TaskName="RemoveEnvironmentVariableTask"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+
+    <ParameterGroup>
+      <Name ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+
+    <Task>
+      <Using Namespace="System" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        Environment.SetEnvironmentVariable(Name, null, EnvironmentVariableTarget.User);
+      ]]>
+      </Code>
+    </Task>
+
+  </UsingTask>
+
+  <Target Name="SetSolutionRoot" BeforeTargets="BeforeBuild">
+    <Message Text="Setting SOLUTIONROOT to '$(SolutionDir)'" Importance="High" />
+    <SetEnvironmentVariableTask Name="SOLUTIONROOT" Value="wibble$(SolutionDir)" />
+  </Target>
+
+  <Target Name="UnsetSolutionRoot" AfterTargets="AfterBuild">
+    <Message Text="Removing SOLUTIONROOT" Importance="High" />
+    <RemoveEnvironmentVariableTask Name="SOLUTIONROOT" />
+  </Target>
+  </Project>

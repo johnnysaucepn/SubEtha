@@ -5,6 +5,7 @@
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <IsTestProject>false</IsTestProject>
+    <ApplicationIcon>Resources\Hitchhiker-Symbol-16.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

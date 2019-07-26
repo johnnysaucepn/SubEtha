@@ -11,9 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="" />
+    <None Include="..\..\LICENSE" Pack="true" Visible="true" PackagePath="">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.0.0-beta5.44"  PrivateAssets="All" />
     <PackageReference Include="UtilPack.NuGet.MSBuild" Version="2.9.1" PrivateAssets="All" />
