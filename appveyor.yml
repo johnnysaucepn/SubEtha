@@ -9,6 +9,9 @@ build:
 
 after_build:
   - ps: dotnet publish src/Howatworks.Matrix.Site
+  
+configuration:
+  - Release
 
 test_script:
   - ps: dotnet test src
