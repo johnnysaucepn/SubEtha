@@ -21,7 +21,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             Log.Info($"Uploading ship state \"{context.GameVersion}\"...");
             Log.Debug(JsonConvert.SerializeObject(state));
 
-            _client.Upload(new Uri($"{context.CommanderName}/{context.GameVersion}/Ship", UriKind.Relative), state);
+            _client.Upload(new Uri($"Api/{context.CommanderName}/{context.GameVersion}/Ship", UriKind.Relative), state);
         }
     }
 }

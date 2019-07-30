@@ -19,7 +19,7 @@ namespace Howatworks.Thumb.Core
             string savedGamesPath;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                savedGamesPath = Shell32.SHGetKnownFolderPath(PInvoke.Shell32.KNOWNFOLDERID.FOLDERID_SavedGames);
+                savedGamesPath = Shell32.SHGetKnownFolderPath(Shell32.KNOWNFOLDERID.FOLDERID_SavedGames);
             }
             else
             {
