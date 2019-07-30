@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Net.Sockets;
 using System.Text;
 using log4net;
 using Microsoft.Extensions.Configuration;
@@ -28,8 +30,19 @@ namespace Howatworks.Thumb.Plugin.Matrix
         {
             var targetUri = uri.IsAbsoluteUri ? uri : new Uri(BaseUri, uri);
 
-            var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
-            Log.Info($"HTTP {response.StatusCode}");
+            try
+            {
+                var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
+                Log.Info($"HTTP {response.StatusCode}");
+            }
+            catch (AggregateException a)
+            {
+                a.Handle(inner =>
+                {
+                    Log.Error("Connection error", inner);
+                    return true;
+                });
+            }
         }
 
         private bool _disposed;
