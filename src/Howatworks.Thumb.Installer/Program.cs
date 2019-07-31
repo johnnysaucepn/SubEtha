@@ -24,8 +24,8 @@ namespace Howatworks.Thumb.Installer
                 new Dir(@"%ProgramFiles%\Howatworks\SubEtha Thumb",
                     new Files(thumbTrayRoot + "*")
                 ),
-                new Dir(@"%Desktop%",
-                    new ExeFileShortcut("Thumb", "[INSTALL_DIR]Howatworks.Thumb.Tray.exe", arguments: "")
+                new Dir("%StartMenu%",
+                    new ExeFileShortcut("SubEtha Thumb", "[INSTALLDIR]Howatworks.Thumb.Tray.exe", arguments: "")
                 )
             )
             {
