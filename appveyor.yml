@@ -7,6 +7,9 @@ build:
   publish_nuget: true
   project: src/SubEtha.sln
 
+after_build:
+  - ps: dotnet publish src/Howatworks.Matrix.Site
+
 test_script:
   - ps: dotnet test src
   
