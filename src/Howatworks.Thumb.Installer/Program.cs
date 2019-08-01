@@ -10,7 +10,7 @@ namespace Howatworks.Thumb.Installer
 #if DEBUG
         private static string Configuration => "Debug";
 #else
-        private static readonly string Configuration => "Release";
+        private static string Configuration => "Release";
 #endif
         private static string TargetNetFramework => "net472";
 
