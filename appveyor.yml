@@ -5,6 +5,7 @@ before_build:
 
 build:
   publish_nuget: true
+  publish_aspnet_core: true
   project: src/SubEtha.sln
 
 test_script:
@@ -14,6 +15,7 @@ artifacts:
   - path: '**/*.msi'
     name: Installers
     type: file
+  - path: 'src/Howatworks.Matrix.Site/**/*.zip'
 
 notifications:
 - provider: Email
