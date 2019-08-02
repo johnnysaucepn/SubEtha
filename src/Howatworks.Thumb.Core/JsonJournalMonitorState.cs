@@ -3,13 +3,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Howatworks.SubEtha.Monitor;
 using log4net;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Howatworks.Thumb.Core
 {
     public class JsonJournalMonitorState : IJournalMonitorState
     {
-        private const string StorageFile = @"journalmonitor.json";
+        private const string StorageFileName = @"journalmonitor.json";
+        private readonly string _storageFilePath;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(JsonJournalMonitorState));
 
@@ -47,8 +49,10 @@ namespace Howatworks.Thumb.Core
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public JsonJournalMonitorState()
+        public JsonJournalMonitorState(IConfiguration config)
         {
+            var folder = config.GetValue<string>("JournalMonitorStateFolder");
+            _storageFilePath = Path.Combine(folder, StorageFileName);
             _state = new Lazy<InMemoryJournalMonitorState>(Load);
         }
 
@@ -56,7 +60,7 @@ namespace Howatworks.Thumb.Core
         {
             try
             {
-                using (var stream = File.OpenRead(StorageFile))
+                using (var stream = File.OpenRead(_storageFilePath))
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
@@ -66,7 +70,7 @@ namespace Howatworks.Thumb.Core
             catch (IOException ex)
             {
                 Log.Warn(ex);
-                return null;
+                return new InMemoryJournalMonitorState();
             }
         }
 
@@ -76,7 +80,7 @@ namespace Howatworks.Thumb.Core
 
             try
             {
-                using (var stream = File.OpenWrite(StorageFile))
+                using (var stream = File.OpenWrite(_storageFilePath))
                 using (var writer = new StreamWriter(stream))
                 {
                     _serializer.Serialize(writer, _state);

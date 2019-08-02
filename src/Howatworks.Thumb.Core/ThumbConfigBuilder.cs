@@ -11,6 +11,7 @@ namespace Howatworks.Thumb.Core
     {
         private readonly string _defaultJournalPath;
         private readonly string _defaultBindingsPath;
+        private readonly string _defaultMonitorPath;
 
         public ThumbConfigBuilder()
         {
@@ -26,13 +27,19 @@ namespace Howatworks.Thumb.Core
                 savedGamesPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                     "..", "Saved Games"
-                    );
+                );
             }
+
             _defaultJournalPath = Path.Combine(savedGamesPath, "Frontier Developments", "Elite Dangerous");
 
             _defaultBindingsPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Frontier Developments", "Elite Dangerous", "Options", "Bindings"
+            );
+
+            _defaultMonitorPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Howatworks", "Thumb"
             );
         }
 
@@ -46,8 +53,9 @@ namespace Howatworks.Thumb.Core
                 ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString(),
                 ["BindingsFolder"] = _defaultBindingsPath,
                 ["BindingsFilename"] = "Custom.3.0.binds",
-                ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)"
-            };
+                ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)",
+                ["JournalMonitorStateFolder"] = _defaultMonitorPath
+        };
 
             var config = new ConfigurationBuilder()
                 .AddInMemoryCollection(defaultConfig)

@@ -7,11 +7,21 @@ build:
   publish_nuget: true
   project: src/SubEtha.sln
 
+after_build:
+  - ps: dotnet publish src/Howatworks.Matrix.Site
+  
 configuration:
   - Release
 
 test_script:
   - ps: dotnet test src
+  
+artifacts:
+  - path: '**/*.msi'
+    name: Installers
+    type: file
+  - path: '**/Artifacts/*.zip'
+    name: ASP.NET Core Apps
 
 notifications:
 - provider: Email

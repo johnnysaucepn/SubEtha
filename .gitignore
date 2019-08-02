@@ -5,3 +5,8 @@ tools/
 packages/
 .vs/
 *.user
+src/Howatworks.Thumb.Installer/Thumb.wixobj
+src/Howatworks.Thumb.Installer/Thumb.wxs
+*.msi
+src/Howatworks.Thumb.Installer/wix/
+src/Howatworks.Matrix.Site/Artifacts/

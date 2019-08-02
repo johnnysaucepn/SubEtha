@@ -1,10 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>aspnet-Howatworks.Matrix.Site-61E1149E-C649-429C-A182-61605C7B569A</UserSecretsId>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Artifacts\**" />
+    <Content Remove="Artifacts\**" />
+    <EmbeddedResource Remove="Artifacts\**" />
+    <None Remove="Artifacts\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
@@ -27,5 +34,13 @@
     <ProjectReference Include="..\Howatworks.Matrix.Domain\Howatworks.Matrix.Domain.csproj" />
     <ProjectReference Include="..\Howatworks.Matrix.EntityFramework\Howatworks.Matrix.EntityFramework.csproj" />
   </ItemGroup>
+
+  <Target Name="ZipPublishArtifacts" AfterTargets="AfterPublish" Condition=" '$(ConfigurationName)' == 'Release' ">
+    <PropertyGroup>
+      <PublishZipFolder>$(ProjectDir)\Artifacts\</PublishZipFolder>
+    </PropertyGroup>
+    <MakeDir Directories="$(PublishZipFolder)" />
+    <ZipDirectory SourceDirectory="$(PublishUrl)" DestinationFile="$(PublishZipFolder)\$(ProjectName)-$(GitVersion_NuGetVersion).zip" />
+  </Target>
 
 </Project>
