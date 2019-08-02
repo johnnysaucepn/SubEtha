@@ -6,7 +6,6 @@ using System.Net.Sockets;
 using System.Text;
 using log4net;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Howatworks.Matrix.Domain;
 
 namespace Howatworks.Thumb.Plugin.Matrix
@@ -32,6 +31,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
             try
             {
+                Log.Info($"Uploading to {targetUri.AbsoluteUri}...");
                 var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
             }

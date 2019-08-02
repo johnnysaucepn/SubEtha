@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Howatworks.Matrix.Domain;
-using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Journal.StationServices;

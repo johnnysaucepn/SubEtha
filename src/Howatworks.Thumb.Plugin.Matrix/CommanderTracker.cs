@@ -25,22 +25,22 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
             router.RegisterFor<Commander>(e =>
             {
-                CommanderName = e.Name;
+                CommanderName = CommanderName ?? e.Name;
                 return true;
             });
             router.RegisterFor<LoadGame>(e =>
             {
-                CommanderName = e.Commander;
+                CommanderName = CommanderName ?? e.Commander;
                 return true;
             });
             router.RegisterFor<ClearSavedGame>(e =>
             {
-                CommanderName = e.Name;
+                CommanderName = CommanderName ?? e.Name;
                 return true;
             });
             router.RegisterFor<NewCommander>(e =>
             {
-                CommanderName = e.Name;
+                CommanderName = CommanderName ?? e.Name;
                 return true;
             });
         }
