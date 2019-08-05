@@ -3,7 +3,7 @@
   {
     "Howatworks.Thumb.Plugin.Matrix": {
       "Enabled": true,
-      "ServiceUri": "https://localhost:44384/"
+      "ServiceUri": "http://matrix.howatworks.com:8084/"
     },
     "Howatworks.Thumb.Plugin.Assistant": {
       "Enabled": true,

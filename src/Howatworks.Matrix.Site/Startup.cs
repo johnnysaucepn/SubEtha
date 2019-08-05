@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
-using Npgsql;
 
 namespace Howatworks.Matrix.Site
 {
@@ -76,7 +75,7 @@ namespace Howatworks.Matrix.Site
                 context.Database.EnsureCreated();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

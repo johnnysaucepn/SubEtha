@@ -26,7 +26,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
