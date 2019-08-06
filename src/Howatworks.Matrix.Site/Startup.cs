@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Text;
+using Howatworks.Matrix.Core;
 using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.EntityFramework;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -45,20 +48,20 @@ namespace Howatworks.Matrix.Site
                 .AddEntityFrameworkStores<MatrixDbContext>();
 
             services.AddAuthentication(options => {
-                    options.DefaultAuthenticateScheme = "JwtBearer";
-                    options.DefaultChallengeScheme = "JwtBearer";
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer("JwtBearer", jwtBearerOptions =>
+                .AddJwtBearer(jwtBearerOptions =>
                 {
                     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your secret goes here")),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenGenerator.Secret)),
 
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         ValidIssuer = "The name of the issuer",
 
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidAudience = "The name of the audience",
 
                         ValidateLifetime = true, //validate the expiration and not before values in the token
@@ -66,6 +69,13 @@ namespace Howatworks.Matrix.Site
                         ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
                     };
                 });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
 
             services.AddMvc()
                 .AddJsonOptions(options =>
