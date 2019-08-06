@@ -1,4 +1,6 @@
-﻿using Howatworks.Matrix.Core.Entities;
+﻿using System;
+using System.Text;
+using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 
 namespace Howatworks.Matrix.Site
@@ -40,6 +43,29 @@ namespace Howatworks.Matrix.Site
 
             services.AddDefaultIdentity<MatrixIdentityUser>()
                 .AddEntityFrameworkStores<MatrixDbContext>();
+
+            services.AddAuthentication(options => {
+                    options.DefaultAuthenticateScheme = "JwtBearer";
+                    options.DefaultChallengeScheme = "JwtBearer";
+                })
+                .AddJwtBearer("JwtBearer", jwtBearerOptions =>
+                {
+                    jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your secret goes here")),
+
+                        ValidateIssuer = true,
+                        ValidIssuer = "The name of the issuer",
+
+                        ValidateAudience = true,
+                        ValidAudience = "The name of the audience",
+
+                        ValidateLifetime = true, //validate the expiration and not before values in the token
+
+                        ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                    };
+                });
 
             services.AddMvc()
                 .AddJsonOptions(options =>
