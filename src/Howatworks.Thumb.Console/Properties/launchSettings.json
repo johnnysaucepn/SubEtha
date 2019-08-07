@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Howatworks.Thumb.Console": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "HOSTINGENVIRONMENT": "vs"
+      }
+    }
+  }
+}
