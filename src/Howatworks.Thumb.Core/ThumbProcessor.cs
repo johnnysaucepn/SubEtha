@@ -35,6 +35,5 @@ namespace Howatworks.Thumb.Core
 
             var batchProcessed = _router.ApplyBatchComplete(mode);
         }
-
     }
 }

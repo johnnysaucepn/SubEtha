@@ -7,6 +7,9 @@ using System.Text;
 using log4net;
 using Microsoft.Extensions.Configuration;
 using Howatworks.Matrix.Domain;
+using System.Collections.Generic;
+using System.Threading;
+using System.Net.Http.Headers;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {
@@ -18,11 +21,35 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private readonly HttpClient _client;
 
+        private readonly Lazy<string> _jwtTokenString;
+
         public HttpUploadClient(IConfiguration config)
         {
             _client = new HttpClient();
 
             BaseUri = new Uri(config["Plugins:Howatworks.Thumb.Plugin.Matrix:ServiceUri"]);
+
+            _jwtTokenString = new Lazy<string>(() =>
+            {
+                var tokenUri = new Uri(BaseUri, "Api/Token");
+                var form = new Dictionary<string, string>
+                {
+                    ["Username"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Username"],
+                    ["Password"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Password"]
+                };
+                var tokenResponse = _client.PostAsync(tokenUri, new FormUrlEncodedContent(form)).Result;
+                if (tokenResponse.IsSuccessStatusCode)
+                {
+                    return tokenResponse.Content.ReadAsStringAsync().Result;
+                }
+                throw new InvalidOperationException("Could not authenticate");
+            }, LazyThreadSafetyMode.PublicationOnly);
+
+            var tokenString = _jwtTokenString.Value;
+            if (_jwtTokenString.IsValueCreated)
+            {
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtTokenString.Value);
+            }
         }
 
         public void Upload(Uri uri, IState state)

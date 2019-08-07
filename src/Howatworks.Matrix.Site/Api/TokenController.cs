@@ -24,16 +24,13 @@ namespace Howatworks.Matrix.Site.Api
         [HttpPost]
         public async Task<IActionResult> Create([FromForm]string username, [FromForm]string password)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(username).ConfigureAwait(false);
             if (user == null)
                 return Forbid();
-            var validUser = await _userManager.CheckPasswordAsync(user, password);
+            var validUser = await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false);
             if (!validUser)
                 return Forbid();
             return new ObjectResult(TokenGenerator.GenerateToken(user.UserName, user.CommanderName ?? ""));
         }
-
-
-
     }
 }
