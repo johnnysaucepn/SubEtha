@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Net.Sockets;
-using System.Text;
 using log4net;
 using Microsoft.Extensions.Configuration;
 using Howatworks.Matrix.Domain;
 using System.Collections.Generic;
-using System.Threading;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {
@@ -19,37 +15,51 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
         private Uri BaseUri { get; }
 
-        private readonly HttpClient _client;
+        private readonly Lazy<HttpClient> _client;
 
-        private readonly Lazy<string> _jwtTokenString;
+        private string _jwtTokenString;
 
         public HttpUploadClient(IConfiguration config)
         {
-            _client = new HttpClient();
-
             BaseUri = new Uri(config["Plugins:Howatworks.Thumb.Plugin.Matrix:ServiceUri"]);
 
-            _jwtTokenString = new Lazy<string>(() =>
+            _client = new Lazy<HttpClient>(() =>
             {
-                var tokenUri = new Uri(BaseUri, "Api/Token");
-                var form = new Dictionary<string, string>
+                var client = new HttpClient();
+                try
                 {
-                    ["Username"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Username"],
-                    ["Password"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Password"]
-                };
-                var tokenResponse = _client.PostAsync(tokenUri, new FormUrlEncodedContent(form)).Result;
+                    _jwtTokenString = GetAuthToken(config, client).Result;
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtTokenString);
+                    return client;
+                }
+                catch (AggregateException a)
+                {
+                    a.Handle(inner =>
+                    {
+                        Log.Error("Connection error", inner);
+                        return true;
+                    });
+                    throw;
+                }
+            });
+        }
+
+        private async Task<string> GetAuthToken(IConfiguration config, HttpClient client)
+        {
+            var tokenUri = new Uri(BaseUri, "Api/Token");
+            var form = new Dictionary<string, string>
+            {
+                ["Username"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Username"],
+                ["Password"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Password"]
+            };
+            using (var tokenResponse = await client.PostAsync(tokenUri, new FormUrlEncodedContent(form)).ConfigureAwait(false))
+            {
                 if (tokenResponse.IsSuccessStatusCode)
                 {
                     return tokenResponse.Content.ReadAsStringAsync().Result;
                 }
-                throw new InvalidOperationException("Could not authenticate");
-            }, LazyThreadSafetyMode.PublicationOnly);
-
-            var tokenString = _jwtTokenString.Value;
-            if (_jwtTokenString.IsValueCreated)
-            {
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtTokenString.Value);
             }
+            throw new InvalidOperationException("Could not authenticate");
         }
 
         public void Upload(Uri uri, IState state)
@@ -59,7 +69,7 @@ namespace Howatworks.Thumb.Plugin.Matrix
             try
             {
                 Log.Info($"Uploading to {targetUri.AbsoluteUri}...");
-                var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
+                var response = _client.Value.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
             }
             catch (AggregateException a)
@@ -86,7 +96,10 @@ namespace Howatworks.Thumb.Plugin.Matrix
 
             if (disposing)
             {
-                _client.Dispose();
+                if (_client.IsValueCreated)
+                {
+                    _client.Value.Dispose();
+                }
             }
 
             _disposed = true;
