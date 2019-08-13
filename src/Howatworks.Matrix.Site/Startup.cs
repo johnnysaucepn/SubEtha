@@ -3,12 +3,14 @@ using System.Text;
 using Howatworks.Matrix.Core;
 using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.EntityFramework;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -55,25 +57,23 @@ namespace Howatworks.Matrix.Site
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenGenerator.Secret)),
-
                         ValidateIssuer = false,
-                        ValidIssuer = "The name of the issuer",
-
                         ValidateAudience = false,
-                        ValidAudience = "The name of the audience",
-
                         ValidateLifetime = true, //validate the expiration and not before values in the token
-
                         ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
                     };
                 });
 
-            /*services.AddAuthorization(auth =>
+            services.AddAuthorization(auth =>
             {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser().Build());
-            });*/
+                auth.AddPolicy("ApiPolicy", policy =>
+                {
+                    policy.AuthenticationSchemes.Add(IdentityConstants.ApplicationScheme);
+                    policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                    //policy.RequireClaim("CommanderName");
+                });
+            });
 
             services.AddMvc()
                 .AddJsonOptions(options =>
