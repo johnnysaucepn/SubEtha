@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Howatworks.Matrix.Core;
 using Howatworks.Matrix.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace Howatworks.Matrix.Site.Api
     //[Route("Api/[controller]")]
     [Route("Api")]
     [ApiController]
+    [AllowAnonymous]
     public class TokenController : ControllerBase
     {
         private readonly UserManager<MatrixIdentityUser> _userManager;

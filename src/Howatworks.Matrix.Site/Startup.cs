@@ -47,10 +47,8 @@ namespace Howatworks.Matrix.Site
             services.AddDefaultIdentity<MatrixIdentityUser>()
                 .AddEntityFrameworkStores<MatrixDbContext>();
 
-            services.AddAuthentication(options => {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+            services.AddAuthentication()
+                .AddCookie(options => options.SlidingExpiration = true)
                 .AddJwtBearer(jwtBearerOptions =>
                 {
                     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
@@ -70,12 +68,12 @@ namespace Howatworks.Matrix.Site
                     };
                 });
 
-            services.AddAuthorization(auth =>
+            /*services.AddAuthorization(auth =>
             {
                 auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser().Build());
-            });
+            });*/
 
             services.AddMvc()
                 .AddJsonOptions(options =>

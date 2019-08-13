@@ -5,6 +5,7 @@ using Howatworks.Matrix.Core.Extensions;
 using Howatworks.Matrix.Core.Repositories;
 using Howatworks.Matrix.Domain;
 using log4net;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ using Newtonsoft.Json;
 namespace Howatworks.Matrix.Site.Api
 {
     [Route("Api")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class LocationController : Controller
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(LocationController));
