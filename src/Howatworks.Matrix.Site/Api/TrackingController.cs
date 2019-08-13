@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
 using Howatworks.Matrix.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Howatworks.Matrix.Site.Api
 {
     [Route("Api")]
+    [Authorize(Policy = "ApiPolicy")]
     public class TrackingController : Controller
     {
         private readonly ISessionEntityRepository _sessionRepoz;

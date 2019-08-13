@@ -4,12 +4,14 @@ using System.Linq;
 using Howatworks.Matrix.Core.Entities;
 using Howatworks.Matrix.Core.Repositories;
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Howatworks.Matrix.Site.Api
 {
     [Route("Api")]
+    [Authorize(Policy = "ApiPolicy")]
     public class GroupController : Controller
     {
         [SuppressMessage("ReSharper", "UnusedMember.Local")]

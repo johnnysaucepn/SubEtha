@@ -7,6 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="appsettings.vs.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.vs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
@@ -23,12 +37,6 @@
     <ProjectReference Include="..\Howatworks.Thumb.Plugin.Assistant\Howatworks.Thumb.Plugin.Assistant.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Plugin.Matrix\Howatworks.Thumb.Plugin.Matrix.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Plugin\Howatworks.Thumb.Plugin.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

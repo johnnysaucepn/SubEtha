@@ -56,10 +56,11 @@ namespace Howatworks.Thumb.Core
                 ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)",
                 ["JournalMonitorStateFolder"] = _defaultMonitorPath
         };
-
+            var env = Environment.GetEnvironmentVariable("HOSTINGENVIRONMENT");
             var config = new ConfigurationBuilder()
                 .AddInMemoryCollection(defaultConfig)
-                .AddJsonFile("config.json")
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env}.json", true)
                 .Build();
 
             return config;

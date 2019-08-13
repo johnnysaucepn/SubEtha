@@ -5,7 +5,7 @@
 @{
     ViewData["Title"] = "Location";
     var user = await UserManager.GetUserAsync(User);
-    var commanderName = "Osbyte";//user?.CommanderName;
+    var commanderName = user?.CommanderName;
 }
 
 @section Scripts
