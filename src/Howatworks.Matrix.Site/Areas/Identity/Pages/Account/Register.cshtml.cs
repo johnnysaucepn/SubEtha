@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Howatworks.Matrix.Core.Entities;
+using Howatworks.Matrix.EntityFramework;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +17,20 @@ namespace Howatworks.Matrix.Site.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        private readonly MatrixDbContext _dbContext;
         private readonly SignInManager<MatrixIdentityUser> _signInManager;
         private readonly UserManager<MatrixIdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+            MatrixDbContext dbContext,
             UserManager<MatrixIdentityUser> userManager,
             SignInManager<MatrixIdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _dbContext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -77,6 +81,11 @@ namespace Howatworks.Matrix.Site.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // Always register new commanders with the default group
+                    var defaultGroup = await _dbContext.Groups.FindAsync(Group.DefaultGroupName);
+                    _dbContext.CommanderGroups.Add(new CommanderGroup {CommanderName = Input.CommanderName, Group = defaultGroup});
+                    await _dbContext.SaveChangesAsync();
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Page(
