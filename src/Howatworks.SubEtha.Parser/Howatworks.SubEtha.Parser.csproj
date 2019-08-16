@@ -9,7 +9,7 @@
     <Authors>James Howat</Authors>
     <PackageProjectUrl>https://github.com/johnnysaucepn/SubEtha</PackageProjectUrl>
     <RepositoryUrl>https://github.com/johnnysaucepn/SubEtha</RepositoryUrl>
-    <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
+    <Configurations>Debug;Release</Configurations>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
