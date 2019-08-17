@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Howatworks.Matrix.Core.Entities;
+using Howatworks.Matrix.Core.Repositories;
 using Howatworks.Matrix.EntityFramework;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -22,19 +24,22 @@ namespace Howatworks.Matrix.Site.Areas.Identity.Pages.Account
         private readonly UserManager<MatrixIdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IGroupRepository _groupRepo;
 
         public RegisterModel(
             MatrixDbContext dbContext,
             UserManager<MatrixIdentityUser> userManager,
             SignInManager<MatrixIdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IGroupRepository groupRepo)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _groupRepo = groupRepo;
         }
 
         [BindProperty]
@@ -83,7 +88,7 @@ namespace Howatworks.Matrix.Site.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     // Always register new commanders with the default group
-                    var defaultGroup = await _dbContext.Groups.FindAsync(Group.DefaultGroupName);
+                    var defaultGroup = _groupRepo.GetDefaultGroup();
                     _dbContext.CommanderGroups.Add(new CommanderGroup {CommanderName = Input.CommanderName, Group = defaultGroup});
                     await _dbContext.SaveChangesAsync();
 
