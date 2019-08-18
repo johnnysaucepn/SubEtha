@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Howatworks.Thumb.Forms;
 
 namespace Howatworks.Thumb.Tray
 {

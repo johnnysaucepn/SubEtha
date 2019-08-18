@@ -1,15 +1,16 @@
 using Autofac;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Plugin;
+using Howatworks.Thumb.Tray;
 using Microsoft.Extensions.Configuration;
 
-namespace Howatworks.Thumb.Tray
+namespace Howatworks.Thumb.Forms
 {
-    public class ThumbTrayModule : Module
+    public class ThumbFormsModule : Module
     {
         private readonly IConfiguration _config;
 
-        public ThumbTrayModule(IConfiguration config)
+        public ThumbFormsModule(IConfiguration config)
         {
             _config = config;
         }

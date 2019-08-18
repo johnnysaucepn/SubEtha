@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
 using Autofac;
-using log4net;
 using Howatworks.Thumb.Core;
+using log4net;
 
-namespace Howatworks.Thumb.Tray
+namespace Howatworks.Thumb.Forms
 {
-    internal class ThumbTrayApplicationContext : ApplicationContext
+    public class ThumbTrayApplicationContext : ApplicationContext
     {
         private NotifyIcon _trayIcon;
         private ThumbApp _thumbApp;
@@ -51,7 +51,7 @@ namespace Howatworks.Thumb.Tray
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
-            builder.RegisterModule(new ThumbTrayModule(config));
+            builder.RegisterModule(new ThumbFormsModule(config));
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())

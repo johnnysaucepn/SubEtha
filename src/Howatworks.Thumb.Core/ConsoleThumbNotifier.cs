@@ -1,6 +1,6 @@
 ﻿using Howatworks.Thumb.Plugin;
 
-namespace Howatworks.Thumb.Console
+namespace Howatworks.Thumb.Core
 {
     public class ConsoleThumbNotifier : IThumbNotifier
     {

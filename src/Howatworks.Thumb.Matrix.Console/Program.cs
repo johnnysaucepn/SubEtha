@@ -1,7 +1,8 @@
 ﻿using Autofac;
+using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
 
-namespace Howatworks.Thumb.Console
+namespace Howatworks.Thumb.Matrix.Console
 {
     internal static class Program
     {
