@@ -10,3 +10,5 @@ src/Howatworks.Thumb.Installer/Thumb.wxs
 *.msi
 src/Howatworks.Thumb.Installer/wix/
 src/Howatworks.Matrix.Site/Artifacts/
+*.wixobj
+*.wxs
