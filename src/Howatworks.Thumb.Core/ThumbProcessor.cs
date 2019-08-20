@@ -10,13 +10,18 @@ namespace Howatworks.Thumb.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ThumbProcessor));
 
+        private readonly IEnumerable<IJournalProcessorPlugin> _plugins;
         private readonly JournalEntryRouter _router;
 
         public ThumbProcessor(IEnumerable<IJournalProcessorPlugin> plugins, JournalEntryRouter router)
         {
+            _plugins = plugins;
             _router = router;
+        }
 
-            foreach (var plugin in plugins)
+        public void Startup()
+        {
+            foreach (var plugin in _plugins)
             {
                 plugin.Startup();
             }

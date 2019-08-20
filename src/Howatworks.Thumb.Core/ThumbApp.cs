@@ -41,6 +41,8 @@ namespace Howatworks.Thumb.Core
             GlobalContext.Properties["logfolder"] = logFolder;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+
+            processor.Startup();
         }
 
         public void Start()

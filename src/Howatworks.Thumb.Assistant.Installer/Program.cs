@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using WixSharp;
 
-namespace Howatworks.Thumb.Installer
+namespace Howatworks.Thumb.Assistant.Installer
 {
     internal static class Program
     {
@@ -18,19 +18,19 @@ namespace Howatworks.Thumb.Installer
         {
             var currentFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
             var root = Path.GetFullPath(Path.Combine(currentFolder, @"..\..\..\..\"));
-            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Tray\bin\{Configuration}\{TargetNetFramework}\");
+            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Assistant\bin\{Configuration}\{TargetNetFramework}\");
 
-            var project = new ManagedProject("SubEtha Thumb",
-                new Dir(@"%ProgramFiles%\Howatworks\SubEtha Thumb",
+            var project = new ManagedProject("SubEtha Thumb Assistant",
+                new Dir(@"%ProgramFiles%\Howatworks\SubEtha Thumb Assistant",
                     new Files(thumbTrayRoot + "*")
                 ),
                 new Dir("%StartMenu%",
-                    new ExeFileShortcut("SubEtha Thumb", "[INSTALLDIR]Howatworks.Thumb.Tray.exe", arguments: "")
+                    new ExeFileShortcut("SubEtha Thumb Assistant", "[INSTALLDIR]Howatworks.Thumb.Assistant.exe", arguments: "")
                 )
             )
             {
                 Platform = Platform.x64,
-                GUID = new Guid("6fe30b47-2577-43ad-9095-1861ba25889b"),
+                GUID = new Guid("ff2b008b-9c7b-4965-bc02-7c72c66400cb"),
                 ManagedUI = ManagedUI.Default,
                 LicenceFile = Path.Combine(thumbTrayRoot, "LICENSE"),
                 OutDir = "Artifacts",
@@ -39,7 +39,7 @@ namespace Howatworks.Thumb.Installer
                     Manufacturer = "Howatworks"
                 },
                 Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
-                OutFileName = "SubEthaThumb"
+                OutFileName = "SubEthaThumbAssistant"
             };
 
             project.Load += Msi_Load;

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
+using Howatworks.Thumb.Plugin.Matrix;
 
 namespace Howatworks.Thumb.Matrix.Console
 {
@@ -13,6 +14,7 @@ namespace Howatworks.Thumb.Matrix.Console
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbConsoleModule(config));
+            builder.RegisterModule(new MatrixPluginModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())

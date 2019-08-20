@@ -38,10 +38,9 @@ Task("Package")
             Zip(projectDetails.OutputPath, zipName, files);
         });
 
-        packageApp("src/Howatworks.Matrix.Service/Howatworks.Matrix.Service.csproj", "Howatworks.Matrix.Service.zip");
         packageApp("src/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", "Howatworks.Matrix.Site.zip");
-        packageApp("src/Howatworks.Thumb.Console/Howatworks.Thumb.Console.csproj", "Howatworks.Thumb.Console.zip");
-        packageApp("src/Howatworks.Thumb.Tray/Howatworks.Thumb.Tray.csproj", "Howatworks.Thumb.Tray.zip");
+        packageApp("src/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj", "Howatworks.Thumb.Assistant.Console.zip");
+        packageApp("src/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj", "Howatworks.Thumb.Matrix.Console.zip");        
 
     });
 
@@ -66,13 +65,16 @@ Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
     {
-        var testSettings = new XUnit2Settings {
-            HtmlReport = true,
-            OutputDirectory = "./TestResults"
-    };
+        var testSettings = new DotNetCoreTestSettings {
 
-    CreateDirectory(testSettings.OutputDirectory);
-        XUnit2(GetFiles("**/bin/**/*Test.dll"), testSettings);
+            OutputDirectory = "./TestResults"
+        };
+
+        CreateDirectory(testSettings.OutputDirectory);
+        foreach(var project in GetFiles("**/bin/**/*Test.csproj"))
+        {
+            DotNetCoreTest(project.FullPath, testSettings);
+        }
     });
 
 Task("Default")

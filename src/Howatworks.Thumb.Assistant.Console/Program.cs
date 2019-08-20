@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
+using Howatworks.Thumb.Plugin.Assistant;
 
 namespace Howatworks.Thumb.Assistant.Console
 {
@@ -13,6 +14,7 @@ namespace Howatworks.Thumb.Assistant.Console
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbConsoleModule(config));
+            builder.RegisterModule(new AssistantPluginModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())

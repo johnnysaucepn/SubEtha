@@ -6,9 +6,6 @@
     <Configurations>Debug;Release</Configurations>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Artifacts\**" />
     <Compile Remove="wix\**" />
@@ -23,8 +20,5 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>

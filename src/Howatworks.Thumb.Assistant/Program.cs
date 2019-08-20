@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
+using Autofac;
+using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Forms;
 
-namespace Howatworks.Thumb.Tray
+namespace Howatworks.Thumb.Assistant
 {
     internal static class Program
     {
@@ -15,7 +17,14 @@ namespace Howatworks.Thumb.Tray
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var context = new ThumbTrayApplicationContext();
+            var config = new ThumbConfigBuilder().Build();
+
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new ThumbCoreModule(config));
+            builder.RegisterModule(new ThumbFormsModule(config));
+            var container = builder.Build();
+
+            var context = new ThumbTrayApplicationContext(container);
             Application.Run(context);
         }
     }

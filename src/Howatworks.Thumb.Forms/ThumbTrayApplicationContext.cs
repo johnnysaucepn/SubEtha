@@ -8,6 +8,7 @@ namespace Howatworks.Thumb.Forms
 {
     public class ThumbTrayApplicationContext : ApplicationContext
     {
+        private readonly IContainer _container;
         private NotifyIcon _trayIcon;
         private ThumbApp _thumbApp;
 
@@ -16,8 +17,9 @@ namespace Howatworks.Thumb.Forms
 
         private System.Threading.Timer _updateTimer;
 
-        public ThumbTrayApplicationContext()
+        public ThumbTrayApplicationContext(IContainer container)
         {
+            _container = container;
             Application.ApplicationExit += Cleanup;
             InitializeComponent();
         }
@@ -47,14 +49,7 @@ namespace Howatworks.Thumb.Forms
                     : Resources.NotifyIconNeverUpdatedLabel;
             });
 
-            var config = new ThumbConfigBuilder().Build();
-
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new ThumbCoreModule(config));
-            builder.RegisterModule(new ThumbFormsModule(config));
-            var container = builder.Build();
-
-            using (var scope = container.BeginLifetimeScope())
+            using (var scope = _container.BeginLifetimeScope())
             {
                 try
                 {
