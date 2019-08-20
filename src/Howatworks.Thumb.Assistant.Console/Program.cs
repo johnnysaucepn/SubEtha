@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+using System.IO;
+using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Plugin.Assistant;
@@ -9,7 +11,11 @@ namespace Howatworks.Thumb.Assistant.Console
     {
         private static void Main()
         {
-            var config = new ThumbConfigBuilder().Build();
+            var appStoragePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Howatworks", "Thumb", "Assistant"
+            );
+            var config = new ThumbConfigBuilder(appStoragePath).Build();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));

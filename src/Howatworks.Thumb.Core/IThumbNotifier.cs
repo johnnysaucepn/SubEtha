@@ -1,4 +1,4 @@
-﻿namespace Howatworks.Thumb.Plugin
+﻿namespace Howatworks.Thumb.Core
 {
     public interface IThumbNotifier
     {

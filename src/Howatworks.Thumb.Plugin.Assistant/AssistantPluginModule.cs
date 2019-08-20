@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Plugin.Assistant.ControlSimulators;
 
 namespace Howatworks.Thumb.Plugin.Assistant

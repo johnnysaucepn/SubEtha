@@ -9,12 +9,13 @@ namespace Howatworks.Thumb.Core
 {
     public class ThumbConfigBuilder
     {
+        private readonly string _defaultAppStoragePath;
         private readonly string _defaultJournalPath;
         private readonly string _defaultBindingsPath;
-        private readonly string _defaultMonitorPath;
 
-        public ThumbConfigBuilder()
+        public ThumbConfigBuilder(string defaultAppStoragePath)
         {
+            _defaultAppStoragePath = defaultAppStoragePath;
             // In Windows, we can use the P/Invoke Shell32 package that exposes KnownFolders to retrieve SavedGames directly
 
             string savedGamesPath;
@@ -36,11 +37,6 @@ namespace Howatworks.Thumb.Core
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Frontier Developments", "Elite Dangerous", "Options", "Bindings"
             );
-
-            _defaultMonitorPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Howatworks", "Thumb"
-            );
         }
 
         public IConfiguration Build()
@@ -54,7 +50,7 @@ namespace Howatworks.Thumb.Core
                 ["BindingsFolder"] = _defaultBindingsPath,
                 ["BindingsFilename"] = "Custom.3.0.binds",
                 ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)",
-                ["JournalMonitorStateFolder"] = _defaultMonitorPath
+                ["JournalMonitorStateFolder"] = _defaultAppStoragePath
         };
             var env = Environment.GetEnvironmentVariable("HOSTINGENVIRONMENT");
             var config = new ConfigurationBuilder()

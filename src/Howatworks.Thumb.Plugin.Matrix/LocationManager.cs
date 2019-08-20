@@ -5,6 +5,7 @@ using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Other;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Travel;
+using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Plugin.Matrix
 {

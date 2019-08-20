@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Monitor;
-using Howatworks.Thumb.Plugin;
 using log4net;
 
 namespace Howatworks.Thumb.Core

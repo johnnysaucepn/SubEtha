@@ -1,10 +1,6 @@
-﻿using System.IO;
-using System.Linq;
-using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
-using Howatworks.Thumb.Plugin;
 using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Core

@@ -1,7 +1,7 @@
 ﻿using System.Media;
-using Howatworks.Thumb.Plugin;
+using Howatworks.Thumb.Core;
 
-namespace Howatworks.Thumb.Tray
+namespace Howatworks.Thumb.Forms
 {
     public class WindowsThumbNotifier : IThumbNotifier
     {

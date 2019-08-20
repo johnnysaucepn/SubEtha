@@ -1,4 +1,4 @@
-﻿using Howatworks.Thumb.Plugin;
+﻿using Howatworks.Thumb.Core;
 
 namespace Howatworks.Thumb.Console
 {

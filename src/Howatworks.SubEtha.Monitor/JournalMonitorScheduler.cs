@@ -48,7 +48,7 @@ namespace Howatworks.SubEtha.Monitor
 
         private void TriggerUpdate_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Update(_journalMonitorState.LastRead, BatchMode.Ongoing);
+            Update(_journalMonitorState.LastEntrySeen, BatchMode.Ongoing);
         }
 
         private void Update(DateTimeOffset? lastRead, BatchMode batchMode)
@@ -62,8 +62,8 @@ namespace Howatworks.SubEtha.Monitor
 
         public void Start()
         {
-            var firstRun = !_journalMonitorState.LastRead.HasValue;
-            var lastRead = _journalMonitorState.LastRead ?? DateTimeOffset.MinValue;
+            var firstRun = !_journalMonitorState.LastEntrySeen.HasValue;
+            var lastRead = _journalMonitorState.LastEntrySeen ?? DateTimeOffset.MinValue;
             foreach (var monitor in _journalMonitors)
             {
                 var firstEntries = monitor.Start(firstRun, lastRead);
@@ -78,7 +78,7 @@ namespace Howatworks.SubEtha.Monitor
             _triggerUpdate.Enabled = false;
 
             // One last run
-            var lastRead = _journalMonitorState.LastRead;
+            var lastRead = _journalMonitorState.LastEntrySeen;
             Update(lastRead, BatchMode.Ongoing);
 
             _triggerUpdate.Dispose();
@@ -86,7 +86,7 @@ namespace Howatworks.SubEtha.Monitor
 
         public DateTimeOffset? LastEntry()
         {
-            return _journalMonitorState.LastRead;
+            return _journalMonitorState.LastEntrySeen;
         }
 
         public DateTimeOffset? LastChecked()
@@ -99,8 +99,7 @@ namespace Howatworks.SubEtha.Monitor
             if (journalEntries.Count == 0) return;
 
             JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(journalEntries, mode));
-            _journalMonitorState.LastRead = journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp;
-            _journalMonitorState.LastChecked = DateTimeOffset.UtcNow;
+            _journalMonitorState.Update(DateTimeOffset.UtcNow, journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp);
         }
 
         public void Dispose()

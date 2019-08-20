@@ -1,7 +1,7 @@
 ﻿using System;
 using Howatworks.SubEtha.Journal;
 
-namespace Howatworks.Thumb.Plugin
+namespace Howatworks.Thumb.Core
 {
     public class JournalEntryHandler
     {

@@ -22,31 +22,9 @@ namespace Howatworks.Thumb.Core
 
         private Lazy<InMemoryJournalMonitorState> _state;
 
-        /// <summary>
-        /// Update the internal representation and save
-        /// </summary>
-        public DateTimeOffset? LastRead
-        {
-            get => _state.Value.LastRead;
-            set
-            {
-                _state.Value.LastRead = value;
-                Save();
-            }
-        }
+        public DateTimeOffset? LastEntrySeen => _state.Value.LastEntrySeen;
 
-        /// <summary>
-        /// Update the internal representation and save
-        /// </summary>
-        public DateTimeOffset? LastChecked
-        {
-            get => _state.Value.LastChecked;
-            set
-            {
-                _state.Value.LastChecked = value;
-                Save();
-            }
-        }
+        public DateTimeOffset? LastChecked => _state.Value.LastChecked;
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public JsonJournalMonitorState(IConfiguration config)
@@ -54,6 +32,15 @@ namespace Howatworks.Thumb.Core
             var folder = config.GetValue<string>("JournalMonitorStateFolder");
             _storageFilePath = Path.Combine(folder, StorageFileName);
             _state = new Lazy<InMemoryJournalMonitorState>(Load);
+        }
+
+        /// <summary>
+        /// Update the internal representation and save
+        /// </summary>
+        public void Update(DateTimeOffset lastChecked, DateTimeOffset lastEntrySeen)
+        {
+            _state.Value.Update(lastChecked, lastEntrySeen);
+            Save();
         }
 
         private InMemoryJournalMonitorState Load()
@@ -80,16 +67,16 @@ namespace Howatworks.Thumb.Core
 
             try
             {
+                Directory.GetParent(_storageFilePath).Create();
                 using (var stream = File.OpenWrite(_storageFilePath))
                 using (var writer = new StreamWriter(stream))
                 {
-                    _serializer.Serialize(writer, _state);
+                    _serializer.Serialize(writer, _state.Value);
                 }
             }
             catch (IOException ex)
             {
                 Log.Warn(ex);
-                _state = null;
             }
         }
     }

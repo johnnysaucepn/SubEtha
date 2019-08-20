@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Autofac;
 using Howatworks.SubEtha.Bindings;
+using Howatworks.Thumb.Core;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

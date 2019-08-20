@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Howatworks.SubEtha.Monitor;
-using Howatworks.Thumb.Plugin;
 using log4net;
 using log4net.Config;
 
