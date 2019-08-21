@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Autofac;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Forms;
+using Howatworks.Thumb.Matrix.Core;
 
 namespace Howatworks.Thumb.Matrix
 {
@@ -27,10 +28,19 @@ namespace Howatworks.Thumb.Matrix
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbFormsModule(config));
+            builder.RegisterModule(new MatrixPluginModule());
             var container = builder.Build();
 
-            var context = new ThumbTrayApplicationContext(container);
-            Application.Run(context);
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var matrixApp = scope.Resolve<MatrixJournalProcessorPlugin>();
+                matrixApp.Startup();
+
+                var thumbApp = scope.Resolve<ThumbApp>();
+
+                var context = new ThumbTrayApplicationContext(thumbApp);
+                Application.Run(context);
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ using System.IO;
 using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
-using Howatworks.Thumb.Plugin.Matrix;
+using Howatworks.Thumb.Matrix.Core;
 
 namespace Howatworks.Thumb.Matrix.Console
 {
@@ -25,10 +25,13 @@ namespace Howatworks.Thumb.Matrix.Console
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var app = scope.Resolve<ThumbApp>();
-                app.Start();
+                var matrixApp = scope.Resolve<MatrixJournalProcessorPlugin>();
+                matrixApp.Startup();
+
+                var thumbApp = scope.Resolve<ThumbApp>();
+                thumbApp.Start();
                 System.Console.ReadKey();
-                app.Stop();
+                thumbApp.Stop();
             }
         }
     }

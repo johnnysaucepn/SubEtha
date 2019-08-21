@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Autofac;
 using Howatworks.Thumb.Core;
 using log4net;
 
@@ -8,18 +7,17 @@ namespace Howatworks.Thumb.Forms
 {
     public class ThumbTrayApplicationContext : ApplicationContext
     {
-        private readonly IContainer _container;
         private NotifyIcon _trayIcon;
-        private ThumbApp _thumbApp;
+        private readonly ThumbApp _thumbApp;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ThumbTrayApplicationContext));
         private IProgress<DateTimeOffset?> _progressHandler;
 
         private System.Threading.Timer _updateTimer;
 
-        public ThumbTrayApplicationContext(IContainer container)
+        public ThumbTrayApplicationContext(ThumbApp thumbApp)
         {
-            _container = container;
+            _thumbApp = thumbApp;
             Application.ApplicationExit += Cleanup;
             InitializeComponent();
         }
@@ -49,23 +47,19 @@ namespace Howatworks.Thumb.Forms
                     : Resources.NotifyIconNeverUpdatedLabel;
             });
 
-            using (var scope = _container.BeginLifetimeScope())
+            try
             {
-                try
-                {
-                    _thumbApp = scope.Resolve<ThumbApp>();
-                    _progressHandler.Report(null);
+                _progressHandler.Report(null);
 
-                    _updateTimer = new System.Threading.Timer(UpdateProgress, null, 0, 10000);
+                _updateTimer = new System.Threading.Timer(UpdateProgress, null, 0, 10000);
 
-                    _thumbApp?.Start();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.Message, ex);
-                    Cleanup(this, null);
-                    throw;
-                }
+                _thumbApp?.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+                Cleanup(this, null);
+                throw;
             }
         }
 

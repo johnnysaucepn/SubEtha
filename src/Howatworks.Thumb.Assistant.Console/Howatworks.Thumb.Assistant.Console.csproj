@@ -10,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Howatworks.Thumb.Assistant.Core\Howatworks.Thumb.Assistant.Core.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Console\Howatworks.Thumb.Console.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
-    <ProjectReference Include="..\Howatworks.Thumb.Plugin.Assistant\Howatworks.Thumb.Plugin.Assistant.csproj" />
   </ItemGroup>
 
   <ItemGroup>

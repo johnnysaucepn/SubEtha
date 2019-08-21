@@ -12,7 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Howatworks.Thumb.Console\Howatworks.Thumb.Console.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
-    <ProjectReference Include="..\Howatworks.Thumb.Plugin.Matrix\Howatworks.Thumb.Plugin.Matrix.csproj" />
+    <ProjectReference Include="..\Howatworks.Thumb.Matrix.Core\Howatworks.Thumb.Matrix.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

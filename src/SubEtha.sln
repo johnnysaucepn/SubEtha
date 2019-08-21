@@ -27,12 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Matrix.Core", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Matrix.Domain", "Howatworks.Matrix.Domain\Howatworks.Matrix.Domain.csproj", "{E34441AE-6D23-4722-87EA-8247C820D2E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Plugin.Matrix", "Howatworks.Thumb.Plugin.Matrix\Howatworks.Thumb.Plugin.Matrix.csproj", "{ECE7740C-E4C6-433F-B829-DB16BC238527}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Plugin.Assistant.Test", "Howatworks.Thumb.Plugin.Assistant.Test\Howatworks.Thumb.Plugin.Assistant.Test.csproj", "{6559D314-04BF-455B-AB09-E18449C58589}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Plugin.Assistant", "Howatworks.Thumb.Plugin.Assistant\Howatworks.Thumb.Plugin.Assistant.csproj", "{51D58D45-64DE-4388-8735-2744EB0CE320}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal.Scan", "Howatworks.SubEtha.Journal.Scan\Howatworks.SubEtha.Journal.Scan.csproj", "{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.CodeGen", "Howatworks.SubEtha.Bindings.CodeGen\Howatworks.SubEtha.Bindings.CodeGen.csproj", "{B4B30D01-F97A-403E-A2A1-D211334EDF88}"
@@ -66,12 +60,24 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant", "Howatworks.Thumb.Assistant\Howatworks.Thumb.Assistant.csproj", "{64FE269D-5C76-4FE3-AF69-9A004D99AFAB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Installer", "Howatworks.Thumb.Assistant.Installer\Howatworks.Thumb.Assistant.Installer.csproj", "{5AE3A210-AB4B-41C7-8AD2-91DF8ADBFB79}"
+	ProjectSection(ProjectDependencies) = postProject
+		{64FE269D-5C76-4FE3-AF69-9A004D99AFAB} = {64FE269D-5C76-4FE3-AF69-9A004D99AFAB}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Installer", "Howatworks.Thumb.Matrix.Installer\Howatworks.Thumb.Matrix.Installer.csproj", "{C490A400-5185-440C-9427-A793CA7A8840}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D2858931-74E5-4943-9F46-E207318C9592} = {D2858931-74E5-4943-9F46-E207318C9592}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Monitor", "Monitor", "{D2146907-E847-4B93-96CD-6DC875D90703}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Parser", "Parser", "{F4570D1F-DF2A-4F53-AF59-6C2CCB246144}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Core", "Howatworks.Thumb.Assistant.Core\Howatworks.Thumb.Assistant.Core.csproj", "{1C5405F9-35E1-49C7-B6F0-B866BCAA333C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Core.Test", "Howatworks.Thumb.Assistant.Core.Test\Howatworks.Thumb.Assistant.Core.Test.csproj", "{CAF5D231-50C5-45E9-84ED-6811F996B9CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Core", "Howatworks.Thumb.Matrix.Core\Howatworks.Thumb.Matrix.Core.csproj", "{A1816FDB-6CA9-498E-9AF4-57298A686210}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,18 +121,6 @@ Global
 		{E34441AE-6D23-4722-87EA-8247C820D2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E34441AE-6D23-4722-87EA-8247C820D2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E34441AE-6D23-4722-87EA-8247C820D2E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ECE7740C-E4C6-433F-B829-DB16BC238527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ECE7740C-E4C6-433F-B829-DB16BC238527}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ECE7740C-E4C6-433F-B829-DB16BC238527}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ECE7740C-E4C6-433F-B829-DB16BC238527}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6559D314-04BF-455B-AB09-E18449C58589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6559D314-04BF-455B-AB09-E18449C58589}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6559D314-04BF-455B-AB09-E18449C58589}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6559D314-04BF-455B-AB09-E18449C58589}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51D58D45-64DE-4388-8735-2744EB0CE320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51D58D45-64DE-4388-8735-2744EB0CE320}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51D58D45-64DE-4388-8735-2744EB0CE320}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51D58D45-64DE-4388-8735-2744EB0CE320}.Release|Any CPU.Build.0 = Release|Any CPU
 		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -183,6 +177,18 @@ Global
 		{C490A400-5185-440C-9427-A793CA7A8840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C490A400-5185-440C-9427-A793CA7A8840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C490A400-5185-440C-9427-A793CA7A8840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C5405F9-35E1-49C7-B6F0-B866BCAA333C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C5405F9-35E1-49C7-B6F0-B866BCAA333C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C5405F9-35E1-49C7-B6F0-B866BCAA333C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C5405F9-35E1-49C7-B6F0-B866BCAA333C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAF5D231-50C5-45E9-84ED-6811F996B9CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAF5D231-50C5-45E9-84ED-6811F996B9CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAF5D231-50C5-45E9-84ED-6811F996B9CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAF5D231-50C5-45E9-84ED-6811F996B9CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1816FDB-6CA9-498E-9AF4-57298A686210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1816FDB-6CA9-498E-9AF4-57298A686210}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1816FDB-6CA9-498E-9AF4-57298A686210}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1816FDB-6CA9-498E-9AF4-57298A686210}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -197,9 +203,6 @@ Global
 		{D057681C-68CC-4C45-89BA-0A0AEE75D1EA} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}
 		{76CF042D-5F77-44FC-ABDF-0C5718E77BFF} = {7F6A6246-D98E-484F-AE12-351FB37863FC}
 		{E34441AE-6D23-4722-87EA-8247C820D2E3} = {7F6A6246-D98E-484F-AE12-351FB37863FC}
-		{ECE7740C-E4C6-433F-B829-DB16BC238527} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
-		{6559D314-04BF-455B-AB09-E18449C58589} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
-		{51D58D45-64DE-4388-8735-2744EB0CE320} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
 		{977FF0C4-DF1C-4CF0-977A-3B2F8F7C1D29} = {9F455D72-1FDB-4969-89EF-9A3CEB74FC93}
 		{B4B30D01-F97A-403E-A2A1-D211334EDF88} = {F2134956-968B-4912-A4C2-288917713688}
 		{9F455D72-1FDB-4969-89EF-9A3CEB74FC93} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}
@@ -218,6 +221,9 @@ Global
 		{C490A400-5185-440C-9427-A793CA7A8840} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 		{D2146907-E847-4B93-96CD-6DC875D90703} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}
 		{F4570D1F-DF2A-4F53-AF59-6C2CCB246144} = {B79142DD-2167-49CF-88CD-7E6A886F0B0F}
+		{1C5405F9-35E1-49C7-B6F0-B866BCAA333C} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
+		{CAF5D231-50C5-45E9-84ED-6811F996B9CF} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
+		{A1816FDB-6CA9-498E-9AF4-57298A686210} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83C552C3-FA11-4510-8F9F-B6BC1641E4A2}

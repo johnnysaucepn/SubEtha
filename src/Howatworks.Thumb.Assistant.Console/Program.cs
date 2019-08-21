@@ -3,7 +3,7 @@ using System.IO;
 using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
-using Howatworks.Thumb.Plugin.Assistant;
+using Howatworks.Thumb.Assistant.Core;
 
 namespace Howatworks.Thumb.Assistant.Console
 {
@@ -25,10 +25,13 @@ namespace Howatworks.Thumb.Assistant.Console
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var app = scope.Resolve<ThumbApp>();
-                app.Start();
+                var assistantApp = scope.Resolve<AssistantJournalProcessorPlugin>();
+                assistantApp.Startup();
+
+                var thumbApp = scope.Resolve<ThumbApp>();
+                thumbApp.Start();
                 System.Console.ReadKey();
-                app.Stop();
+                thumbApp.Stop();
             }
         }
     }

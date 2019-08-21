@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Core
 {
-    public class ThumbCoreModule : Autofac.Module
+    public class ThumbCoreModule : Module
     {
         private readonly IConfiguration _config;
 
@@ -24,7 +24,6 @@ namespace Howatworks.Thumb.Core
             builder.RegisterType<JournalMonitorScheduler>().AsSelf().SingleInstance();
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
             builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();
-            builder.RegisterType<ThumbProcessor>().AsSelf().SingleInstance();
             builder.RegisterType<JournalEntryRouter>().AsSelf().SingleInstance();
         }
     }

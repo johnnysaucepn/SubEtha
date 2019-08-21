@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Autofac;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Forms;
+using Howatworks.Thumb.Assistant.Core;
 
 namespace Howatworks.Thumb.Assistant
 {
@@ -27,10 +28,19 @@ namespace Howatworks.Thumb.Assistant
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbFormsModule(config));
+            builder.RegisterModule(new AssistantPluginModule());
             var container = builder.Build();
 
-            var context = new ThumbTrayApplicationContext(container);
-            Application.Run(context);
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var assistantApp = scope.Resolve<AssistantJournalProcessorPlugin>();
+                assistantApp.Startup();
+
+                var thumbApp = scope.Resolve<ThumbApp>();
+
+                var context = new ThumbTrayApplicationContext(thumbApp);
+                Application.Run(context);
+            }
         }
     }
 }
