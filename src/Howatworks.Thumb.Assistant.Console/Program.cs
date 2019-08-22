@@ -20,12 +20,12 @@ namespace Howatworks.Thumb.Assistant.Console
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbConsoleModule(config));
-            builder.RegisterModule(new AssistantPluginModule());
+            builder.RegisterModule(new AssistantModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var assistantApp = scope.Resolve<AssistantJournalProcessorPlugin>();
+                var assistantApp = scope.Resolve<AssistantApp>();
                 assistantApp.Startup();
 
                 var thumbApp = scope.Resolve<ThumbApp>();

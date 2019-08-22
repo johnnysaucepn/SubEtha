@@ -169,7 +169,7 @@ namespace Howatworks.Thumb.Assistant.Core.ControlSimulators
 
         public InputSimulatorKeyboardSimulator(IConfiguration config)
         {
-            var ms = config.GetValue<int?>("Plugin:Howatworks.Thumb.Plugin.Assistant:KeyDownTimeMs");
+            var ms = config.GetValue<int?>("KeyDownTimeMs");
             if (ms.HasValue)
             {
                 KeyDownTime = TimeSpan.FromMilliseconds(ms.Value);

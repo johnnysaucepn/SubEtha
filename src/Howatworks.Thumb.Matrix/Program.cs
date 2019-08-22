@@ -28,12 +28,12 @@ namespace Howatworks.Thumb.Matrix
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbFormsModule(config));
-            builder.RegisterModule(new MatrixPluginModule());
+            builder.RegisterModule(new MatrixModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var matrixApp = scope.Resolve<MatrixJournalProcessorPlugin>();
+                var matrixApp = scope.Resolve<MatrixApp>();
                 matrixApp.Startup();
 
                 var thumbApp = scope.Resolve<ThumbApp>();

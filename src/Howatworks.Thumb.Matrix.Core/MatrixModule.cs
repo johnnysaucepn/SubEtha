@@ -3,13 +3,13 @@ using Howatworks.Matrix.Domain;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
-    public class MatrixPluginModule : Module
+    public class MatrixModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<HttpUploadClient>().AsSelf().SingleInstance();
 
-            builder.RegisterType<MatrixJournalProcessorPlugin>().AsSelf().SingleInstance();
+            builder.RegisterType<MatrixApp>().AsSelf().SingleInstance();
 
             builder.RegisterType<CommanderTracker>().AsSelf().SingleInstance();
             builder.RegisterType<LocationManager>().AsSelf().SingleInstance();

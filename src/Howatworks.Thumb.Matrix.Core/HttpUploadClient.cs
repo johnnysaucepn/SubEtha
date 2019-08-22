@@ -21,7 +21,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public HttpUploadClient(IConfiguration config)
         {
-            BaseUri = new Uri(config["Plugins:Howatworks.Thumb.Plugin.Matrix:ServiceUri"]);
+            BaseUri = new Uri(config["ServiceUri"]);
 
             _client = new Lazy<HttpClient>(() =>
             {
@@ -49,8 +49,8 @@ namespace Howatworks.Thumb.Matrix.Core
             var tokenUri = new Uri(BaseUri, "Api/Token");
             var form = new Dictionary<string, string>
             {
-                ["Username"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Username"],
-                ["Password"] = config["Plugins:Howatworks.Thumb.Plugin.Matrix:Password"]
+                ["Username"] = config["Username"],
+                ["Password"] = config["Password"]
             };
             using (var tokenResponse = await client.PostAsync(tokenUri, new FormUrlEncodedContent(form)).ConfigureAwait(false))
             {

@@ -3,11 +3,11 @@ using Howatworks.Thumb.Assistant.Core.ControlSimulators;
 
 namespace Howatworks.Thumb.Assistant.Core
 {
-    public class AssistantPluginModule : Module
+    public class AssistantModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<AssistantJournalProcessorPlugin>().AsSelf().SingleInstance();
+            builder.RegisterType<AssistantApp>().AsSelf().SingleInstance();
             builder.RegisterType<StatusManager>().AsSelf().SingleInstance();
             builder.RegisterType<WebSocketConnectionManager>().AsSelf().SingleInstance();
             builder.RegisterType<GameControlBridge>().AsSelf().SingleInstance();

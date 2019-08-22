@@ -28,12 +28,12 @@ namespace Howatworks.Thumb.Assistant
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbFormsModule(config));
-            builder.RegisterModule(new AssistantPluginModule());
+            builder.RegisterModule(new AssistantModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var assistantApp = scope.Resolve<AssistantJournalProcessorPlugin>();
+                var assistantApp = scope.Resolve<AssistantApp>();
                 assistantApp.Startup();
 
                 var thumbApp = scope.Resolve<ThumbApp>();

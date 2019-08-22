@@ -12,9 +12,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Howatworks.Thumb.Assistant.Core
 {
-    public class AssistantJournalProcessorPlugin
+    public class AssistantApp
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantJournalProcessorPlugin));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 
         private readonly IConfiguration _configuration;
         private readonly IComponentContext _context;
@@ -24,7 +24,7 @@ namespace Howatworks.Thumb.Assistant.Core
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
 
-        public AssistantJournalProcessorPlugin(
+        public AssistantApp(
             IConfiguration configuration,
             IComponentContext context,
             IThumbNotifier notifier,
