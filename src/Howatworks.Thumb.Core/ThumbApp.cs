@@ -7,6 +7,7 @@ using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Monitor;
 using log4net;
 using log4net.Config;
+using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Core
 {
@@ -24,7 +25,8 @@ namespace Howatworks.Thumb.Core
         public ThumbApp(
             JournalMonitorScheduler monitor,
             IThumbNotifier notifier,
-            JournalEntryRouter router
+            JournalEntryRouter router,
+            IConfiguration config
         )
         {
             _monitor = monitor;
@@ -39,9 +41,7 @@ namespace Howatworks.Thumb.Core
 
             _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
 
-            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var workingFolder = Path.Combine(appDataFolder, "Howatworks", "Thumb");
-            var logFolder = Path.Combine(workingFolder, "Logs");
+            var logFolder = config["LogFolder"];
             Directory.CreateDirectory(logFolder);
 
             GlobalContext.Properties["logfolder"] = logFolder;
@@ -59,7 +59,7 @@ namespace Howatworks.Thumb.Core
             _monitor.Stop();
         }
 
-        public void Apply(IEnumerable<IJournalEntry> entries, BatchMode mode)
+        private void Apply(IEnumerable<IJournalEntry> entries, BatchMode mode)
         {
             foreach (var journalEntry in entries)
             {

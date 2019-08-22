@@ -7,7 +7,7 @@ namespace Howatworks.Thumb.Core
         public static readonly IBatchPolicy OnlyOngoing = new OnlyOngoingBatchPolicy();
         public static readonly IBatchPolicy All = new AcceptAllBatchPolicy();
 
-        public class OnlyOngoingBatchPolicy : IBatchPolicy
+        private class OnlyOngoingBatchPolicy : IBatchPolicy
         {
             public bool Accepts(BatchMode mode)
             {
@@ -15,7 +15,7 @@ namespace Howatworks.Thumb.Core
             }
         }
 
-        public class AcceptAllBatchPolicy : IBatchPolicy
+        private class AcceptAllBatchPolicy : IBatchPolicy
         {
             public bool Accepts(BatchMode mode)
             {

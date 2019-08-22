@@ -48,15 +48,15 @@ namespace Howatworks.SubEtha.Monitor
 
         private void TriggerUpdate_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Update(_journalMonitorState.LastEntrySeen, BatchMode.Ongoing);
+            Update(e.SignalTime.ToUniversalTime(), _journalMonitorState.LastEntrySeen, BatchMode.Ongoing);
         }
 
-        private void Update(DateTimeOffset? lastRead, BatchMode batchMode)
+        private void Update(DateTimeOffset triggerTime, DateTimeOffset? lastRead, BatchMode batchMode)
         {
             foreach (var monitor in _journalMonitors)
             {
                 var entries = monitor.Update(lastRead ?? DateTimeOffset.MinValue);
-                ProcessEntries(entries, batchMode);
+                ProcessEntries(triggerTime, entries, batchMode);
             }
         }
 
@@ -64,10 +64,11 @@ namespace Howatworks.SubEtha.Monitor
         {
             var firstRun = !_journalMonitorState.LastEntrySeen.HasValue;
             var lastRead = _journalMonitorState.LastEntrySeen ?? DateTimeOffset.MinValue;
+            var triggerTime = DateTimeOffset.UtcNow;
             foreach (var monitor in _journalMonitors)
             {
                 var firstEntries = monitor.Start(firstRun, lastRead);
-                ProcessEntries(firstEntries, firstRun ? BatchMode.FirstRun : BatchMode.Catchup);
+                ProcessEntries(triggerTime, firstEntries, firstRun ? BatchMode.FirstRun : BatchMode.Catchup);
             }
 
             _triggerUpdate.Enabled = true;
@@ -79,7 +80,13 @@ namespace Howatworks.SubEtha.Monitor
 
             // One last run
             var lastRead = _journalMonitorState.LastEntrySeen;
-            Update(lastRead, BatchMode.Ongoing);
+            var triggerTime = DateTimeOffset.UtcNow;
+            Update(triggerTime, lastRead, BatchMode.Ongoing);
+
+            foreach (var monitor in _journalMonitors)
+            {
+                monitor.Stop();
+            }
 
             _triggerUpdate.Dispose();
         }
@@ -94,12 +101,12 @@ namespace Howatworks.SubEtha.Monitor
             return _journalMonitorState.LastChecked;
         }
 
-        private void ProcessEntries(IList<IJournalEntry> journalEntries, BatchMode mode)
+        private void ProcessEntries(DateTimeOffset triggerTime, IList<IJournalEntry> journalEntries, BatchMode mode)
         {
             if (journalEntries.Count == 0) return;
 
             JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(journalEntries, mode));
-            _journalMonitorState.Update(DateTimeOffset.UtcNow, journalEntries.OrderBy(x => x.Timestamp).Last().Timestamp);
+            _journalMonitorState.Update(triggerTime, journalEntries.Max(x => x.Timestamp));
         }
 
         public void Dispose()

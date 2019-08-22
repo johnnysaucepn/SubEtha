@@ -50,7 +50,8 @@ namespace Howatworks.Thumb.Core
                 ["BindingsFolder"] = _defaultBindingsPath,
                 ["BindingsFilename"] = "Custom.3.0.binds",
                 ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)",
-                ["JournalMonitorStateFolder"] = _defaultAppStoragePath
+                ["JournalMonitorStateFolder"] = _defaultAppStoragePath,
+                ["LogFolder"] = _defaultAppStoragePath
         };
             var env = Environment.GetEnvironmentVariable("HOSTINGENVIRONMENT");
             var config = new ConfigurationBuilder()

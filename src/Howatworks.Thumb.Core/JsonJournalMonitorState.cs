@@ -15,12 +15,15 @@ namespace Howatworks.Thumb.Core
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(JsonJournalMonitorState));
 
-        private readonly JsonSerializer _serializer = new JsonSerializer
+        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
         {
-            MissingMemberHandling = MissingMemberHandling.Ignore
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            DateParseHandling = DateParseHandling.DateTimeOffset
         };
 
-        private Lazy<InMemoryJournalMonitorState> _state;
+        private readonly Lazy<InMemoryJournalMonitorState> _state;
 
         public DateTimeOffset? LastEntrySeen => _state.Value.LastEntrySeen;
 
@@ -47,12 +50,8 @@ namespace Howatworks.Thumb.Core
         {
             try
             {
-                using (var stream = File.OpenRead(_storageFilePath))
-                using (var reader = new StreamReader(stream))
-                using (var jsonReader = new JsonTextReader(reader))
-                {
-                    return _serializer.Deserialize<InMemoryJournalMonitorState>(jsonReader);
-                }
+                var jsonState = File.ReadAllText(_storageFilePath);
+                return JsonConvert.DeserializeObject<InMemoryJournalMonitorState>(jsonState, _serializerSettings);
             }
             catch (IOException ex)
             {
@@ -64,15 +63,10 @@ namespace Howatworks.Thumb.Core
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private void Save()
         {
-
             try
             {
                 Directory.GetParent(_storageFilePath).Create();
-                using (var stream = File.OpenWrite(_storageFilePath))
-                using (var writer = new StreamWriter(stream))
-                {
-                    _serializer.Serialize(writer, _state.Value);
-                }
+                File.WriteAllText(_storageFilePath, JsonConvert.SerializeObject(_state.Value, _serializerSettings));
             }
             catch (IOException ex)
             {
