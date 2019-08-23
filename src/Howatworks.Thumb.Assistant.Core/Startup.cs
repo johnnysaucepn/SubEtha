@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -16,11 +15,9 @@ namespace Howatworks.Thumb.Assistant.Core
 
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-            var autofacContext = serviceProvider.GetService<IComponentContext>();
+            var webSocketConnectionManager = serviceProvider.GetService<WebSocketConnectionManager>();
             var staticContentAssembly = Assembly.GetExecutingAssembly();
             var staticContentFileProvider = new ManifestEmbeddedFileProvider(staticContentAssembly, "StaticContent");
-
-            var webSocketConnectionManager = autofacContext.Resolve<WebSocketConnectionManager>();
 
             app
                 .UseWebSockets()

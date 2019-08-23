@@ -36,8 +36,8 @@ namespace Howatworks.SubEtha.Monitor
 
             foreach (var monitor in _journalMonitors)
             {
-                monitor.JournalFileWatchingStarted += (sender, args) => { JournalFileWatchingStarted?.Invoke(sender, args); };
-                monitor.JournalFileWatchingStopped += (sender, args) => { JournalFileWatchingStopped?.Invoke(sender, args); };
+                monitor.JournalFileWatchingStarted += (sender, args) => JournalFileWatchingStarted?.Invoke(sender, args);
+                monitor.JournalFileWatchingStopped += (sender, args) => JournalFileWatchingStopped?.Invoke(sender, args);
             }
             var updateInterval = TimeSpan.Parse(config["UpdateInterval"]);
 

@@ -33,7 +33,21 @@ namespace Howatworks.Thumb.Core
             _batchHandlers.Add(new JournalEntryBatchCompleteHandler(action, policy));
         }
 
-        public bool Apply<T>(T entry, BatchMode mode) where T : IJournalEntry
+        public void Apply(IEnumerable<IJournalEntry> entries, BatchMode mode)
+        {
+            foreach (var journalEntry in entries)
+            {
+                var somethingApplied = Apply(journalEntry, mode);
+                if (!somethingApplied)
+                {
+                    Log.Info($"No handler applied for event type {journalEntry.Event}");
+                }
+            }
+
+            var batchProcessed = ApplyBatchComplete(mode);
+        }
+
+        private bool Apply<T>(T entry, BatchMode mode) where T : IJournalEntry
         {
             var t = entry.GetType();
             if (!_journalHandlers.ContainsKey(t)) return false;
@@ -49,7 +63,7 @@ namespace Howatworks.Thumb.Core
             return applied;
         }
 
-        public bool ApplyBatchComplete(BatchMode mode)
+        private bool ApplyBatchComplete(BatchMode mode)
         {
             var applied = false;
             Log.Info("Applying end of batch");
@@ -61,6 +75,5 @@ namespace Howatworks.Thumb.Core
             }
             return applied;
         }
-
     }
 }

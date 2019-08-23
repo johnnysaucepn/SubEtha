@@ -8,14 +8,14 @@ namespace Howatworks.Thumb.Forms
     public class ThumbTrayApplicationContext : ApplicationContext
     {
         private NotifyIcon _trayIcon;
-        private readonly ThumbApp _thumbApp;
+        private readonly IThumbApp _thumbApp;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ThumbTrayApplicationContext));
         private IProgress<DateTimeOffset?> _progressHandler;
 
         private System.Threading.Timer _updateTimer;
 
-        public ThumbTrayApplicationContext(ThumbApp thumbApp)
+        public ThumbTrayApplicationContext(IThumbApp thumbApp)
         {
             _thumbApp = thumbApp;
             Application.ApplicationExit += Cleanup;

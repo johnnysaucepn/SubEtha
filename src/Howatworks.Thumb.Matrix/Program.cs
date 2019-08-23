@@ -33,12 +33,10 @@ namespace Howatworks.Thumb.Matrix
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var matrixApp = scope.Resolve<MatrixApp>();
-                matrixApp.Startup();
+                var app = scope.Resolve<MatrixApp>();
+                app.Initialize();
 
-                var thumbApp = scope.Resolve<ThumbApp>();
-
-                var context = new ThumbTrayApplicationContext(thumbApp);
+                var context = new ThumbTrayApplicationContext(app);
                 Application.Run(context);
             }
         }

@@ -33,12 +33,10 @@ namespace Howatworks.Thumb.Assistant
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var assistantApp = scope.Resolve<AssistantApp>();
-                assistantApp.Startup();
+                var app = scope.Resolve<AssistantApp>();
+                app.Initialize();
 
-                var thumbApp = scope.Resolve<ThumbApp>();
-
-                var context = new ThumbTrayApplicationContext(thumbApp);
+                var context = new ThumbTrayApplicationContext(app);
                 Application.Run(context);
             }
         }

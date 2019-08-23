@@ -18,7 +18,7 @@ namespace Howatworks.Thumb.Core
         {
             builder.Register(c => _config).As<IConfiguration>().SingleInstance();
 
-            builder.RegisterType<ThumbApp>().SingleInstance();
+            builder.RegisterType<Log4NetThumbLogging>().As<IThumbLogging>().SingleInstance();
 
             builder.RegisterType<JsonJournalMonitorState>().As<IJournalMonitorState>().SingleInstance();
             builder.RegisterType<JournalMonitorScheduler>().AsSelf().SingleInstance();

@@ -32,7 +32,7 @@ namespace Howatworks.Thumb.Assistant.Core
             {
                 var token = CancellationToken.None;
                 var buffer = new ArraySegment<byte>(new byte[4096]);
-                var received = await socket.ReceiveAsync(buffer, token);
+                var received = await socket.ReceiveAsync(buffer, token).ConfigureAwait(false);
 
                 switch (received.MessageType)
                 {
@@ -49,7 +49,7 @@ namespace Howatworks.Thumb.Assistant.Core
                         catch (JsonException)
                         {
                             var errorMessage = Encoding.UTF8.GetBytes($"Failed to handle message: {incoming}");
-                            await socket.SendAsync(new ArraySegment<byte>(errorMessage), WebSocketMessageType.Text, true, token);
+                            await socket.SendAsync(new ArraySegment<byte>(errorMessage), WebSocketMessageType.Text, true, token).ConfigureAwait(false);
                         }
                         break;
                 }
@@ -90,7 +90,7 @@ namespace Howatworks.Thumb.Assistant.Core
                     {
                         if (socket.State == WebSocketState.Open)
                         {
-                            await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                            await socket.SendAsync(new ArraySegment<byte>(statusBytes), WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
                         }
                     }
                 }
@@ -100,7 +100,7 @@ namespace Howatworks.Thumb.Assistant.Core
                 }
             }
 
-            Console.WriteLine(message);
+            Log.Info(message);
         }
     }
 }

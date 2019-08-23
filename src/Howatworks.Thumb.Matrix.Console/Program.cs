@@ -25,13 +25,12 @@ namespace Howatworks.Thumb.Matrix.Console
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var matrixApp = scope.Resolve<MatrixApp>();
-                matrixApp.Startup();
+                var app = scope.Resolve<MatrixApp>();
+                app.Initialize();
 
-                var thumbApp = scope.Resolve<ThumbApp>();
-                thumbApp.Start();
+                app.Start();
                 System.Console.ReadKey();
-                thumbApp.Stop();
+                app.Stop();
             }
         }
     }

@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Autofac;
 using Howatworks.SubEtha.Bindings;
+using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Assistant.Core.Messages;
 using Howatworks.Thumb.Core;
 using log4net;
@@ -12,49 +14,60 @@ using Newtonsoft.Json.Linq;
 
 namespace Howatworks.Thumb.Assistant.Core
 {
-    public class AssistantApp
+    public class AssistantApp : IThumbApp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 
+        private readonly IThumbLogging _logger;
+        private readonly JournalMonitorScheduler _monitor;
+        private readonly IThumbNotifier _notifier;
+        private readonly JournalEntryRouter _router;
+
         private readonly IConfiguration _configuration;
         private readonly IComponentContext _context;
-        private readonly IThumbNotifier _notifier;
         private readonly WebSocketConnectionManager _connectionManager;
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
 
         public AssistantApp(
+            IThumbLogging logger,
+            JournalMonitorScheduler monitor,
+            IThumbNotifier notifier,
+            JournalEntryRouter router,
             IConfiguration configuration,
             IComponentContext context,
-            IThumbNotifier notifier,
             WebSocketConnectionManager connectionManager,
             StatusManager statusManager,
             GameControlBridge keyboard)
         {
+            _logger = logger;
+            _monitor = monitor;
+            _notifier = notifier;
+            _router = router;
             _configuration = configuration;
             _context = context;
-            _notifier = notifier;
             _connectionManager = connectionManager;
             _statusManager = statusManager;
             _keyboard = keyboard;
         }
 
-        public void Startup()
+        public void Initialize()
         {
+            _logger.Configure();
+
+            _monitor.JournalEntriesParsed += (sender, args) =>
+            {
+                if (args == null) return;
+                _router.Apply(args.Entries, args.BatchMode);
+            };
+            _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
+
+            _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
+
             var bindingsPath = Path.Combine(_configuration["BindingsFolder"], _configuration["BindingsFilename"]);
 
             _bindingMapper = BindingMapper.FromFile(bindingsPath);
-
-            var hostBuilder = new WebHostBuilder()
-                .UseConfiguration(_configuration)
-                // Use our existing Autofac context in the web app services
-                .ConfigureServices(services => { services.AddSingleton(_context); })
-                .UseStartup<Startup>()
-                .UseKestrel()
-                .UseUrls("http://*:5984");
-
-            var host = hostBuilder.Build();
 
             _connectionManager.MessageReceived += (sender, args) =>
             {
@@ -79,7 +92,6 @@ namespace Howatworks.Thumb.Assistant.Core
                         Log.Warn($"Unrecognised message format :{args.Message}");
                         break;
                 }
-
             };
 
             _connectionManager.ClientConnected += (sender, args) =>
@@ -104,7 +116,28 @@ namespace Howatworks.Thumb.Assistant.Core
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
 
+        }
+
+        public void Start()
+        {
+            _monitor.Start();
+
+            var hostBuilder = new WebHostBuilder()
+                .UseConfiguration(_configuration)
+                // Use our existing Autofac context in the web app services
+                .ConfigureServices(services => services.AddSingleton(_connectionManager))
+                .UseStartup<Startup>()
+                .UseKestrel()
+                .UseUrls("http://*:5984");
+
+            var host = hostBuilder.Build();
+
             host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
+        }
+
+        public void Stop()
+        {
+            _monitor.Stop();
         }
 
         private void ActivateBinding(ControlRequest controlRequest)
@@ -120,6 +153,16 @@ namespace Howatworks.Thumb.Assistant.Core
             {
                 _keyboard.TriggerKeyCombination(button);
             }
+        }
+
+        public DateTimeOffset? LastEntry()
+        {
+            return _monitor.LastEntry();
+        }
+
+        public DateTimeOffset? LastChecked()
+        {
+            return _monitor.LastChecked();
         }
     }
 }
