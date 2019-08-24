@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Autofac;
 using Howatworks.SubEtha.Bindings;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Assistant.Core.Messages;
@@ -24,7 +23,6 @@ namespace Howatworks.Thumb.Assistant.Core
         private readonly JournalEntryRouter _router;
 
         private readonly IConfiguration _configuration;
-        private readonly IComponentContext _context;
         private readonly WebSocketConnectionManager _connectionManager;
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
@@ -36,7 +34,6 @@ namespace Howatworks.Thumb.Assistant.Core
             IThumbNotifier notifier,
             JournalEntryRouter router,
             IConfiguration configuration,
-            IComponentContext context,
             WebSocketConnectionManager connectionManager,
             StatusManager statusManager,
             GameControlBridge keyboard)
@@ -46,7 +43,6 @@ namespace Howatworks.Thumb.Assistant.Core
             _notifier = notifier;
             _router = router;
             _configuration = configuration;
-            _context = context;
             _connectionManager = connectionManager;
             _statusManager = statusManager;
             _keyboard = keyboard;
