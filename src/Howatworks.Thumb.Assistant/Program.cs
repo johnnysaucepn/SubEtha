@@ -36,8 +36,10 @@ namespace Howatworks.Thumb.Assistant
                 var app = scope.Resolve<AssistantApp>();
                 app.Initialize();
 
+                app.Start();
                 var context = new ThumbTrayApplicationContext(app);
                 Application.Run(context);
+                app.Stop();
             }
         }
     }

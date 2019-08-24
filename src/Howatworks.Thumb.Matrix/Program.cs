@@ -36,8 +36,10 @@ namespace Howatworks.Thumb.Matrix
                 var app = scope.Resolve<MatrixApp>();
                 app.Initialize();
 
+                app.Start();
                 var context = new ThumbTrayApplicationContext(app);
                 Application.Run(context);
+                app.Stop();
             }
         }
     }
