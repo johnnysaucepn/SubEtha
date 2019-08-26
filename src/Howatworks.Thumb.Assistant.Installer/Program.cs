@@ -32,10 +32,11 @@ namespace Howatworks.Thumb.Assistant.Installer
                 Platform = Platform.x64,
                 GUID = new Guid("ff2b008b-9c7b-4965-bc02-7c72c66400cb"),
                 ManagedUI = ManagedUI.Default,
-                LicenceFile = Path.Combine(thumbTrayRoot, "LICENSE"),
+                LicenceFile = "LICENSE.rtf",
                 OutDir = "Artifacts",
                 ControlPanelInfo = new ProductInfo()
                 {
+                    ProductIcon = "thumb_blue.ico",
                     Manufacturer = "Howatworks"
                 },
                 Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),

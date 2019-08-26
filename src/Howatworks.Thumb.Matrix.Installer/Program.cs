@@ -32,10 +32,11 @@ namespace Howatworks.Thumb.Matrix.Installer
                 Platform = Platform.x64,
                 GUID = new Guid("6fe30b47-2577-43ad-9095-1861ba25889b"),
                 ManagedUI = ManagedUI.Default,
-                LicenceFile = Path.Combine(thumbTrayRoot, "LICENSE"),
+                LicenceFile = "LICENSE.rtf",
                 OutDir = "Artifacts",
                 ControlPanelInfo = new ProductInfo()
                 {
+                    ProductIcon = "thumb_red.ico",
                     Manufacturer = "Howatworks"
                 },
                 Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
