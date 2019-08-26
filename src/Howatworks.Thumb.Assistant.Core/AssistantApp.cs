@@ -111,7 +111,6 @@ namespace Howatworks.Thumb.Assistant.Core
                     Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
-
         }
 
         public void Start()

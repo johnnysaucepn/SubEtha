@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Resources;
 using System.Windows.Forms;
 using Howatworks.Thumb.Core;
 using log4net;
@@ -14,25 +15,33 @@ namespace Howatworks.Thumb.Forms
         private IProgress<DateTimeOffset?> _progressHandler;
 
         private System.Threading.Timer _updateTimer;
+        private readonly ResourceManager _resources;
 
-        public ThumbTrayApplicationContext(IThumbApp thumbApp)
+        public ThumbTrayApplicationContext(IThumbApp thumbApp, ResourceManager resources)
         {
             _thumbApp = thumbApp;
+            _resources = resources;
             Application.ApplicationExit += Cleanup;
             InitializeComponent();
         }
 
         private void InitializeComponent()
         {
-            var exitMenuItem = new MenuItem(Resources.ExitLabel, (sender, args) => Application.Exit());
+            var exitLabel = _resources.GetString("ExitLabel");
+            var notifyIconDefaultLabel = _resources.GetString("NotifyIconDefaultLabel");
+            var notifyIconLastUpdatedLabel = _resources.GetString("NotifyIconLastUpdatedLabel");
+            var notifyIconNeverUpdatedLabel = _resources.GetString("NotifyIconNeverUpdatedLabel");
+            var thumbIcon = (System.Drawing.Icon)_resources.GetObject("ThumbIcon");
+
+            var exitMenuItem = new MenuItem(exitLabel, (sender, args) => Application.Exit());
 
             // Initialize Tray Icon
             _trayIcon = new NotifyIcon
             {
-                Icon = Resources.ThumbIcon,
+                Icon = thumbIcon,
                 ContextMenu = new ContextMenu(new[] {exitMenuItem}),
                 Visible = true,
-                Text = Resources.NotifyIconDefaultLabel
+                Text = notifyIconDefaultLabel
             };
 
             _progressHandler = new Progress<DateTimeOffset?>(_ =>
@@ -41,10 +50,10 @@ namespace Howatworks.Thumb.Forms
                 var lastEntry = _thumbApp.LastEntry();
                 _trayIcon.Text = lastEntry.HasValue
                     ? string.Format(
-                        Resources.NotifyIconLastUpdatedLabel.Replace("\\n", Environment.NewLine),
+                        notifyIconLastUpdatedLabel.Replace("\\n", Environment.NewLine),
                         lastEntry.Value.LocalDateTime.ToString("g"),
                         lastChecked.LocalDateTime.ToString("g"))
-                    : Resources.NotifyIconNeverUpdatedLabel;
+                    : notifyIconNeverUpdatedLabel;
             });
 
             try
