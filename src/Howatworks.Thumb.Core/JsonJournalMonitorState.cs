@@ -15,38 +15,19 @@ namespace Howatworks.Thumb.Core
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(JsonJournalMonitorState));
 
-        private readonly JsonSerializer _serializer = new JsonSerializer
+        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
         {
-            MissingMemberHandling = MissingMemberHandling.Ignore
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            DateParseHandling = DateParseHandling.DateTimeOffset
         };
 
-        private Lazy<InMemoryJournalMonitorState> _state;
+        private readonly Lazy<InMemoryJournalMonitorState> _state;
 
-        /// <summary>
-        /// Update the internal representation and save
-        /// </summary>
-        public DateTimeOffset? LastRead
-        {
-            get => _state.Value.LastRead;
-            set
-            {
-                _state.Value.LastRead = value;
-                Save();
-            }
-        }
+        public DateTimeOffset? LastEntrySeen => _state.Value.LastEntrySeen;
 
-        /// <summary>
-        /// Update the internal representation and save
-        /// </summary>
-        public DateTimeOffset? LastChecked
-        {
-            get => _state.Value.LastChecked;
-            set
-            {
-                _state.Value.LastChecked = value;
-                Save();
-            }
-        }
+        public DateTimeOffset? LastChecked => _state.Value.LastChecked;
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public JsonJournalMonitorState(IConfiguration config)
@@ -56,16 +37,21 @@ namespace Howatworks.Thumb.Core
             _state = new Lazy<InMemoryJournalMonitorState>(Load);
         }
 
+        /// <summary>
+        /// Update the internal representation and save
+        /// </summary>
+        public void Update(DateTimeOffset lastChecked, DateTimeOffset lastEntrySeen)
+        {
+            _state.Value.Update(lastChecked, lastEntrySeen);
+            Save();
+        }
+
         private InMemoryJournalMonitorState Load()
         {
             try
             {
-                using (var stream = File.OpenRead(_storageFilePath))
-                using (var reader = new StreamReader(stream))
-                using (var jsonReader = new JsonTextReader(reader))
-                {
-                    return _serializer.Deserialize<InMemoryJournalMonitorState>(jsonReader);
-                }
+                var jsonState = File.ReadAllText(_storageFilePath);
+                return JsonConvert.DeserializeObject<InMemoryJournalMonitorState>(jsonState, _serializerSettings);
             }
             catch (IOException ex)
             {
@@ -77,19 +63,14 @@ namespace Howatworks.Thumb.Core
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private void Save()
         {
-
             try
             {
-                using (var stream = File.OpenWrite(_storageFilePath))
-                using (var writer = new StreamWriter(stream))
-                {
-                    _serializer.Serialize(writer, _state);
-                }
+                Directory.GetParent(_storageFilePath).Create();
+                File.WriteAllText(_storageFilePath, JsonConvert.SerializeObject(_state.Value, _serializerSettings));
             }
             catch (IOException ex)
             {
                 Log.Warn(ex);
-                _state = null;
             }
         }
     }

@@ -4,7 +4,12 @@ namespace Howatworks.SubEtha.Monitor
 {
     public interface IJournalMonitorState
     {
-        DateTimeOffset? LastRead { get; set; }
-        DateTimeOffset? LastChecked { get; set; }
+        DateTimeOffset? LastEntrySeen { get; }
+        DateTimeOffset? LastChecked { get; }
+
+        /// <summary>
+        /// Update the internal representation and save
+        /// </summary>
+        void Update(DateTimeOffset lastChecked, DateTimeOffset lastEntrySeen);
     }
 }

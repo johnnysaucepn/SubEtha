@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Artifacts\**" />
+    <Compile Remove="wix\**" />
+    <EmbeddedResource Remove="Artifacts\**" />
+    <EmbeddedResource Remove="wix\**" />
+    <None Remove="Artifacts\**" />
+    <None Remove="wix\**" />
+    <None Include="wix\$(ProjectName).g.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixSharp" Version="1.10.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+</Project>

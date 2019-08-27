@@ -1,6 +1,5 @@
 using Autofac;
 using Howatworks.Thumb.Core;
-using Howatworks.Thumb.Plugin;
 using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Console
