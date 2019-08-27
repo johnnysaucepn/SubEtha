@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="journalmonitor.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -27,6 +23,10 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
   </ItemGroup>
 
 </Project>

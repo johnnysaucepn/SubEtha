@@ -10,8 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Thumb.Console\Howatworks.Thumb.Console.csproj" />
-    <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
+    <ProjectReference Include="..\..\Thumb\Howatworks.Thumb.Console\Howatworks.Thumb.Console.csproj" />
     <ProjectReference Include="..\Howatworks.Thumb.Matrix.Core\Howatworks.Thumb.Matrix.Core.csproj" />
   </ItemGroup>
 

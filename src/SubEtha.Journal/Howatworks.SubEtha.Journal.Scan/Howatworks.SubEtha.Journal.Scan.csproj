@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
+    <ProjectReference Include="..\..\SubEtha.Parser\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
   </ItemGroup>
 
   <ItemGroup>

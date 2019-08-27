@@ -18,8 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.SubEtha.Monitor\Howatworks.SubEtha.Monitor.csproj" />
-    <ProjectReference Include="..\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
+    <ProjectReference Include="..\..\SubEtha.Monitor\Howatworks.SubEtha.Monitor\Howatworks.SubEtha.Monitor.csproj" />
   </ItemGroup>
 
 </Project>

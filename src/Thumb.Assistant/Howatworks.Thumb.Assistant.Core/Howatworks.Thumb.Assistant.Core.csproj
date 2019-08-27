@@ -46,9 +46,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj" />
-    <ProjectReference Include="..\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
-    <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
+    <ProjectReference Include="..\..\SubEtha.Bindings\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj" />
+    <ProjectReference Include="..\..\SubEtha.Journal\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
+    <ProjectReference Include="..\..\Thumb\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
   </ItemGroup>
 
 </Project>

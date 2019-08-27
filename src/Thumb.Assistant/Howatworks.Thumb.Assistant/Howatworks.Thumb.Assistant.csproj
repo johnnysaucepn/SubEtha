@@ -15,9 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
-    <ProjectReference Include="..\Howatworks.Thumb.Forms\Howatworks.Thumb.Forms.csproj" />
-    <ProjectReference Include="..\Howatworks.Thumb.Matrix.Core\Howatworks.Thumb.Matrix.Core.csproj" />
+    <ProjectReference Include="..\..\Thumb\Howatworks.Thumb.Forms\Howatworks.Thumb.Forms.csproj" />
+    <ProjectReference Include="..\Howatworks.Thumb.Assistant.Core\Howatworks.Thumb.Assistant.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

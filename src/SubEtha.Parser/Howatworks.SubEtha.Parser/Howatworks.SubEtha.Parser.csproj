@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
+    <ProjectReference Include="..\..\SubEtha.Journal\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
   </ItemGroup>
 
 </Project>
