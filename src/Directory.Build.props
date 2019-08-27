@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir)\..\LICENSE" Pack="true" Visible="true" PackagePath="">
+    <None Include="$(MSBuildThisFileDirectory)\..\LICENSE.md" Pack="true" Visible="true" PackagePath="">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

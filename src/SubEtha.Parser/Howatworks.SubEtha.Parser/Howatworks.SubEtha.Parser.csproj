@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>Elite: Dangerous Player Journal Parser</Title>
     <Description>An API for quick and easy parsing of Player Journal log entries in the game Elite: Dangerous</Description>
     <PackageTags>elite dangerous player journal parser</PackageTags>
@@ -10,7 +11,6 @@
     <PackageProjectUrl>https://github.com/johnnysaucepn/SubEtha</PackageProjectUrl>
     <RepositoryUrl>https://github.com/johnnysaucepn/SubEtha</RepositoryUrl>
     <Configurations>Debug;Release</Configurations>
-    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
