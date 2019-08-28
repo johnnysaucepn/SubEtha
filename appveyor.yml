@@ -8,7 +8,7 @@ build:
   project: src/SubEtha.sln
 
 after_build:
-  - ps: dotnet publish src/Howatworks.Matrix.Site
+  - ps: dotnet publish src/Matrix/Howatworks.Matrix.Site
   
 configuration:
   - Release
