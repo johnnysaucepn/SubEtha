@@ -10,6 +10,7 @@
     <Authors>James Howat</Authors>
     <PackageProjectUrl>https://github.com/johnnysaucepn/SubEtha</PackageProjectUrl>
     <RepositoryUrl>https://github.com/johnnysaucepn/SubEtha</RepositoryUrl>
+    <PackageIconUrl>https://1drv.ms/u/s!Av_XC9BOodm0jhjFRxMlEpgPRHch?e=d0dNt0</PackageIconUrl>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
