@@ -37,7 +37,7 @@ These working applications use the libraries to illustrate some of the possibili
 
 *Assistant* operates as a virtual control panel - by checking for controls bound to keys, it can provide a Websocket-powered web front-end to ship operations. In addition, since it also monitors journal events, it can dynamically switch control options according to the situation.
 
-** See README files in each application's source folder for more information **
+**See README files in each application's source folder for more information**
 
 ## Installation
 
