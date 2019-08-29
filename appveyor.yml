@@ -14,14 +14,21 @@ configuration:
   - Release
 
 test_script:
-  - ps: dotnet test src
+  - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
   
 artifacts:
-  - path: '**/*.msi'
-    name: Installers
+  - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
+    name: Thumb Assistant Installer
     type: file
-  - path: '**/Artifacts/*.zip'
-    name: ASP.NET Core Apps
+  - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaMatrixAssistant.msi
+    name: Thumb Assistant Installer
+    type: file
+  - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-0.2.2-alpha0001.zip
+    name: Matrix Site
+    type: zip
+  - path: src/**/coverage.opencover.xml
+    name: OpenCover Reports
+    type: file
 
 notifications:
 - provider: Email

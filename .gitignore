@@ -10,3 +10,4 @@ packages/
 *.wxs
 /*.zip
 src/**/coverage.json
+src/**/coverage.opencover.xml
