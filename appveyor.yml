@@ -20,10 +20,10 @@ artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
     name: Thumb Assistant Installer
     type: file
-  - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaMatrixAssistant.msi
+  - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaThumbMatrix.msi
     name: Thumb Assistant Installer
     type: file
-  - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-0.2.2-alpha0001.zip
+  - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
   - path: src/**/coverage.opencover.xml
