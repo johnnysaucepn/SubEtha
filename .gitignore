@@ -9,3 +9,4 @@ packages/
 *.wixobj
 *.wxs
 /*.zip
+src/**/coverage.json
