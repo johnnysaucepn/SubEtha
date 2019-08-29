@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Resources;
 using System.Windows.Forms;
 using Howatworks.Thumb.Core;
@@ -31,7 +32,7 @@ namespace Howatworks.Thumb.Forms
             var notifyIconDefaultLabel = _resources.GetString("NotifyIconDefaultLabel");
             var notifyIconLastUpdatedLabel = _resources.GetString("NotifyIconLastUpdatedLabel");
             var notifyIconNeverUpdatedLabel = _resources.GetString("NotifyIconNeverUpdatedLabel");
-            var thumbIcon = (System.Drawing.Icon)_resources.GetObject("ThumbIcon");
+            var thumbIcon = (Icon)_resources.GetObject("ThumbIcon");
 
             var exitMenuItem = new MenuItem(exitLabel, (sender, args) => Application.Exit());
 

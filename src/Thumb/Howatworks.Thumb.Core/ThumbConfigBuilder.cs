@@ -55,6 +55,7 @@ namespace Howatworks.Thumb.Core
         };
             var env = Environment.GetEnvironmentVariable("HOSTINGENVIRONMENT");
             var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables("THUMB_")
                 .AddInMemoryCollection(defaultConfig)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env}.json", true)
