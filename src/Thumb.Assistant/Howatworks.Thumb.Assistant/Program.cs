@@ -37,7 +37,7 @@ namespace Howatworks.Thumb.Assistant
                 app.Initialize();
 
                 app.Start();
-                var context = new ThumbTrayApplicationContext(app, Resources.ResourceManager);
+                var context = new AssistantApplicationContext(app);
                 Application.Run(context);
                 app.Stop();
             }

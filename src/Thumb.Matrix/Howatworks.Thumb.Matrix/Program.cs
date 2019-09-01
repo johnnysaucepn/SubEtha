@@ -37,7 +37,7 @@ namespace Howatworks.Thumb.Matrix
                 app.Initialize();
 
                 app.Start();
-                var context = new ThumbTrayApplicationContext(app, Resources.ResourceManager);
+                var context = new MatrixApplicationContext(app);
                 Application.Run(context);
                 app.Stop();
             }
