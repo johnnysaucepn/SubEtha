@@ -5,11 +5,14 @@ using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Journal.StationServices;
 using Howatworks.Thumb.Core;
+using log4net;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
     public class ShipManager
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+
         private readonly CommanderTracker _commander;
         private readonly IUploader<ShipState> _client;
         private readonly Dictionary<GameContext, ShipState> _ships = new Dictionary<GameContext, ShipState>();
@@ -105,12 +108,29 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             if (!_isDirty) return false;
 
-            foreach (var context in _ships.Keys)
+            try
             {
-                _client.Upload(context, _ships[context]);
+                foreach (var context in _ships.Keys)
+                {
+                    _client.Upload(context, _ships[context]);
+                }
+
+                _isDirty = false;
+            }
+            catch (MatrixUploadException ex)
+            {
+                // Fail whole operation on any part
+                // This may result in multiple uploads, but better than than unsynced data
+                Log.Error("Upload error", ex);
+            }
+            catch (MatrixAuthenticationException ex)
+            {
+                // Fail whole operation on any part
+                // This may result in multiple uploads, but better than than unsynced data
+                Log.Error("Authentication error", ex);
+                throw;
             }
 
-            _isDirty = false;
             return true;
         }
 

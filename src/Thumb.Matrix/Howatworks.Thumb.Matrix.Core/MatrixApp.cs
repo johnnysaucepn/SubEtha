@@ -9,6 +9,7 @@ namespace Howatworks.Thumb.Matrix.Core
         public LocationManager Location { get; }
         public ShipManager Ship { get; set; }
         public SessionManager Session { get; set; }
+        public event EventHandler OnAuthenticationError;
 
         private readonly IThumbLogging _logger;
         private readonly JournalMonitorScheduler _monitor;
@@ -41,7 +42,14 @@ namespace Howatworks.Thumb.Matrix.Core
             _monitor.JournalEntriesParsed += (sender, args) =>
             {
                 if (args == null) return;
-                _router.Apply(args.Entries, args.BatchMode);
+                try
+                {
+                    _router.Apply(args.Entries, args.BatchMode);
+                }
+                catch (MatrixAuthenticationException)
+                {
+                    OnAuthenticationError?.Invoke(this, new EventArgs());
+                }
             };
             _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
 
