@@ -4,11 +4,14 @@ using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.Thumb.Core;
+using log4net;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
     public class SessionManager
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+
         private readonly CommanderTracker _commander;
         private readonly IUploader<SessionState> _client;
         private readonly Dictionary<GameContext, SessionState> _sessions = new Dictionary<GameContext, SessionState>();
@@ -93,15 +96,31 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             if (!_isDirty) return false;
 
-            foreach (var context in _sessions.Keys)
+            try
             {
-                _client.Upload(context, _sessions[context]);
+                foreach (var context in _sessions.Keys)
+                {
+                    _client.Upload(context, _sessions[context]);
+                }
+
+                _isDirty = false;
+            }
+            catch (MatrixUploadException ex)
+            {
+                // Fail whole operation on any part
+                // This may result in multiple uploads, but better than than unsynced data
+                Log.Error("Upload error", ex);
+            }
+            catch (MatrixAuthenticationException ex)
+            {
+                // Fail whole operation on any part
+                // This may result in multiple uploads, but better than than unsynced data
+                Log.Error("Authentication error", ex);
+                throw;
             }
 
-            _isDirty = false;
             return true;
         }
-
 
     }
 }

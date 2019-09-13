@@ -4,6 +4,7 @@ using log4net;
 using Microsoft.Extensions.Configuration;
 using Howatworks.Matrix.Domain;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -37,6 +38,10 @@ namespace Howatworks.Thumb.Matrix.Core
                     a.Handle(inner =>
                     {
                         Log.Error("Connection error", inner);
+                        if (inner is MatrixAuthenticationException ex)
+                        {
+                            throw ex;
+                        }
                         return true;
                     });
                     throw;
@@ -59,7 +64,7 @@ namespace Howatworks.Thumb.Matrix.Core
                     return tokenResponse.Content.ReadAsStringAsync().Result;
                 }
             }
-            throw new InvalidOperationException("Could not authenticate");
+            throw new MatrixAuthenticationException("Could not authenticate");
         }
 
         public void Upload(Uri uri, IState state)
@@ -71,6 +76,10 @@ namespace Howatworks.Thumb.Matrix.Core
                 Log.Info($"Uploading to {targetUri.AbsoluteUri}...");
                 var response = _client.Value.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
+                if (response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    throw new MatrixAuthenticationException("Upload rejected - authentication failed");
+                }
             }
             catch (AggregateException a)
             {

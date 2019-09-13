@@ -2,11 +2,14 @@
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.Thumb.Core;
+using log4net;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
     public class CommanderTracker
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+
         public string CommanderName { get; private set; }
         public string GameVersion { get; set; }
         public GameContext Context => new GameContext(GameVersion, CommanderName);
