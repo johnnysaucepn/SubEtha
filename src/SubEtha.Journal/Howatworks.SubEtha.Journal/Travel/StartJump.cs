@@ -4,7 +4,7 @@
     {
         public string JumpType { get; set; } // TODO: consider enum - Hyperspace, Supercruise
         public string StarSystem { get; set; }
-        public long SystemAddress { get; set; } // TODO: check data type
+        public long SystemAddress { get; set; }
         public string StarClass { get; set; } // TODO: check data type
     }
 }

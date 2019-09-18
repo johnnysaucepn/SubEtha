@@ -34,6 +34,8 @@ namespace Howatworks.SubEtha.Journal.Status
         InSrv = 1 << 26,
         HudAnalysisMode = 1 << 27,
         NightVision = 1 << 28,
-        AltitudeFromAverageRadius = 1 << 29
+        AltitudeFromAverageRadius = 1 << 29,
+        FsdJump = 1 << 30,
+        SrvHighBeam = 1 << 31
     }
 }

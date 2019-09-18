@@ -36,6 +36,8 @@ namespace Howatworks.SubEtha.Journal.Exploration
 
         #region Common to all planets/stars/moons
         public string ScanType { get; set; } // TODO: consider enum  Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan
+        public string StarSystem { get; set; } // WARN: docs suggest this is star-only. Check.
+        public long SystemAddress { get; set; } // WARN: docs suggest this is star-only. Check.
         public string BodyName { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int BodyID { get; set; }

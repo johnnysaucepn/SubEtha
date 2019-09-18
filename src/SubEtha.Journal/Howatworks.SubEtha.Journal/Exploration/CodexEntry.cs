@@ -17,6 +17,8 @@ namespace Howatworks.SubEtha.Journal.Exploration
         public string Region_Localised { get; set; }
         public string System { get; set; } // Note: name
         public long SystemAddress { get; set; }
+        public string NearestDestination { get; set; } // Note: name
+        public string NearestDestination_Localised { get; set; }
         public bool? IsNewEntry { get; set; }
         public bool? NewTraitsDiscovered { get; set; }
         public List<string> Traits { get; set; }

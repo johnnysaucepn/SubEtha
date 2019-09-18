@@ -6,7 +6,7 @@
         public bool TargetLocked { get; set; }
 
         // If target locked:
-        public string Ship { get; set; } // Note: ship name
+        public string Ship { get; set; } // Note: ship type
         public string Ship_Localised { get; set; }
         public int? ScanStage { get; set; } // TODO: enumerate these?
 
@@ -22,9 +22,9 @@
         // If ScanStage >=2
         public string Faction { get; set; } // Note: faction name
         public string LegalStatus { get; set; } // TODO: check data type
-        public decimal? Bounty { get; set; } // TODO: check data type
+        public decimal? Bounty { get; set; } 
         public string SubSystem { get; set; } // TODO: check data type
         public decimal? SubSystemHealth { get; set; } // TODO: check data type
-
+        public string Power { get; set; } // TODO: based on assumption that all Powers are NPC names
     }
 }
