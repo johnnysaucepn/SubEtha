@@ -2,6 +2,7 @@
 using Howatworks.Matrix.Core;
 using Howatworks.Matrix.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,11 +28,15 @@ namespace Howatworks.Matrix.Site.Api
         public async Task<IActionResult> Create([FromForm]string username, [FromForm]string password)
         {
             var user = await _userManager.FindByNameAsync(username).ConfigureAwait(false);
+            // Note: Forbid() attempts to allow ASP.NET to use its handling logic,
+            // which may result in redirection to a page.
             if (user == null)
-                return Forbid();
+                return StatusCode(StatusCodes.Status403Forbidden);
+
             var validUser = await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false);
             if (!validUser)
-                return Forbid();
+                return StatusCode(StatusCodes.Status403Forbidden);
+
             return new ObjectResult(TokenGenerator.GenerateToken(user.UserName, user.CommanderName ?? ""));
         }
     }
