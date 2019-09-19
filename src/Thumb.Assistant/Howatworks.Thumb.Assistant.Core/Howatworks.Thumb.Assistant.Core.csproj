@@ -11,6 +11,7 @@
     <None Remove="appsettings.vs.json" />
     <None Remove="SocketTest.html" />
     <None Remove="StaticContent\css\theme-ed.css" />
+    <None Remove="StaticContent\favicon.ico" />
     <None Remove="StaticContent\fonts\EUROCAPS.TTF" />
     <None Remove="StaticContent\fonts\Sintony-Regular.ttf" />
     <None Remove="StaticContent\js\assistant.js" />
@@ -27,6 +28,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="StaticContent\css\theme-ed.css" />
+    <EmbeddedResource Include="StaticContent\favicon.ico" />
     <EmbeddedResource Include="StaticContent\fonts\EUROCAPS.TTF" />
     <EmbeddedResource Include="StaticContent\fonts\Sintony-Regular.ttf" />
     <EmbeddedResource Include="StaticContent\index.html" />
