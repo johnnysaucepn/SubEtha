@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using Howatworks.Thumb.Forms;
 using Howatworks.Thumb.Matrix.Core;
@@ -12,20 +11,20 @@ namespace Howatworks.Thumb.Matrix
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApplicationContext));
 
         private readonly MatrixApp _app;
+        private readonly HttpUploadClient _client;
         private readonly ThumbTrayUserInterface _ui;
-        private readonly LoginForm _loginForm;
+        private LoginForm _loginForm;
 
-        public MatrixApplicationContext(MatrixApp app)
+        public MatrixApplicationContext(MatrixApp app, HttpUploadClient client)
         {
             _app = app;
-            _app.OnAuthenticationError += (sender, args) => { _loginForm.Show(); };
+            _client = client;
+            _loginForm = new LoginForm();
 
             _ui = new ThumbTrayUserInterface(GetLastChecked, GetLastEntry,
                 Resources.ThumbIcon,
                 Resources.ExitLabel,
                 Resources.NotifyIconDefaultLabel, Resources.NotifyIconNeverUpdatedLabel, Resources.NotifyIconLastUpdatedLabel);
-
-            _loginForm = new LoginForm();
 
             InitializeComponent();
         }
@@ -34,7 +33,41 @@ namespace Howatworks.Thumb.Matrix
         {
             try
             {
+                _app.Initialize();
+
+                _app.OnAuthenticationError += (sender, args) => { _loginForm.Show(); };
+
+                _loginForm.OnLogin += (sender, args) =>
+                {
+                    _client.AuthenticateByBearerToken(args.Username, args.Password);
+                    if (_client.Authenticated)
+                    {
+                        _loginForm.Hide();
+                        _app.Start();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Login failed. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
+
+                if (!_client.Authenticated)
+                {
+                    _loginForm.Show();
+                }
+                else
+                {
+                    _app.Start();
+                }
+
+
                 _ui.Initialize();
+                _ui.OnExitRequested += (sender, args) =>
+                {
+                    Application.Exit();
+                };
+                ThreadExit += (sender, args) => { _app.Stop(); };
+
             }
             catch (Exception ex)
             {

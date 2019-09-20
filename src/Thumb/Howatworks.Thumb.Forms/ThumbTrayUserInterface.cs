@@ -21,6 +21,8 @@ namespace Howatworks.Thumb.Forms
         private Timer _updateTimer;
         private MenuItem _exitMenuItem;
 
+        public event EventHandler OnExitRequested = delegate { };
+
         public ThumbTrayUserInterface(Func<DateTimeOffset?> getLastChecked,
             Func<DateTimeOffset?> getLastEntry,
             Icon icon,
@@ -38,7 +40,7 @@ namespace Howatworks.Thumb.Forms
 
         public void Initialize()
         {
-            _exitMenuItem = new MenuItem(_exitLabel, (sender, args) => Application.Exit());
+            _exitMenuItem = new MenuItem(_exitLabel, (sender, args) => OnExitRequested(this, new EventArgs()));
 
             // Initialize Tray Icon
             _trayIcon = CreateTrayIcon();

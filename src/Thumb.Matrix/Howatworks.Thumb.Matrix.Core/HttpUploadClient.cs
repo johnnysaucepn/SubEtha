@@ -16,48 +16,43 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private Uri BaseUri { get; }
 
-        private readonly Lazy<HttpClient> _client;
-
-        private string _jwtTokenString;
+        private readonly HttpClient _client;
+        public bool Authenticated { get; private set; }
 
         public HttpUploadClient(IConfiguration config)
         {
             BaseUri = new Uri(config["ServiceUri"]);
-
-            _client = new Lazy<HttpClient>(() =>
-            {
-                var client = new HttpClient();
-                try
-                {
-                    _jwtTokenString = GetAuthToken(config, client).Result;
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtTokenString);
-                    return client;
-                }
-                catch (AggregateException a)
-                {
-                    a.Handle(inner =>
-                    {
-                        Log.Error("Connection error", inner);
-                        if (inner is MatrixAuthenticationException ex)
-                        {
-                            throw ex;
-                        }
-                        return true;
-                    });
-                    throw;
-                }
-            });
+            _client = new HttpClient();
         }
 
-        private async Task<string> GetAuthToken(IConfiguration config, HttpClient client)
+        public void AuthenticateByBearerToken(string username, string password)
+        {
+            try
+            {
+                var jwtTokenString = GetAuthToken(username, password).Result;
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtTokenString);
+                Authenticated = true;
+            }
+            catch (AggregateException a)
+            {
+                a.Handle(innerEx =>
+                {
+                    Log.Error("Connection error", innerEx);
+                    // Rethrow MatrixAuthenticationException, but not others
+                    return !(innerEx is MatrixAuthenticationException);
+                });
+            }
+        }
+
+        private async Task<string> GetAuthToken(string username, string password)
         {
             var tokenUri = new Uri(BaseUri, "Api/Token");
             var form = new Dictionary<string, string>
             {
-                ["Username"] = config["Username"],
-                ["Password"] = config["Password"]
+                ["Username"] = username,
+                ["Password"] = password
             };
-            using (var tokenResponse = await client.PostAsync(tokenUri, new FormUrlEncodedContent(form)).ConfigureAwait(false))
+            using (var tokenResponse = await _client.PostAsync(tokenUri, new FormUrlEncodedContent(form)).ConfigureAwait(false))
             {
                 if (tokenResponse.IsSuccessStatusCode)
                 {
@@ -71,10 +66,15 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             var targetUri = uri.IsAbsoluteUri ? uri : new Uri(BaseUri, uri);
 
+            if (!Authenticated)
+            {
+                Log.Warn($"Not uploading to {targetUri.AbsoluteUri} as not authenticated");
+                return;
+            }
             try
             {
                 Log.Info($"Uploading to {targetUri.AbsoluteUri}...");
-                var response = _client.Value.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
+                var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
                 if (response.StatusCode == HttpStatusCode.Forbidden)
                 {
@@ -105,10 +105,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
             if (disposing)
             {
-                if (_client.IsValueCreated)
-                {
-                    _client.Value.Dispose();
-                }
+                _client.Dispose();
             }
 
             _disposed = true;

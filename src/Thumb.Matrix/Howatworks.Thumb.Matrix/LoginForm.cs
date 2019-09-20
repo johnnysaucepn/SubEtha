@@ -17,6 +17,8 @@ namespace Howatworks.Thumb.Matrix
             InitializeComponent();
         }
 
+        public event EventHandler<LoginEventArgs> OnLogin = delegate { };
+
         private void LoginForm_Load(object sender, EventArgs e)
         {
 
@@ -29,7 +31,19 @@ namespace Howatworks.Thumb.Matrix
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            OnLogin(this, new LoginEventArgs(this.textBox1.Text, this.maskedTextBox1.Text));
         }
+    }
+
+    public class LoginEventArgs : EventArgs
+    {
+        public LoginEventArgs(string username, string password)
+        {
+            Username = username;
+            Password = password;
+        }
+
+        public string Username { get; }
+        public string Password { get; }
     }
 }

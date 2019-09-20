@@ -29,17 +29,13 @@ namespace Howatworks.Thumb.Matrix
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbFormsModule(config));
             builder.RegisterModule(new MatrixModule());
+            builder.RegisterModule(new MatrixWinFormsModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var app = scope.Resolve<MatrixApp>();
-                app.Initialize();
-
-                app.Start();
-                var context = new MatrixApplicationContext(app);
+                var context = scope.Resolve<MatrixApplicationContext>();
                 Application.Run(context);
-                app.Stop();
             }
         }
     }
