@@ -13,7 +13,7 @@ namespace Howatworks.Thumb.Matrix
         private readonly MatrixApp _app;
         private readonly HttpUploadClient _client;
         private readonly ThumbTrayUserInterface _ui;
-        private LoginForm _loginForm;
+        private readonly LoginForm _loginForm;
 
         public MatrixApplicationContext(MatrixApp app, HttpUploadClient client)
         {
@@ -37,6 +37,7 @@ namespace Howatworks.Thumb.Matrix
 
                 _app.OnAuthenticationError += (sender, args) => { _loginForm.Show(); };
 
+                _loginForm.SiteName = _client.BaseUri.AbsoluteUri;
                 _loginForm.OnLogin += (sender, args) =>
                 {
                     _client.AuthenticateByBearerToken(args.Username, args.Password);
@@ -47,7 +48,7 @@ namespace Howatworks.Thumb.Matrix
                     }
                     else
                     {
-                        MessageBox.Show("Login failed. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Resources.LoginFailedMessage, Resources.LoginFailedTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 };
 

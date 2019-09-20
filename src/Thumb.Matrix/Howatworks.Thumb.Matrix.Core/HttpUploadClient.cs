@@ -14,7 +14,7 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HttpUploadClient));
 
-        private Uri BaseUri { get; }
+        public Uri BaseUri { get; }
 
         private readonly HttpClient _client;
         public bool Authenticated { get; private set; }
@@ -38,8 +38,7 @@ namespace Howatworks.Thumb.Matrix.Core
                 a.Handle(innerEx =>
                 {
                     Log.Error("Connection error", innerEx);
-                    // Rethrow MatrixAuthenticationException, but not others
-                    return !(innerEx is MatrixAuthenticationException);
+                    return true;
                 });
             }
         }

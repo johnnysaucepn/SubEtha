@@ -19,7 +19,7 @@ namespace Howatworks.Thumb.Matrix {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -66,6 +66,24 @@ namespace Howatworks.Thumb.Matrix {
         internal static string ExitLabel {
             get {
                 return ResourceManager.GetString("ExitLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login failed. Please try again..
+        /// </summary>
+        internal static string LoginFailedMessage {
+            get {
+                return ResourceManager.GetString("LoginFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login Failed.
+        /// </summary>
+        internal static string LoginFailedTitle {
+            get {
+                return ResourceManager.GetString("LoginFailedTitle", resourceCulture);
             }
         }
         
