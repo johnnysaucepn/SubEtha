@@ -79,6 +79,7 @@
             // UsernameBox
             // 
             this.UsernameBox.Location = new System.Drawing.Point(99, 73);
+            this.UsernameBox.MaxLength = 256;
             this.UsernameBox.Name = "UsernameBox";
             this.UsernameBox.Size = new System.Drawing.Size(240, 29);
             this.UsernameBox.TabIndex = 4;
@@ -96,6 +97,7 @@
             // PasswordBox
             // 
             this.PasswordBox.Location = new System.Drawing.Point(99, 119);
+            this.PasswordBox.MaxLength = 100;
             this.PasswordBox.Name = "PasswordBox";
             this.PasswordBox.PasswordChar = '*';
             this.PasswordBox.Size = new System.Drawing.Size(240, 29);
@@ -103,6 +105,7 @@
             // 
             // LoginForm
             // 
+            this.AcceptButton = this.LoginButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(362, 216);

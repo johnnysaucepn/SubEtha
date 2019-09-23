@@ -11,13 +11,13 @@ namespace Howatworks.Thumb.Assistant
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApplicationContext));
 
         private readonly AssistantApp _app;
-        private readonly ThumbTrayUserInterface _ui;
+        private readonly ThumbTrayControl _ui;
 
         public AssistantApplicationContext(AssistantApp app)
         {
             _app = app;
 
-            _ui = new ThumbTrayUserInterface(GetLastChecked, GetLastEntry,
+            _ui = new ThumbTrayControl(GetLastChecked, GetLastEntry,
                 Resources.ThumbIcon,
                 Resources.ExitLabel,
                 Resources.NotifyIconDefaultLabel, Resources.NotifyIconNeverUpdatedLabel, Resources.NotifyIconLastUpdatedLabel);

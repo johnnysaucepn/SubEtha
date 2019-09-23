@@ -10,7 +10,8 @@ namespace Howatworks.Thumb.Matrix.Core
         public LocationManager Location { get; }
         public ShipManager Ship { get; set; }
         public SessionManager Session { get; set; }
-        public event EventHandler OnAuthenticationError;
+
+        public event EventHandler OnAuthenticationRequired;
 
         private readonly IConfiguration _config;
         private readonly IThumbLogging _logger;
@@ -18,6 +19,13 @@ namespace Howatworks.Thumb.Matrix.Core
         private readonly IThumbNotifier _notifier;
         private readonly JournalEntryRouter _router;
         private readonly HttpUploadClient _client;
+
+        public bool IsAuthenticated => _client.IsAuthenticated;
+        public string SiteUri => _client.BaseUri.AbsoluteUri;
+
+        // Empirically-determined to match the default ASP.NET settings
+        public int MaxUsernameLength = 256;
+        public int MaxPasswordLength = 100;
 
         public MatrixApp(
             IConfiguration config,
@@ -46,9 +54,19 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             _logger.Configure();
 
-            if (!string.IsNullOrWhiteSpace(_config["Username"]) && !string.IsNullOrWhiteSpace(_config["Password"]))
+            // Try username and password from configuration, if possible
+            if (!IsAuthenticated)
             {
-                _client.AuthenticateByBearerToken(_config["Username"], _config["Password"]);
+                if (!string.IsNullOrWhiteSpace(_config["Username"]) && !string.IsNullOrWhiteSpace(_config["Password"]))
+                {
+                    Authenticate(_config["Username"], _config["Password"]);
+                }
+            }
+            // Otherwise, delegate getting username and password to caller
+            // TODO: make this more structured
+            if (!IsAuthenticated)
+            {
+                OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
             }
 
             _monitor.JournalEntriesParsed += (sender, args) =>
@@ -60,12 +78,18 @@ namespace Howatworks.Thumb.Matrix.Core
                 }
                 catch (MatrixAuthenticationException)
                 {
-                    OnAuthenticationError?.Invoke(this, new EventArgs());
+                    OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
                 }
             };
             _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
 
             _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
+        }
+
+        public bool Authenticate(string username, string password)
+        {
+            _client.AuthenticateByBearerToken(username, password);
+            return _client.IsAuthenticated;
         }
 
         public void Start()

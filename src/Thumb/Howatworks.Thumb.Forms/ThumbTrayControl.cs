@@ -5,7 +5,7 @@ using Timer = System.Threading.Timer;
 
 namespace Howatworks.Thumb.Forms
 {
-    public class ThumbTrayUserInterface : IDisposable
+    public class ThumbTrayControl : IDisposable
     {
         private NotifyIcon _trayIcon;
         private readonly Func<DateTimeOffset?> _getLastChecked;
@@ -23,7 +23,7 @@ namespace Howatworks.Thumb.Forms
 
         public event EventHandler OnExitRequested = delegate { };
 
-        public ThumbTrayUserInterface(Func<DateTimeOffset?> getLastChecked,
+        public ThumbTrayControl(Func<DateTimeOffset?> getLastChecked,
             Func<DateTimeOffset?> getLastEntry,
             Icon icon,
             string exitLabel,
@@ -40,7 +40,7 @@ namespace Howatworks.Thumb.Forms
 
         public void Initialize()
         {
-            _exitMenuItem = new MenuItem(_exitLabel, (sender, args) => OnExitRequested(this, new EventArgs()));
+            _exitMenuItem = new MenuItem(_exitLabel, (sender, args) => OnExitRequested(this, EventArgs.Empty));
 
             // Initialize Tray Icon
             _trayIcon = CreateTrayIcon();
@@ -48,7 +48,7 @@ namespace Howatworks.Thumb.Forms
             _progressHandler = CreateProgressHandler();
             _progressHandler.Report(null);
 
-            _updateTimer = new Timer(x => _progressHandler.Report(_getLastEntry()), null, 0, 10000);
+            _updateTimer = new Timer(_ => _progressHandler.Report(_getLastEntry()), null, 0, 10000);
         }
 
         private IProgress<DateTimeOffset?> CreateProgressHandler()

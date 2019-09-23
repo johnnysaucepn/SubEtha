@@ -11,17 +11,15 @@ namespace Howatworks.Thumb.Matrix
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApplicationContext));
 
         private readonly MatrixApp _app;
-        private readonly HttpUploadClient _client;
-        private readonly ThumbTrayUserInterface _ui;
+        private readonly ThumbTrayControl _ui;
         private readonly LoginForm _loginForm;
 
-        public MatrixApplicationContext(MatrixApp app, HttpUploadClient client)
+        public MatrixApplicationContext(MatrixApp app)
         {
             _app = app;
-            _client = client;
             _loginForm = new LoginForm();
 
-            _ui = new ThumbTrayUserInterface(GetLastChecked, GetLastEntry,
+            _ui = new ThumbTrayControl(GetLastChecked, GetLastEntry,
                 Resources.ThumbIcon,
                 Resources.ExitLabel,
                 Resources.NotifyIconDefaultLabel, Resources.NotifyIconNeverUpdatedLabel, Resources.NotifyIconLastUpdatedLabel);
@@ -35,13 +33,17 @@ namespace Howatworks.Thumb.Matrix
             {
                 _app.Initialize();
 
-                _app.OnAuthenticationError += (sender, args) => { _loginForm.Show(); };
+                _app.OnAuthenticationRequired += (sender, args) =>
+                {
+                    _app.Stop();
+                    _loginForm.Show();
+                };
 
-                _loginForm.SiteName = _client.BaseUri.AbsoluteUri;
+                _loginForm.SiteName = _app.SiteUri;
                 _loginForm.OnLogin += (sender, args) =>
                 {
-                    _client.AuthenticateByBearerToken(args.Username, args.Password);
-                    if (_client.Authenticated)
+                    var authenticated = _app.Authenticate(args.Username, args.Password);
+                    if (authenticated)
                     {
                         _loginForm.Hide();
                         _app.Start();
@@ -52,23 +54,18 @@ namespace Howatworks.Thumb.Matrix
                     }
                 };
 
-                if (!_client.Authenticated)
-                {
-                    _loginForm.Show();
-                }
-                else
+                if (_app.IsAuthenticated)
                 {
                     _app.Start();
                 }
-
+                else
+                {
+                    _loginForm.Show();
+                }
 
                 _ui.Initialize();
-                _ui.OnExitRequested += (sender, args) =>
-                {
-                    Application.Exit();
-                };
-                ThreadExit += (sender, args) => { _app.Stop(); };
-
+                _ui.OnExitRequested += (sender, args) => Application.Exit();
+                ThreadExit += (sender, args) => _app.Stop();
             }
             catch (Exception ex)
             {
@@ -87,5 +84,4 @@ namespace Howatworks.Thumb.Matrix
             return _app.LastChecked();
         }
     }
-
 }

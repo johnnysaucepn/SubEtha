@@ -26,6 +26,37 @@ namespace Howatworks.Thumb.Matrix.Console
             using (var scope = container.BeginLifetimeScope())
             {
                 var app = scope.Resolve<MatrixApp>();
+                
+                app.OnAuthenticationRequired += (sender, args) => {
+                    app.Stop();
+                    do
+                    {
+                        string username;
+                        string password;
+                        System.Console.WriteLine("Authentication required");
+                        do
+                        {
+                            System.Console.WriteLine("Username:");
+
+                            username = System.Console.ReadLine();
+                            username = username.Substring(0, Math.Min(username.Length, app.MaxUsernameLength));
+                        } while (string.IsNullOrWhiteSpace(username));
+                        do
+                        {
+                            System.Console.WriteLine("Password:");
+
+                            password = System.Console.ReadLine();
+                            password = password.Substring(0, Math.Min(password.Length, app.MaxPasswordLength));
+                        } while (string.IsNullOrWhiteSpace(password));
+
+                        app.Authenticate(username, password);
+                        if (!app.IsAuthenticated)
+                        {
+                            System.Console.WriteLine("Authentication failed!");
+                        }
+                    } while (app.IsAuthenticated);
+                };
+
                 app.Initialize();
 
                 app.Start();
@@ -33,5 +64,6 @@ namespace Howatworks.Thumb.Matrix.Console
                 app.Stop();
             }
         }
+
     }
 }

@@ -17,7 +17,7 @@ namespace Howatworks.Thumb.Matrix.Core
         public Uri BaseUri { get; }
 
         private readonly HttpClient _client;
-        public bool Authenticated { get; private set; }
+        public bool IsAuthenticated { get; private set; }
 
         public HttpUploadClient(IConfiguration config)
         {
@@ -31,7 +31,7 @@ namespace Howatworks.Thumb.Matrix.Core
             {
                 var jwtTokenString = GetAuthToken(username, password).Result;
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtTokenString);
-                Authenticated = true;
+                IsAuthenticated = true;
             }
             catch (AggregateException a)
             {
@@ -65,7 +65,7 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             var targetUri = uri.IsAbsoluteUri ? uri : new Uri(BaseUri, uri);
 
-            if (!Authenticated)
+            if (!IsAuthenticated)
             {
                 Log.Warn($"Not uploading to {targetUri.AbsoluteUri} as not authenticated");
                 return;
