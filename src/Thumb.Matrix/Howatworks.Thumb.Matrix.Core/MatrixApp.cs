@@ -14,7 +14,6 @@ namespace Howatworks.Thumb.Matrix.Core
         public event EventHandler OnAuthenticationRequired;
 
         private readonly IConfiguration _config;
-        private readonly IThumbLogging _logger;
         private readonly JournalMonitorScheduler _monitor;
         private readonly IThumbNotifier _notifier;
         private readonly JournalEntryRouter _router;
@@ -29,7 +28,6 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public MatrixApp(
             IConfiguration config,
-            IThumbLogging logger,
             JournalMonitorScheduler monitor,
             IThumbNotifier notifier,
             JournalEntryRouter router,
@@ -43,7 +41,6 @@ namespace Howatworks.Thumb.Matrix.Core
             Ship = ship;
             Session = session;
             _config = config;
-            _logger = logger;
             _monitor = monitor;
             _notifier = notifier;
             _router = router;
@@ -52,8 +49,6 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public void Initialize()
         {
-            _logger.Configure();
-
             // Try username and password from configuration, if possible
             if (!IsAuthenticated)
             {

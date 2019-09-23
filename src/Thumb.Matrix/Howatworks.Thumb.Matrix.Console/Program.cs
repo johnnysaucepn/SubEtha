@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
@@ -11,11 +10,10 @@ namespace Howatworks.Thumb.Matrix.Console
     {
         private static void Main()
         {
-            var appStoragePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Howatworks", "Thumb", "Matrix"
-            );
-            var config = new ThumbConfigBuilder(appStoragePath).Build();
+            var config = new ThumbConfigBuilder("Matrix").Build();
+
+            var logger = new Log4NetThumbLogging(config);
+            logger.Configure();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
@@ -26,7 +24,7 @@ namespace Howatworks.Thumb.Matrix.Console
             using (var scope = container.BeginLifetimeScope())
             {
                 var app = scope.Resolve<MatrixApp>();
-                
+
                 app.OnAuthenticationRequired += (sender, args) => {
                     app.Stop();
                     do
@@ -39,14 +37,14 @@ namespace Howatworks.Thumb.Matrix.Console
                             System.Console.WriteLine("Username:");
 
                             username = System.Console.ReadLine();
-                            username = username.Substring(0, Math.Min(username.Length, app.MaxUsernameLength));
+                            username = username?.Substring(0, Math.Min(username.Length, app.MaxUsernameLength));
                         } while (string.IsNullOrWhiteSpace(username));
                         do
                         {
                             System.Console.WriteLine("Password:");
 
                             password = System.Console.ReadLine();
-                            password = password.Substring(0, Math.Min(password.Length, app.MaxPasswordLength));
+                            password = password?.Substring(0, Math.Min(password.Length, app.MaxPasswordLength));
                         } while (string.IsNullOrWhiteSpace(password));
 
                         app.Authenticate(username, password);

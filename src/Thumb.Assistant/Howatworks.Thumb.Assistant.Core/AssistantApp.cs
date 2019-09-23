@@ -17,7 +17,6 @@ namespace Howatworks.Thumb.Assistant.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 
-        private readonly IThumbLogging _logger;
         private readonly JournalMonitorScheduler _monitor;
         private readonly IThumbNotifier _notifier;
         private readonly JournalEntryRouter _router;
@@ -29,7 +28,6 @@ namespace Howatworks.Thumb.Assistant.Core
         private BindingMapper _bindingMapper;
 
         public AssistantApp(
-            IThumbLogging logger,
             JournalMonitorScheduler monitor,
             IThumbNotifier notifier,
             JournalEntryRouter router,
@@ -38,7 +36,6 @@ namespace Howatworks.Thumb.Assistant.Core
             StatusManager statusManager,
             GameControlBridge keyboard)
         {
-            _logger = logger;
             _monitor = monitor;
             _notifier = notifier;
             _router = router;
@@ -50,8 +47,6 @@ namespace Howatworks.Thumb.Assistant.Core
 
         public void Initialize()
         {
-            _logger.Configure();
-
             _monitor.JournalEntriesParsed += (sender, args) =>
             {
                 if (args == null) return;

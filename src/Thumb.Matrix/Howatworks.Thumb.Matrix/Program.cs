@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
 using Autofac;
 using Howatworks.Thumb.Core;
@@ -19,11 +18,10 @@ namespace Howatworks.Thumb.Matrix
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var appStoragePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Howatworks", "Thumb", "Matrix"
-            );
-            var config = new ThumbConfigBuilder(appStoragePath).Build();
+            var config = new ThumbConfigBuilder("Matrix").Build();
+
+            var logger = new Log4NetThumbLogging(config);
+            logger.Configure();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));

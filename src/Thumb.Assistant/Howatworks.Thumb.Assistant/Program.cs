@@ -19,11 +19,10 @@ namespace Howatworks.Thumb.Assistant
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var appStoragePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Howatworks", "Thumb", "Assistant"
-            );
-            var config = new ThumbConfigBuilder(appStoragePath).Build();
+            var config = new ThumbConfigBuilder("Assistant").Build();
+
+            var logger = new Log4NetThumbLogging(config);
+            logger.Configure();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
