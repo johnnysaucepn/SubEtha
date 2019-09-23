@@ -50,12 +50,12 @@ namespace Howatworks.Thumb.Assistant.Core
             }
             else
             {
-                Log.Warn($"Neither primary or secondary bindings are for keyboard or mouse (found {button.Primary.Device}, {button.Secondary.Device}");
+                Log.Warn($"Neither primary or secondary bindings are for keyboard or mouse (found '{button.Primary.Device}', '{button.Secondary.Device}'");
                 return;
             }
 
             var modifierNames = selectedButtonBinding.Modifier.Select(x => x.Key).ToArray();
-            Log.Info($"Pressing {selectedButtonBinding.Key} with {(modifierNames.Any() ? string.Join(", ", modifierNames) : "no")} modifiers");
+            Log.Info($"Pressing '{selectedButtonBinding.Key}' with '{(modifierNames.Any() ? string.Join(", ", modifierNames) : "no")}' modifiers");
 
             if (selectedButtonBinding.Device == "Keyboard")
             {

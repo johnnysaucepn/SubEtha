@@ -43,7 +43,7 @@ namespace Howatworks.SubEtha.Monitor
 
             if (!_started) return entriesFound;
 
-            Log.Debug($"Rescanning {_filename} file...");
+            Log.Debug($"Rescanning file '{_filename}'...");
 
             entriesFound = RescanFile(lastRead).ToList();
 
@@ -74,7 +74,7 @@ namespace Howatworks.SubEtha.Monitor
                 return entries;
             }
 
-            Log.Debug($"Scanning file {FilePath}");
+            Log.Debug($"Scanning file '{FilePath}'");
 
             var reader = _journalReaderFactory.CreateRealTimeJournalReader(FilePath);
             entries = reader.ReadAll(since).ToList();
@@ -82,7 +82,7 @@ namespace Howatworks.SubEtha.Monitor
             // Only expect one entry per standalone file, but no harm in checking
             if (entries.Count > 0)
             {
-                Log.Info($"Scanned file {FilePath}, {entries.Count} new entries found");
+                Log.Info($"Scanned file '{FilePath}', {entries.Count} new entries found");
             }
 
             return entries;

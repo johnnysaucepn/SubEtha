@@ -120,9 +120,7 @@ namespace Howatworks.SubEtha.Monitor
 
         private IEnumerable<IJournalEntry> RescanFile(IJournalReader reader, DateTimeOffset since)
         {
-            //var info = reader.FileInfo;
-
-            Log.Debug($"Scanning file {reader.FilePath}");
+            Log.Debug($"Scanning file '{reader.FilePath}'");
             var count = 0;
 
             if (reader.FileExists)
@@ -147,7 +145,7 @@ namespace Howatworks.SubEtha.Monitor
 
             if (count > 0)
             {
-                Log.Info($"Scanned file {reader.FilePath}, {count} new entries found");
+                Log.Info($"Scanned file '{reader.FilePath}', {count} new entries found");
             }
         }
 

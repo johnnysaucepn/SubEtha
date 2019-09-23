@@ -53,9 +53,9 @@ namespace Howatworks.Thumb.Core
                 var jsonState = File.ReadAllText(_storageFilePath);
                 return JsonConvert.DeserializeObject<InMemoryJournalMonitorState>(jsonState, _serializerSettings);
             }
-            catch (IOException ex)
+            catch (IOException)
             {
-                Log.Warn(ex);
+                Log.Warn($"No '{StorageFileName}' found, creating new file");
                 return new InMemoryJournalMonitorState();
             }
         }
@@ -70,7 +70,7 @@ namespace Howatworks.Thumb.Core
             }
             catch (IOException ex)
             {
-                Log.Warn(ex);
+                Log.Error(ex);
             }
         }
     }

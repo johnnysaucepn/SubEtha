@@ -67,12 +67,12 @@ namespace Howatworks.Thumb.Matrix.Core
 
             if (!IsAuthenticated)
             {
-                Log.Warn($"Not uploading to {targetUri.AbsoluteUri} as not authenticated");
+                Log.Warn($"Not uploading to '{targetUri.AbsoluteUri}' as not authenticated");
                 return;
             }
             try
             {
-                Log.Info($"Uploading to {targetUri.AbsoluteUri}...");
+                Log.Info($"Uploading to '{targetUri.AbsoluteUri}'...");
                 var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
                 if (response.StatusCode == HttpStatusCode.Forbidden)

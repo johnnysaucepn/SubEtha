@@ -80,7 +80,7 @@ namespace Howatworks.Thumb.Assistant.Core
                         _connectionManager.SendMessageToAllClients(serializedMessage);
                         break;
                     default:
-                        Log.Warn($"Unrecognised message format :{args.Message}");
+                        Log.Warn($"Unrecognised message format: {args.Message}");
                         break;
                 }
             };
@@ -132,7 +132,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
         private void ActivateBinding(ControlRequest controlRequest)
         {
-            Log.Info($"Activated a control: {controlRequest.BindingName}");
+            Log.Info($"Activated a control: '{controlRequest.BindingName}'");
 
             var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
             if (button == null)
