@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 
-namespace Howatworks.Thumb.Matrix
+namespace Howatworks.Thumb.Assistant
 {
-    public class MatrixWinFormsModule : Module
+    public class AssistantFormsModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<MatrixApplicationContext>().AsSelf().SingleInstance();
+            builder.RegisterType<AssistantApplicationContext>().AsSelf().SingleInstance();
         }
     }
 }

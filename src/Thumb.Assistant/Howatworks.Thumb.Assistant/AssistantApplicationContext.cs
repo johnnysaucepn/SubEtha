@@ -29,7 +29,14 @@ namespace Howatworks.Thumb.Assistant
         {
             try
             {
+                _app.Initialize();
+
                 _ui.Initialize();
+
+                _ui.OnExitRequested += (sender, args) => Application.Exit();
+                ThreadExit += (sender, args) => _app.Stop();
+
+                _app.Start();
             }
             catch (Exception ex)
             {

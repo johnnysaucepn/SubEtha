@@ -54,6 +54,10 @@ namespace Howatworks.Thumb.Matrix
                     }
                 };
 
+                _ui.Initialize();
+                _ui.OnExitRequested += (sender, args) => Application.Exit();
+                ThreadExit += (sender, args) => _app.Stop();
+
                 if (_app.IsAuthenticated)
                 {
                     _app.Start();
@@ -62,10 +66,6 @@ namespace Howatworks.Thumb.Matrix
                 {
                     _loginForm.Show();
                 }
-
-                _ui.Initialize();
-                _ui.OnExitRequested += (sender, args) => Application.Exit();
-                ThreadExit += (sender, args) => _app.Stop();
             }
             catch (Exception ex)
             {

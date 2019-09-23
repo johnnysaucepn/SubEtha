@@ -27,7 +27,7 @@ namespace Howatworks.Thumb.Matrix
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbFormsModule(config));
             builder.RegisterModule(new MatrixModule());
-            builder.RegisterModule(new MatrixWinFormsModule());
+            builder.RegisterModule(new MatrixFormsModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
