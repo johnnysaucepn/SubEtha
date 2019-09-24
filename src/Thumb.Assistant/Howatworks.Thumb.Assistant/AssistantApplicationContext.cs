@@ -11,13 +11,13 @@ namespace Howatworks.Thumb.Assistant
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApplicationContext));
 
         private readonly AssistantApp _app;
-        private readonly ThumbTrayControl _ui;
+        private readonly ThumbTrayControl _tray;
 
         public AssistantApplicationContext(AssistantApp app)
         {
             _app = app;
 
-            _ui = new ThumbTrayControl(GetLastChecked, GetLastEntry,
+            _tray = new ThumbTrayControl(GetLastChecked, GetLastEntry,
                 Resources.ThumbIcon,
                 Resources.ExitLabel,
                 Resources.NotifyIconDefaultLabel, Resources.NotifyIconNeverUpdatedLabel, Resources.NotifyIconLastUpdatedLabel);
@@ -31,9 +31,9 @@ namespace Howatworks.Thumb.Assistant
             {
                 _app.Initialize();
 
-                _ui.Initialize();
+                _tray.Initialize();
 
-                _ui.OnExitRequested += (sender, args) => Application.Exit();
+                _tray.OnExitRequested += (sender, args) => Application.Exit();
                 ThreadExit += (sender, args) => _app.Stop();
 
                 _app.Start();

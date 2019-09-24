@@ -11,7 +11,7 @@ namespace Howatworks.Thumb.Matrix
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApplicationContext));
 
         private readonly MatrixApp _app;
-        private readonly ThumbTrayControl _ui;
+        private readonly ThumbTrayControl _tray;
         private readonly LoginForm _loginForm;
 
         public MatrixApplicationContext(MatrixApp app)
@@ -19,7 +19,7 @@ namespace Howatworks.Thumb.Matrix
             _app = app;
             _loginForm = new LoginForm();
 
-            _ui = new ThumbTrayControl(GetLastChecked, GetLastEntry,
+            _tray = new ThumbTrayControl(GetLastChecked, GetLastEntry,
                 Resources.ThumbIcon,
                 Resources.ExitLabel,
                 Resources.NotifyIconDefaultLabel, Resources.NotifyIconNeverUpdatedLabel, Resources.NotifyIconLastUpdatedLabel);
@@ -54,8 +54,8 @@ namespace Howatworks.Thumb.Matrix
                     }
                 };
 
-                _ui.Initialize();
-                _ui.OnExitRequested += (sender, args) => Application.Exit();
+                _tray.Initialize();
+                _tray.OnExitRequested += (sender, args) => Application.Exit();
                 ThreadExit += (sender, args) => _app.Stop();
 
                 if (_app.IsAuthenticated)
