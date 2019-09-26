@@ -45,7 +45,8 @@ namespace Howatworks.Matrix.Site.Api
         {
             return new
             {
-                GameContext = new GameContext(gameVersion, user),
+                GameVersion = gameVersion,
+                CommanderName = user,
                 Locations = entities.Select(x => ToLocationRepresentation(user, gameVersion, x))
             };
         }
@@ -54,7 +55,8 @@ namespace Howatworks.Matrix.Site.Api
         {
             return new
             {
-                GameContext = new GameContext(gameVersion, user),
+                GameVersion = gameVersion,
+                CommanderName = user,
                 Location = ToLocationRepresentation(entity)
             };
         }
@@ -77,7 +79,8 @@ namespace Howatworks.Matrix.Site.Api
         {
             return new
             {
-                GameContext = new GameContext(gameVersion, user),
+                GameVersion = gameVersion,
+                CommanderName = user,
                 Systems = entities?.RemoveSequentialRepeats(new StarSystemEntityComparer()).Select(x => ToSystemRepresentation(x))
             };
         }

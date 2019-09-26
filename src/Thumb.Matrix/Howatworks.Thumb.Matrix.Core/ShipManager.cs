@@ -14,11 +14,11 @@ namespace Howatworks.Thumb.Matrix.Core
         private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
 
         private readonly CommanderTracker _commander;
-        private readonly IUploader<ShipState> _client;
+        private readonly UploadQueue<ShipState> _client;
         private readonly ConcurrentDictionary<GameContext, ShipState> _ships = new ConcurrentDictionary<GameContext, ShipState>();
         private bool _isDirty;
 
-        public ShipManager(JournalEntryRouter router, CommanderTracker commander, IUploader<ShipState> client)
+        public ShipManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<ShipState> client)
         {
             _commander = commander;
             _client = client;
@@ -110,19 +110,21 @@ namespace Howatworks.Thumb.Matrix.Core
 
             foreach (var context in _ships)
             {
-                _client.Upload(context.Key, context.Value);
+                _client.Enqueue(context.Key.GameVersion, context.Key.CommanderName, context.Value);
             }
 
             _isDirty = false;
+
+            // Always try to commit immediately
+            _client.Flush();
 
             return true;
         }
 
         private bool Modify(DateTimeOffset timestamp, Func<ShipState, bool> stateChange)
         {
-            var discriminator = _commander.Context;
-            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
-            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
+            var discriminator = _commander.GetContext();
+            if (discriminator is null) return false;
 
             var ship = _ships.ContainsKey(discriminator) ? _ships[discriminator] : new ShipState();
 
@@ -137,9 +139,8 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool Replace(DateTimeOffset timestamp, ShipState newState)
         {
-            var discriminator = _commander.Context;
-            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
-            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
+            var discriminator = _commander.GetContext();
+            if (discriminator is null) return false;
 
             // If handler didn't apply the change, don't update state
             if (newState == null) return false;

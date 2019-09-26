@@ -13,11 +13,11 @@ namespace Howatworks.Thumb.Matrix.Core
         private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
 
         private readonly CommanderTracker _commander;
-        private readonly IUploader<SessionState> _client;
+        private readonly UploadQueue<SessionState> _client;
         private readonly ConcurrentDictionary<GameContext, SessionState> _sessions = new ConcurrentDictionary<GameContext, SessionState>();
         private bool _isDirty;
 
-        public SessionManager(JournalEntryRouter router, CommanderTracker commander, IUploader<SessionState> client)
+        public SessionManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<SessionState> client)
         {
             _commander = commander;
             _client = client;
@@ -67,9 +67,8 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool Replace(DateTimeOffset timestamp, SessionState newState)
         {
-            var discriminator = _commander.Context;
-            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
-            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
+            var discriminator = _commander.GetContext();
+            if (discriminator is null) return false;
 
             newState.TimeStamp = timestamp;
             _sessions[discriminator] = newState;
@@ -79,9 +78,8 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool Modify(DateTimeOffset timestamp, Func<SessionState, bool> stateChange)
         {
-            var discriminator = _commander.Context;
-            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
-            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
+            var discriminator = _commander.GetContext();
+            if (discriminator is null) return false;
 
             var state = _sessions.ContainsKey(discriminator) ? _sessions[discriminator] : new SessionState();
 
@@ -100,10 +98,13 @@ namespace Howatworks.Thumb.Matrix.Core
 
             foreach (var context in _sessions)
             {
-                _client.Upload(context.Key, context.Value);
+                _client.Enqueue(context.Key.GameVersion, context.Key.CommanderName, context.Value);
             }
 
             _isDirty = false;
+
+            // Always try to commit immediately
+            _client.Flush();
 
             return true;
         }
