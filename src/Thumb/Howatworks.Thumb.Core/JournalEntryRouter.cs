@@ -40,7 +40,7 @@ namespace Howatworks.Thumb.Core
                 var somethingApplied = Apply(journalEntry, mode);
                 if (!somethingApplied)
                 {
-                    Log.Info($"No handler applied for event type {journalEntry.Event}");
+                    Log.Info($"No handler applied for event type '{journalEntry.Event}'");
                 }
             }
 
@@ -53,7 +53,7 @@ namespace Howatworks.Thumb.Core
             if (!_journalHandlers.ContainsKey(t)) return false;
 
             var applied = false;
-            Log.Info($"Applying journal event {t.Name}");
+            Log.Info($"Applying journal event '{t.Name}'");
             foreach (var handler in _journalHandlers[t])
             {
                 if (!handler.Policy.Accepts(mode)) continue;

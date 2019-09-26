@@ -16,9 +16,7 @@ namespace Howatworks.Thumb.Core
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => _config).As<IConfiguration>().SingleInstance();
-
-            builder.RegisterType<Log4NetThumbLogging>().As<IThumbLogging>().SingleInstance();
+            builder.Register(_ => _config).As<IConfiguration>().SingleInstance();
 
             builder.RegisterType<JsonJournalMonitorState>().As<IJournalMonitorState>().SingleInstance();
             builder.RegisterType<JournalMonitorScheduler>().AsSelf().SingleInstance();

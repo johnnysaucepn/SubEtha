@@ -25,9 +25,9 @@ namespace Howatworks.Thumb.Core
 
         private readonly Lazy<InMemoryJournalMonitorState> _state;
 
-        public DateTimeOffset? LastEntrySeen => _state.Value.LastEntrySeen;
+        public DateTimeOffset? LastEntrySeen => _state.Value?.LastEntrySeen;
 
-        public DateTimeOffset? LastChecked => _state.Value.LastChecked;
+        public DateTimeOffset? LastChecked => _state.Value?.LastChecked;
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public JsonJournalMonitorState(IConfiguration config)
@@ -42,7 +42,7 @@ namespace Howatworks.Thumb.Core
         /// </summary>
         public void Update(DateTimeOffset lastChecked, DateTimeOffset lastEntrySeen)
         {
-            _state.Value.Update(lastChecked, lastEntrySeen);
+            _state.Value?.Update(lastChecked, lastEntrySeen);
             Save();
         }
 
@@ -53,9 +53,9 @@ namespace Howatworks.Thumb.Core
                 var jsonState = File.ReadAllText(_storageFilePath);
                 return JsonConvert.DeserializeObject<InMemoryJournalMonitorState>(jsonState, _serializerSettings);
             }
-            catch (IOException ex)
+            catch (IOException)
             {
-                Log.Warn(ex);
+                Log.Warn($"No '{StorageFileName}' found, creating new file");
                 return new InMemoryJournalMonitorState();
             }
         }
@@ -70,7 +70,7 @@ namespace Howatworks.Thumb.Core
             }
             catch (IOException ex)
             {
-                Log.Warn(ex);
+                Log.Error(ex);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public void Upload(GameContext context, SessionState state)
         {
-            Log.Info($"Uploading session state \"{context.GameVersion}\"...");
+            Log.Info($"Uploading session state '{context.GameVersion}'...");
             Log.Debug(JsonConvert.SerializeObject(state));
 
             _client.Upload(new Uri($"Api/{context.CommanderName}/{context.GameVersion}/Session", UriKind.Relative), state);

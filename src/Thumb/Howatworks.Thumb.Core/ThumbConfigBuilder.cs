@@ -13,9 +13,10 @@ namespace Howatworks.Thumb.Core
         private readonly string _defaultJournalPath;
         private readonly string _defaultBindingsPath;
 
-        public ThumbConfigBuilder(string defaultAppStoragePath)
+        public ThumbConfigBuilder(string appName)
         {
-            _defaultAppStoragePath = defaultAppStoragePath;
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
             // In Windows, we can use the P/Invoke Shell32 package that exposes KnownFolders to retrieve SavedGames directly
 
             string savedGamesPath;
@@ -25,18 +26,12 @@ namespace Howatworks.Thumb.Core
             }
             else
             {
-                savedGamesPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    "..", "Saved Games"
-                );
+                savedGamesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Saved Games");
             }
 
+            _defaultAppStoragePath = Path.Combine(appData, "Howatworks", "Thumb", appName);
             _defaultJournalPath = Path.Combine(savedGamesPath, "Frontier Developments", "Elite Dangerous");
-
-            _defaultBindingsPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Frontier Developments", "Elite Dangerous", "Options", "Bindings"
-            );
+            _defaultBindingsPath = Path.Combine(appData, "Frontier Developments", "Elite Dangerous", "Options", "Bindings");
         }
 
         public IConfiguration Build()
@@ -55,6 +50,7 @@ namespace Howatworks.Thumb.Core
         };
             var env = Environment.GetEnvironmentVariable("HOSTINGENVIRONMENT");
             var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables("THUMB_")
                 .AddInMemoryCollection(defaultConfig)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env}.json", true)

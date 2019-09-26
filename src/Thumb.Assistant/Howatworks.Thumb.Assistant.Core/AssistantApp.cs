@@ -17,7 +17,6 @@ namespace Howatworks.Thumb.Assistant.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 
-        private readonly IThumbLogging _logger;
         private readonly JournalMonitorScheduler _monitor;
         private readonly IThumbNotifier _notifier;
         private readonly JournalEntryRouter _router;
@@ -29,7 +28,6 @@ namespace Howatworks.Thumb.Assistant.Core
         private BindingMapper _bindingMapper;
 
         public AssistantApp(
-            IThumbLogging logger,
             JournalMonitorScheduler monitor,
             IThumbNotifier notifier,
             JournalEntryRouter router,
@@ -38,7 +36,6 @@ namespace Howatworks.Thumb.Assistant.Core
             StatusManager statusManager,
             GameControlBridge keyboard)
         {
-            _logger = logger;
             _monitor = monitor;
             _notifier = notifier;
             _router = router;
@@ -50,7 +47,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
         public void Initialize()
         {
-            _logger.Configure();
+            Log.Info("Starting up");
 
             _monitor.JournalEntriesParsed += (sender, args) =>
             {
@@ -65,7 +62,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
             _bindingMapper = BindingMapper.FromFile(bindingsPath);
 
-            _connectionManager.MessageReceived += (sender, args) =>
+            _connectionManager.MessageReceived += (_, args) =>
             {
                 var messageWrapper = JObject.Parse(args.Message);
                 switch (messageWrapper["MessageType"].Value<string>())
@@ -85,7 +82,7 @@ namespace Howatworks.Thumb.Assistant.Core
                         _connectionManager.SendMessageToAllClients(serializedMessage);
                         break;
                     default:
-                        Log.Warn($"Unrecognised message format :{args.Message}");
+                        Log.Warn($"Unrecognised message format: {args.Message}");
                         break;
                 }
             };
@@ -101,7 +98,7 @@ namespace Howatworks.Thumb.Assistant.Core
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
 
-            _statusManager.ControlStateChanged += (sender, args) =>
+            _statusManager.ControlStateChanged += (_, args) =>
             {
                 _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated ship status");
                 var serializedMessage = JsonConvert.SerializeObject(new
@@ -111,11 +108,6 @@ namespace Howatworks.Thumb.Assistant.Core
                     Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
-        }
-
-        public void Start()
-        {
-            _monitor.Start();
 
             var hostBuilder = new WebHostBuilder()
                 .UseConfiguration(_configuration)
@@ -128,26 +120,26 @@ namespace Howatworks.Thumb.Assistant.Core
             var host = hostBuilder.Build();
 
             host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
+
+            StartMonitoring();
         }
 
-        public void Stop()
+        public void Shutdown()
         {
+            Log.Info("Shutting down");
+            StopMonitoring();
+        }
+
+        public void StartMonitoring()
+        {
+            Log.Info("Starting monitoring");
+            _monitor.Start();
+        }
+
+        public void StopMonitoring()
+        {
+            Log.Info("Stopping monitoring");
             _monitor.Stop();
-        }
-
-        private void ActivateBinding(ControlRequest controlRequest)
-        {
-            Log.Info($"Activated a control: {controlRequest.BindingName}");
-
-            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
-            if (button == null)
-            {
-                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
-            }
-            else
-            {
-                _keyboard.TriggerKeyCombination(button);
-            }
         }
 
         public DateTimeOffset? LastEntry()
@@ -158,6 +150,21 @@ namespace Howatworks.Thumb.Assistant.Core
         public DateTimeOffset? LastChecked()
         {
             return _monitor.LastChecked();
+        }
+
+        private void ActivateBinding(ControlRequest controlRequest)
+        {
+            Log.Info($"Activated a control: '{controlRequest.BindingName}'");
+
+            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
+            if (button == null)
+            {
+                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
+            }
+            else
+            {
+                _keyboard.TriggerKeyCombination(button);
+            }
         }
     }
 }

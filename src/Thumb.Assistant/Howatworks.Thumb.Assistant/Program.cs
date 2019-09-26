@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
 using Autofac;
 using Howatworks.Thumb.Core;
@@ -19,27 +18,22 @@ namespace Howatworks.Thumb.Assistant
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var appStoragePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Howatworks", "Thumb", "Assistant"
-            );
-            var config = new ThumbConfigBuilder(appStoragePath).Build();
+            var config = new ThumbConfigBuilder("Assistant").Build();
+
+            var logger = new Log4NetThumbLogging(config);
+            logger.Configure();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbFormsModule(config));
             builder.RegisterModule(new AssistantModule());
+            builder.RegisterModule(new AssistantFormsModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var app = scope.Resolve<AssistantApp>();
-                app.Initialize();
-
-                app.Start();
-                var context = new ThumbTrayApplicationContext(app, Resources.ResourceManager);
+                var context = scope.Resolve<AssistantApplicationContext>();
                 Application.Run(context);
-                app.Stop();
             }
         }
     }

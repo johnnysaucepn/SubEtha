@@ -1,18 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Journal.StationServices;
 using Howatworks.Thumb.Core;
+using log4net;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
     public class ShipManager
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+
         private readonly CommanderTracker _commander;
         private readonly IUploader<ShipState> _client;
-        private readonly Dictionary<GameContext, ShipState> _ships = new Dictionary<GameContext, ShipState>();
+        private readonly ConcurrentDictionary<GameContext, ShipState> _ships = new ConcurrentDictionary<GameContext, ShipState>();
         private bool _isDirty;
 
         public ShipManager(JournalEntryRouter router, CommanderTracker commander, IUploader<ShipState> client)
@@ -34,7 +37,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyLoadGame(LoadGame loadGame)
         {
-            return Apply(loadGame.Timestamp, ship =>
+            return Modify(loadGame.Timestamp, ship =>
             {
                 ship.Type = loadGame.Ship;
                 ship.ShipId = loadGame.ShipID;
@@ -55,7 +58,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap)
         {
-            return Apply(shipyardSwap.Timestamp, ship =>
+            return Modify(shipyardSwap.Timestamp, ship =>
             {
                 ship.Type = shipyardSwap.ShipType;
                 ship.ShipId = shipyardSwap.ShipID;
@@ -65,7 +68,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyHullDamage(HullDamage hullDamage)
         {
-            return Apply(hullDamage.Timestamp, ship =>
+            return Modify(hullDamage.Timestamp, ship =>
             {
                 ship.HullIntegrity = hullDamage.Health;
                 return true;
@@ -74,7 +77,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyShieldState(ShieldState shieldState)
         {
-            return Apply(shieldState.Timestamp, ship =>
+            return Modify(shieldState.Timestamp, ship =>
             {
                 // If shield state was unknown before (i.e. null) we know it now
                 ship.ShieldsUp = shieldState.ShieldsUp;
@@ -84,7 +87,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyRepair(Repair repair)
         {
-            return Apply(repair.Timestamp, ship =>
+            return Modify(repair.Timestamp, ship =>
             {
                 if (repair.Item != "hull" && repair.Item != "all") return false;
                 ship.HullIntegrity = 1;
@@ -94,7 +97,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyRepairAll(RepairAll repair)
         {
-            return Apply(repair.Timestamp, ship =>
+            return Modify(repair.Timestamp, ship =>
             {
                 ship.HullIntegrity = 1;
                 return true;
@@ -105,23 +108,26 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             if (!_isDirty) return false;
 
-            foreach (var context in _ships.Keys)
+            foreach (var context in _ships)
             {
-                _client.Upload(context, _ships[context]);
+                _client.Upload(context.Key, context.Value);
             }
 
             _isDirty = false;
+
             return true;
         }
 
-        private bool Apply(DateTimeOffset timestamp, Func<ShipState, bool> action)
+        private bool Modify(DateTimeOffset timestamp, Func<ShipState, bool> stateChange)
         {
             var discriminator = _commander.Context;
+            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
+            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
 
             var ship = _ships.ContainsKey(discriminator) ? _ships[discriminator] : new ShipState();
 
             // If handler didn't apply the change, don't update state
-            if (!action(ship)) return false;
+            if (!stateChange(ship)) return false;
 
             ship.TimeStamp = timestamp;
             _ships[discriminator] = ship;
@@ -132,6 +138,8 @@ namespace Howatworks.Thumb.Matrix.Core
         private bool Replace(DateTimeOffset timestamp, ShipState newState)
         {
             var discriminator = _commander.Context;
+            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
+            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
 
             // If handler didn't apply the change, don't update state
             if (newState == null) return false;

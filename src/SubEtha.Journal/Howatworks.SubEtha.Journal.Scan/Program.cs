@@ -10,11 +10,11 @@ using System.Reflection;
 
 namespace Howatworks.SubEtha.Journal.Scan
 {
-    class Program
+    internal class Program
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // TODO: In tray, we can use the Win32 add-on package that extends SpecialFolder to retrieve SavedGames directly
             var defaultJournalFolder = Path.Combine(
@@ -46,7 +46,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             var incrementalFiles = Directory.EnumerateFiles(basePath, incrementalPattern, SearchOption.TopDirectoryOnly);
             foreach (var file in incrementalFiles)
             {
-                Log.Info($"Parsing file {file}...");
+                Log.Info($"Parsing file '{file}'...");
                 var reader = new IncrementalJournalReader(file, parser);
                 // Read all entries from all files
                 var _ = reader.ReadAll(DateTimeOffset.MinValue).ToList();
@@ -55,7 +55,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             var realTimeFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
             foreach (var file in realTimeFiles)
             {
-                Log.Info($"Parsing file {file}...");
+                Log.Info($"Parsing file '{file}'...");
                 var reader = new RealTimeJournalReader(file, parser);
                 // Read all entries from all files
                 var _ = reader.ReadAll(DateTimeOffset.MinValue).ToList();
