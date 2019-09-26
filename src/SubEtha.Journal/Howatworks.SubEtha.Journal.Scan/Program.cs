@@ -10,11 +10,11 @@ using System.Reflection;
 
 namespace Howatworks.SubEtha.Journal.Scan
 {
-    class Program
+    internal class Program
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // TODO: In tray, we can use the Win32 add-on package that extends SpecialFolder to retrieve SavedGames directly
             var defaultJournalFolder = Path.Combine(

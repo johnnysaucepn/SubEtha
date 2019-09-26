@@ -25,11 +25,10 @@ namespace Howatworks.Thumb.Assistant.Console
             using (var scope = container.BeginLifetimeScope())
             {
                 var app = scope.Resolve<AssistantApp>();
+                
                 app.Initialize();
-
-                app.Start();
                 System.Console.ReadKey();
-                app.Stop();
+                app.Shutdown();
             }
         }
     }

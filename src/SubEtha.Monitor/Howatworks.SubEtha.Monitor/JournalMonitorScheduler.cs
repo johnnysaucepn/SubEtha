@@ -13,6 +13,7 @@ namespace Howatworks.SubEtha.Monitor
         private readonly IList<IJournalMonitor> _journalMonitors = new List<IJournalMonitor>();
         private readonly IJournalMonitorState _journalMonitorState;
         private readonly Timer _triggerUpdate;
+        private bool _initialized = false;
 
         public event EventHandler<JournalEntriesParsedEventArgs> JournalEntriesParsed;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
@@ -48,7 +49,15 @@ namespace Howatworks.SubEtha.Monitor
 
         private void TriggerUpdate_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Update(e.SignalTime.ToUniversalTime(), _journalMonitorState.LastEntrySeen, BatchMode.Ongoing);
+            DateTime triggerTime = e.SignalTime.ToUniversalTime();
+            if (_initialized)
+            {
+                Update(triggerTime, _journalMonitorState.LastEntrySeen, BatchMode.Ongoing);
+            }
+            else
+            {
+                Initialize(triggerTime);
+            }
         }
 
         private void Update(DateTimeOffset triggerTime, DateTimeOffset? lastRead, BatchMode batchMode)
@@ -60,23 +69,31 @@ namespace Howatworks.SubEtha.Monitor
             }
         }
 
-        public void Start()
+        private void Initialize(DateTimeOffset triggerTime)
         {
             var firstRun = !_journalMonitorState.LastEntrySeen.HasValue;
             var lastRead = _journalMonitorState.LastEntrySeen ?? DateTimeOffset.MinValue;
-            var triggerTime = DateTimeOffset.UtcNow;
             foreach (var monitor in _journalMonitors)
             {
                 var firstEntries = monitor.Start(firstRun, lastRead);
                 ProcessEntries(triggerTime, firstEntries, firstRun ? BatchMode.FirstRun : BatchMode.Catchup);
             }
+            _initialized = true;
+        }
 
+        public void Start()
+        {
             _triggerUpdate.Enabled = true;
         }
 
         public void Stop()
         {
             _triggerUpdate.Enabled = false;
+        }
+
+        public void Shutdown()
+        {
+            Stop();
 
             // One last run
             var lastRead = _journalMonitorState.LastEntrySeen;

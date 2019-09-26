@@ -24,7 +24,7 @@ namespace Howatworks.Thumb.Matrix
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            OnLogin(this, new LoginEventArgs(this.UsernameBox.Text, this.PasswordBox.Text));
+            OnLogin(this, new LoginEventArgs(UsernameBox.Text, PasswordBox.Text));
         }
     }
 }

@@ -31,11 +31,8 @@ namespace Howatworks.Thumb.Matrix
         {
             try
             {
-                _app.Initialize();
-
-                _app.OnAuthenticationRequired += (sender, args) =>
+                _app.OnAuthenticationRequired += (_, args) =>
                 {
-                    _app.Stop();
                     _loginForm.Show();
                 };
 
@@ -46,7 +43,6 @@ namespace Howatworks.Thumb.Matrix
                     if (authenticated)
                     {
                         _loginForm.Hide();
-                        _app.Start();
                     }
                     else
                     {
@@ -56,16 +52,9 @@ namespace Howatworks.Thumb.Matrix
 
                 _tray.Initialize();
                 _tray.OnExitRequested += (sender, args) => Application.Exit();
-                ThreadExit += (sender, args) => _app.Stop();
+                ThreadExit += (sender, args) => _app.Shutdown();
 
-                if (_app.IsAuthenticated)
-                {
-                    _app.Start();
-                }
-                else
-                {
-                    _loginForm.Show();
-                }
+                _app.Initialize();
             }
             catch (Exception ex)
             {

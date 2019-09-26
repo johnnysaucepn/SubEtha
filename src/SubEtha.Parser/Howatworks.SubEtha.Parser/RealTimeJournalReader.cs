@@ -67,6 +67,5 @@ namespace Howatworks.SubEtha.Parser
                 }
             }
         }
-
     }
 }

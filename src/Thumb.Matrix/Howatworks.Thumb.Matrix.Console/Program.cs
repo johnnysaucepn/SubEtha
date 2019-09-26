@@ -26,42 +26,61 @@ namespace Howatworks.Thumb.Matrix.Console
                 var app = scope.Resolve<MatrixApp>();
 
                 app.OnAuthenticationRequired += (sender, args) => {
-                    app.Stop();
                     do
                     {
-                        string username;
-                        string password;
-                        System.Console.WriteLine("Authentication required");
-                        do
-                        {
-                            System.Console.WriteLine("Username:");
-
-                            username = System.Console.ReadLine();
-                            username = username?.Substring(0, Math.Min(username.Length, app.MaxUsernameLength));
-                        } while (string.IsNullOrWhiteSpace(username));
-                        do
-                        {
-                            System.Console.WriteLine("Password:");
-
-                            password = System.Console.ReadLine();
-                            password = password?.Substring(0, Math.Min(password.Length, app.MaxPasswordLength));
-                        } while (string.IsNullOrWhiteSpace(password));
+                        (string username, string password) = GetCredentials(app);
 
                         app.Authenticate(username, password);
                         if (!app.IsAuthenticated)
                         {
                             System.Console.WriteLine("Authentication failed!");
                         }
-                    } while (app.IsAuthenticated);
+                    } while (!app.IsAuthenticated);
                 };
 
                 app.Initialize();
-
-                app.Start();
                 System.Console.ReadKey();
-                app.Stop();
+                app.Shutdown();
             }
         }
 
+        private static (string username, string password) GetCredentials(MatrixApp app)
+        {
+            string username;
+            string password;
+            System.Console.WriteLine("Authentication required");
+            do
+            {
+                System.Console.Write("Username: ");
+
+                username = System.Console.ReadLine();
+                username = username?.Substring(0, Math.Min(username.Length, app.MaxUsernameLength));
+            } while (string.IsNullOrWhiteSpace(username));
+            do
+            {
+                System.Console.Write("Password: ");
+
+                password = MaskedReadLine();
+                password = password?.Substring(0, Math.Min(password.Length, app.MaxPasswordLength));
+            } while (string.IsNullOrWhiteSpace(password));
+
+            return (username, password);
+        }
+
+        private static string MaskedReadLine()
+        {
+            var input = string.Empty;
+
+            ConsoleKeyInfo ch = System.Console.ReadKey(true);
+            while (ch.Key != ConsoleKey.Enter)
+            {
+                input += ch.KeyChar;
+                System.Console.Write('*');
+
+                ch = System.Console.ReadKey(true);
+            }
+            System.Console.WriteLine();
+            return input;
+        }
     }
 }

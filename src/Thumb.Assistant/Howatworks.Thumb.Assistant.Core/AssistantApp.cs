@@ -47,6 +47,8 @@ namespace Howatworks.Thumb.Assistant.Core
 
         public void Initialize()
         {
+            Log.Info("Starting up");
+
             _monitor.JournalEntriesParsed += (sender, args) =>
             {
                 if (args == null) return;
@@ -60,7 +62,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
             _bindingMapper = BindingMapper.FromFile(bindingsPath);
 
-            _connectionManager.MessageReceived += (sender, args) =>
+            _connectionManager.MessageReceived += (_, args) =>
             {
                 var messageWrapper = JObject.Parse(args.Message);
                 switch (messageWrapper["MessageType"].Value<string>())
@@ -96,7 +98,7 @@ namespace Howatworks.Thumb.Assistant.Core
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
 
-            _statusManager.ControlStateChanged += (sender, args) =>
+            _statusManager.ControlStateChanged += (_, args) =>
             {
                 _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated ship status");
                 var serializedMessage = JsonConvert.SerializeObject(new
@@ -106,11 +108,6 @@ namespace Howatworks.Thumb.Assistant.Core
                     Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
-        }
-
-        public void Start()
-        {
-            _monitor.Start();
 
             var hostBuilder = new WebHostBuilder()
                 .UseConfiguration(_configuration)
@@ -123,11 +120,36 @@ namespace Howatworks.Thumb.Assistant.Core
             var host = hostBuilder.Build();
 
             host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
+
+            StartMonitoring();
         }
 
-        public void Stop()
+        public void Shutdown()
         {
+            Log.Info("Shutting down");
+            StopMonitoring();
+        }
+
+        public void StartMonitoring()
+        {
+            Log.Info("Starting monitoring");
+            _monitor.Start();
+        }
+
+        public void StopMonitoring()
+        {
+            Log.Info("Stopping monitoring");
             _monitor.Stop();
+        }
+
+        public DateTimeOffset? LastEntry()
+        {
+            return _monitor.LastEntry();
+        }
+
+        public DateTimeOffset? LastChecked()
+        {
+            return _monitor.LastChecked();
         }
 
         private void ActivateBinding(ControlRequest controlRequest)
@@ -143,16 +165,6 @@ namespace Howatworks.Thumb.Assistant.Core
             {
                 _keyboard.TriggerKeyCombination(button);
             }
-        }
-
-        public DateTimeOffset? LastEntry()
-        {
-            return _monitor.LastEntry();
-        }
-
-        public DateTimeOffset? LastChecked()
-        {
-            return _monitor.LastChecked();
         }
     }
 }

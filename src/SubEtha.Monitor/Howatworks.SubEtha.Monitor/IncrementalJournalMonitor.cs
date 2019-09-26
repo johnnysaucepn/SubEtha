@@ -48,7 +48,7 @@ namespace Howatworks.SubEtha.Monitor
 
             lock (_activeReaders)
             {
-                if (_activeReaders.Count <= 0) return entriesFound;
+                if (_activeReaders.Count == 0) return entriesFound;
 
                 Log.Debug($"Rescanning {_activeReaders.Count} log files...");
 
@@ -63,14 +63,14 @@ namespace Howatworks.SubEtha.Monitor
 
         public IList<IJournalEntry> Start(bool firstRun, DateTimeOffset lastRead)
         {
-            IList<IJournalEntry> firstEntries = new List<IJournalEntry>();
+            var firstEntries = new List<IJournalEntry>();
 
             // Scan any files created since last run
 
             var allFilesInFolder = EnumerateFolder(_journalFolder, _journalPattern);
             var recentFilesInFolder = FilterFilesByDate(allFilesInFolder, lastRead).ToList();
 
-            if (recentFilesInFolder.Any())
+            if (recentFilesInFolder.Count > 0)
             {
                 firstEntries = RescanFiles(recentFilesInFolder, lastRead).ToList();
 
@@ -107,7 +107,7 @@ namespace Howatworks.SubEtha.Monitor
                     // monitoring it, and we'll read it then.
                     //if (!info.IsValid) return null;
 
-                    return reader.LastEntryTimeStamp.GetValueOrDefault(DateTimeOffset.MaxValue) > since ? reader : null;
+                    return (reader.LastEntryTimeStamp ?? DateTimeOffset.MaxValue) > since ? reader : null;
                 })
                 .Where(f => f != null)
                 .OrderBy(f => f.LastEntryTimeStamp);
@@ -183,6 +183,5 @@ namespace Howatworks.SubEtha.Monitor
                 }
             }
         }
-
     }
 }

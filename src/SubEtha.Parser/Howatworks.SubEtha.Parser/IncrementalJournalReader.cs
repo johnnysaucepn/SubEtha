@@ -40,30 +40,31 @@ namespace Howatworks.SubEtha.Parser
 
             try
             {
-                var streamReader = GetStreamReader();
-
-                // FileHeader *should* be the first line in the file, but at least try the first 5
-                var tolerance = 5;
-
-                while (!streamReader.EndOfStream && tolerance > 0 && fileHeader == null)
+                using (var streamReader = GetStreamReader())
                 {
-                    var line = streamReader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line)) continue;
+                    // FileHeader *should* be the first line in the file, but at least try the first 5
+                    var tolerance = 5;
 
-                    // TODO: beef up error handling here, what if line is not a parseable event?
-                    var (eventType, timestamp) = _parser.ParseCommonProperties(line);
-
-                    if (timestamp > lastEntry.GetValueOrDefault(DateTimeOffset.MinValue))
+                    while (!streamReader.EndOfStream && tolerance > 0 && fileHeader == null)
                     {
-                        lastEntry = timestamp;
-                    }
+                        var line = streamReader.ReadLine();
+                        if (string.IsNullOrWhiteSpace(line)) continue;
 
-                    if (eventType != null && eventType.Equals("fileheader", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        fileHeader = _parser.Parse<FileHeader>(line);
-                    }
+                        // TODO: beef up error handling here, what if line is not a parseable event?
+                        var (eventType, timestamp) = _parser.ParseCommonProperties(line);
 
-                    tolerance--;
+                        if (timestamp > (lastEntry ?? DateTimeOffset.MinValue))
+                        {
+                            lastEntry = timestamp;
+                        }
+
+                        if (eventType?.Equals("fileheader", StringComparison.InvariantCultureIgnoreCase) == true)
+                        {
+                            fileHeader = _parser.Parse<FileHeader>(line);
+                        }
+
+                        tolerance--;
+                    }
                 }
 
                 if (fileHeader != null)

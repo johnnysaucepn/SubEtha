@@ -87,6 +87,7 @@ namespace Howatworks.Thumb.Matrix.Core
                     Log.Error("Connection error", inner);
                     return true;
                 });
+                throw new MatrixUploadException(a.Message);
             }
         }
 

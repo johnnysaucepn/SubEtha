@@ -65,11 +65,11 @@ namespace Howatworks.Matrix.Site.Api
             return new LocationState
             {
                 TimeStamp = entity.TimeStamp,
-                Body = new Body(entity.Body_Name, entity.Body_Type, entity.Body_Docked.GetValueOrDefault(false)),
+                Body = new Body(entity.Body_Name, entity.Body_Type, entity.Body_Docked ?? false),
                 SignalSource = new SignalSource(new LocalisedString(entity.SignalSource_Type_Symbol, entity.SignalSource_Type_Text),entity.SignalSource_Threat),
                 StarSystem = new StarSystem(entity.StarSystem_Name, new[] {entity.StarSystem_Coords_X, entity.StarSystem_Coords_Y, entity.StarSystem_Coords_Z}),
                 Station = new Station(entity.Station_Name, entity.Station_Type),
-                SurfaceLocation = new SurfaceLocation(entity.SurfaceLocation_Landed.GetValueOrDefault(false), entity.SurfaceLocation_Latitude, entity.SurfaceLocation_Longitude)
+                SurfaceLocation = new SurfaceLocation(entity.SurfaceLocation_Landed ?? false, entity.SurfaceLocation_Latitude, entity.SurfaceLocation_Longitude)
             };
         }
 
@@ -141,7 +141,6 @@ namespace Howatworks.Matrix.Site.Api
                 SignalSource_Type_Symbol = location.SignalSource?.Type.Symbol,
                 SignalSource_Type_Text = location.SignalSource?.Type.Text
             };
-
         }
     }
 }
