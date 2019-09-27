@@ -68,16 +68,20 @@ namespace Howatworks.Thumb.Matrix.Core
             if (!IsAuthenticated)
             {
                 Log.Warn($"Not uploading to '{targetUri.AbsoluteUri}' as not authenticated");
-                return;
+                throw new MatrixAuthenticationException("Not authenticated");
             }
             try
             {
                 Log.Info($"Uploading to '{targetUri.AbsoluteUri}'...");
                 var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
-                if (response.StatusCode == HttpStatusCode.Forbidden)
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     throw new MatrixAuthenticationException("Upload rejected - authentication failed");
+                }
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new MatrixUploadException(response.ReasonPhrase);
                 }
             }
             catch (AggregateException a)

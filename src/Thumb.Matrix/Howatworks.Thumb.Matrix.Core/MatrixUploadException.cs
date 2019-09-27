@@ -2,7 +2,7 @@
 
 namespace Howatworks.Thumb.Matrix.Core
 {
-    internal class MatrixUploadException : Exception
+    public class MatrixUploadException : Exception
     {
         public MatrixUploadException() : base()
         {

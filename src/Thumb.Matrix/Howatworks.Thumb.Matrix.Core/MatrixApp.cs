@@ -76,18 +76,13 @@ namespace Howatworks.Thumb.Matrix.Core
 
             // Try username and password from configuration, if possible
             var nowAuthenticated = Authenticate(username, password);
-            // Otherwise, delegate getting username and password to caller
-            // TODO: make this more structured
-            if (!nowAuthenticated)
-            {
-                OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
-            }
+            StartMonitoring();
         }
 
         public void Shutdown()
         {
             Log.Info("Shutting down");
-            _monitor.Shutdown();
+            StopMonitoring();
         }
 
         public bool Authenticate(string username, string password)
@@ -96,10 +91,7 @@ namespace Howatworks.Thumb.Matrix.Core
             if (string.IsNullOrWhiteSpace(password)) return false;
 
             _client.AuthenticateByBearerToken(username, password);
-            if (_client.IsAuthenticated)
-            {
-                StartMonitoring();
-            }
+
             return _client.IsAuthenticated;
         }
 
