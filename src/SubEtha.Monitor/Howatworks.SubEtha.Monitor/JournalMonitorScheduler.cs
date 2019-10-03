@@ -4,16 +4,20 @@ using System.Linq;
 using System.Timers;
 using Howatworks.SubEtha.Parser;
 using Howatworks.SubEtha.Journal;
+using log4net;
 using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.SubEtha.Monitor
 {
     public class JournalMonitorScheduler : IDisposable
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalMonitorScheduler));
+
         private readonly IList<IJournalMonitor> _journalMonitors = new List<IJournalMonitor>();
         private readonly IJournalMonitorState _journalMonitorState;
         private readonly Timer _triggerUpdate;
         private bool _initialized = false;
+        private bool _running = false; // Attempt to ensure we don't overlap operations
 
         public event EventHandler<JournalEntriesParsedEventArgs> JournalEntriesParsed;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
@@ -49,36 +53,52 @@ namespace Howatworks.SubEtha.Monitor
 
         private void TriggerUpdate_Elapsed(object sender, ElapsedEventArgs e)
         {
-            DateTime triggerTime = e.SignalTime.ToUniversalTime();
-            if (_initialized)
+            if (_running) return;
+
+            try
             {
-                Update(triggerTime, _journalMonitorState.LastEntrySeen, BatchMode.Ongoing);
+                _running = true;
+                var triggerTime = e.SignalTime.ToUniversalTime();
+                if (_initialized)
+                {
+                    Update(triggerTime, _journalMonitorState.LastEntrySeen, BatchMode.Ongoing);
+                }
+                else
+                {
+                    Initialize(triggerTime);
+                    _initialized = true;
+                }
             }
-            else
+            finally
             {
-                Initialize(triggerTime);
+                _running = false;
             }
         }
 
         private void Update(DateTimeOffset triggerTime, DateTimeOffset? lastRead, BatchMode batchMode)
         {
+            Log.Info($"Update {batchMode}");
+            var entries = new List<IJournalEntry>();
             foreach (var monitor in _journalMonitors)
             {
-                var entries = monitor.Update(lastRead ?? DateTimeOffset.MinValue);
-                ProcessEntries(triggerTime, entries, batchMode);
+                entries.AddRange(monitor.Update(lastRead ?? DateTimeOffset.MinValue));
             }
+            ProcessEntries(triggerTime, entries, batchMode);
         }
 
         private void Initialize(DateTimeOffset triggerTime)
         {
+            Log.Info("Initialize");
             var firstRun = !_journalMonitorState.LastEntrySeen.HasValue;
             var lastRead = _journalMonitorState.LastEntrySeen ?? DateTimeOffset.MinValue;
+            var batchMode = firstRun ? BatchMode.FirstRun : BatchMode.Catchup;
+
+            var entries = new List<IJournalEntry>();
             foreach (var monitor in _journalMonitors)
             {
-                var firstEntries = monitor.Start(firstRun, lastRead);
-                ProcessEntries(triggerTime, firstEntries, firstRun ? BatchMode.FirstRun : BatchMode.Catchup);
+                entries.AddRange(monitor.Start(firstRun, lastRead));
             }
-            _initialized = true;
+            ProcessEntries(triggerTime, entries, batchMode);
         }
 
         public void Start()
@@ -121,6 +141,7 @@ namespace Howatworks.SubEtha.Monitor
         private void ProcessEntries(DateTimeOffset triggerTime, IList<IJournalEntry> journalEntries, BatchMode mode)
         {
             if (journalEntries.Count == 0) return;
+            Log.Info($"Processing entries in '{mode}' mode");
 
             JournalEntriesParsed?.Invoke(this, new JournalEntriesParsedEventArgs(journalEntries, mode));
             _journalMonitorState.Update(triggerTime, journalEntries.Max(x => x.Timestamp));

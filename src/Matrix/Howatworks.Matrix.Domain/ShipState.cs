@@ -2,7 +2,7 @@
 
 namespace Howatworks.Matrix.Domain
 {
-    public class ShipState : IShipState
+    public class ShipState : IShipState, ICloneable<ShipState>
     {
         public DateTimeOffset TimeStamp { get; set; }
 
@@ -16,6 +16,20 @@ namespace Howatworks.Matrix.Domain
         public ShipState()
         {
             HullIntegrity = 1;
+        }
+
+        public ShipState Clone()
+        {
+            return new ShipState
+            {
+                TimeStamp = this.TimeStamp,
+                Type = this.Type,
+                ShipId = this.ShipId,
+                Name = this.Name,
+                Ident = this.Ident,
+                ShieldsUp = this.ShieldsUp,
+                HullIntegrity = this.HullIntegrity
+            };
         }
     }
 }

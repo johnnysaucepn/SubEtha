@@ -11,8 +11,8 @@ namespace Howatworks.Thumb.Matrix.Core
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApp));
 
         public LocationManager Location { get; }
-        public ShipManager Ship { get; set; }
-        public SessionManager Session { get; set; }
+        public ShipManager Ship { get; }
+        public SessionManager Session { get; }
 
         public event EventHandler OnAuthenticationRequired;
 
@@ -57,13 +57,17 @@ namespace Howatworks.Thumb.Matrix.Core
             _monitor.JournalEntriesParsed += (sender, args) =>
             {
                 if (args == null) return;
+
+                _router.Apply(args.Entries, args.BatchMode);
+
                 try
                 {
-                    _router.Apply(args.Entries, args.BatchMode);
+                    Location.FlushQueue();
+                    Ship.FlushQueue();
+                    Session.FlushQueue();
                 }
                 catch (MatrixAuthenticationException)
                 {
-                    StopMonitoring();
                     OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
                 }
             };

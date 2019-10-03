@@ -1,11 +1,9 @@
-﻿using System;
-using Howatworks.Matrix.Domain;
+﻿using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Other;
 using Howatworks.SubEtha.Journal.Travel;
 using Howatworks.Thumb.Core;
 using log4net;
-using System.Collections.Concurrent;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
@@ -13,15 +11,13 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
 
-        private readonly CommanderTracker _commander;
-        private readonly UploadQueue<LocationState> _client;
-        private readonly ConcurrentDictionary<GameContext, LocationState> _locations = new ConcurrentDictionary<GameContext, LocationState>();
-        private bool _isDirty;
+        private readonly UploadQueue<LocationState> _queue;
+        private readonly Tracker<LocationState> _tracker;
 
-        public LocationManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<LocationState> client)
+        public LocationManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<LocationState> queue)
         {
-            _commander = commander;
-            _client = client;
+            _tracker = new Tracker<LocationState>(commander);
+            _queue = queue;
 
             router.RegisterFor<Location>(ApplyLocation);
             router.RegisterFor<FsdJump>(ApplyFsdJump);
@@ -37,32 +33,36 @@ namespace Howatworks.Thumb.Matrix.Core
             router.RegisterForBatchComplete(BatchComplete);
         }
 
+        public void FlushQueue()
+        {
+            _queue.Flush();
+        }
+
         private bool ApplyLocation(Location location)
         {
-            // Ignore previous information, return new location
-
-            return Replace(location.Timestamp, new LocationState
+            return _tracker.Replace(location.Timestamp, x =>
             {
-                StarSystem = new StarSystem(location.StarSystem, location.StarPos),
-                Body = new Body(location.Body, location.BodyType, location.Docked),
-                Station = Station.Create(location.StationName, location.StationType)
+                x.StarSystem = new StarSystem(location.StarSystem, location.StarPos);
+                x.Body = new Body(location.Body, location.BodyType, location.Docked);
+                x.Station = Station.Create(location.StationName, location.StationType);
                 // All other items set to default
+                return true;
             });
         }
 
         private bool ApplyFsdJump(FsdJump fsdJump)
         {
-            // Ignore previous information, return new location
-            return Replace(fsdJump.Timestamp, new LocationState
+            return _tracker.Replace(fsdJump.Timestamp, x=>
             {
-                StarSystem = new StarSystem(fsdJump.StarSystem, fsdJump.StarPos)
+                x.StarSystem = new StarSystem(fsdJump.StarSystem, fsdJump.StarPos);
                 // All other items set to default
+                return true;
             });
         }
 
         private bool ApplyDocked(Docked docked)
         {
-            return Modify(docked.Timestamp, x =>
+            return _tracker.Modify(docked.Timestamp, x =>
             {
                 if (x.Body != null) x.Body.Docked = true;
                 x.SurfaceLocation = null;
@@ -74,7 +74,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyUndocked(Undocked undocked)
         {
-            return Modify(undocked.Timestamp, x =>
+            return _tracker.Modify(undocked.Timestamp, x =>
             {
                 if (x.Body != null) x.Body.Docked = false;
                 x.SurfaceLocation = null;
@@ -86,7 +86,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyTouchdown(Touchdown touchdown)
         {
-            return Modify(touchdown.Timestamp, x =>
+            return _tracker.Modify(touchdown.Timestamp, x =>
             {
                 x.Body = new Body(x.Body.Name, x.Body.Type);
                 x.SurfaceLocation = new SurfaceLocation(true, touchdown.Latitude, touchdown.Longitude);
@@ -98,7 +98,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyLiftoff(Liftoff liftoff)
         {
-            return Modify(liftoff.Timestamp, x =>
+            return _tracker.Modify(liftoff.Timestamp, x =>
             {
                 x.Body = new Body(x.Body.Name, x.Body.Type);
                 x.SurfaceLocation = new SurfaceLocation(false, liftoff.Latitude, liftoff.Longitude);
@@ -110,7 +110,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplySuperCruiseEntry(SupercruiseEntry entry)
         {
-            return Modify(entry.Timestamp, x =>
+            return _tracker.Modify(entry.Timestamp, x =>
             {
                 x.Body = null;
                 x.SurfaceLocation = null;
@@ -122,7 +122,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplySupercruiseExit(SupercruiseExit exit)
         {
-            return Modify(exit.Timestamp, x =>
+            return _tracker.Modify(exit.Timestamp, x =>
             {
                 x.Body = new Body(exit.Body, exit.BodyType);
                 x.SurfaceLocation = null;
@@ -134,7 +134,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyUssDrop(UssDrop ussDrop)
         {
-            return Modify(ussDrop.Timestamp, x =>
+            return _tracker.Modify(ussDrop.Timestamp, x =>
             {
                 x.Body = null;
                 x.SurfaceLocation = null;
@@ -148,48 +148,12 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             // Ignore previous information, return new location
 
-            return Replace(died.Timestamp, new LocationState());
-        }
-
-        private bool Replace(DateTimeOffset timestamp, LocationState newState)
-        {
-            var discriminator = _commander.GetContext();
-            if (discriminator is null) return false;
-
-            newState.TimeStamp = timestamp;
-            _locations[discriminator] = newState;
-            _isDirty = true;
-            return true;
-        }
-
-        private bool Modify(DateTimeOffset timestamp, Func<LocationState, bool> stateChange)
-        {
-            var discriminator = _commander.GetContext();
-            if (discriminator is null) return false;
-
-            var state = _locations.ContainsKey(discriminator) ? _locations[discriminator] : new LocationState();
-
-            // If handler didn't apply the change, don't update state
-            if (!stateChange(state)) return false;
-
-            state.TimeStamp = timestamp;
-            _locations[discriminator] = state;
-            _isDirty = true;
-            return true;
+            return _tracker.Replace(died.Timestamp, x => true);
         }
 
         private bool BatchComplete()
         {
-            if (!_isDirty) return false;
-
-            foreach (var context in _locations)
-            {
-                _client.Enqueue(context.Key.GameVersion, context.Key.CommanderName, context.Value);
-            }
-            _isDirty = false;
-
-            // Always try to commit immediately
-            _client.Flush();
+            _tracker.Commit(() => { _queue.Enqueue(_tracker.GameVersion, _tracker.CommanderName, _tracker.CurrentState); });
 
             return true;
         }

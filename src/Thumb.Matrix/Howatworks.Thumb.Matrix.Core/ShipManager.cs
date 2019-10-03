@@ -11,17 +11,15 @@ namespace Howatworks.Thumb.Matrix.Core
 {
     public class ShipManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ShipManager));
 
-        private readonly CommanderTracker _commander;
-        private readonly UploadQueue<ShipState> _client;
-        private readonly ConcurrentDictionary<GameContext, ShipState> _ships = new ConcurrentDictionary<GameContext, ShipState>();
-        private bool _isDirty;
+        private readonly UploadQueue<ShipState> _queue;
+        private readonly Tracker<ShipState> _tracker;
 
-        public ShipManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<ShipState> client)
+        public ShipManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<ShipState> queue)
         {
-            _commander = commander;
-            _client = client;
+            _tracker = new Tracker<ShipState>(commander);
+            _queue = queue;
 
             router.RegisterFor<LoadGame>(ApplyLoadGame);
             router.RegisterFor<ShipyardNew>(ApplyShipyardNew);
@@ -35,9 +33,14 @@ namespace Howatworks.Thumb.Matrix.Core
             router.RegisterForBatchComplete(BatchComplete);
         }
 
+        public void FlushQueue()
+        {
+            _queue.Flush();
+        }
+
         private bool ApplyLoadGame(LoadGame loadGame)
         {
-            return Modify(loadGame.Timestamp, ship =>
+            return _tracker.Modify(loadGame.Timestamp, ship =>
             {
                 ship.Type = loadGame.Ship;
                 ship.ShipId = loadGame.ShipID;
@@ -49,16 +52,17 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyShipyardNew(ShipyardNew shipyardNew)
         {
-            return Replace(shipyardNew.Timestamp, new ShipState
+            return _tracker.Replace(shipyardNew.Timestamp, ship =>
             {
-                Type = shipyardNew.ShipType,
-                ShipId = shipyardNew.NewShipID
+                ship.Type = shipyardNew.ShipType;
+                ship.ShipId = shipyardNew.NewShipID;
+                return true;
             });
         }
 
         private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap)
         {
-            return Modify(shipyardSwap.Timestamp, ship =>
+            return _tracker.Modify(shipyardSwap.Timestamp, ship =>
             {
                 ship.Type = shipyardSwap.ShipType;
                 ship.ShipId = shipyardSwap.ShipID;
@@ -68,7 +72,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyHullDamage(HullDamage hullDamage)
         {
-            return Modify(hullDamage.Timestamp, ship =>
+            return _tracker.Modify(hullDamage.Timestamp, ship =>
             {
                 ship.HullIntegrity = hullDamage.Health;
                 return true;
@@ -77,7 +81,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyShieldState(ShieldState shieldState)
         {
-            return Modify(shieldState.Timestamp, ship =>
+            return _tracker.Modify(shieldState.Timestamp, ship =>
             {
                 // If shield state was unknown before (i.e. null) we know it now
                 ship.ShieldsUp = shieldState.ShieldsUp;
@@ -87,7 +91,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyRepair(Repair repair)
         {
-            return Modify(repair.Timestamp, ship =>
+            return _tracker.Modify(repair.Timestamp, ship =>
             {
                 if (repair.Item != "hull" && repair.Item != "all") return false;
                 ship.HullIntegrity = 1;
@@ -97,7 +101,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool ApplyRepairAll(RepairAll repair)
         {
-            return Modify(repair.Timestamp, ship =>
+            return _tracker.Modify(repair.Timestamp, ship =>
             {
                 ship.HullIntegrity = 1;
                 return true;
@@ -106,49 +110,8 @@ namespace Howatworks.Thumb.Matrix.Core
 
         private bool BatchComplete()
         {
-            if (!_isDirty) return false;
+            _tracker.Commit(() => { _queue.Enqueue(_tracker.GameVersion, _tracker.CommanderName, _tracker.CurrentState); });
 
-            foreach (var context in _ships)
-            {
-                _client.Enqueue(context.Key.GameVersion, context.Key.CommanderName, context.Value);
-            }
-
-            _isDirty = false;
-
-            // Always try to commit immediately
-            _client.Flush();
-
-            return true;
-        }
-
-        private bool Modify(DateTimeOffset timestamp, Func<ShipState, bool> stateChange)
-        {
-            var discriminator = _commander.GetContext();
-            if (discriminator is null) return false;
-
-            var ship = _ships.ContainsKey(discriminator) ? _ships[discriminator] : new ShipState();
-
-            // If handler didn't apply the change, don't update state
-            if (!stateChange(ship)) return false;
-
-            ship.TimeStamp = timestamp;
-            _ships[discriminator] = ship;
-            _isDirty = true;
-            return true;
-        }
-
-        private bool Replace(DateTimeOffset timestamp, ShipState newState)
-        {
-            var discriminator = _commander.GetContext();
-            if (discriminator is null) return false;
-
-            // If handler didn't apply the change, don't update state
-            if (newState == null) return false;
-
-            newState.TimeStamp = timestamp;
-            _isDirty = true;
-
-            _ships[discriminator] = newState;
             return true;
         }
     }

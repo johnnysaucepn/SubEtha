@@ -29,37 +29,48 @@ namespace Howatworks.Thumb.Matrix
 
         private void InitializeComponent()
         {
-            try
+            _app.Initialize();
+            _app.OnAuthenticationRequired += (_, args) => { OpenLoginDialog(); };
+
+            _loginForm.SiteName = _app.SiteUri;
+            _loginForm.OnLogin += (sender, args) =>
             {
-                _app.OnAuthenticationRequired += (_, args) =>
+                var authenticated = _app.Authenticate(args.Username, args.Password);
+                if (authenticated)
                 {
-                    _loginForm.Show();
-                };
-
-                _loginForm.SiteName = _app.SiteUri;
-                _loginForm.OnLogin += (sender, args) =>
+                    _loginForm.Hide();
+                }
+                else
                 {
-                    var authenticated = _app.Authenticate(args.Username, args.Password);
-                    if (authenticated)
-                    {
-                        _loginForm.Hide();
-                    }
-                    else
-                    {
-                        MessageBox.Show(Resources.LoginFailedMessage, Resources.LoginFailedTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                };
+                    MessageBox.Show(Resources.LoginFailedMessage, Resources.LoginFailedTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
 
-                _tray.Initialize();
-                _tray.OnExitRequested += (sender, args) => Application.Exit();
-                ThreadExit += (sender, args) => _app.Shutdown();
+            _tray.Initialize();
+            _tray.OnExitRequested += (sender, args) =>
+            {
+                Application.Exit();
+            };
+            ThreadExit += (sender, args) =>
+            {
+                _app.Shutdown();
+            };
+        }
 
-                _app.Initialize();
+        private void OpenLoginDialog()
+        {
+            Dispatch(() => { _loginForm.ShowDialog(); });
+        }
+
+        private void Dispatch(MethodInvoker invoker)
+        {
+            if (_loginForm.InvokeRequired)
+            {
+                _loginForm.Invoke(invoker);
             }
-            catch (Exception ex)
+            else
             {
-                Log.Error(ex.Message, ex);
-                throw;
+                invoker();
             }
         }
 
