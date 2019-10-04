@@ -31,11 +31,11 @@ namespace Howatworks.Matrix.Site.Api
             // Note: Forbid() attempts to allow ASP.NET to use its handling logic,
             // which may result in redirection to a page.
             if (user == null)
-                return StatusCode(StatusCodes.Status403Forbidden);
+                return Unauthorized();
 
             var validUser = await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false);
             if (!validUser)
-                return StatusCode(StatusCodes.Status403Forbidden);
+                return Unauthorized();
 
             return new ObjectResult(TokenGenerator.GenerateToken(user.UserName, user.CommanderName ?? ""));
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using Howatworks.Matrix.Domain;
+﻿using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.Thumb.Core;
@@ -10,17 +8,15 @@ namespace Howatworks.Thumb.Matrix.Core
 {
     public class SessionManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SessionManager));
 
-        private readonly CommanderTracker _commander;
-        private readonly IUploader<SessionState> _client;
-        private readonly ConcurrentDictionary<GameContext, SessionState> _sessions = new ConcurrentDictionary<GameContext, SessionState>();
-        private bool _isDirty;
+        private readonly UploadQueue<SessionState> _queue;
+        private readonly Tracker<SessionState> _tracker;
 
-        public SessionManager(JournalEntryRouter router, CommanderTracker commander, IUploader<SessionState> client)
+        public SessionManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<SessionState> queue)
         {
-            _commander = commander;
-            _client = client;
+            _tracker = new Tracker<SessionState>(commander);
+            _queue = queue;
 
             router.RegisterFor<LoadGame>(ApplyLoadGame);
             router.RegisterFor<NewCommander>(ApplyNewCommander);
@@ -30,80 +26,52 @@ namespace Howatworks.Thumb.Matrix.Core
             router.RegisterForBatchComplete(BatchComplete);
         }
 
+        public void FlushQueue()
+        {
+            _queue.Flush();
+        }
+
         private bool ApplyLoadGame(LoadGame loadGame)
         {
-            return Replace(loadGame.Timestamp, new SessionState
+            return _tracker.Replace(loadGame.Timestamp, x =>
             {
-                CommanderName = loadGame.Commander,
-                GameMode = loadGame.GameMode,
-                Group = loadGame.Group
+                x.CommanderName = loadGame.Commander;
+                x.GameMode = loadGame.GameMode;
+                x.Group = loadGame.Group;
+                return true;
             });
         }
 
         private bool ApplyNewCommander(NewCommander newCommander)
         {
-            return Replace(newCommander.Timestamp, new SessionState
+            return _tracker.Replace(newCommander.Timestamp, x =>
             {
-                CommanderName = newCommander.Name
+                x.CommanderName = newCommander.Name;
+                return true;
             });
         }
 
         private bool ApplyClearSavedGame(ClearSavedGame clearSavedGame)
         {
-            return Replace(clearSavedGame.Timestamp, new SessionState
+            return _tracker.Replace(clearSavedGame.Timestamp, x =>
             {
-                CommanderName = clearSavedGame.Name
+                x.CommanderName = clearSavedGame.Name;
+                return true;
             });
         }
 
         private bool ApplyFileHeader(FileHeader fileHeader)
         {
-            return Modify(fileHeader.Timestamp, x =>
+            return _tracker.Modify(fileHeader.Timestamp, x =>
             {
                 x.Build = fileHeader.Build;
                 return true;
             });
         }
 
-        private bool Replace(DateTimeOffset timestamp, SessionState newState)
-        {
-            var discriminator = _commander.Context;
-            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
-            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
-
-            newState.TimeStamp = timestamp;
-            _sessions[discriminator] = newState;
-            _isDirty = true;
-            return true;
-        }
-
-        private bool Modify(DateTimeOffset timestamp, Func<SessionState, bool> stateChange)
-        {
-            var discriminator = _commander.Context;
-            if (string.IsNullOrWhiteSpace(discriminator.CommanderName)) return false;
-            if (string.IsNullOrWhiteSpace(discriminator.GameVersion)) return false;
-
-            var state = _sessions.ContainsKey(discriminator) ? _sessions[discriminator] : new SessionState();
-
-            // If handler didn't apply the change, don't update state
-            if (!stateChange(state)) return false;
-
-            state.TimeStamp = timestamp;
-            _sessions[discriminator] = state;
-            _isDirty = true;
-            return true;
-        }
-
         private bool BatchComplete()
         {
-            if (!_isDirty) return false;
-
-            foreach (var context in _sessions)
-            {
-                _client.Upload(context.Key, context.Value);
-            }
-
-            _isDirty = false;
+            _tracker.Commit(() => { _queue.Enqueue(_tracker.GameVersion, _tracker.CommanderName, _tracker.CurrentState); });
 
             return true;
         }

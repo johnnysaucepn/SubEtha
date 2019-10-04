@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Howatworks.Matrix.Domain
+namespace Howatworks.Thumb.Matrix.Core
 {
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public sealed class GameContext : IEquatable<GameContext>
+    internal sealed class GameContext : IEquatable<GameContext>
     {
         public string GameVersion { get; }
         public string CommanderName { get; }
-        public bool IsLive { get; set; }
 
         public GameContext()
         {
@@ -19,7 +18,6 @@ namespace Howatworks.Matrix.Domain
         {
             GameVersion = gameVersion;
             CommanderName = commanderName;
-            IsLive = !gameVersion.Contains("Beta");
         }
 
         public bool Equals(GameContext other)

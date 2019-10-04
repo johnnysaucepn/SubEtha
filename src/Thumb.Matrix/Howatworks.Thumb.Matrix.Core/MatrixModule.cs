@@ -16,9 +16,9 @@ namespace Howatworks.Thumb.Matrix.Core
             builder.RegisterType<ShipManager>().AsSelf().SingleInstance();
             builder.RegisterType<SessionManager>().AsSelf().SingleInstance();
 
-            builder.RegisterType<LocationUploader>().As<IUploader<LocationState>>().SingleInstance();
-            builder.RegisterType<ShipUploader>().As<IUploader<ShipState>>().SingleInstance();
-            builder.RegisterType<SessionUploader>().As<IUploader<SessionState>>().SingleInstance();
+            builder.RegisterType<LocationUploadQueue>().As<UploadQueue<LocationState>>().SingleInstance();
+            builder.RegisterType<ShipUploadQueue>().As<UploadQueue<ShipState>>().SingleInstance();
+            builder.RegisterType<SessionUploadQueue>().As<UploadQueue<SessionState>>().SingleInstance();
         }
     }
 }
