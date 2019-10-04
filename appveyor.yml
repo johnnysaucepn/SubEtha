@@ -9,7 +9,7 @@ build:
 
 after_build:
   - ps: dotnet publish src/Matrix/Howatworks.Matrix.Site
-  
+
 configuration:
   - Release
 
@@ -18,7 +18,7 @@ test_script:
   - ps: dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
   - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
   - ps: reportgenerator "-reports:src/**/coverage.opencover.xml" "-targetdir:AnalysisResults" "-reporttypes:HTMLSummary;Badges"
-  
+
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
     name: Thumb Assistant Installer
@@ -35,7 +35,7 @@ artifacts:
   - path: AnalysisResults/summary.htm
     name: ReportGenerator Report
     type: file
-  - path: AnalysisResults/*.png
+  - path: AnalysisResults/*.svg
     name: ReportGenerator Badges
     type: file
 
