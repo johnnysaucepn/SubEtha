@@ -9,3 +9,5 @@ packages/
 *.wixobj
 *.wxs
 /*.zip
+src/**/coverage.json
+src/**/coverage.opencover.xml

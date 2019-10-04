@@ -9,19 +9,35 @@ build:
 
 after_build:
   - ps: dotnet publish src/Matrix/Howatworks.Matrix.Site
-  
+
 configuration:
   - Release
 
 test_script:
-  - ps: dotnet test src
-  
+  - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
+  - ps: dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
+  - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+  - ps: reportgenerator "-reports:src/**/coverage.opencover.xml" "-targetdir:AnalysisResults" "-reporttypes:HTMLSummary;Badges"
+
 artifacts:
-  - path: '**/*.msi'
-    name: Installers
+  - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
+    name: Thumb Assistant Installer
     type: file
-  - path: '**/Artifacts/*.zip'
-    name: ASP.NET Core Apps
+  - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaThumbMatrix.msi
+    name: Thumb Assistant Installer
+    type: file
+  - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
+    name: Matrix Site
+    type: zip
+  - path: src/**/coverage.opencover.xml
+    name: OpenCover Reports
+    type: file
+  - path: AnalysisResults/summary.htm
+    name: ReportGenerator Report
+    type: file
+  - path: AnalysisResults/*.svg
+    name: ReportGenerator Badges
+    type: file
 
 notifications:
 - provider: Email
