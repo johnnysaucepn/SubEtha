@@ -14,7 +14,10 @@ configuration:
   - Release
 
 test_script:
+  - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
+  - ps: dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
   - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+  - ps: reportgenerator "-reports:src/**/coverage.opencover.xml" "-targetdir:AnalysisResults" -reporttypes:HTMLSummary;Badges
   
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
@@ -28,6 +31,12 @@ artifacts:
     type: zip
   - path: src/**/coverage.opencover.xml
     name: OpenCover Reports
+    type: file
+  - path: AnalysisResults/summary.htm
+    name: ReportGenerator Report
+    type: file
+  - path: AnalysisResults/*.png
+    name: ReportGenerator Badges
     type: file
 
 notifications:
