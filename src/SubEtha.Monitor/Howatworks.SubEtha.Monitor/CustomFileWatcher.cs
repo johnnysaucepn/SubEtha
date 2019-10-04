@@ -88,7 +88,7 @@ namespace Howatworks.SubEtha.Monitor
 
         private static void LogWatcherEvent(FileSystemEventArgs e)
         {
-            Log.Info($"Received '{e.ChangeType}' entry on file '{e.FullPath}'");
+            Log.Debug($"Received '{e.ChangeType}' entry on file '{e.FullPath}'");
         }
     }
 }

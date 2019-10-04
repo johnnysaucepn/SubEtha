@@ -77,7 +77,6 @@ namespace Howatworks.SubEtha.Monitor
 
         private void Update(DateTimeOffset triggerTime, DateTimeOffset? lastRead, BatchMode batchMode)
         {
-            Log.Info($"Update {batchMode}");
             var entries = new List<IJournalEntry>();
             foreach (var monitor in _journalMonitors)
             {

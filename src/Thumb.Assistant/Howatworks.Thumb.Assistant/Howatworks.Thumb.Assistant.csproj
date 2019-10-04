@@ -5,7 +5,7 @@
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <IsTestProject>false</IsTestProject>
-    <ApplicationIcon></ApplicationIcon>
+    <ApplicationIcon>Resources\thumb_blue.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

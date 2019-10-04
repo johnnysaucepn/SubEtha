@@ -66,7 +66,7 @@ namespace Howatworks.Thumb.Core
             try
             {
                 Directory.GetParent(_storageFilePath).Create();
-                //File.WriteAllText(_storageFilePath, JsonConvert.SerializeObject(_state.Value, _serializerSettings));
+                File.WriteAllText(_storageFilePath, JsonConvert.SerializeObject(_state.Value, _serializerSettings));
             }
             catch (IOException ex)
             {
