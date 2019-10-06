@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<PropertyGroup>
+	<PropertyGroup Condition="$(MSBuildToolsVersion) &lt;= 15.0">
+		<PackageIconUrl>https://static.howatworks.com/thumb_purple_64.png</PackageIconUrl>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(MSBuildToolsVersion) &gt; 15.0">
 		<PackageIcon>thumb_purple_64.png</PackageIcon>
 	</PropertyGroup>
 
