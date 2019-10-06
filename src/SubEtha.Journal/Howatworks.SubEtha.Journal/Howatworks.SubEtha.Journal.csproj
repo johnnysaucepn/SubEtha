@@ -13,6 +13,6 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)\NuGetAssets.props" />
+  <Import Project="..\..\NuGetAssets.props" />
 
 </Project>
