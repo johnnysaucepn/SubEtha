@@ -10,7 +10,6 @@
     <Authors>James Howat</Authors>
     <PackageProjectUrl>https://github.com/johnnysaucepn/SubEtha</PackageProjectUrl>
     <RepositoryUrl>https://github.com/johnnysaucepn/SubEtha</RepositoryUrl>
-    <PackageIconUrl>https://static.howatworks.com/thumb_purple_64.png</PackageIconUrl>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
@@ -23,5 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SubEtha.Parser\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
   </ItemGroup>
+
+  <Import Project="..\..\NuGetAssets.props" />
 
 </Project>
