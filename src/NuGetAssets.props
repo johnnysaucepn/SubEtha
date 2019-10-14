@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-	<PropertyGroup Condition="$(MSBuildToolsVersion) &lt; 16.3">
+	<PropertyGroup Condition="$(MSBuildVersion) &lt; 16.3">
 		<PackageIconUrl>https://static.howatworks.com/thumb_purple_64.png</PackageIconUrl>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(MSBuildToolsVersion) &gt;= 16.3">
+	<PropertyGroup Condition="$(MSBuildVersion) &gt;= 16.3">
 		<PackageIcon>thumb_purple_64.png</PackageIcon>
 	</PropertyGroup>
 
