@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Matrix.Site
 {
-    public class Program
+    public static class Program
     {
         private static string _appDataFolder;
         private static string _workingFolder;
@@ -34,7 +34,7 @@ namespace Howatworks.Matrix.Site
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((builderContext, config) =>
                 {
-                    IHostingEnvironment env = builderContext.HostingEnvironment;
+                    var env = builderContext.HostingEnvironment;
 
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
