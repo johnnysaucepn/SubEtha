@@ -14,12 +14,16 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="PInvoke.Shell32" Version="0.5.184" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="PInvoke.Shell32" Version="0.6.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SubEtha.Monitor\Howatworks.SubEtha.Monitor\Howatworks.SubEtha.Monitor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="GitVersionTask" Version="5.1.3" />
   </ItemGroup>
 
 </Project>
