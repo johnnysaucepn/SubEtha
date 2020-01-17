@@ -2,9 +2,9 @@
 
 ## SubEtha for Elite: Dangerous
 
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/25t6x52w4r3gw6vr/branch/master?svg=true)](https://ci.appveyor.com/project/johnnysaucepn/subetha/branch/master)
-[![AppVeyor tests](https://img.shields.io/appveyor/tests/johnnysaucepn/subetha/master.svg)](https://ci.appveyor.com/project/johnnysaucepn/subetha/build/tests?branch=master)
-[![Coverlet code coverage](https://ci.appveyor.com/api/projects/johnnysaucepn/subetha/artifacts/AnalysisResults/badge_linecoverage.png?branch=master)](https://ci.appveyor.com/api/projects/johnnysaucepn/subetha/artifacts/AnalysisResults/summary.htm?branch=master)
+[![AppVeyor build status](https://img.shields.io/appveyor/ci/johnnysaucepn/subetha/master)](https://ci.appveyor.com/project/johnnysaucepn/subetha/branch/master)
+[![AppVeyor tests](https://img.shields.io/appveyor/tests/johnnysaucepn/subetha/master)](https://ci.appveyor.com/project/johnnysaucepn/subetha/build/tests?branch=master)
+[![Coverlet code coverage](https://img.shields.io/badge/dynamic/json?color=success&label=coverage&query=%24.summary.linecoverage&suffix=%25&url=https%3A%2F%2Fci.appveyor.com%2Fapi%2Fprojects%2Fjohnnysaucepn%2Fsubetha%2Fartifacts%2FAnalysisResults%2FSummary.json%3Fbranch%3Dmaster)](https://ci.appveyor.com/api/projects/johnnysaucepn/subetha/artifacts/AnalysisResults/summary.htm?branch=master)
 
 At its core, this is a set of .NET (Standard, Core and Framework) packages and tools for parsing and consuming Elite: Dangerous Player's Journal log events, allowing the creation of new tools for tracking player progress.
 
