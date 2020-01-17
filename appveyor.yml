@@ -1,7 +1,7 @@
-﻿image: Visual Studio 2017
+image: Visual Studio 2019
 
-before_build:
-  - ps: nuget restore src
+#before_build:
+#  - ps: nuget restore src
 
 build:
   publish_nuget: true
