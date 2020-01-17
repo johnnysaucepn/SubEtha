@@ -17,7 +17,7 @@ test_script:
   - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
   - ps: dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
   - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-  - ps: reportgenerator "-reports:src/**/coverage.opencover.xml" "-targetdir:AnalysisResults" "-reporttypes:HTMLSummary;Badges"
+  - ps: reportgenerator "-reports:src/**/coverage.opencover.xml" "-targetdir:AnalysisResults" "-reporttypes:HTMLSummary;JSONSummary;Badges"
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
