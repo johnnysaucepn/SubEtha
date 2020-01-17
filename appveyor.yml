@@ -35,7 +35,7 @@ artifacts:
   - path: AnalysisResults/summary.htm
     name: ReportGenerator Report
     type: file
-  - path: AnalysisResults/*.svg
+  - path: AnalysisResults/*.png
     name: ReportGenerator Badges
     type: file
 
