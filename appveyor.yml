@@ -35,11 +35,8 @@ artifacts:
   - path: AnalysisResults/summary.htm
     name: ReportGenerator Report
     type: file
-  - path: AnalysisResults/*.json
+  - path: AnalysisResults/Summary.json
     name: ReportGenerator Report
-    type: file
-  - path: AnalysisResults/*.png
-    name: ReportGenerator Badges
     type: file
 
 notifications:
