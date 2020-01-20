@@ -11,6 +11,8 @@
     <GenerateAssemblyCopyrightVersionAttribute>false</GenerateAssemblyCopyrightVersionAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <Company>Howatworks</Company>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) James Howat</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
