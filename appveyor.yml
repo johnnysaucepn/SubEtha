@@ -20,7 +20,7 @@ configuration:
 test_script:
   - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
   - ps: reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:AnalysisResults" "-reporttypes:Cobertura"
-  - ps: codecov -f "AnalysisResults/"
+  - ps: codecov -f "AnalysisResults/Cobertura.xml" --no-color --required
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
@@ -32,14 +32,11 @@ artifacts:
   - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
-  - path: src/**/coverage.opencover.xml
-    name: OpenCover Reports
+  - path: src/**/coverage.cobertura.xml
+    name: Coverlet Reports
     type: file
-  - path: AnalysisResults/summary.htm
-    name: ReportGenerator Report
-    type: file
-  - path: AnalysisResults/Summary.json
-    name: ReportGenerator Report
+  - path: AnalysisResults/Cobertura.xml
+    name: ReportGenerator Merged Report
     type: file
 
 notifications:
