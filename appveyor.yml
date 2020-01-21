@@ -1,5 +1,9 @@
 image: Visual Studio 2019
 
+install:
+  - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
+  - ps: dotnet tool install -g Codecov.Tool
+
 before_build:
   - ps: nuget restore src
 
@@ -14,9 +18,9 @@ configuration:
   - Release
 
 test_script:
-  - ps: dotnet tool install --global Codecov.Tool
-  - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='./coverlet/'
-  - ps: .\codecov -f "coverlet"
+  - ps: dotnet test src /p:CollectCoverage=true
+  - ps: reportgenerator "-reports:src/**/coverage.cobertura.json" "-targetdir:AnalysisResults" "-reporttypes:Cobertura"
+  - ps: codecov -f "AnalysisResults/"
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
@@ -28,6 +32,15 @@ artifacts:
   - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
+  - path: src/**/coverage.opencover.xml
+    name: OpenCover Reports
+    type: file
+  - path: AnalysisResults/summary.htm
+    name: ReportGenerator Report
+    type: file
+  - path: AnalysisResults/Summary.json
+    name: ReportGenerator Report
+    type: file
 
 notifications:
 - provider: Email
