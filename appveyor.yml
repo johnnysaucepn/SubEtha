@@ -18,7 +18,7 @@ configuration:
   - Release
 
 test_script:
-  - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+  - ps: dotnet test --no-build src /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
   - ps: reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:AnalysisResults" "-reporttypes:Cobertura"
   - ps: codecov -f "AnalysisResults/Cobertura.xml" --no-color --required
 
