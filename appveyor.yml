@@ -1,5 +1,9 @@
 image: Visual Studio 2019
 
+install:
+  - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
+  - ps: dotnet tool install -g Codecov.Tool
+
 before_build:
   - ps: nuget restore src
 
@@ -14,10 +18,9 @@ configuration:
   - Release
 
 test_script:
-  - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
-  - ps: dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
-  - ps: dotnet test src /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-  - ps: reportgenerator "-reports:src/**/coverage.opencover.xml" "-targetdir:AnalysisResults" "-reporttypes:HTMLSummary;JSONSummary;Badges"
+  - ps: dotnet test --no-build src /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+  - ps: reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:AnalysisResults" "-reporttypes:Cobertura"
+  - ps: codecov -f "AnalysisResults/Cobertura.xml" --no-color --required
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
@@ -29,14 +32,11 @@ artifacts:
   - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
-  - path: src/**/coverage.opencover.xml
-    name: OpenCover Reports
+  - path: src/**/coverage.cobertura.xml
+    name: Coverlet Reports
     type: file
-  - path: AnalysisResults/summary.htm
-    name: ReportGenerator Report
-    type: file
-  - path: AnalysisResults/Summary.json
-    name: ReportGenerator Report
+  - path: AnalysisResults/Cobertura.xml
+    name: ReportGenerator Merged Report
     type: file
 
 notifications:
