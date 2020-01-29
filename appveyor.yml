@@ -7,7 +7,7 @@ install:
 
 before_build:
   - ps: nuget restore src
-  - ps: gitversion /l console /updateassemblyinfo src/SharedAssemblyInfo.cs /ensureassemblyinfo
+  - ps: dotnet-gitversion /l console /updateassemblyinfo src/SharedAssemblyInfo.cs /ensureassemblyinfo
   - ps: appveyor UpdateBuild -Version "$env:GitVersion_SemVer.build.$env:APPVEYOR_BUILD_NUMBER"
 
 build:
