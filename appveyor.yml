@@ -1,12 +1,13 @@
 image: Visual Studio 2019
-version: +build.{build}
 
 install:
+  - ps: choco install gitversion.portable -pre -y
   - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
   - ps: dotnet tool install -g Codecov.Tool
 
 before_build:
   - ps: nuget restore src
+  - ps: gitversion /l console /updateassemblyinfo src/SharedAssemblyInfo.cs /ensureassemblyinfo
 
 build:
   publish_nuget: true

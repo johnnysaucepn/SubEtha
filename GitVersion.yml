@@ -1,7 +1,7 @@
 assembly-versioning-scheme: MajorMinor
-mode: Mainline
+mode: ContinuousDelivery
 next-version: 0.1.0
-branches: 
+branches:
   feature:
     tag: alpha
   release:
