@@ -1,7 +1,7 @@
 image: Visual Studio 2019
 
 install:
-  - ps: dotnet tool install -g gitversion.portable
+  - ps: dotnet tool install -g GitVersion.Tool
   - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
   - ps: dotnet tool install -g Codecov.Tool
 
