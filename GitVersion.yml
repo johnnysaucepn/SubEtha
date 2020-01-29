@@ -1,5 +1,5 @@
 assembly-versioning-scheme: MajorMinor
-mode: ContinuousDelivery
+mode: Mainline
 next-version: 0.1.0
 branches:
   feature:

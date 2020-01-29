@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using WixSharp;
@@ -16,9 +17,12 @@ namespace Howatworks.Thumb.Matrix.Installer
 
         private static void Main()
         {
-            var currentFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var currentFolder = Path.GetDirectoryName(assembly.Location) ?? Environment.CurrentDirectory;
             var root = Path.GetFullPath(Path.Combine(currentFolder, @"..\..\..\..\"));
             var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Matrix\bin\{Configuration}\{TargetNetFramework}\");
+
+            var version = FileVersionInfo.GetVersionInfo(assembly.Location);
 
             var project = new ManagedProject("SubEtha Thumb Matrix",
                 new Dir(@"%ProgramFiles%\Howatworks\SubEtha Thumb Matrix",
@@ -39,7 +43,7 @@ namespace Howatworks.Thumb.Matrix.Installer
                     ProductIcon = "thumb_red.ico",
                     Manufacturer = "Howatworks"
                 },
-                Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
+                Version = Version.Parse(version.FileVersion),
                 OutFileName = "SubEthaThumbMatrix"
             };
 

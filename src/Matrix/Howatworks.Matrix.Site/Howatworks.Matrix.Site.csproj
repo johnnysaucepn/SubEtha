@@ -43,7 +43,7 @@
       <PublishZipFolder>$(ProjectDir)\Artifacts\</PublishZipFolder>
     </PropertyGroup>
     <MakeDir Directories="$(PublishZipFolder)" />
-    <ZipDirectory SourceDirectory="$(PublishUrl)" DestinationFile="$(PublishZipFolder)\$(ProjectName)-$(GitVersion_NuGetVersion).zip" />
+    <ZipDirectory SourceDirectory="$(PublishUrl)" DestinationFile="$(PublishZipFolder)\$(ProjectName)-$(GitVersion_SemVer).zip" />
   </Target>
 
 </Project>
