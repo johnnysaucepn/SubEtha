@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,7 @@ namespace Howatworks.Thumb.Matrix.Win
         public AuthenticationDialog()
         {
             InitializeComponent();
-        }
-
-        private void OkClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            Closing += (sender, evt) => evt.Cancel = true;
         }
     }
 }

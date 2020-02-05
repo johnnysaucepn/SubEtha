@@ -11,15 +11,17 @@
     <UIElement x:Key="TrayStatusPopup" />
     <UIElement x:Key="TrayToolTip" />
 
+    <BitmapImage x:Key="DialogIcon" UriSource="thumb_red.ico"/>
+
     <tb:TaskbarIcon x:Key="ThumbTrayIcon"
                     ToolTipText="Right-click for menu"
                     IconSource="thumb_red.ico"
                     ContextMenu="{StaticResource TrayMenu}"
                     MenuActivation="RightClick"
-                     LeftClickCommand="{Binding ShowAuthDialogCommand}">
+                    LeftClickCommand="{Binding ShowAuthDialogCommand}">
 
         <tb:TaskbarIcon.DataContext>
-            <local:NotifyIconViewModel />
+            <local:TrayIconViewModel />
         </tb:TaskbarIcon.DataContext>
     </tb:TaskbarIcon>
 
