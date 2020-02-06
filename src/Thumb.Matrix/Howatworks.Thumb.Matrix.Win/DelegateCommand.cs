@@ -8,11 +8,6 @@ using System.Windows.Input;
 
 namespace Howatworks.Thumb.Matrix.Win
 {
-
-
-    /// <summary>
-    /// Simplistic delegate command for the demo.
-    /// </summary>
     public class DelegateCommand : ICommand
     {
         public Action CommandAction { get; set; }
