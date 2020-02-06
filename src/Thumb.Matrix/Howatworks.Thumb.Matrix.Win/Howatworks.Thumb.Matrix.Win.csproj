@@ -57,6 +57,10 @@
     </ApplicationDefinition>
     <Compile Include="AuthenticationDialogViewModel.cs" />
     <Compile Include="ViewManager.cs" />
+    <Page Include="AppResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AuthenticationDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

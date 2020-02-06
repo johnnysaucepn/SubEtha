@@ -9,6 +9,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="TrayIcon.xaml" />
+                <ResourceDictionary Source="AppResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

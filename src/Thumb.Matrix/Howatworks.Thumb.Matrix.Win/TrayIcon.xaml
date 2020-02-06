@@ -8,10 +8,6 @@
     <ContextMenu x:Shared="false" x:Key="TrayMenu">
         <MenuItem Header="Exit" Command="{Binding ExitApplicationCommand}" />
     </ContextMenu>
-    <UIElement x:Key="TrayStatusPopup" />
-    <UIElement x:Key="TrayToolTip" />
-
-    <BitmapImage x:Key="DialogIcon" UriSource="thumb_red.ico"/>
 
     <tb:TaskbarIcon x:Key="ThumbTrayIcon"
                     ToolTipText="Right-click for menu"
@@ -24,6 +20,5 @@
             <local:TrayIconViewModel />
         </tb:TaskbarIcon.DataContext>
     </tb:TaskbarIcon>
-
 
 </ResourceDictionary>
