@@ -25,5 +25,10 @@ namespace Howatworks.Thumb.Matrix.Win
             InitializeComponent();
             Closing += (sender, evt) => evt.Cancel = true;
         }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            ((dynamic)DataContext).Password = ((PasswordBox)sender).Password;
+        }
     }
 }

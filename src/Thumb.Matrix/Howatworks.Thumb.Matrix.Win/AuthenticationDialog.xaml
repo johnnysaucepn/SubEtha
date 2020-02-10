@@ -31,7 +31,7 @@
         <Label Grid.Column="1" Grid.Row="1" MinWidth="100" Margin="5" VerticalAlignment="Center">Username</Label>
         <TextBox Grid.Column="2" Grid.Row="1" MinWidth="200" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center"></TextBox>
         <Label Grid.Column="1" Grid.Row="2" MinWidth="100" Margin="5" VerticalAlignment="Center">Password</Label>
-        <TextBox Grid.Column="2" Grid.Row="2" MinWidth="200" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center"></TextBox>
+        <PasswordBox Grid.Column="2" Grid.Row="2" MinWidth="200" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged"></PasswordBox>
 
         <WrapPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Command="{Binding CancelCommand}" Content="Cancel" MinWidth="100" IsCancel="True" Margin="5" />

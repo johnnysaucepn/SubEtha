@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="AuthenticationDialogViewModel.cs" />
     <Compile Include="ViewManager.cs" />
+    <Compile Include="MatrixApplication.cs" />
     <Page Include="AppResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
