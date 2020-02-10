@@ -36,7 +36,7 @@ namespace Howatworks.Thumb.Matrix.Installer
                 OutDir = "Artifacts",
                 ControlPanelInfo = new ProductInfo()
                 {
-                    ProductIcon = "Resources\\thumb_red.ico",
+                    ProductIcon = "thumb_red.ico",
                     Manufacturer = "Howatworks"
                 },
                 Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
