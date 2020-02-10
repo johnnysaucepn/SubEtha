@@ -10,18 +10,11 @@ namespace Howatworks.Thumb.Matrix.Win
 {
     public class AuthenticationDialogViewModel
     {
-        private readonly MatrixApplication _app;
-
         public string Username { get; set; }
         public string Password { get; set; }
 
         public string SiteName { get; set; }
 
-
-        public AuthenticationDialogViewModel(MatrixApplication app)
-        {
-            _app = app;
-        }
 
         public ICommand CancelCommand =>
             new DelegateCommand
@@ -34,14 +27,14 @@ namespace Howatworks.Thumb.Matrix.Win
             {
                 CommandAction = () =>
                 {
-                    var authResult = _app.Authenticate(Username, Password);
-                    if (authResult.Success)
+                    var authResult = ViewManager.Authenticate(Username, Password);
+                    if (authResult.Succeeded)
                     {
                         ViewManager.ConfirmAuthenticationDialog();
                     }
                     else
                     {
-                        MessageBox.Show("LoginFailedMessage", "LoginFailedTitle", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(Resources.LoginFailedMessage, Resources.LoginFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             };

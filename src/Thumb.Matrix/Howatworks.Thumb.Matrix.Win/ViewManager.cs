@@ -3,26 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Howatworks.Thumb.Matrix.Core;
 
 namespace Howatworks.Thumb.Matrix.Win
 {
     public static class ViewManager
     {
-        private static readonly Lazy<AuthenticationDialog> _authenticationDialog = new Lazy<AuthenticationDialog>(() => new AuthenticationDialog());
+        public static MatrixApp App;
+
+        private static readonly Lazy<AuthenticationDialog> AuthenticationDialog = new Lazy<AuthenticationDialog>(() => new AuthenticationDialog());
+
+        public static AuthenticationResult Authenticate(string username, string password)
+        {
+            return App.Authenticate(username, password) ? AuthenticationResult.Success : AuthenticationResult.Failure;
+        }
+
+        public class AuthenticationResult
+        {
+            public bool Succeeded { get; private set; }
+
+            public static AuthenticationResult Success => new AuthenticationResult {Succeeded = true};
+            public static AuthenticationResult Failure => new AuthenticationResult { Succeeded = false };
+        }
 
         public static void ShowAuthenticationDialog()
         {
-            _authenticationDialog.Value.Show();
+            AuthenticationDialog.Value.Show();
         }
 
         public static void CloseAuthenticationDialog()
         {
-            _authenticationDialog.Value.Hide();
+            AuthenticationDialog.Value.Hide();
         }
 
         public static void ConfirmAuthenticationDialog()
         {
-            _authenticationDialog.Value.Hide();
+            AuthenticationDialog.Value.Hide();
         }
     }
 }

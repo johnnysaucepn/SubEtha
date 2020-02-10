@@ -6,15 +6,16 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
     <ContextMenu x:Shared="false" x:Key="TrayMenu">
-        <MenuItem Header="Exit" Command="{Binding ExitApplicationCommand}" />
+        <MenuItem Header="{x:Static local:Resources.ExitLabel}" Command="{Binding ExitApplicationCommand}" />
     </ContextMenu>
 
     <tb:TaskbarIcon x:Key="ThumbTrayIcon"
                     ToolTipText="Right-click for menu"
-                    IconSource="thumb_red.ico"
+                    IconSource="Resources/thumb_red.ico"
                     ContextMenu="{StaticResource TrayMenu}"
                     MenuActivation="RightClick"
                     LeftClickCommand="{Binding ShowAuthDialogCommand}">
+
 
         <tb:TaskbarIcon.DataContext>
             <local:TrayIconViewModel />

@@ -56,8 +56,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AuthenticationDialogViewModel.cs" />
+    <Compile Include="MatrixWpfModule.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="ViewManager.cs" />
-    <Compile Include="MatrixApplication.cs" />
     <Page Include="AppResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +107,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -111,12 +123,29 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="thumb_red.ico" />
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="Autofac">
+      <Version>4.9.4</Version>
+    </PackageReference>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
       <Version>1.0.8</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Thumb\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj">
+      <Project>{295FD37D-3673-4AC9-A7B9-395E58BA2B48}</Project>
+      <Name>Howatworks.Thumb.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Thumb\Howatworks.Thumb.Forms\Howatworks.Thumb.Forms.csproj">
+      <Project>{B48746B2-8B28-4368-A91B-AD867F8EF439}</Project>
+      <Name>Howatworks.Thumb.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Howatworks.Thumb.Matrix.Core\Howatworks.Thumb.Matrix.Core.csproj">
+      <Project>{B0C34CD7-5ACC-4664-A0C2-4B30840246DD}</Project>
+      <Name>Howatworks.Thumb.Matrix.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\thumb_red.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
