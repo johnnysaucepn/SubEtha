@@ -135,4 +135,7 @@
   <data name="LoginFailedTitle" xml:space="preserve">
     <value>Login Failed</value>
   </data>
+  <data name="LoginPrompt" xml:space="preserve">
+    <value>Please enter your username and password for</value>
+  </data>
 </root>

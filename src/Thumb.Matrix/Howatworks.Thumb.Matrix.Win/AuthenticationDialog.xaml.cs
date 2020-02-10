@@ -20,6 +20,8 @@ namespace Howatworks.Thumb.Matrix.Win
     /// </summary>
     public partial class AuthenticationDialog : Window
     {
+        public AuthenticationDialogViewModel ViewModel => (AuthenticationDialogViewModel)DataContext;
+
         public AuthenticationDialog()
         {
             InitializeComponent();
@@ -28,7 +30,12 @@ namespace Howatworks.Thumb.Matrix.Win
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            ((dynamic)DataContext).Password = ((PasswordBox)sender).Password;
+            ViewModel.Password = ((PasswordBox)sender).Password;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            ViewModel.CancelCommand.Execute(null);
         }
     }
 }

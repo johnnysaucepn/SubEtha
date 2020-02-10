@@ -13,7 +13,7 @@ namespace Howatworks.Thumb.Matrix.Win
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public string SiteName { get; set; }
+        public string SiteName => ViewManager.App.SiteUri;
 
 
         public ICommand CancelCommand =>

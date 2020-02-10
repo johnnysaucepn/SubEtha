@@ -19,7 +19,7 @@ namespace Howatworks.Thumb.Matrix.Win {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -84,6 +84,15 @@ namespace Howatworks.Thumb.Matrix.Win {
         public static string LoginFailedTitle {
             get {
                 return ResourceManager.GetString("LoginFailedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your username and password for.
+        /// </summary>
+        public static string LoginPrompt {
+            get {
+                return ResourceManager.GetString("LoginPrompt", resourceCulture);
             }
         }
         
