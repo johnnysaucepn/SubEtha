@@ -19,7 +19,7 @@ namespace Howatworks.Thumb.Matrix.Win
     {
         private TaskbarIcon _tb;
         private IContainer _container;
-
+        private MatrixApp _app;
 
         public void Start()
         {
@@ -36,11 +36,13 @@ namespace Howatworks.Thumb.Matrix.Win
 
             _container = builder.Build();
 
-            //using (var scope = _container.BeginLifetimeScope())
-            //{
-                var context = _container.Resolve<MatrixApp>();
-                ViewManager.App = context;
-            //}
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                _app = _container.Resolve<MatrixApp>();
+                _app.Initialize();
+                ViewManager.App = _app;
+                _app.StartMonitoring();
+            }
         }
 
         protected override void OnStartup(StartupEventArgs e)

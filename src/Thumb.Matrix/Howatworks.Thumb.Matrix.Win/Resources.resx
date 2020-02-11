@@ -120,15 +120,6 @@
   <data name="ExitLabel" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="NotifyIconDefaultLabel" xml:space="preserve">
-    <value>SubEtha Thumb Matrix</value>
-  </data>
-  <data name="NotifyIconLastUpdatedLabel" xml:space="preserve">
-    <value>Last entry {0}\nLast checked {1}</value>
-  </data>
-  <data name="NotifyIconNeverUpdatedLabel" xml:space="preserve">
-    <value>Never updated</value>
-  </data>
   <data name="LoginFailedMessage" xml:space="preserve">
     <value>Login failed. Please try again.</value>
   </data>
@@ -137,5 +128,14 @@
   </data>
   <data name="LoginPrompt" xml:space="preserve">
     <value>Please enter your username and password for</value>
+  </data>
+  <data name="NotifyIconDefaultLabel" xml:space="preserve">
+    <value>SubEtha Thumb Matrix</value>
+  </data>
+  <data name="NotifyIconLastUpdatedLabel" xml:space="preserve">
+    <value>Last entry {0}\nLast checked {1}</value>
+  </data>
+  <data name="NotifyIconNeverUpdatedLabel" xml:space="preserve">
+    <value>Never updated</value>
   </data>
 </root>

@@ -35,6 +35,7 @@ namespace Howatworks.Thumb.Assistant
                 ThreadExit += (sender, args) => _app.Shutdown();
 
                 _app.Initialize();
+                _app.StartMonitoring();
             }
             catch (Exception ex)
             {

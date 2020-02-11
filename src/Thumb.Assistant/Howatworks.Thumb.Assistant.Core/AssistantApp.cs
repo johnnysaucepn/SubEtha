@@ -120,8 +120,6 @@ namespace Howatworks.Thumb.Assistant.Core
             var host = hostBuilder.Build();
 
             host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
-
-            StartMonitoring();
         }
 
         public void Shutdown()

@@ -55,6 +55,7 @@ namespace Howatworks.Thumb.Matrix
             {
                 _app.Shutdown();
             };
+            _app.StartMonitoring();
         }
 
         private void OpenLoginDialog()
