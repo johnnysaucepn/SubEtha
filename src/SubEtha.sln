@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Thumb", "Thumb", "{3C7A3739-DFB0-4F98-9909-4FBD05A35E26}"
 EndProject
@@ -79,7 +79,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Ins
 		{2BD529D7-63C8-456A-90AB-3815B9683299} = {2BD529D7-63C8-456A-90AB-3815B9683299}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.Thumb.Matrix.Win", "Thumb.Matrix\Howatworks.Thumb.Matrix.Win\Howatworks.Thumb.Matrix.Win.csproj", "{4786642D-88CD-4721-B0AF-CAA3A0852DF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Win", "Thumb.Matrix\Howatworks.Thumb.Matrix.Win\Howatworks.Thumb.Matrix.Win.csproj", "{6B5361F1-2001-473C-9367-5128C8E224FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -191,10 +191,10 @@ Global
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4786642D-88CD-4721-B0AF-CAA3A0852DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4786642D-88CD-4721-B0AF-CAA3A0852DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4786642D-88CD-4721-B0AF-CAA3A0852DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4786642D-88CD-4721-B0AF-CAA3A0852DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B5361F1-2001-473C-9367-5128C8E224FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B5361F1-2001-473C-9367-5128C8E224FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B5361F1-2001-473C-9367-5128C8E224FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B5361F1-2001-473C-9367-5128C8E224FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -230,7 +230,7 @@ Global
 		{82291D07-97B5-473B-ACD5-B07F65740F3B} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 		{B0C34CD7-5ACC-4664-A0C2-4B30840246DD} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
-		{4786642D-88CD-4721-B0AF-CAA3A0852DF3} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
+		{6B5361F1-2001-473C-9367-5128C8E224FE} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83C552C3-FA11-4510-8F9F-B6BC1641E4A2}
