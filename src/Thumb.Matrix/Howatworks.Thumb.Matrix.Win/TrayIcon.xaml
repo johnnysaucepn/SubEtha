@@ -10,12 +10,11 @@
     </ContextMenu>
 
     <tb:TaskbarIcon x:Key="ThumbTrayIcon"
-                    ToolTipText="Right-click for menu"
+                    ToolTipText="{Binding PlainStatusDisplayText}"
                     IconSource="Resources/thumb_red.ico"
                     ContextMenu="{StaticResource TrayMenu}"
-                    MenuActivation="RightClick"
+                    MenuActivation="All"
                     LeftClickCommand="{Binding ShowAuthDialogCommand}">
-
 
         <tb:TaskbarIcon.DataContext>
             <local:TrayIconViewModel />
