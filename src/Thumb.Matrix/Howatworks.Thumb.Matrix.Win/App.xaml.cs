@@ -40,6 +40,13 @@ namespace Howatworks.Thumb.Matrix.Win
             {
                 _app = _container.Resolve<MatrixApp>();
                 _app.Initialize();
+                _app.OnAuthenticationRequired += (_, args) =>
+                {
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        ViewManager.ShowAuthenticationDialog();
+                    });
+                };
                 ViewManager.App = _app;
                 _app.StartMonitoring();
             }

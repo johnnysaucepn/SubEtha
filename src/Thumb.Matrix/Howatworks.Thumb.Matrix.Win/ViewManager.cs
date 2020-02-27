@@ -22,7 +22,7 @@ namespace Howatworks.Thumb.Matrix.Win
         {
             public bool Succeeded { get; private set; }
 
-            public static AuthenticationResult Success => new AuthenticationResult {Succeeded = true};
+            public static AuthenticationResult Success => new AuthenticationResult { Succeeded = true };
             public static AuthenticationResult Failure => new AuthenticationResult { Succeeded = false };
         }
 
