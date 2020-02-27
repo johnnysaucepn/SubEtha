@@ -49,7 +49,10 @@ namespace Howatworks.Thumb.Matrix.Win
             {
                 CommandAction = () =>
                 {
-                    ViewManager.ShowAuthenticationDialog();
+                    if (!ViewManager.App.IsAuthenticated)
+                    {
+                        ViewManager.ShowAuthenticationDialog();
+                    }
                 }
             };
     }
