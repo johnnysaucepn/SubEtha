@@ -1,8 +1,6 @@
-﻿using Howatworks.Thumb.Core;
-
-namespace Howatworks.Thumb.Console
+﻿namespace Howatworks.Thumb.Core
 {
-    public class ConsoleThumbNotifier : IThumbNotifier
+    public class BeepThumbNotifier : IThumbNotifier
     {
         public void Notify(NotificationPriority priority, NotificationEventType eventType, string logMessage)
         {

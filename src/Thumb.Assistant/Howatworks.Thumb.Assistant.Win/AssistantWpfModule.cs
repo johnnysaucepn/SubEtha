@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Howatworks.Thumb.Core;
 
-namespace Howatworks.Thumb.Matrix.Win
+namespace Howatworks.Thumb.Assistant.Win
 {
-    public class MatrixWpfModule : Module
+    public class AssistantWpfModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

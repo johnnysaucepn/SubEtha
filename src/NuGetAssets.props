@@ -11,7 +11,7 @@
 
 	<ItemGroup>
 		<None Include="$(MSBuildThisFileDirectory)\thumb_purple_64.png" Pack="true" Visible="true" PackagePath="">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>None</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 

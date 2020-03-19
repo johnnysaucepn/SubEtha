@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Autofac;
+using Hardcodet.Wpf.TaskbarNotification;
+using Howatworks.Thumb.Assistant.Core;
+using Howatworks.Thumb.Core;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Autofac;
-using Hardcodet.Wpf.TaskbarNotification;
-using Howatworks.Thumb.Core;
-using Howatworks.Thumb.Matrix.Core;
 using Howatworks.Thumb.Wpf;
 
-namespace Howatworks.Thumb.Matrix.Win
+namespace Howatworks.Thumb.Assistant.Win
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -20,11 +20,11 @@ namespace Howatworks.Thumb.Matrix.Win
     {
         private TaskbarIcon _tb;
         private IContainer _container;
-        private MatrixApp _app;
+        private AssistantApp _app;
 
         public void Start()
         {
-            var config = new ThumbConfigBuilder("Matrix").Build();
+            var config = new ThumbConfigBuilder("Assistant").Build();
 
             var logger = new Log4NetThumbLogging(config);
             logger.Configure();
@@ -32,22 +32,16 @@ namespace Howatworks.Thumb.Matrix.Win
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbWpfModule(config));
-            builder.RegisterModule(new MatrixModule());
-            builder.RegisterModule(new MatrixWpfModule());
+            builder.RegisterModule(new AssistantModule());
+            builder.RegisterModule(new AssistantWpfModule());
 
             _container = builder.Build();
 
             using (var scope = _container.BeginLifetimeScope())
             {
-                _app = _container.Resolve<MatrixApp>();
+                _app = _container.Resolve<AssistantApp>();
                 _app.Initialize();
-                _app.OnAuthenticationRequired += (_, args) =>
-                {
-                    Application.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        ViewManager.ShowAuthenticationDialog();
-                    });
-                };
+
                 ViewManager.App = _app;
                 _app.StartMonitoring();
             }
@@ -58,10 +52,8 @@ namespace Howatworks.Thumb.Matrix.Win
             base.OnStartup(e);
             Start();
 
-            _tb = (TaskbarIcon) FindResource("ThumbTrayIcon");
+            _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
             _tb?.BringIntoView();
-
-
         }
 
         protected override void OnExit(ExitEventArgs e)
