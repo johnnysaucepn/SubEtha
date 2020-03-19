@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Howatworks.Thumb.Wpf;
 
-namespace Howatworks.Thumb.Assistant.Win
+namespace Howatworks.Thumb.Assistant.Wpf
 {
     /// <summary>
     /// Interaction logic for App.xaml

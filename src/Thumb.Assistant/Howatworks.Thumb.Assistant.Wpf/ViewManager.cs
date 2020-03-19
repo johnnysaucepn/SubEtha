@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Howatworks.Thumb.Assistant.Core;
 
-namespace Howatworks.Thumb.Assistant.Win
+namespace Howatworks.Thumb.Assistant.Wpf
 {
     public static class ViewManager
     {

@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Howatworks.Thumb.Core;
 
-namespace Howatworks.Thumb.Matrix.Win
+namespace Howatworks.Thumb.Matrix.Wpf
 {
     public class MatrixWpfModule : Module
     {

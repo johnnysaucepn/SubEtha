@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using Howatworks.Thumb.Wpf;
 
-namespace Howatworks.Thumb.Matrix.Win
+namespace Howatworks.Thumb.Matrix.Wpf
 {
     public class AuthenticationDialogViewModel
     {

@@ -55,8 +55,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Core", "Th
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Forms", "Thumb\Howatworks.Thumb.Forms\Howatworks.Thumb.Forms.csproj", "{B48746B2-8B28-4368-A91B-AD867F8EF439}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant", "Thumb.Assistant\Howatworks.Thumb.Assistant\Howatworks.Thumb.Assistant.csproj", "{F8F719F4-EA68-458B-86AB-A25FA6152D6A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Console", "Thumb.Assistant\Howatworks.Thumb.Assistant.Console\Howatworks.Thumb.Assistant.Console.csproj", "{71AD0395-E5DF-486A-A3E5-562235A21761}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Core", "Thumb.Assistant\Howatworks.Thumb.Assistant.Core\Howatworks.Thumb.Assistant.Core.csproj", "{0E1792CC-AF3F-4808-87B4-19289B0B654F}"
@@ -64,24 +62,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Core.Test", "Thumb.Assistant\Howatworks.Thumb.Assistant.Core.Test\Howatworks.Thumb.Assistant.Core.Test.csproj", "{0B27CABE-A057-4E0F-9C04-3DFC26C4271E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Installer", "Thumb.Assistant\Howatworks.Thumb.Assistant.Installer\Howatworks.Thumb.Assistant.Installer.csproj", "{BB8B073A-D009-4F83-A876-7C2C0E549EF6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F8F719F4-EA68-458B-86AB-A25FA6152D6A} = {F8F719F4-EA68-458B-86AB-A25FA6152D6A}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Console", "Thumb.Matrix\Howatworks.Thumb.Matrix.Console\Howatworks.Thumb.Matrix.Console.csproj", "{82291D07-97B5-473B-ACD5-B07F65740F3B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Core", "Thumb.Matrix\Howatworks.Thumb.Matrix.Core\Howatworks.Thumb.Matrix.Core.csproj", "{B0C34CD7-5ACC-4664-A0C2-4B30840246DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Installer", "Thumb.Matrix\Howatworks.Thumb.Matrix.Installer\Howatworks.Thumb.Matrix.Installer.csproj", "{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6B5361F1-2001-473C-9367-5128C8E224FE} = {6B5361F1-2001-473C-9367-5128C8E224FE}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Win", "Thumb.Matrix\Howatworks.Thumb.Matrix.Win\Howatworks.Thumb.Matrix.Win.csproj", "{6B5361F1-2001-473C-9367-5128C8E224FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.Thumb.Wpf", "Thumb\Howatworks.Thumb.Wpf\Howatworks.Thumb.Wpf.csproj", "{5BD6D7D4-41D9-493E-A729-717C64161655}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Win", "Thumb.Assistant\Howatworks.Thumb.Assistant.Win\Howatworks.Thumb.Assistant.Win.csproj", "{83E64DE9-6A97-46BC-B2F8-6DB07EA9F8B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Wpf", "Thumb.Assistant\Howatworks.Thumb.Assistant.Wpf\Howatworks.Thumb.Assistant.Wpf.csproj", "{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Wpf", "Thumb.Matrix\Howatworks.Thumb.Matrix.Wpf\Howatworks.Thumb.Matrix.Wpf.csproj", "{E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,10 +149,6 @@ Global
 		{B48746B2-8B28-4368-A91B-AD867F8EF439}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B48746B2-8B28-4368-A91B-AD867F8EF439}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B48746B2-8B28-4368-A91B-AD867F8EF439}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8F719F4-EA68-458B-86AB-A25FA6152D6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8F719F4-EA68-458B-86AB-A25FA6152D6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8F719F4-EA68-458B-86AB-A25FA6152D6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8F719F4-EA68-458B-86AB-A25FA6152D6A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71AD0395-E5DF-486A-A3E5-562235A21761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71AD0395-E5DF-486A-A3E5-562235A21761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71AD0395-E5DF-486A-A3E5-562235A21761}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -189,18 +177,18 @@ Global
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B5361F1-2001-473C-9367-5128C8E224FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B5361F1-2001-473C-9367-5128C8E224FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B5361F1-2001-473C-9367-5128C8E224FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B5361F1-2001-473C-9367-5128C8E224FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5BD6D7D4-41D9-493E-A729-717C64161655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5BD6D7D4-41D9-493E-A729-717C64161655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BD6D7D4-41D9-493E-A729-717C64161655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BD6D7D4-41D9-493E-A729-717C64161655}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83E64DE9-6A97-46BC-B2F8-6DB07EA9F8B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83E64DE9-6A97-46BC-B2F8-6DB07EA9F8B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83E64DE9-6A97-46BC-B2F8-6DB07EA9F8B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83E64DE9-6A97-46BC-B2F8-6DB07EA9F8B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,7 +215,6 @@ Global
 		{FB3E3B1F-8128-4397-8A8E-91166DB5DFA8} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}
 		{295FD37D-3673-4AC9-A7B9-395E58BA2B48} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}
 		{B48746B2-8B28-4368-A91B-AD867F8EF439} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}
-		{F8F719F4-EA68-458B-86AB-A25FA6152D6A} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
 		{71AD0395-E5DF-486A-A3E5-562235A21761} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
 		{0E1792CC-AF3F-4808-87B4-19289B0B654F} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
 		{0B27CABE-A057-4E0F-9C04-3DFC26C4271E} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
@@ -235,9 +222,9 @@ Global
 		{82291D07-97B5-473B-ACD5-B07F65740F3B} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 		{B0C34CD7-5ACC-4664-A0C2-4B30840246DD} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 		{D99948F3-D05A-4AF0-9DBE-D203A35C24BC} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
-		{6B5361F1-2001-473C-9367-5128C8E224FE} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 		{5BD6D7D4-41D9-493E-A729-717C64161655} = {3C7A3739-DFB0-4F98-9909-4FBD05A35E26}
-		{83E64DE9-6A97-46BC-B2F8-6DB07EA9F8B7} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
+		{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1} = {142DAC3D-81C2-4F9B-9C6B-799034C02ABE}
+		{E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D} = {4D30E6F0-C81A-4340-81AE-B013764A2612}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83C552C3-FA11-4510-8F9F-B6BC1641E4A2}

@@ -18,14 +18,14 @@ namespace Howatworks.Thumb.Matrix.Installer
         {
             var currentFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
             var root = Path.GetFullPath(Path.Combine(currentFolder, @"..\..\..\..\"));
-            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Matrix.Win\bin\{Configuration}\{TargetNetFramework}\");
+            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Matrix.Wpf\bin\{Configuration}\{TargetNetFramework}\");
 
             var project = new ManagedProject("SubEtha Thumb Matrix",
                 new Dir(@"%ProgramFiles%\Howatworks\SubEtha Thumb Matrix",
                     new Files(thumbTrayRoot + "*")
                 ),
                 new Dir("%StartMenu%",
-                    new ExeFileShortcut("SubEtha Thumb Matrix", "[INSTALLDIR]Howatworks.Thumb.Matrix.Win.exe", arguments: "")
+                    new ExeFileShortcut("SubEtha Thumb Matrix", "[INSTALLDIR]Howatworks.Thumb.Matrix.exe", arguments: "")
                 )
             )
             {

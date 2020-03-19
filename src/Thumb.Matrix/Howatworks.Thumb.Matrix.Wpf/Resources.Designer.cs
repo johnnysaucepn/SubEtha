@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Howatworks.Thumb.Matrix.Win {
+namespace Howatworks.Thumb.Matrix.Wpf {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Howatworks.Thumb.Matrix.Win {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Howatworks.Thumb.Matrix.Win.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Howatworks.Thumb.Matrix.Wpf.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using Howatworks.Thumb.Wpf;
 
-namespace Howatworks.Thumb.Matrix.Win
+namespace Howatworks.Thumb.Assistant.Wpf
 {
     public class TrayIconViewModel
     {
@@ -42,19 +42,9 @@ namespace Howatworks.Thumb.Matrix.Win
         public ICommand ExitApplicationCommand =>
             new DelegateCommand
             {
-                CommandAction = () => Application.Current.Shutdown()
+                CommandAction = () => 
+                Application.Current.Shutdown()
             };
 
-        public ICommand ShowAuthDialogCommand =>
-            new DelegateCommand
-            {
-                CommandAction = () =>
-                {
-                    if (!ViewManager.App.IsAuthenticated)
-                    {
-                        ViewManager.ShowAuthenticationDialog();
-                    }
-                }
-            };
     }
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Howatworks.Thumb.Assistant {
+namespace Howatworks.Thumb.Assistant.Wpf {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace Howatworks.Thumb.Assistant {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace Howatworks.Thumb.Assistant {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Howatworks.Thumb.Assistant.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Howatworks.Thumb.Assistant.Wpf.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace Howatworks.Thumb.Assistant {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Howatworks.Thumb.Assistant {
         /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
-        internal static string ExitLabel {
+        public static string ExitLabel {
             get {
                 return ResourceManager.GetString("ExitLabel", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Howatworks.Thumb.Assistant {
         /// <summary>
         ///   Looks up a localized string similar to SubEtha Thumb Assistant.
         /// </summary>
-        internal static string NotifyIconDefaultLabel {
+        public static string NotifyIconDefaultLabel {
             get {
                 return ResourceManager.GetString("NotifyIconDefaultLabel", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Howatworks.Thumb.Assistant {
         /// <summary>
         ///   Looks up a localized string similar to Last entry {0}\nLast checked {1}.
         /// </summary>
-        internal static string NotifyIconLastUpdatedLabel {
+        public static string NotifyIconLastUpdatedLabel {
             get {
                 return ResourceManager.GetString("NotifyIconLastUpdatedLabel", resourceCulture);
             }
@@ -90,19 +90,9 @@ namespace Howatworks.Thumb.Assistant {
         /// <summary>
         ///   Looks up a localized string similar to Never updated.
         /// </summary>
-        internal static string NotifyIconNeverUpdatedLabel {
+        public static string NotifyIconNeverUpdatedLabel {
             get {
                 return ResourceManager.GetString("NotifyIconNeverUpdatedLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon ThumbIcon {
-            get {
-                object obj = ResourceManager.GetObject("ThumbIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
     }

@@ -11,7 +11,7 @@ using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Matrix.Core;
 using Howatworks.Thumb.Wpf;
 
-namespace Howatworks.Thumb.Matrix.Win
+namespace Howatworks.Thumb.Matrix.Wpf
 {
     /// <summary>
     /// Interaction logic for App.xaml
