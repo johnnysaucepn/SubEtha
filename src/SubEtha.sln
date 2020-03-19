@@ -60,14 +60,20 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Core.Test", "Thumb.Assistant\Howatworks.Thumb.Assistant.Core.Test\Howatworks.Thumb.Assistant.Core.Test.csproj", "{0B27CABE-A057-4E0F-9C04-3DFC26C4271E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Installer", "Thumb.Assistant\Howatworks.Thumb.Assistant.Installer\Howatworks.Thumb.Assistant.Installer.csproj", "{BB8B073A-D009-4F83-A876-7C2C0E549EF6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1} = {D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Console", "Thumb.Matrix\Howatworks.Thumb.Matrix.Console\Howatworks.Thumb.Matrix.Console.csproj", "{82291D07-97B5-473B-ACD5-B07F65740F3B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Core", "Thumb.Matrix\Howatworks.Thumb.Matrix.Core\Howatworks.Thumb.Matrix.Core.csproj", "{B0C34CD7-5ACC-4664-A0C2-4B30840246DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Matrix.Installer", "Thumb.Matrix\Howatworks.Thumb.Matrix.Installer\Howatworks.Thumb.Matrix.Installer.csproj", "{D99948F3-D05A-4AF0-9DBE-D203A35C24BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D} = {E4FD3A5B-A40F-45A2-98B5-E67E7A033C1D}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.Thumb.Wpf", "Thumb\Howatworks.Thumb.Wpf\Howatworks.Thumb.Wpf.csproj", "{5BD6D7D4-41D9-493E-A729-717C64161655}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Wpf", "Thumb\Howatworks.Thumb.Wpf\Howatworks.Thumb.Wpf.csproj", "{5BD6D7D4-41D9-493E-A729-717C64161655}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.Assistant.Wpf", "Thumb.Assistant\Howatworks.Thumb.Assistant.Wpf\Howatworks.Thumb.Assistant.Wpf.csproj", "{D146053E-ADC8-4EC3-BC19-60E3CCD1BAF1}"
 EndProject
