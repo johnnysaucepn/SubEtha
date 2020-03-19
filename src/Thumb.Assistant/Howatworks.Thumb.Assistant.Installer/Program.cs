@@ -12,13 +12,13 @@ namespace Howatworks.Thumb.Assistant.Installer
 #else
         private static string Configuration => "Release";
 #endif
-        private static string TargetNetFramework => "net472";
+        private static string TargetNetFramework => "netcoreapp3.1";
 
         private static void Main()
         {
             var currentFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
             var root = Path.GetFullPath(Path.Combine(currentFolder, @"..\..\..\..\"));
-            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Assistant\bin\{Configuration}\{TargetNetFramework}\");
+            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Assistant.Wpf\bin\{Configuration}\{TargetNetFramework}\");
 
             var project = new ManagedProject("SubEtha Thumb Assistant",
                 new Dir(@"%ProgramFiles%\Howatworks\SubEtha Thumb Assistant",

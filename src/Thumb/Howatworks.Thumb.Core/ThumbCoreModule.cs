@@ -23,6 +23,15 @@ namespace Howatworks.Thumb.Core
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
             builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();
             builder.RegisterType<JournalEntryRouter>().AsSelf().SingleInstance();
+
+            if (_config.GetValue<bool>("AudioNotifications"))
+            {
+                builder.RegisterType<BeepThumbNotifier>().As<IThumbNotifier>().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType<SilentThumbNotifier>().As<IThumbNotifier>().SingleInstance();
+            }
         }
     }
 }

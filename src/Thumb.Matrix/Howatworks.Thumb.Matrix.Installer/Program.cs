@@ -12,13 +12,13 @@ namespace Howatworks.Thumb.Matrix.Installer
 #else
         private static string Configuration => "Release";
 #endif
-        private static string TargetNetFramework => "net472";
+        private static string TargetNetFramework => "netcoreapp3.1";
 
         private static void Main()
         {
             var currentFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
             var root = Path.GetFullPath(Path.Combine(currentFolder, @"..\..\..\..\"));
-            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Matrix\bin\{Configuration}\{TargetNetFramework}\");
+            var thumbTrayRoot = Path.Combine(root, $@"Howatworks.Thumb.Matrix.Wpf\bin\{Configuration}\{TargetNetFramework}\");
 
             var project = new ManagedProject("SubEtha Thumb Matrix",
                 new Dir(@"%ProgramFiles%\Howatworks\SubEtha Thumb Matrix",

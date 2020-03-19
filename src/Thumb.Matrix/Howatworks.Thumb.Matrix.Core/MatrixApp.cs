@@ -80,7 +80,6 @@ namespace Howatworks.Thumb.Matrix.Core
 
             // Try username and password from configuration, if possible
             var nowAuthenticated = Authenticate(username, password);
-            StartMonitoring();
         }
 
         public void Shutdown()

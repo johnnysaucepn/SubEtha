@@ -1,13 +1,14 @@
 using Autofac;
+using Howatworks.Thumb.Core;
 using Microsoft.Extensions.Configuration;
 
-namespace Howatworks.Thumb.Console
+namespace Howatworks.Thumb.Wpf
 {
-    public class ThumbConsoleModule : Module
+    public class ThumbWpfModule : Module
     {
         private readonly IConfiguration _config;
 
-        public ThumbConsoleModule(IConfiguration config)
+        public ThumbWpfModule(IConfiguration config)
         {
             _config = config;
         }

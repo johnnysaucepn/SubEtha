@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using Howatworks.SubEtha.Bindings;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.Thumb.Assistant.Core.Messages;
@@ -26,6 +27,8 @@ namespace Howatworks.Thumb.Assistant.Core
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
+
+        private readonly CancellationTokenSource _cancelSource = new CancellationTokenSource();
 
         public AssistantApp(
             JournalMonitorScheduler monitor,
@@ -119,15 +122,14 @@ namespace Howatworks.Thumb.Assistant.Core
 
             var host = hostBuilder.Build();
 
-            host.RunAsync().ConfigureAwait(false); // Don't block the calling thread
-
-            StartMonitoring();
+            host.RunAsync(_cancelSource.Token).ConfigureAwait(false); // Don't block the calling thread
         }
 
         public void Shutdown()
         {
             Log.Info("Shutting down");
             StopMonitoring();
+            _cancelSource.Cancel();
         }
 
         public void StartMonitoring()

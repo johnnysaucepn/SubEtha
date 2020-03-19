@@ -39,6 +39,7 @@ namespace Howatworks.Thumb.Matrix.Console
                 };
 
                 app.Initialize();
+                app.StartMonitoring();
                 System.Console.ReadKey();
                 app.Shutdown();
             }
