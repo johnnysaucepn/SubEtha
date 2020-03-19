@@ -28,7 +28,7 @@ artifacts:
     name: Thumb Assistant Installer
     type: file
   - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaThumbMatrix.msi
-    name: Thumb Assistant Installer
+    name: Thumb Matrix Installer
     type: file
   - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
