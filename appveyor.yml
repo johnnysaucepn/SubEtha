@@ -1,15 +1,19 @@
 image: Visual Studio 2019
 
 install:
+  - ps: dotnet tool restore
   - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
   - ps: dotnet tool install -g Codecov.Tool
 
-before_build:
-  - ps: nuget restore src
+#before_build:
+#  - ps: nuget restore src
 
-build:
-  publish_nuget: true
-  project: src/SubEtha.sln
+#build:
+#  publish_nuget: true
+#  project: src/SubEtha.sln
+
+build_script:
+  - dotnet dotnet-cake
 
 after_build:
   - ps: dotnet publish src/Matrix/Howatworks.Matrix.Site

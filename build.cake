@@ -1,4 +1,5 @@
-﻿#tool "nuget:?package=xunit.runner.console"
+﻿#tool "nuget:?package=GitVersion.CommandLine"
+#tool "nuget:?package=xunit.runner.console"
 #addin "nuget:?package=Cake.Incubator"
 
 var version = "0.0.1";
@@ -6,26 +7,45 @@ var revision = 0;
 var configuration = "Release";
 var build = 0;
 
-// TODO: add these as arguments, instead of interrogating environment variables
-//if (BuildSystem.IsRunningOnJenkins)
-//{
-    version = Environment.GetEnvironmentVariable("version") ?? version;
-    if (Environment.GetEnvironmentVariable("revision") != null ) revision = Convert.ToInt32(Environment.GetEnvironmentVariable("revision"));
-    configuration = Environment.GetEnvironmentVariable("configuration") ?? configuration;
-    if (Environment.GetEnvironmentVariable("build") != null ) build = Convert.ToInt32(Environment.GetEnvironmentVariable("build"));
-//}
-
+var isAppVeyorBuild = AppVeyor.IsRunningOnAppVeyor;
 
 var target = Argument("target", "Default");
 
-Task("Build")
+Task("Version")
     .Does(() =>
     {
-        NuGetRestore("src/SubEtha.sln");
-        DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
-        {
-            Configuration = configuration
+        /*StartProcess("gitversion", new ProcessSettings{
+            Arguments = new ProcessArgumentBuilder()
+                .Append(@"build")
+                .AppendQuoted("src/SubEtha.sln")
+        });*/
+
+        
+        GitVersion(new GitVersionSettings {
+            UpdateAssemblyInfo = true,
+            UpdateAssemblyInfoFilePath = "src/SharedAssemblyInfo.cs",
+            ArgumentCustomization = args => args.Append("/ensureassemblyinfo"),
+            OutputType = GitVersionOutput.BuildServer
         });
+
+
+    
+        if (AppVeyor.IsRunningOnAppVeyor)
+        {
+            var buildNumber = AppVeyor.Environment.Build.Number;
+            AppVeyor.UpdateBuildVersion("x.x.x");
+        }
+
+    });
+
+Task("Build")
+    .IsDependentOn("Version")
+    .Does(() =>
+    {
+        DotNetCoreRestore("src/SubEtha.sln");
+        DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings { 
+            Configuration = configuration
+        });        
     });
 
 Task("Package")
@@ -78,8 +98,6 @@ Task("Test")
     });
 
 Task("Default")
-    .IsDependentOn("Build")
-    .IsDependentOn("Test")
-    .IsDependentOn("Package");
+    .IsDependentOn("Build");
 
 RunTarget(target);

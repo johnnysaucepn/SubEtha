@@ -4,7 +4,10 @@
   <PropertyGroup>
     <GenerateAssemblyCopyrightVersionAttribute>false</GenerateAssemblyCopyrightVersionAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <Version Condition="'$(GitVersion_NuGetVersion)' != ''">$(GitVersion_NuGetVersion)</Version>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <!--<Version Condition="'$(GitVersion_NuGetVersion)' != ''">$(GitVersion_NuGetVersion)</Version>-->
     <Company>Howatworks</Company>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) James Howat</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -17,7 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.2.4" PrivateAssets="All" />
+    <Compile Include="$(MSBuildThisFileDirectory)\SharedAssemblyInfo.cs" Visible="true">
+      <CopyToOutputDirectory>None</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
+
+  <!--<ItemGroup>
+    <PackageReference Include="GitVersionTask" Version="5.2.4" PrivateAssets="All" />
+  </ItemGroup>-->
 
 </Project>
