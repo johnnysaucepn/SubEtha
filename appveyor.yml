@@ -1,5 +1,8 @@
 image: Visual Studio 2019
 
+nuget:
+  account_feed: true
+  
 install:
   - ps: dotnet tool restore
 
