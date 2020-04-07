@@ -1,13 +1,7 @@
 image: Visual Studio 2019
 
-nuget:
-  account_feed: true
-  project_feed: true
-
 install:
   - ps: dotnet tool restore
-  - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
-  - ps: dotnet tool install -g Codecov.Tool
 
 build_script:
   - ps: dotnet dotnet-cake
@@ -19,9 +13,7 @@ configuration:
   - Release
 
 test_script:
-  - ps: dotnet test --no-build src /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-  - ps: reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:AnalysisResults" "-reporttypes:Cobertura"
-  - ps: codecov -f "AnalysisResults/Cobertura.xml" --no-color --required
+- ps: dotnet dotnet-cake --target=Test
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi

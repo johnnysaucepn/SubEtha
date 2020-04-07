@@ -11,3 +11,4 @@ packages/
 /*.zip
 src/**/coverage.json
 src/**/coverage.opencover.xml
+CoverageResults/

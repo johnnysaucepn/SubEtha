@@ -1,17 +1,24 @@
 ﻿//#tool "nuget:?package=GitVersion.CommandLine&prerelease"
 #tool "nuget:?package=xunit.runner.console"
 #addin "nuget:?package=Cake.Incubator"
+#tool "nuget:?package=xunit.runner.console"
+#tool "nuget:?package=coverlet.console"
+#addin "nuget:?package=Cake.Coverlet"
+#tool "nuget:?package=ReportGenerator"
+#tool "nuget:?package=Codecov"
+#addin "nuget:?package=Cake.Codecov"
 
 var configuration = "Release";
 var buildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0;
 
-var target = Argument("target", "Default");
+var target = Argument("target", "Build");
 
 Task("Version")
     .WithCriteria(AppVeyor.IsRunningOnAppVeyor)
     .Does(() =>
     {
-        /*var gitVersion = GitVersion(new GitVersionSettings {
+        /*var gitVersion = GitVersion(new GitVersionSettings
+        {
             UpdateAssemblyInfo = false,
             OutputType = GitVersionOutput.BuildServer
         });*/
@@ -29,7 +36,8 @@ Task("Build")
     .Does(() =>
     {
         DotNetCoreRestore("src/SubEtha.sln");
-        DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings { 
+        DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
+        { 
             Configuration = configuration
         });        
     });
@@ -64,26 +72,48 @@ Task("NuGetPush")
         var packages = GetFiles("./**/*.nupkg");
 
         NuGetPush(packages, pushSettings);
-
     });
 
 Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
     {
-        var testSettings = new DotNetCoreTestSettings {
+        var testDirectory = Directory(@"./TestResults/");
+        var coverletDirectory = Directory(@"./CoverageResults/");
 
-            OutputDirectory = "./TestResults"
+        CleanDirectory(testDirectory);
+        CleanDirectory(coverletDirectory);
+
+        var coverletReport = File(@"Coverage.cobertura.xml");
+
+        var testSettings = new DotNetCoreTestSettings
+        {
+            NoBuild = true,
+            ResultsDirectory = testDirectory
         };
 
-        CreateDirectory(testSettings.OutputDirectory);
-        foreach(var project in GetFiles("**/bin/**/*Test.csproj"))
+        var coverletSettings = new CoverletSettings
         {
-            DotNetCoreTest(project.FullPath, testSettings);
+            CollectCoverage = true,
+            CoverletOutputFormat = CoverletOutputFormat.cobertura,
+            CoverletOutputDirectory = coverletDirectory,
+            CoverletOutputName = coverletReport,
+            MergeWithFile = coverletReport
+        };
+
+        foreach(var project in GetFiles("src/**/*Test.csproj"))
+        {
+            DotNetCoreTest(project.FullPath, testSettings, coverletSettings);
+        }
+
+        if (AppVeyor.IsRunningOnAppVeyor)
+        {
+            Codecov(new CodecovSettings
+            { 
+                Files = new[] { (coverletDirectory + coverletReport).Path.FullPath },
+                NoColor = true
+            });
         }
     });
-
-Task("Default")
-    .IsDependentOn("Build");
 
 RunTarget(target);
