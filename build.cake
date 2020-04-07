@@ -20,11 +20,11 @@ Task("Version")
             OutputType = GitVersionOutput.BuildServer
         });
 
-        if (AppVeyor.IsRunningOnAppVeyor)
+        /*if (AppVeyor.IsRunningOnAppVeyor)
         {
             var buildNumber = AppVeyor.Environment.Build.Number;
             AppVeyor.UpdateBuildVersion(gitVersion.InformationalVersion);
-        }
+        }*/
 
     });
 
