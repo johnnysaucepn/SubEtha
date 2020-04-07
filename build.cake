@@ -1,24 +1,20 @@
-﻿#tool "nuget:?package=GitVersion.CommandLine"
+﻿//#tool "nuget:?package=GitVersion.CommandLine&prerelease"
 #tool "nuget:?package=xunit.runner.console"
 #addin "nuget:?package=Cake.Incubator"
 
-var version = "0.0.1";
-var revision = 0;
 var configuration = "Release";
-var build = 0;
-
-var isAppVeyorBuild = AppVeyor.IsRunningOnAppVeyor;
+var buildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0;
 
 var target = Argument("target", "Default");
 
 Task("Version")
+    .WithCriteria(AppVeyor.IsRunningOnAppVeyor)
     .Does(() =>
     {
-        var gitVersion = GitVersion(new GitVersionSettings {
+        /*var gitVersion = GitVersion(new GitVersionSettings {
             UpdateAssemblyInfo = false,
-            EnvironmentVariables = new Dictionary<string, string>{ ["MSBUILDSINGLELOADCONTEXT"] ="1" },
             OutputType = GitVersionOutput.BuildServer
-        });
+        });*/
 
         /*if (AppVeyor.IsRunningOnAppVeyor)
         {
@@ -34,8 +30,7 @@ Task("Build")
     {
         DotNetCoreRestore("src/SubEtha.sln");
         DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings { 
-            Configuration = configuration,
-            EnvironmentVariables = new Dictionary<string, string>{ ["MSBUILDSINGLELOADCONTEXT"] ="1" }
+            Configuration = configuration
         });        
     });
 
