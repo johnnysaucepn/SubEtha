@@ -39,7 +39,7 @@ namespace Howatworks.Thumb.Assistant.Installer
                     ProductIcon = "thumb_blue.ico",
                     Manufacturer = "Howatworks"
                 },
-                //Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
+                Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
                 OutFileName = "SubEthaThumbAssistant"
             };
 

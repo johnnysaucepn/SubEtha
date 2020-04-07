@@ -14,26 +14,16 @@ var target = Argument("target", "Default");
 Task("Version")
     .Does(() =>
     {
-        /*StartProcess("gitversion", new ProcessSettings{
-            Arguments = new ProcessArgumentBuilder()
-                .Append(@"build")
-                .AppendQuoted("src/SubEtha.sln")
-        });*/
-
-        
-        GitVersion(new GitVersionSettings {
-            UpdateAssemblyInfo = true,
-            UpdateAssemblyInfoFilePath = "src/SharedAssemblyInfo.cs",
-            ArgumentCustomization = args => args.Append("/ensureassemblyinfo"),
+        var gitVersion = GitVersion(new GitVersionSettings {
+            UpdateAssemblyInfo = false,
+            EnvironmentVariables = new Dictionary<string, string>{ ["MSBUILDSINGLELOADCONTEXT"] ="1" },
             OutputType = GitVersionOutput.BuildServer
         });
 
-
-    
         if (AppVeyor.IsRunningOnAppVeyor)
         {
             var buildNumber = AppVeyor.Environment.Build.Number;
-            AppVeyor.UpdateBuildVersion("x.x.x");
+            AppVeyor.UpdateBuildVersion(gitVersion.InformationalVersion);
         }
 
     });
@@ -44,7 +34,8 @@ Task("Build")
     {
         DotNetCoreRestore("src/SubEtha.sln");
         DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings { 
-            Configuration = configuration
+            Configuration = configuration,
+            EnvironmentVariables = new Dictionary<string, string>{ ["MSBUILDSINGLELOADCONTEXT"] ="1" }
         });        
     });
 

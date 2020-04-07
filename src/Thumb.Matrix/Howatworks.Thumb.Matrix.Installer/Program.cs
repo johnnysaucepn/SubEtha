@@ -39,7 +39,7 @@ namespace Howatworks.Thumb.Matrix.Installer
                     ProductIcon = "thumb_red.ico",
                     Manufacturer = "Howatworks"
                 },
-                //Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
+                Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
                 OutFileName = "SubEthaThumbMatrix"
             };
 
