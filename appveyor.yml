@@ -10,10 +10,13 @@ build_script:
   - ps: dotnet dotnet-cake
 
 after_build:
-  - ps: dotnet publish src/Matrix/Howatworks.Matrix.Site
+  - ps: dotnet dotnet-cake --target=PackageApps
 
 test_script:
   - ps: dotnet dotnet-cake --target=Test
+
+after_test:
+  - ps: dotnet dotnet-cake --target=PublishCoverage
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
