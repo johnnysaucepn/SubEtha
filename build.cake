@@ -38,24 +38,14 @@ Task("Build")
         });        
     });
 
-Task("PackageApps")
+Task("PublishApps")
     .Does<BuildData>(data =>
     {
         CleanDirectory(data.AppDirectory);
 
-        var packageApp = new Action<string, string>((projectFile, zipName) =>
-        {
-            var projectDetails = ParseProject(projectFile, data.Configuration);
-            var files = GetFiles($"{projectDetails.OutputPath}/**/*");
-            var zipPath = $"{data.AppDirectory}/{zipName}";
-            Zip(projectDetails.OutputPath, zipPath, files);
-            Information($"Packaged app {zipName}");
-        });
-
-        packageApp("src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", "Howatworks.Matrix.Site.zip");
-        packageApp("src/Thumb.Assistant/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj", "Howatworks.Thumb.Assistant.Console.zip");
-        packageApp("src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj", "Howatworks.Thumb.Matrix.Console.zip");        
-
+        DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj");
+        DotNetCorePublish("./src/Thumb.Assistant/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj");
+        DotNetCorePublish("./src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj");
     });
 
 Task("NuGetPush")

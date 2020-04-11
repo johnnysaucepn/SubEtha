@@ -10,7 +10,7 @@ build_script:
   - ps: dotnet dotnet-cake
 
 after_build:
-  - ps: dotnet dotnet-cake --target=PackageApps
+  - ps: dotnet dotnet-cake --target=PublishApps
 
 test_script:
   - ps: dotnet dotnet-cake --target=Test
@@ -22,10 +22,16 @@ artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
     name: Thumb Assistant Installer
     type: file
+  - path: PublishedApps/Howatworks.Thumb.Assistant.Console-*.zip
+    name: Thumb Assistant Console
+    type: file
   - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaThumbMatrix.msi
     name: Thumb Matrix Installer
     type: file
-  - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
+  - path: PublishedApps/Howatworks.Thumb.Matrix.Console-*.zip
+    name: Thumb Matrix Console
+    type: file
+  - path: PublishedApps/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
   - path: CoverageResults/Coverage.*.cobertura.xml
