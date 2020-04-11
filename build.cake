@@ -9,16 +9,18 @@ var target = Argument("target", "Build");
 
 public class BuildData
 {
-    public DirectoryPath TestResults;
-    public DirectoryPath CoverageResults;
+    public DirectoryPath TestResultsDirectory;
+    public DirectoryPath CoverageResultsDirectory;
+    public DirectoryPath AppDirectory;
     public string Configuration;
     public int BuildNumber;
 }
 
 Setup<BuildData>(ctx => new BuildData()
     {
-        TestResults = Directory(@"./TestResults/"),
-        CoverageResults = Directory(@"./CoverageResults/"),
+        TestResultsDirectory = Directory(@"./TestResults/"),
+        CoverageResultsDirectory = Directory(@"./CoverageResults/"),
+        AppDirectory = Directory(@"./PublishedApps/"),
         Configuration = "Release",
         BuildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0
     });
@@ -36,14 +38,18 @@ Task("Build")
         });        
     });
 
-Task("Package")
+Task("PackageApps")
     .Does<BuildData>(data =>
     {
+        CleanDirectory(data.AppDirectory);
+
         var packageApp = new Action<string, string>((projectFile, zipName) =>
         {
             var projectDetails = ParseProject(projectFile, data.Configuration);
-            var files = GetFiles($"{projectDetails.OutputPath}/**/*.*");
-            Zip(projectDetails.OutputPath, zipName, files);
+            var files = GetFiles($"{projectDetails.OutputPath}/**/*");
+            var zipPath = $"{data.AppDirectory}/{zipName}";
+            Zip(projectDetails.OutputPath, zipPath, files);
+            Information($"Packaged app {zipName}");
         });
 
         packageApp("src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", "Howatworks.Matrix.Site.zip");
@@ -63,7 +69,7 @@ Task("NuGetPush")
         var pushSettings = new NuGetPushSettings {Source = source, ApiKey = apiKey};
 
         // WARNING: this may publish more than we expect!
-        var packages = GetFiles("./**/*.nupkg");
+        var packages = GetFiles("./**/Howatworks.*.nupkg");
 
         NuGetPush(packages, pushSettings);
     });
@@ -71,14 +77,13 @@ Task("NuGetPush")
 Task("Test")
     .Does<BuildData>(data =>
     {
-        CleanDirectory(data.TestResults);
-        CleanDirectory(data.CoverageResults);
+        CleanDirectory(data.TestResultsDirectory);
+        CleanDirectory(data.CoverageResultsDirectory);
 
         var testSettings = new DotNetCoreTestSettings
         {
             NoBuild = true,
-            OutputDirectory = data.TestResults,
-            ResultsDirectory = data.TestResults
+            ResultsDirectory = data.TestResultsDirectory
         };
 
         foreach(var project in GetFiles("src/**/*Test.csproj"))
@@ -87,20 +92,18 @@ Task("Test")
             {
                 CollectCoverage = true,
                 CoverletOutputFormat = CoverletOutputFormat.cobertura,
-                CoverletOutputDirectory = data.CoverageResults,
+                CoverletOutputDirectory = data.CoverageResultsDirectory,
                 CoverletOutputName = File($"Coverage.{project.GetFilenameWithoutExtension()}.cobertura.xml"),
             };
 
             DotNetCoreTest(project.FullPath, testSettings, coverletSettings);
         }
-
-        RunTarget("PublishCoverage");
     });
 
 Task("PublishCoverage")
     .Does<BuildData>(data =>
     {
-        var coverageFiles = GetFiles($"{data.CoverageResults}/*.*");
+        var coverageFiles = GetFiles($"{data.CoverageResultsDirectory}/*.*");
 
         if (AppVeyor.IsRunningOnAppVeyor)
         {
