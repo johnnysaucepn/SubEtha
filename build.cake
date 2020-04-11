@@ -5,27 +5,40 @@
 #tool "nuget:?package=Codecov&version=1.10.0"
 #addin "nuget:?package=Cake.Codecov&version=0.8.0"
 
-var configuration = "Release";
-var buildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0;
-
 var target = Argument("target", "Build");
 
+public class BuildData
+{
+    public DirectoryPath TestResults;
+    public DirectoryPath CoverageResults;
+    public string Configuration;
+    public int BuildNumber;
+}
+
+Setup<BuildData>(ctx => new BuildData()
+    {
+        TestResults = Directory(@"./TestResults/"),
+        CoverageResults = Directory(@"./CoverageResults/"),
+        Configuration = "Release",
+        BuildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0
+    });
+
 Task("Build")
-    .Does(() =>
+    .Does<BuildData>(data =>
     {
         DotNetCoreRestore("src/SubEtha.sln");
         DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
         { 
-            Configuration = configuration
+            Configuration = data.Configuration
         });        
     });
 
 Task("Package")
-    .Does(() =>
+    .Does<BuildData>(data =>
     {
         var packageApp = new Action<string, string>((projectFile, zipName) =>
         {
-            var projectDetails = ParseProject(projectFile, configuration);
+            var projectDetails = ParseProject(projectFile, data.Configuration);
             var files = GetFiles(projectDetails.OutputPath + "/**/*.*");
             Zip(projectDetails.OutputPath, zipName, files);
         });
@@ -37,7 +50,7 @@ Task("Package")
     });
 
 Task("NuGetPush")
-    .Does(() =>
+    .Does<BuildData>(data =>
     {
         if (!IsRunningOnWindows()) return;
 
@@ -53,21 +66,16 @@ Task("NuGetPush")
     });
 
 Task("Test")
-    .IsDependentOn("Build")
-    .Does(() =>
+    .Does<BuildData>(data =>
     {
-        var testDirectory = Directory(@"./TestResults/");
-        var coverletDirectory = Directory(@"./CoverageResults/");
-
-        CleanDirectory(testDirectory);
-        CleanDirectory(coverletDirectory);
-
-        var coverletReport = File(@"Coverage.cobertura.xml");
+        CleanDirectory(data.TestResults);
+        CleanDirectory(data.CoverageResults);
 
         var testSettings = new DotNetCoreTestSettings
         {
             NoBuild = true,
-            ResultsDirectory = testDirectory
+            OutputDirectory = data.TestResults,
+            ResultsDirectory = data.TestResults
         };
 
         foreach(var project in GetFiles("src/**/*Test.csproj"))
@@ -76,18 +84,26 @@ Task("Test")
             {
                 CollectCoverage = true,
                 CoverletOutputFormat = CoverletOutputFormat.cobertura,
-                CoverletOutputDirectory = coverletDirectory,
+                CoverletOutputDirectory = data.CoverageResults,
                 CoverletOutputName = File($"Coverage.{project.GetFilenameWithoutExtension()}.cobertura.xml"),
             };
 
             DotNetCoreTest(project.FullPath, testSettings, coverletSettings);
         }
 
+        RunTarget("PublishCoverage");
+    });
+
+Task("PublishCoverage")
+    .Does<BuildData>(data =>
+    {
+        var coverageFiles = GetFiles($"{data.CoverageResults}/*.*");
+
         if (AppVeyor.IsRunningOnAppVeyor)
         {
             Codecov(new CodecovSettings
             { 
-                Files = GetFiles(coverletDirectory).Select(f => f.FullPath),
+                Files = coverageFiles.Select(f => f.FullPath),
                 NoColor = true
             });
         }
