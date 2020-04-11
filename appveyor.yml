@@ -1,5 +1,8 @@
 image: Visual Studio 2019
  
+configuration:
+  - Release
+
 install:
   - ps: dotnet tool restore
 
@@ -9,11 +12,8 @@ build_script:
 after_build:
   - ps: dotnet publish src/Matrix/Howatworks.Matrix.Site
 
-configuration:
-  - Release
-
 test_script:
-- ps: dotnet dotnet-cake --target=Test
+  - ps: dotnet dotnet-cake --target=Test
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
@@ -25,11 +25,8 @@ artifacts:
   - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
-  - path: src/**/coverage.cobertura.xml
+  - path: CoverageResults/Coverage.*.cobertura.xml
     name: Coverlet Reports
-    type: file
-  - path: AnalysisResults/Cobertura.xml
-    name: ReportGenerator Merged Report
     type: file
 
 notifications:

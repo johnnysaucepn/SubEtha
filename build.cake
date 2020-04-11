@@ -70,17 +70,16 @@ Task("Test")
             ResultsDirectory = testDirectory
         };
 
-        var coverletSettings = new CoverletSettings
-        {
-            CollectCoverage = true,
-            CoverletOutputFormat = CoverletOutputFormat.cobertura,
-            CoverletOutputDirectory = coverletDirectory,
-            CoverletOutputName = coverletReport,
-            MergeWithFile = coverletReport
-        };
-
         foreach(var project in GetFiles("src/**/*Test.csproj"))
         {
+            var coverletSettings = new CoverletSettings
+            {
+                CollectCoverage = true,
+                CoverletOutputFormat = CoverletOutputFormat.cobertura,
+                CoverletOutputDirectory = coverletDirectory,
+                CoverletOutputName = File($"Coverage.{project.GetFilenameWithoutExtension()}.cobertura.xml"),
+            };
+
             DotNetCoreTest(project.FullPath, testSettings, coverletSettings);
         }
 
@@ -88,7 +87,7 @@ Task("Test")
         {
             Codecov(new CodecovSettings
             { 
-                Files = new[] { (coverletDirectory + coverletReport).Path.FullPath },
+                Files = GetFiles(coverletDirectory).Select(f => f.FullPath),
                 NoColor = true
             });
         }
