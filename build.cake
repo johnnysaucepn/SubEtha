@@ -1,5 +1,4 @@
-﻿//#tool "nuget:?package=GitVersion.CommandLine&prerelease"
-#tool "nuget:?package=xunit.runner.console&version=2.4.1"
+﻿#tool "nuget:?package=xunit.runner.console&version=2.4.1"
 #addin "nuget:?package=Cake.Incubator&version=5.1.0"
 #tool "nuget:?package=coverlet.console&version=1.7.1"
 #addin "nuget:?package=Cake.Coverlet&version=2.4.2"
@@ -11,26 +10,7 @@ var buildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Numb
 
 var target = Argument("target", "Build");
 
-Task("Version")
-    .WithCriteria(AppVeyor.IsRunningOnAppVeyor)
-    .Does(() =>
-    {
-        /*var gitVersion = GitVersion(new GitVersionSettings
-        {
-            UpdateAssemblyInfo = false,
-            OutputType = GitVersionOutput.BuildServer
-        });*/
-
-        /*if (AppVeyor.IsRunningOnAppVeyor)
-        {
-            var buildNumber = AppVeyor.Environment.Build.Number;
-            AppVeyor.UpdateBuildVersion(gitVersion.InformationalVersion);
-        }*/
-
-    });
-
 Task("Build")
-    .IsDependentOn("Version")
     .Does(() =>
     {
         DotNetCoreRestore("src/SubEtha.sln");
