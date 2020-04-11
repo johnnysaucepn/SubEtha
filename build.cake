@@ -43,9 +43,18 @@ Task("PublishApps")
     {
         CleanDirectory(data.AppDirectory);
 
-        DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj");
-        DotNetCorePublish("./src/Thumb.Assistant/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj");
-        DotNetCorePublish("./src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj");
+        var publishSettings = new DotNetCorePublishSettings
+        { 
+            Configuration = data.Configuration,
+            MSBuildSettings = new DotNetCoreMSBuildSettings
+            {
+                MaxCpuCount = 1
+            }
+        };
+
+        DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", publishSettings);
+        DotNetCorePublish("./src/Thumb.Assistant/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj", publishSettings);
+        DotNetCorePublish("./src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj", publishSettings);
     });
 
 Task("NuGetPush")
