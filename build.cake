@@ -26,7 +26,6 @@ Setup<BuildData>(ctx => new BuildData()
 Task("Build")
     .Does<BuildData>(data =>
     {
-        DotNetCoreRestore("src/SubEtha.sln");
         DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
         { 
             Configuration = data.Configuration,
@@ -43,7 +42,7 @@ Task("Package")
         var packageApp = new Action<string, string>((projectFile, zipName) =>
         {
             var projectDetails = ParseProject(projectFile, data.Configuration);
-            var files = GetFiles(projectDetails.OutputPath + "/**/*.*");
+            var files = GetFiles($"{projectDetails.OutputPath}/**/*.*");
             Zip(projectDetails.OutputPath, zipName, files);
         });
 
