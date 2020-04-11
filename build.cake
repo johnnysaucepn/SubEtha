@@ -29,7 +29,11 @@ Task("Build")
         DotNetCoreRestore("src/SubEtha.sln");
         DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
         { 
-            Configuration = data.Configuration
+            Configuration = data.Configuration,
+            MSBuildSettings = new DotNetCoreMSBuildSettings
+            {
+                MaxCpuCount = 1
+            }
         });        
     });
 
@@ -104,7 +108,8 @@ Task("PublishCoverage")
             Codecov(new CodecovSettings
             { 
                 Files = coverageFiles.Select(f => f.FullPath),
-                NoColor = true
+                NoColor = true,
+                Required = true
             });
         }
     });
