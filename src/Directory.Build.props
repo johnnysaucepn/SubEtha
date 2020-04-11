@@ -20,4 +20,12 @@
     <PackageReference Include="GitVersionTask" Version="5.2.4" PrivateAssets="All" />
   </ItemGroup>
 
+  <Target Name="ZipPublishArtifacts" AfterTargets="Publish">
+    <PropertyGroup>
+      <PublishZipFolder>$(MSBuildThisFileDirectory)\..\PublishedApps\</PublishZipFolder>
+    </PropertyGroup>
+    <MakeDir Directories="$(PublishZipFolder)" />
+    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PublishZipFolder)\$(ProjectName)-$(GitVersion_NuGetVersion).zip" />
+  </Target>
+
 </Project>

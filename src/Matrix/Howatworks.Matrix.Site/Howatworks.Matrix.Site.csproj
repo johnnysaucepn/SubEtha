@@ -38,12 +38,4 @@
     <ProjectReference Include="..\Howatworks.Matrix.EntityFramework\Howatworks.Matrix.EntityFramework.csproj" />
   </ItemGroup>
 
-  <Target Name="ZipPublishArtifacts" AfterTargets="AfterPublish" Condition=" '$(ConfigurationName)' == 'Release' ">
-    <PropertyGroup>
-      <PublishZipFolder>$(ProjectDir)\Artifacts\</PublishZipFolder>
-    </PropertyGroup>
-    <MakeDir Directories="$(PublishZipFolder)" />
-    <ZipDirectory SourceDirectory="$(PublishUrl)" DestinationFile="$(PublishZipFolder)\$(ProjectName)-$(GitVersion_NuGetVersion).zip" />
-  </Target>
-
 </Project>

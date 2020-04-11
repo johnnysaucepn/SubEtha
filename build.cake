@@ -1,51 +1,55 @@
-﻿#tool "nuget:?package=xunit.runner.console"
-#addin "nuget:?package=Cake.Incubator"
+﻿#tool "nuget:?package=xunit.runner.console&version=2.4.1"
+#addin "nuget:?package=Cake.Incubator&version=5.1.0"
+#tool "nuget:?package=coverlet.console&version=1.7.1"
+#addin "nuget:?package=Cake.Coverlet&version=2.4.2"
+#tool "nuget:?package=Codecov&version=1.10.0"
+#addin "nuget:?package=Cake.Codecov&version=0.8.0"
 
-var version = "0.0.1";
-var revision = 0;
-var configuration = "Release";
-var build = 0;
+var target = Argument("target", "Build");
 
-// TODO: add these as arguments, instead of interrogating environment variables
-//if (BuildSystem.IsRunningOnJenkins)
-//{
-    version = Environment.GetEnvironmentVariable("version") ?? version;
-    if (Environment.GetEnvironmentVariable("revision") != null ) revision = Convert.ToInt32(Environment.GetEnvironmentVariable("revision"));
-    configuration = Environment.GetEnvironmentVariable("configuration") ?? configuration;
-    if (Environment.GetEnvironmentVariable("build") != null ) build = Convert.ToInt32(Environment.GetEnvironmentVariable("build"));
-//}
+public class BuildData
+{
+    public DirectoryPath TestResultsDirectory;
+    public DirectoryPath CoverageResultsDirectory;
+    public DirectoryPath AppDirectory;
+    public string Configuration;
+    public int BuildNumber;
+}
 
-
-var target = Argument("target", "Default");
-
-Task("Build")
-    .Does(() =>
+Setup<BuildData>(ctx => new BuildData()
     {
-        NuGetRestore("src/SubEtha.sln");
-        DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
-        {
-            Configuration = configuration
-        });
+        TestResultsDirectory = Directory(@"./TestResults/"),
+        CoverageResultsDirectory = Directory(@"./CoverageResults/"),
+        AppDirectory = Directory(@"./PublishedApps/"),
+        Configuration = "Release",
+        BuildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0
     });
 
-Task("Package")
-    .Does(() =>
+Task("Build")
+    .Does<BuildData>(data =>
     {
-        var packageApp = new Action<string, string>((projectFile, zipName) =>
-        {
-            var projectDetails = ParseProject(projectFile, configuration);
-            var files = GetFiles(projectDetails.OutputPath + "/**/*.*");
-            Zip(projectDetails.OutputPath, zipName, files);
-        });
+        DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
+        { 
+            Configuration = data.Configuration,
+            MSBuildSettings = new DotNetCoreMSBuildSettings
+            {
+                MaxCpuCount = 1
+            }
+        });        
+    });
 
-        packageApp("src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", "Howatworks.Matrix.Site.zip");
-        packageApp("src/Thumb.Assistant/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj", "Howatworks.Thumb.Assistant.Console.zip");
-        packageApp("src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj", "Howatworks.Thumb.Matrix.Console.zip");        
+Task("PublishApps")
+    .Does<BuildData>(data =>
+    {
+        CleanDirectory(data.AppDirectory);
 
+        DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj");
+        DotNetCorePublish("./src/Thumb.Assistant/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj");
+        DotNetCorePublish("./src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj");
     });
 
 Task("NuGetPush")
-    .Does(() =>
+    .Does<BuildData>(data =>
     {
         if (!IsRunningOnWindows()) return;
 
@@ -55,31 +59,51 @@ Task("NuGetPush")
         var pushSettings = new NuGetPushSettings {Source = source, ApiKey = apiKey};
 
         // WARNING: this may publish more than we expect!
-        var packages = GetFiles("./**/*.nupkg");
+        var packages = GetFiles("./**/Howatworks.*.nupkg");
 
         NuGetPush(packages, pushSettings);
-
     });
 
 Task("Test")
-    .IsDependentOn("Build")
-    .Does(() =>
+    .Does<BuildData>(data =>
     {
-        var testSettings = new DotNetCoreTestSettings {
+        CleanDirectory(data.TestResultsDirectory);
+        CleanDirectory(data.CoverageResultsDirectory);
 
-            OutputDirectory = "./TestResults"
+        var testSettings = new DotNetCoreTestSettings
+        {
+            NoBuild = true,
+            ResultsDirectory = data.TestResultsDirectory
         };
 
-        CreateDirectory(testSettings.OutputDirectory);
-        foreach(var project in GetFiles("**/bin/**/*Test.csproj"))
+        foreach(var project in GetFiles("src/**/*Test.csproj"))
         {
-            DotNetCoreTest(project.FullPath, testSettings);
+            var coverletSettings = new CoverletSettings
+            {
+                CollectCoverage = true,
+                CoverletOutputFormat = CoverletOutputFormat.cobertura,
+                CoverletOutputDirectory = data.CoverageResultsDirectory,
+                CoverletOutputName = File($"Coverage.{project.GetFilenameWithoutExtension()}.cobertura.xml"),
+            };
+
+            DotNetCoreTest(project.FullPath, testSettings, coverletSettings);
         }
     });
 
-Task("Default")
-    .IsDependentOn("Build")
-    .IsDependentOn("Test")
-    .IsDependentOn("Package");
+Task("PublishCoverage")
+    .Does<BuildData>(data =>
+    {
+        var coverageFiles = GetFiles($"{data.CoverageResultsDirectory}/*.*");
+
+        if (AppVeyor.IsRunningOnAppVeyor)
+        {
+            Codecov(new CodecovSettings
+            { 
+                Files = coverageFiles.Select(f => f.FullPath),
+                NoColor = true,
+                Required = true
+            });
+        }
+    });
 
 RunTarget(target);

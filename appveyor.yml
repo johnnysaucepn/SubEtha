@@ -1,42 +1,41 @@
 image: Visual Studio 2019
-
-install:
-  - ps: dotnet tool install -g dotnet-reportgenerator-globaltool
-  - ps: dotnet tool install -g Codecov.Tool
-
-before_build:
-  - ps: nuget restore src
-
-build:
-  publish_nuget: true
-  project: src/SubEtha.sln
-
-after_build:
-  - ps: dotnet publish src/Matrix/Howatworks.Matrix.Site
-
+ 
 configuration:
   - Release
 
+install:
+  - ps: dotnet tool restore
+
+build_script:
+  - ps: dotnet dotnet-cake
+
+after_build:
+  - ps: dotnet dotnet-cake --target=PublishApps
+
 test_script:
-  - ps: dotnet test --no-build src /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-  - ps: reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:AnalysisResults" "-reporttypes:Cobertura"
-  - ps: codecov -f "AnalysisResults/Cobertura.xml" --no-color --required
+  - ps: dotnet dotnet-cake --target=Test
+
+after_test:
+  - ps: dotnet dotnet-cake --target=PublishCoverage
 
 artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
     name: Thumb Assistant Installer
     type: file
+  - path: PublishedApps/Howatworks.Thumb.Assistant.Console-*.zip
+    name: Thumb Assistant Console
+    type: file
   - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaThumbMatrix.msi
     name: Thumb Matrix Installer
     type: file
-  - path: src/Matrix/Howatworks.Matrix.Site/Artifacts/Howatworks.Matrix.Site-*.zip
+  - path: PublishedApps/Howatworks.Thumb.Matrix.Console-*.zip
+    name: Thumb Matrix Console
+    type: file
+  - path: PublishedApps/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
-  - path: src/**/coverage.cobertura.xml
+  - path: CoverageResults/Coverage.*.cobertura.xml
     name: Coverlet Reports
-    type: file
-  - path: AnalysisResults/Cobertura.xml
-    name: ReportGenerator Merged Report
     type: file
 
 notifications:

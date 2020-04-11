@@ -1,6 +1,5 @@
 **/bin/
 **/obj/
-TestResults/
 tools/
 packages/
 .vs/
@@ -8,6 +7,6 @@ packages/
 *.msi
 *.wixobj
 *.wxs
-/*.zip
-src/**/coverage.json
-src/**/coverage.opencover.xml
+TestResults/
+CoverageResults/
+PublishedApps/
