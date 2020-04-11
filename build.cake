@@ -1,12 +1,10 @@
 ﻿//#tool "nuget:?package=GitVersion.CommandLine&prerelease"
-#tool "nuget:?package=xunit.runner.console"
-#addin "nuget:?package=Cake.Incubator"
-#tool "nuget:?package=xunit.runner.console"
-#tool "nuget:?package=coverlet.console"
-#addin "nuget:?package=Cake.Coverlet"
-#tool "nuget:?package=ReportGenerator"
-#tool "nuget:?package=Codecov"
-#addin "nuget:?package=Cake.Codecov"
+#tool "nuget:?package=xunit.runner.console&version=2.4.1"
+#addin "nuget:?package=Cake.Incubator&version=5.1.0"
+#tool "nuget:?package=coverlet.console&version=1.7.1"
+#addin "nuget:?package=Cake.Coverlet&version=2.4.2"
+#tool "nuget:?package=Codecov&version=1.10.0"
+#addin "nuget:?package=Cake.Codecov&version=0.8.0"
 
 var configuration = "Release";
 var buildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0;
