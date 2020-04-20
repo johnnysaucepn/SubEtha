@@ -41,6 +41,10 @@ artifacts:
     name: Coverlet Reports
     type: file
 
+deploy:
+  provider: Environment
+  name: Nuget
+
 notifications:
 - provider: Email
   to:
