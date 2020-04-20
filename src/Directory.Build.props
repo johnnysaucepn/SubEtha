@@ -32,9 +32,9 @@
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
   </PropertyGroup>
 
-  <Target Name="ZipPublishArtifacts" AfterTargets="Publish">
+  <Target Name="ZipPublishArtifacts" Condition="'$(GitVersion_FullSemVer' != ''" AfterTargets="Publish">
     <MakeDir Directories="$(AppOutputPath)" />
-    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(AppOutputPath)\$(ProjectName)-$(GitVersion_FullSemVerVersion).zip" />
+    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(AppOutputPath)\$(ProjectName)-$(GitVersion_FullSemVer).zip" />
   </Target>
 
 </Project>
