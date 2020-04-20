@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 
   <PropertyGroup>
     <GenerateAssemblyCopyrightVersionAttribute>false</GenerateAssemblyCopyrightVersionAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <Version Condition="'$(GitVersion_NuGetVersion)' != ''">$(GitVersion_NuGetVersion)</Version>
     <Company>Howatworks</Company>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) James Howat</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)\..\.build\Packages\</PackageOutputPath>
+  </PropertyGroup>
+
+  <!-- Custom properties -->
+  <PropertyGroup>
+    <AppOutputPath>$(MSBuildThisFileDirectory)\..\.build\PublishedApps\</AppOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,16 +21,20 @@
     </None>
   </ItemGroup>
 
+  <!-- Use GitVersionTask: https://gitversion.net/docs/usage/msbuild-task -->
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.2.4" PrivateAssets="All" />
   </ItemGroup>
 
-  <Target Name="ZipPublishArtifacts" AfterTargets="Publish">
-    <PropertyGroup>
-      <PublishZipFolder>$(MSBuildThisFileDirectory)\..\PublishedApps\</PublishZipFolder>
-    </PropertyGroup>
-    <MakeDir Directories="$(PublishZipFolder)" />
-    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PublishZipFolder)\$(ProjectName)-$(GitVersion_NuGetVersion).zip" />
+  <!-- GitVersionTask properties -->
+  <PropertyGroup>
+    <!-- Note: GitVersionTask automatically populates Version and PackageVersion, etc. -->
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+  </PropertyGroup>
+
+  <Target Name="ZipPublishArtifacts" Condition="'$(GitVersion_FullSemVer' != ''" AfterTargets="Publish">
+    <MakeDir Directories="$(AppOutputPath)" />
+    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(AppOutputPath)\$(ProjectName)-$(GitVersion_FullSemVer).zip" />
   </Target>
 
 </Project>

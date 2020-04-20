@@ -22,19 +22,22 @@ artifacts:
   - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
     name: Thumb Assistant Installer
     type: file
-  - path: PublishedApps/Howatworks.Thumb.Assistant.Console-*.zip
+  - path: .build/PublishedApps/Howatworks.Thumb.Assistant.Console-*.zip
     name: Thumb Assistant Console
     type: file
   - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaThumbMatrix.msi
     name: Thumb Matrix Installer
     type: file
-  - path: PublishedApps/Howatworks.Thumb.Matrix.Console-*.zip
+  - path: .build/PublishedApps/Howatworks.Thumb.Matrix.Console-*.zip
     name: Thumb Matrix Console
     type: file
-  - path: PublishedApps/Howatworks.Matrix.Site-*.zip
+  - path: .build/PublishedApps/Howatworks.Matrix.Site-*.zip
     name: Matrix Site
     type: zip
-  - path: CoverageResults/Coverage.*.cobertura.xml
+  - path: .build/Packages/*.nupkg
+    name: Packages
+    type: file
+  - path: .build/CoverageResults/Coverage.*.cobertura.xml
     name: Coverlet Reports
     type: file
 
