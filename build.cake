@@ -12,15 +12,17 @@ public class BuildData
     public DirectoryPath TestResultsDirectory;
     public DirectoryPath CoverageResultsDirectory;
     public DirectoryPath AppDirectory;
+    public DirectoryPath PackageDirectory;
     public string Configuration;
     public int BuildNumber;
 }
 
 Setup<BuildData>(ctx => new BuildData()
     {
-        TestResultsDirectory = Directory(@"./TestResults/"),
-        CoverageResultsDirectory = Directory(@"./CoverageResults/"),
-        AppDirectory = Directory(@"./PublishedApps/"),
+        TestResultsDirectory = Directory(@"./.build/TestResults/"),
+        CoverageResultsDirectory = Directory(@"./.build/CoverageResults/"),
+        AppDirectory = Directory(@"./.build/PublishedApps/"),
+        PackageDirectory = Directory(@"./.build/Packages/"),
         Configuration = "Release",
         BuildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0
     });
@@ -42,6 +44,7 @@ Task("PublishApps")
     .Does<BuildData>(data =>
     {
         CleanDirectory(data.AppDirectory);
+        CleanDirectory(data.PackageDirectory);
 
         var publishSettings = new DotNetCorePublishSettings
         { 
@@ -68,7 +71,7 @@ Task("NuGetPush")
         var pushSettings = new NuGetPushSettings {Source = source, ApiKey = apiKey};
 
         // WARNING: this may publish more than we expect!
-        var packages = GetFiles("./**/Howatworks.*.nupkg");
+        var packages = GetFiles($"{data.PackageDirectory}/Howatworks.*.nupkg");
 
         NuGetPush(packages, pushSettings);
     });
