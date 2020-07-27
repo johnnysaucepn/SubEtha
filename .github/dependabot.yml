@@ -1,0 +1,46 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: sunday
+    time: "22:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: GitVersionTask
+    versions:
+    - "> 5.1.2"
+    - "< 5.2"
+  - dependency-name: Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
+    versions:
+    - ">= 3.a"
+    - "< 4"
+  - dependency-name: Microsoft.AspNetCore.Identity.EntityFrameworkCore
+    versions:
+    - ">= 3.a"
+    - "< 4"
+  - dependency-name: Microsoft.EntityFrameworkCore
+    versions:
+    - ">= 3.a"
+    - "< 4"
+  - dependency-name: Microsoft.EntityFrameworkCore.Analyzers
+    versions:
+    - ">= 3.a"
+    - "< 4"
+  - dependency-name: Microsoft.EntityFrameworkCore.Design
+    versions:
+    - ">= 3.a"
+    - "< 4"
+  - dependency-name: Microsoft.EntityFrameworkCore.InMemory
+    versions:
+    - ">= 3.a"
+    - "< 4"
+  - dependency-name: Microsoft.EntityFrameworkCore.Tools
+    versions:
+    - ">= 3.a"
+    - "< 4"
+  - dependency-name: Npgsql.EntityFrameworkCore.PostgreSQL
+    versions:
+    - ">= 3.a"
+    - "< 4"
