@@ -1,7 +1,8 @@
-﻿using System;
-using System.IO;
-using log4net;
+﻿using log4net;
 using Microsoft.Extensions.FileSystemGlobbing;
+using System;
+using System.IO;
+using System.Reactive.Linq;
 
 namespace Howatworks.SubEtha.Monitor
 {
@@ -11,12 +12,15 @@ namespace Howatworks.SubEtha.Monitor
     /// </summary>
     public class CustomFileWatcher
     {
+        public IObservable<string> ChangedFiles { get; }
+        public IObservable<string> CreatedFiles { get; }
+        public IObservable<string> DeletedFiles { get; }
+        public IObservable<Exception> Errors { get; }
+        public IObservable<(string oldPath, string newPath)> RenamedFiles { get; }
         private static readonly ILog Log = LogManager.GetLogger(typeof(CustomFileWatcher));
 
-        public event Action<string> Created;
-        public event Action<string> Changed;
-        public event Action<string> Deleted;
         private readonly FileSystemWatcher _journalWatcher;
+
         private readonly Matcher _matcher;
 
         public CustomFileWatcher(string folder, string pattern)
@@ -26,10 +30,63 @@ namespace Howatworks.SubEtha.Monitor
             {
                 EnableRaisingEvents = false
             };
-            _journalWatcher.Renamed += JournalWatcher_OnRenamed;
-            _journalWatcher.Changed += JournalWatcher_OnChanged;
-            _journalWatcher.Created += JournalWatcher_OnCreated;
-            _journalWatcher.Deleted += JournalWatcher_OnDeleted;
+
+            CreatedFiles = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>
+                    (
+                        h => _journalWatcher.Created += h,
+                        h => _journalWatcher.Created -= h
+                    )
+                    .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+                    .Select(x => x.EventArgs.FullPath)
+
+                    // Treat renamed files as ones that have been created in one place and deleted in another
+                    .Merge(
+                        Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>
+                        (
+                            h => _journalWatcher.Renamed += h,
+                            h => _journalWatcher.Renamed -= h
+                        )
+                        .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+                        .Select(x => x.EventArgs.FullPath)
+                    )
+
+                    .Do(x => Log.Debug($"Seen new file '{x}'"));
+
+            ChangedFiles = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>
+                    (
+                        h => _journalWatcher.Changed += h,
+                        h => _journalWatcher.Changed -= h
+                    )
+                    .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+                    .Select(x => x.EventArgs.FullPath)
+                    .Do(x => Log.Debug($"Seen modified file '{x}'"));
+
+            DeletedFiles = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>
+                    (
+                        h => _journalWatcher.Deleted += h,
+                        h => _journalWatcher.Deleted -= h
+                    )
+                    .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+                    .Select(x => x.EventArgs.FullPath)
+
+                    // Treat renamed files as ones that have been created in one place and deleted in another
+                    .Merge(
+                        Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>
+                        (
+                            h => _journalWatcher.Renamed += h,
+                            h => _journalWatcher.Renamed -= h
+                        )
+                        .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+                        .Select(x => x.EventArgs.OldFullPath)
+                    )
+
+                    .Do(x => Log.Debug($"Seen deletion of file '{x}'"));
+
+            Errors = Observable.FromEventPattern<ErrorEventHandler, ErrorEventArgs>
+                   (h => _journalWatcher.Error += h,
+                   h => _journalWatcher.Error -= h)
+                   .Select(x => x.EventArgs.GetException())
+                   .Do(x => Log.Error("Seen file error", x));
         }
 
         public void Start()
@@ -42,53 +99,5 @@ namespace Howatworks.SubEtha.Monitor
             _journalWatcher.EnableRaisingEvents = false;
         }
 
-        private void JournalWatcher_OnDeleted(object s, FileSystemEventArgs e)
-        {
-            if (_matcher.Match(e.Name).HasMatches)
-            {
-                LogWatcherEvent(e);
-                Deleted?.Invoke(e.FullPath);
-            }
-        }
-
-        private void JournalWatcher_OnChanged(object s, FileSystemEventArgs e)
-        {
-            if (_matcher.Match(e.Name).HasMatches)
-            {
-                LogWatcherEvent(e);
-                Changed?.Invoke(e.FullPath);
-            }
-        }
-
-        private void JournalWatcher_OnCreated(object s, FileSystemEventArgs e)
-        {
-            if (_matcher.Match(e.Name).HasMatches)
-            {
-                LogWatcherEvent(e);
-                Created?.Invoke(e.FullPath);
-            }
-        }
-
-        private void JournalWatcher_OnRenamed(object s, RenamedEventArgs e)
-        {
-            // If renamed from something we care about
-            if (_matcher.Match(e.OldName).HasMatches)
-            {
-                LogWatcherEvent(e);
-                Deleted?.Invoke(e.OldFullPath);
-            }
-
-            // If renamed to something we care about
-            if (_matcher.Match(e.Name).HasMatches)
-            {
-                LogWatcherEvent(e);
-                Created?.Invoke(e.FullPath);
-            }
-        }
-
-        private static void LogWatcherEvent(FileSystemEventArgs e)
-        {
-            Log.Debug($"Received '{e.ChangeType}' entry on file '{e.FullPath}'");
-        }
     }
 }

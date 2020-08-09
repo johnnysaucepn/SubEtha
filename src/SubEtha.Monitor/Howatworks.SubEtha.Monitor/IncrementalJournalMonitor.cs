@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Howatworks.SubEtha.Journal;
+using Howatworks.SubEtha.Journal.Other;
+using Howatworks.SubEtha.Parser;
+using log4net;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Howatworks.SubEtha.Parser;
-using Howatworks.SubEtha.Journal;
-using Howatworks.SubEtha.Journal.Other;
-using log4net;
 
 namespace Howatworks.SubEtha.Monitor
 {
-    public class IncrementalJournalMonitor :  IJournalMonitor
+    public class IncrementalJournalMonitor : IJournalMonitor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(IncrementalJournalMonitor));
 
@@ -22,6 +22,7 @@ namespace Howatworks.SubEtha.Monitor
         private readonly string _journalPattern;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
+
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
         private readonly Dictionary<string, IJournalReader> _activeReaders = new Dictionary<string, IJournalReader>();
@@ -35,9 +36,9 @@ namespace Howatworks.SubEtha.Monitor
             _journalPattern = pattern;
 
             _journalWatcher = new CustomFileWatcher(_journalFolder, _journalPattern);
-            _journalWatcher.Created += StartMonitoringFile;
-            _journalWatcher.Changed += StartMonitoringFile;
-            _journalWatcher.Deleted += StopMonitoringFile;
+            _journalWatcher.CreatedFiles.Subscribe(StartMonitoringFile);
+            _journalWatcher.ChangedFiles.Subscribe(StartMonitoringFile);
+            _journalWatcher.DeletedFiles.Subscribe(StopMonitoringFile);
         }
 
         public IList<IJournalEntry> Update(DateTimeOffset lastRead)

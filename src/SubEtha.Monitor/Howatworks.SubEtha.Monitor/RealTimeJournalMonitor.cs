@@ -33,8 +33,8 @@ namespace Howatworks.SubEtha.Monitor
             _journalReaderFactory = journalReaderFactory;
 
             _customFileWatcher = new CustomFileWatcher(folder, filename);
-            _customFileWatcher.Created += StartMonitoringFile;
-            _customFileWatcher.Deleted += StopMonitoringFile;
+            _customFileWatcher.CreatedFiles.Subscribe(StartMonitoringFile);
+            _customFileWatcher.DeletedFiles.Subscribe(StopMonitoringFile);
         }
 
         public IList<IJournalEntry> Update(DateTimeOffset lastRead)
