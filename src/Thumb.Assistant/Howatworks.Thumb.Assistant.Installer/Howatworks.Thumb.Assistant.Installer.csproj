@@ -16,7 +16,7 @@
     <None Include="wix\$(ProjectName).g.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="WixSharp" Version="1.14.7" />
+    <PackageReference Include="WixSharp" Version="1.14.8" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
