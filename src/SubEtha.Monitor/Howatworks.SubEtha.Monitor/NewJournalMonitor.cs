@@ -66,7 +66,7 @@ namespace Howatworks.SubEtha.Monitor
             }
         }
 
-        public IObservable<NewJournalLine> GetJournalEntries()
+        public IObservable<NewJournalLine> GetJournalLines()
         {
             return _liveReaders.Select(x => x.GetObservable())
                 .Union(_logReaders.Select(x => x.Value.GetObservable()))

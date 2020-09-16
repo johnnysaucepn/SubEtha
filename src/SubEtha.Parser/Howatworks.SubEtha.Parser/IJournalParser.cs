@@ -7,6 +7,7 @@ namespace Howatworks.SubEtha.Parser
     {
         IJournalEntry Parse(string eventType, string line);
         T Parse<T>(string line) where T : class;
+        IJournalEntry Parse(string line);
 
         /// <summary>
         /// Parse the absolute minimum required for an entry - saves time in deserialising

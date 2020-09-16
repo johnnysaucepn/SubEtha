@@ -46,50 +46,22 @@ namespace ConsoleApp1
 
             var parser = new JournalParser();
             var monitor = new NewJournalMonitor(config, parser);
+            var source = new JournalEntrySource(parser);
 
             var startOfYear = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero);
             while (true)
             {
-                GetABunchOfStuff(parser, monitor, startOfYear);
-                /*Log.Debug("WAIT");
-                GetABunchOfStuff(parser, monitor, startOfYear);
-                Log.Debug("WAIT");
-                GetABunchOfStuff(parser, monitor, startOfYear);*/
-
-                //Console.WriteLine(items);
-
+                GetABunchOfStuff(monitor, source, startOfYear);
                 Console.ReadKey();
             }
         }
 
-        private static void GetABunchOfStuff(JournalParser parser, NewJournalMonitor monitor, DateTimeOffset startOfYear)
+        private static void GetABunchOfStuff(NewJournalMonitor monitor, JournalEntrySource source, DateTimeOffset startOfYear)
         {
-            monitor.GetJournalEntries()
-                //.Where(x => x.Context.HeaderTimestamp > startOfYear)
-                .Select(l =>
-                {
-                    try
-                    {
-                        var journalEntry = parser.Parse(l.Line);
-                        return (line: l, journal: journalEntry);
-                    }
-                    catch (JournalParseException e)
-                    {
-                        Log.Error($"'{l.Context.File.FullName}': {e.JournalFragment}");
-                        Log.Error(e.Message);
-                    }
-                    catch (UnrecognizedJournalException e)
-                    {
-                        Log.Warn($"'{l.Context.File.FullName}': {e.JournalFragment}");
-                        Log.Warn(e.Message);
-                    }
-                    return (null, null);
-
-                })
-                .Where(x=>x.line != null)
+            source.GetJournalEntries(monitor.GetJournalLines())
+            .Where(x => x.Context.HeaderTimestamp > startOfYear)
             //.Count().Subscribe(Console.WriteLine);
-            //.Subscribe(x => Log.Debug($"{x.Context.Path}: {x.Line.Substring(0, Math.Min(50, x.Line.Length))}"));
-            .Subscribe(x => Log.Info($"{x.line.Context.File.Name} {x.journal.Timestamp:g}: {x.journal.Event}"));
+            .Subscribe(x => Log.Info($"{x.Context.File.Name} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event} {x.JournalEntry.GetType().Name}"));
         }
     }
 }
