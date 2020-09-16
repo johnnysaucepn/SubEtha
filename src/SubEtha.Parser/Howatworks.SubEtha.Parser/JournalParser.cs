@@ -57,26 +57,61 @@ namespace Howatworks.SubEtha.Parser
             _serializerSettings = strict ? Strict : Loose;
         }
 
+        public bool Validate(string line)
+        {
+            try
+            {
+                var json = JObject.Parse(line);
+            }
+            catch (JsonException e)
+            {
+                Log.Warn("Line failed validation", e);
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Parse the absolute minimum required for an entry - saves time in deserialising
         /// to a specific type too early.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        public (string, DateTimeOffset) ParseCommonProperties(string line)
+        public (string eventType, DateTimeOffset timestamp) ParseCommonProperties(string line)
         {
             //var json = JObject.Parse(line);
-            var json = (JObject)JsonConvert.DeserializeObject(line, _serializerSettings);
-            var eventType = json.Value<string>("event");
-            var timeStamp = json.Value<DateTimeOffset>("timestamp");
+            try
+            {
+                var json = (JObject)JsonConvert.DeserializeObject(line, _serializerSettings);
+                string eventType = json.Value<string>("event");
+                DateTimeOffset timestamp = json.Value<DateTimeOffset>("timestamp");
 
-            return (eventType, timeStamp);
-
+                return (eventType, timestamp);
+            }
+            catch (JsonSerializationException e)
+            {
+                throw new JournalParseException($"JSON deserialisation failure - {e.Message}", line, e);
+            }
+            catch (FormatException e)
+            {
+                throw new JournalParseException($"Failure in type conversion - {e.Message}", line, e);
+            }
+            catch (Exception e)
+            {
+                throw new JournalParseException($"Unexpected exception when parsing - {e.Message}", line, e);
+            }
         }
 
         public T Parse<T>(string line) where T : class
         {
             return Parse(typeof(T).Name, line) as T;
+        }
+
+        public IJournalEntry Parse(string line)
+        {
+            var (eventType, timestamp) = ParseCommonProperties(line);
+
+            return Parse(eventType, line);
         }
 
         public IJournalEntry Parse(string eventType, string line)

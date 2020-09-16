@@ -20,6 +20,12 @@ namespace Howatworks.SubEtha.Parser
             _parser = parser;
         }
 
+        public RealTimeJournalReader(string folder, string filename, IJournalParser parser)
+        {
+            FilePath = Path.Combine(folder, filename);
+            _parser = parser;
+        }
+
         private StreamReader GetStreamReader()
         {
             var fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);

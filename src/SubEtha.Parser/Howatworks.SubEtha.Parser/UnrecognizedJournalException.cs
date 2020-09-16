@@ -3,7 +3,7 @@
 namespace Howatworks.SubEtha.Parser
 {
     [Serializable]
-    internal class UnrecognizedJournalException : Exception
+    public class UnrecognizedJournalException : Exception
     {
         public string EntryType { get; set; }
         public string JournalFragment { get; set; }
@@ -25,5 +25,8 @@ namespace Howatworks.SubEtha.Parser
             JournalFragment = fragment;
         }
 
+        public UnrecognizedJournalException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

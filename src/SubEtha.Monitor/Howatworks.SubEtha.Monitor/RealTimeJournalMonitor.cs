@@ -5,6 +5,9 @@ using System.Linq;
 using Howatworks.SubEtha.Parser;
 using Howatworks.SubEtha.Journal;
 using log4net;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive;
 
 namespace Howatworks.SubEtha.Monitor
 {
@@ -23,6 +26,8 @@ namespace Howatworks.SubEtha.Monitor
 
         //private readonly IJournalReader _monitoredFile;
         private readonly CustomFileWatcher _customFileWatcher;
+
+        public List<IObservable<string>> JournalReaders { get; set; }
 
         private string FilePath => Path.Combine(_folder, _filename);
 

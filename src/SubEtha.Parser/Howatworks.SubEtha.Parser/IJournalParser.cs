@@ -14,6 +14,7 @@ namespace Howatworks.SubEtha.Parser
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        (string, DateTimeOffset) ParseCommonProperties(string line);
+        (string eventType, DateTimeOffset timestamp) ParseCommonProperties(string line);
+        bool Validate(string line);
     }
 }
