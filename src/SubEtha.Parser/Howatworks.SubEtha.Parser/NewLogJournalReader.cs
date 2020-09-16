@@ -1,5 +1,4 @@
 ﻿using Howatworks.SubEtha.Journal;
-using Howatworks.SubEtha.Parser;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.IO;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
-namespace Howatworks.SubEtha.Monitor
+namespace Howatworks.SubEtha.Parser
 {
 
     public class NewLogJournalReader : IDisposable

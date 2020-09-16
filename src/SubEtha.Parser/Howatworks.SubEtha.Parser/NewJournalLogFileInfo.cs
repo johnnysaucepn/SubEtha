@@ -3,7 +3,6 @@ using System.IO;
 
 namespace Howatworks.SubEtha.Parser
 {
-
     public class NewJournalLogFileInfo
     {
         public bool IsValid { get; set; }

@@ -1,11 +1,10 @@
-﻿using Howatworks.SubEtha.Parser;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
-namespace Howatworks.SubEtha.Monitor
+namespace Howatworks.SubEtha.Parser
 {
     public class NewLiveJournalReader
     {
