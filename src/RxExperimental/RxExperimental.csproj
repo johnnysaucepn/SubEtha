@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SubEtha.Journal\Howatworks.SubEtha.Journal.Cooked\Howatworks.SubEtha.Journal.Cooked.csproj" />
     <ProjectReference Include="..\SubEtha.Monitor\Howatworks.SubEtha.Monitor\Howatworks.SubEtha.Monitor.csproj" />
     <ProjectReference Include="..\Thumb\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
   </ItemGroup>

@@ -22,7 +22,7 @@ namespace Howatworks.SubEtha.Monitor
 
         private readonly CustomFileWatcher _journalFileWatcher;
         private readonly SortedList<DateTimeOffset, NewLogJournalReader> _logReaders;
-
+        
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 

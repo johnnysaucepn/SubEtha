@@ -65,7 +65,7 @@ namespace Howatworks.SubEtha.Parser
             }
             catch (JsonException e)
             {
-                Log.Warn("Line failed validation", e);
+                Log.Debug("Line failed validation", e);
                 return false;
             }
             return true;
