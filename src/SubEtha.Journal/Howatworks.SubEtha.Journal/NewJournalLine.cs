@@ -1,6 +1,4 @@
-﻿using Howatworks.SubEtha.Journal;
-
-namespace Howatworks.SubEtha.Parser
+﻿namespace Howatworks.SubEtha.Journal
 {
     public class NewJournalLine
     {

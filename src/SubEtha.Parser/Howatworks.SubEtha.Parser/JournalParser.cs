@@ -109,7 +109,7 @@ namespace Howatworks.SubEtha.Parser
 
         public IJournalEntry Parse(string line)
         {
-            var (eventType, timestamp) = ParseCommonProperties(line);
+            var (eventType, _) = ParseCommonProperties(line);
 
             return Parse(eventType, line);
         }

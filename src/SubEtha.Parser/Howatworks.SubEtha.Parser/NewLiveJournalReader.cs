@@ -1,9 +1,6 @@
-﻿using Howatworks.SubEtha.Journal;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using Howatworks.SubEtha.Journal;
 
 namespace Howatworks.SubEtha.Parser
 {
@@ -13,8 +10,6 @@ namespace Howatworks.SubEtha.Parser
         public NewJournalLogFileInfo Context { get; }
         private DateTimeOffset _lastSeen;
 
-        //public IObservable<NewJournalLine> JournalEntries { get; internal set; }
-
         public bool FileExists => File.Exists;
 
         public NewLiveJournalReader(FileInfo file)
@@ -22,29 +17,14 @@ namespace Howatworks.SubEtha.Parser
             File = file;
 
             Context = new NewJournalLogFileInfo(File);
-            
-            //JournalEntries = Observable.Interval(TimeSpan.FromSeconds(5)).SelectMany(_ => ReadNext());
         }
 
-        public IObservable<NewJournalLine> GetObservable()
+        public NewJournalLine ReadCurrent()
         {
-            return Observable.Create<NewJournalLine>(observer =>
-            {
-                foreach (var y in ReadNext())
-                {
-                    observer.OnNext(y);
-                }
-                observer.OnCompleted();
-                return Disposable.Empty;
-            });
-        }
-
-        public IEnumerable<NewJournalLine> ReadNext()
-        {
-            // TODO: handle non-existent files
+            if (!File.Exists) return null;
 
             var modTime = File.LastWriteTimeUtc;
-            if (modTime <= _lastSeen) yield break;
+            if (modTime <= _lastSeen) return null;
 
             _lastSeen = modTime;
 
@@ -52,14 +32,15 @@ namespace Howatworks.SubEtha.Parser
             {
                 using (var stream = new StreamReader(file))
                 {
-                    while (!stream.EndOfStream)
+                    var content = stream.ReadToEnd();
+                    //Log.Debug(content);
+                    if (!string.IsNullOrWhiteSpace(content))
                     {
-                        var content = stream.ReadToEnd();
-                        //Log.Debug(content);
-                        if (!string.IsNullOrWhiteSpace(content)) yield return new NewJournalLine(Context, content);
+                        return new NewJournalLine(Context, content);
                     }
                 }
             }
+            return null;
         }
     }
 }

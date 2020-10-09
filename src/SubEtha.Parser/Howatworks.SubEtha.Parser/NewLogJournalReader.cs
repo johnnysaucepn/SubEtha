@@ -3,13 +3,9 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 
 namespace Howatworks.SubEtha.Parser
 {
-
     public class NewLogJournalReader : IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NewLogJournalReader));
@@ -22,15 +18,12 @@ namespace Howatworks.SubEtha.Parser
         private bool disposedValue;
         private readonly IJournalParser _parser;
 
-        //public IObservable<NewJournalLine> JournalEntries { get; internal set; }
-
         public NewLogJournalReader(FileInfo file, IJournalParser parser)
         {
             File = file;
             _parser = parser;
             _stream = new Lazy<StreamReader>(GetStreamReader);
 
-            //JournalEntries = Observable.Interval(TimeSpan.FromSeconds(5)).SelectMany(_ => ReadNext());
             Context = ReadFileInfo();
         }
 
@@ -68,7 +61,7 @@ namespace Howatworks.SubEtha.Parser
                                 lastEntry = timestamp;
                             }
 
-                            if (eventType?.Equals("fileheader", StringComparison.InvariantCultureIgnoreCase) == true)
+                            if (eventType?.Equals(nameof(FileHeader), StringComparison.InvariantCultureIgnoreCase) == true)
                             {
                                 fileHeader = _parser.Parse<FileHeader>(line);
                             }
@@ -99,20 +92,7 @@ namespace Howatworks.SubEtha.Parser
             return info;
         }
 
-        public IObservable<NewJournalLine> GetObservable()
-        {
-            return Observable.Create<NewJournalLine>(observer =>
-            {
-                foreach (var y in ReadNext())
-                {
-                    observer.OnNext(y);
-                }
-                observer.OnCompleted();
-                return Disposable.Empty;
-            });
-        }
-
-        public IEnumerable<NewJournalLine> ReadNext()
+        public IEnumerable<NewJournalLine> ReadLines()
         {
             var streamReader = _stream.Value;
 

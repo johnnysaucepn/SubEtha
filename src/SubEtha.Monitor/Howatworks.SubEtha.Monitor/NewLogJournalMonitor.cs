@@ -1,46 +1,36 @@
-﻿using Howatworks.SubEtha.Parser;
-using log4net;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Howatworks.SubEtha.Journal;
+using Howatworks.SubEtha.Parser;
+using log4net;
+using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.SubEtha.Monitor
 {
-
-    public class NewJournalMonitor
+    public class NewLogJournalMonitor : INewJournalLineSource
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NewJournalMonitor));
-
-        private readonly IJournalParser _parser;
-
-        private readonly List<NewLiveJournalReader> _liveReaders;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NewLogJournalMonitor));
 
         private readonly CustomFileWatcher _journalFileWatcher;
         private readonly SortedList<DateTimeOffset, NewLogJournalReader> _logReaders;
-        
+
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        public NewJournalMonitor(IConfiguration config, IJournalParser parser)
+        public NewLogJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory)
         {
-            _parser = parser;
-
             var folder = config["JournalFolder"];
-            var pattern = config["JournalPattern"];
-            var liveFilenames = config["RealTimeFilenames"].Split(';').Select(x => x.Trim());
+            var logPattern = config["JournalPattern"];
 
             _logReaders = new SortedList<DateTimeOffset, NewLogJournalReader>();
 
-            _journalFileWatcher = new CustomFileWatcher(folder, pattern);
+            _journalFileWatcher = new CustomFileWatcher(folder, logPattern);
             _journalFileWatcher.CreatedFiles.Subscribe(f =>
             {
                 var file = new FileInfo(Path.Combine(folder, f));
-                var newReader = new NewLogJournalReader(file, _parser);
+                var newReader = readerFactory.CreateLogJournalReader(file);
 
                 // TODO: wrap the add/remove mechanics in a new class
                 _logReaders.Add(newReader.Context.HeaderTimestamp, newReader);
@@ -56,22 +46,13 @@ namespace Howatworks.SubEtha.Monitor
                 }
             });
             _journalFileWatcher.Start();
-
-            _liveReaders = new List<NewLiveJournalReader>();
-            foreach (var filename in liveFilenames)
-            {
-                var file = new FileInfo(Path.Combine(folder, filename));
-                var newReader = new NewLiveJournalReader(file);
-                _liveReaders.Add(newReader);
-            }
         }
 
-        public IObservable<NewJournalLine> GetJournalLines()
+        public IEnumerable<NewJournalLine> GetJournalLines()
         {
-            return _liveReaders.Select(x => x.GetObservable())
-                .Union(_logReaders.Select(x => x.Value.GetObservable()))
-                .Merge();
+            return _logReaders
+                .SelectMany(x => x.Value.ReadLines())
+                .Where(l => l != null);
         }
-
     }
 }

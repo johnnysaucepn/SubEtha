@@ -1,22 +1,16 @@
-﻿using Howatworks.SubEtha.Journal.Combat;
-using Howatworks.SubEtha.Journal.Cooked.Combat;
-using Howatworks.SubEtha.Journal.Other;
-using Howatworks.SubEtha.Monitor;
-using Howatworks.SubEtha.Parser;
-using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Core;
-using log4net.Layout;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using PInvoke;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
 using System.Reflection;
-using static log4net.Appender.ManagedColoredConsoleAppender;
+using Howatworks.SubEtha.Journal.Combat;
+using Howatworks.SubEtha.Journal.Cooked.Combat;
+using Howatworks.SubEtha.Monitor;
+using Howatworks.SubEtha.Parser;
+using log4net;
+using log4net.Config;
+using Microsoft.Extensions.Configuration;
+using PInvoke;
 
 namespace ConsoleApp1
 {
@@ -48,48 +42,40 @@ namespace ConsoleApp1
                 .AddInMemoryCollection(defaultConfig)
                 .Build();
 
+            var startOfYear = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
             var parser = new JournalParser();
-            var monitor = new NewJournalMonitor(config, parser);
-            var source = new JournalEntrySource(parser);
+            var readerFactory = new NewJournalReaderFactory(parser);
+            var logMonitor = new NewLogJournalMonitor(config, readerFactory);
+            var liveMonitor = new NewLiveJournalMonitor(config, readerFactory);
+            var source = new JournalEntrySource(parser, startOfYear, logMonitor, liveMonitor);
 
-            var startOfYear = new DateTimeOffset(2019, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var publisher = new JournalEntryPublisher(source);
+            var publication = publisher.GetObservable().Publish();
 
-            var publisher = source.GetJournalEntries(monitor.GetJournalLines(), startOfYear).Publish();
+            //publication.Subscribe(x => Log.Info($"{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event} {x.JournalEntry.GetType().Name}"));
+            publication.Where(x => x.JournalEntry.Event.Equals("Music")).Subscribe(x => Log.Info($"#{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
+            publication.Where(x => x.JournalEntry.Event.Equals("Shutdown")).Subscribe(x => Log.Info($"*{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
+            publication.Where(x => x.JournalEntry.Event.Equals("ShipTargeted")).Subscribe(s => Log.Info($"@{s.Context.Filename} {s.JournalEntry.Event}"));
 
-            //publisher.Source.Subscribe(x => Log.Info($"{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event} {x.JournalEntry.GetType().Name}"));
-            publisher.Where(x => x.JournalEntry.Event.Equals("Music")).Subscribe(x => Log.Info($"#{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
-            publisher.Where(x => x.JournalEntry.Event.Equals("Shutdown")).Subscribe(x => Log.Info($"*{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
-            publisher.Where(x => x.JournalEntry.Event.Equals("ShipTargeted")).Subscribe(s => Log.Info($"@{s.Context.Filename} {s.JournalEntry.Event}"));
-
-            publisher.Where(x => x.JournalEntry is ShipTargeted)
-                .Select(j=>new ShipTargetedCooked(j.Context, j.JournalEntry as ShipTargeted))
+            publication.Where(x => x.JournalEntry is ShipTargeted)
+                .Select(j => new ShipTargetedCooked(j.Context, j.JournalEntry as ShipTargeted))
                 .Subscribe(s => Log.Info($":{s.Context.Filename} {s.Ship.Text}"));
+
+
+            Console.WriteLine("Connecting");
+            var sub = publication.Connect();
 
             while (true)
             {
-                using (publisher.Connect())
-                {
-                    Console.ReadKey();
-                }
+                Console.WriteLine("Waiting");
+                Console.ReadKey();
+                publisher.Poll();
             }
+
+            sub.Dispose();
         }
 
-        /*private static void GetABunchOfStuff(NewJournalMonitor monitor, JournalEntrySource source, DateTimeOffset startOfYear)
-        {
-            source.GetJournalEntries(monitor.GetJournalLines())
-            //.Where(x => x.Context.HeaderTimestamp > startOfYear)
-            .Where(x => x.JournalEntry is ShipTargeted)
-            .Select(t => new ShipTargetedCooked(t.Context, t.JournalEntry as ShipTargeted))
-            .Subscribe(s => Log.Info(JsonConvert.SerializeObject(s)));
-            //.Count().Subscribe(Console.WriteLine);
-            //.Subscribe(x => Log.Info($"{x.Context.File.Name} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event} {x.JournalEntry.GetType().Name}"));
-        }*/
-
-        /*private static void Listen(RawJournalEntryPublisher source)
-        {
-            
-            source.Source.Subscribe(x => Log.Info($"{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event} {x.JournalEntry.GetType().Name}"));
-        }*/
         
     }
 }

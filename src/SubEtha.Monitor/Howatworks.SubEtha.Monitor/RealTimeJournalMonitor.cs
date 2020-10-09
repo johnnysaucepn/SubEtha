@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Howatworks.SubEtha.Parser;
-using Howatworks.SubEtha.Journal;
-using log4net;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive;
+using Howatworks.SubEtha.Journal;
+using Howatworks.SubEtha.Parser;
+using log4net;
 
 namespace Howatworks.SubEtha.Monitor
 {
