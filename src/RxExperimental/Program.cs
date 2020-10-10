@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Cooked.Combat;
+using Howatworks.SubEtha.Journal.Other;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
 using log4net;
@@ -46,7 +47,7 @@ namespace ConsoleApp1
 
             var parser = new JournalParser();
             var readerFactory = new NewJournalReaderFactory(parser);
-            var logMonitor = new NewLogJournalMonitor(config, readerFactory);
+            var logMonitor = new NewLogJournalMonitor(config, readerFactory, startOfYear);
             var liveMonitor = new NewLiveJournalMonitor(config, readerFactory);
             var source = new JournalEntrySource(parser, startOfYear, logMonitor, liveMonitor);
 
@@ -54,9 +55,9 @@ namespace ConsoleApp1
             var publication = publisher.GetObservable().Publish();
 
             //publication.Subscribe(x => Log.Info($"{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event} {x.JournalEntry.GetType().Name}"));
-            publication.Where(x => x.JournalEntry.Event.Equals("Music")).Subscribe(x => Log.Info($"#{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
-            publication.Where(x => x.JournalEntry.Event.Equals("Shutdown")).Subscribe(x => Log.Info($"*{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
-            publication.Where(x => x.JournalEntry.Event.Equals("ShipTargeted")).Subscribe(s => Log.Info($"@{s.Context.Filename} {s.JournalEntry.Event}"));
+            publication.Where(x => x.JournalEntry is Music).Subscribe(x => Log.Info($"#{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
+            publication.Where(x => x.JournalEntry is Shutdown).Subscribe(x => Log.Info($"*{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
+            publication.Where(x => x.JournalEntry is ShipTargeted).Subscribe(s => Log.Info($"@{s.Context.Filename} {s.JournalEntry.Event}"));
 
             publication.Where(x => x.JournalEntry is ShipTargeted)
                 .Select(j => new ShipTargetedCooked(j.Context, j.JournalEntry as ShipTargeted))

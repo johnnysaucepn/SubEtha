@@ -10,6 +10,7 @@ namespace Howatworks.SubEtha.Journal
         public string Filename { get; }
         public string GameVersionDiscriminator { get; }
         public DateTimeOffset HeaderTimestamp { get; }
+        public DateTimeOffset LastEntry { get; }
 
         public NewJournalLogFileInfo(FileInfo file)
         {
@@ -17,12 +18,13 @@ namespace Howatworks.SubEtha.Journal
             IsValid = false;
         }
 
-        public NewJournalLogFileInfo(FileInfo file, string gameVersion, DateTimeOffset timestamp)
+        public NewJournalLogFileInfo(FileInfo file, string gameVersion, DateTimeOffset timestamp, DateTimeOffset lastEntry)
         {
             IsValid = true;
             Filename = file.Name;
             GameVersionDiscriminator = gameVersion;
             HeaderTimestamp = timestamp;
+            LastEntry = lastEntry;
         }
 
     }

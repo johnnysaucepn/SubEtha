@@ -1,8 +1,8 @@
-﻿using Howatworks.SubEtha.Journal;
-using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Howatworks.SubEtha.Journal;
+using log4net;
 
 namespace Howatworks.SubEtha.Parser
 {
@@ -77,7 +77,7 @@ namespace Howatworks.SubEtha.Parser
 
                 if (fileHeader != null)
                 {
-                    info = new NewJournalLogFileInfo(File, fileHeader.GameVersion, fileHeader.Timestamp);
+                    info = new NewJournalLogFileInfo(File, fileHeader.GameVersion, fileHeader.Timestamp, lastEntry ?? fileHeader.Timestamp);
                 }
             }
             catch (FileNotFoundException e)

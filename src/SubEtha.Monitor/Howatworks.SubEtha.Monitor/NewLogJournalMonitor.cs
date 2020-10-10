@@ -13,39 +13,43 @@ namespace Howatworks.SubEtha.Monitor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NewLogJournalMonitor));
 
-        private readonly CustomFileWatcher _journalFileWatcher;
+        private readonly CustomFileWatcher _logFileWatcher;
         private readonly SortedList<DateTimeOffset, NewLogJournalReader> _logReaders;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        public NewLogJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory)
+        public NewLogJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory, DateTimeOffset startTime)
         {
             var folder = config["JournalFolder"];
             var logPattern = config["JournalPattern"];
 
             _logReaders = new SortedList<DateTimeOffset, NewLogJournalReader>();
 
-            _journalFileWatcher = new CustomFileWatcher(folder, logPattern);
-            _journalFileWatcher.CreatedFiles.Subscribe(f =>
+            _logFileWatcher = new CustomFileWatcher(folder, logPattern);
+
+            _logFileWatcher.CreatedFiles.Subscribe(f =>
             {
                 var file = new FileInfo(Path.Combine(folder, f));
                 var newReader = readerFactory.CreateLogJournalReader(file);
 
-                // TODO: wrap the add/remove mechanics in a new class
-                _logReaders.Add(newReader.Context.HeaderTimestamp, newReader);
-                JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(f)); // TODO: use FileInfo instead?
+                // As long as the files has some entries that happened after our desired start time, it's a valid source
+                if (newReader.Context.LastEntry >= startTime)
+                {
+                    _logReaders.Add(newReader.Context.HeaderTimestamp, newReader);
+                    JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(f)); // TODO: use FileInfo instead?
+                }
             });
-            _journalFileWatcher.DeletedFiles.Subscribe(f =>
+
+            _logFileWatcher.DeletedFiles.Subscribe(f =>
             {
                 foreach (var reader in _logReaders.Where(x => x.Value.File.Name.Equals(f)))
                 {
-                    // TODO: wrap the add/remove mechanics in a new class
                     _logReaders.Remove(reader.Key);
                     JournalFileWatchingStopped?.Invoke(this, new JournalFileEventArgs(f)); // TODO: use FileInfo instead?
                 }
             });
-            _journalFileWatcher.Start();
+            _logFileWatcher.Start();
         }
 
         public IEnumerable<NewJournalLine> GetJournalLines()
