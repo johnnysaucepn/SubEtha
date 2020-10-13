@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Howatworks.SubEtha.Journal;
@@ -14,6 +15,9 @@ namespace Howatworks.SubEtha.Monitor
 
         private readonly List<NewLiveJournalReader> _liveReaders;
 
+        public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
+        public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
+
         public NewLiveJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory)
         {
             var folder = config["JournalFolder"];
@@ -25,6 +29,7 @@ namespace Howatworks.SubEtha.Monitor
                 var file = new FileInfo(Path.Combine(folder, filename));
                 var newReader = readerFactory.CreateLiveJournalReader(file);
                 _liveReaders.Add(newReader);
+                JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(filename)); // TODO: use FileInfo instead?
             }
         }
 

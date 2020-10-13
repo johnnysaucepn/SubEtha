@@ -19,8 +19,9 @@ namespace Howatworks.SubEtha.Monitor
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        public NewLogJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory, DateTimeOffset startTime)
+        public NewLogJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory, DateTimeOffset? startTime = null)
         {
+            startTime = startTime ?? DateTimeOffset.MinValue;
             var folder = config["JournalFolder"];
             var logPattern = config["JournalPattern"];
 

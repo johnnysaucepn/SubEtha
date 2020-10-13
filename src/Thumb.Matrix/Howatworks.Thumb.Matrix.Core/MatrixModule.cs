@@ -11,10 +11,14 @@ namespace Howatworks.Thumb.Matrix.Core
 
             builder.RegisterType<MatrixApp>().AsSelf().SingleInstance();
 
-            builder.RegisterType<CommanderTracker>().AsSelf().SingleInstance();
+            builder.RegisterType<GameContextTracker>().AsSelf().SingleInstance();
             builder.RegisterType<LocationManager>().AsSelf().SingleInstance();
             builder.RegisterType<ShipManager>().AsSelf().SingleInstance();
             builder.RegisterType<SessionManager>().AsSelf().SingleInstance();
+            
+            builder.RegisterType<Tracker<LocationState>>().AsSelf().SingleInstance();
+            builder.RegisterType<Tracker<ShipState>>().AsSelf().SingleInstance();
+            builder.RegisterType<Tracker<SessionState>>().AsSelf().SingleInstance();
 
             builder.RegisterType<LocationUploadQueue>().As<UploadQueue<LocationState>>().SingleInstance();
             builder.RegisterType<ShipUploadQueue>().As<UploadQueue<ShipState>>().SingleInstance();

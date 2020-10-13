@@ -6,8 +6,8 @@ namespace Howatworks.Thumb.Core
     {
         void Initialize();
         void Shutdown();
-        DateTimeOffset? LastChecked();
-        DateTimeOffset? LastEntry();
+        DateTimeOffset? LastChecked { get; }
+        DateTimeOffset? LastEntry { get; }
         void StartMonitoring();
         void StopMonitoring();
     }

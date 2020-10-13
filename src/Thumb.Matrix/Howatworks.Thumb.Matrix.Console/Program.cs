@@ -25,7 +25,8 @@ namespace Howatworks.Thumb.Matrix.Console
             {
                 var app = scope.Resolve<MatrixApp>();
 
-                app.OnAuthenticationRequired += (sender, args) => {
+                app.OnAuthenticationRequired += (sender, args) =>
+                {
                     do
                     {
                         (string username, string password) = GetCredentials(app);
@@ -39,9 +40,7 @@ namespace Howatworks.Thumb.Matrix.Console
                 };
 
                 app.Initialize();
-                app.StartMonitoring();
                 System.Console.ReadKey();
-                app.Shutdown();
             }
         }
 

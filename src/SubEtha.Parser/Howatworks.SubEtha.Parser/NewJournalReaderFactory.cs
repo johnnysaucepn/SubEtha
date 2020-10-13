@@ -18,7 +18,7 @@ namespace Howatworks.SubEtha.Parser
 
         public NewLiveJournalReader CreateLiveJournalReader(FileInfo file)
         {
-            return new NewLiveJournalReader(file);
+            return new NewLiveJournalReader(file, _parser);
         }
     }
 }

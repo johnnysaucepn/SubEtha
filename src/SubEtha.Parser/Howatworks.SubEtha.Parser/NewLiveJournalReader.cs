@@ -9,12 +9,14 @@ namespace Howatworks.SubEtha.Parser
         public FileInfo File { get; }
         public NewJournalLogFileInfo Context { get; }
         private DateTimeOffset _lastSeen;
+        private readonly IJournalParser _parser;
 
         public bool FileExists => File.Exists;
 
-        public NewLiveJournalReader(FileInfo file)
+        public NewLiveJournalReader(FileInfo file, IJournalParser parser)
         {
             File = file;
+            _parser = parser;
 
             Context = new NewJournalLogFileInfo(File);
         }
@@ -23,19 +25,16 @@ namespace Howatworks.SubEtha.Parser
         {
             if (!File.Exists) return null;
 
-            var modTime = File.LastWriteTimeUtc;
-            if (modTime <= _lastSeen) return null;
-
-            _lastSeen = modTime;
-
             using (var file = new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (var stream = new StreamReader(file))
                 {
                     var content = stream.ReadToEnd();
+                    var (_, timestamp) = _parser.ParseCommonProperties(content);
                     //Log.Debug(content);
-                    if (!string.IsNullOrWhiteSpace(content))
+                    if (timestamp > _lastSeen)
                     {
+                        _lastSeen = timestamp;
                         return new NewJournalLine(Context, content);
                     }
                 }

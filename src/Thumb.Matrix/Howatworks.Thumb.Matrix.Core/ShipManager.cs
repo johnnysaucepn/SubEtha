@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Reactive.Linq;
 using Howatworks.Matrix.Domain;
+using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Combat;
 using Howatworks.SubEtha.Journal.Startup;
 using Howatworks.SubEtha.Journal.StationServices;
-using Howatworks.Thumb.Core;
+using Howatworks.SubEtha.Monitor;
 using log4net;
 
 namespace Howatworks.Thumb.Matrix.Core
@@ -13,34 +14,29 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ShipManager));
 
-        private readonly UploadQueue<ShipState> _queue;
         private readonly Tracker<ShipState> _tracker;
 
-        public ShipManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<ShipState> queue)
+        public ShipManager(Tracker<ShipState> tracker)
         {
-            _tracker = new Tracker<ShipState>(commander);
-            _queue = queue;
-
-            router.RegisterFor<LoadGame>(ApplyLoadGame);
-            router.RegisterFor<ShipyardNew>(ApplyShipyardNew);
-            router.RegisterFor<ShipyardSwap>(ApplyShipyardSwap);
-
-            router.RegisterFor<ShieldState>(ApplyShieldState);
-            router.RegisterFor<HullDamage>(ApplyHullDamage);
-            router.RegisterFor<Repair>(ApplyRepair);
-            router.RegisterFor<RepairAll>(ApplyRepairAll);
-
-            router.RegisterForBatchComplete(BatchComplete);
+            _tracker = tracker;
         }
 
-        public void FlushQueue()
+        public void SubscribeTo(IObservable<NewJournalEntry> observable)
         {
-            _queue.Flush();
+            observable.OfJournalType<LoadGame>().Subscribe(ApplyLoadGame);
+
+            observable.OfJournalType<ShipyardNew>().Subscribe(ApplyShipyardNew);
+            observable.OfJournalType<ShipyardSwap>().Subscribe(ApplyShipyardSwap);
+
+            observable.OfJournalType<ShieldState>().Subscribe(ApplyShieldState);
+            observable.OfJournalType<HullDamage>().Subscribe(ApplyHullDamage);
+            observable.OfJournalType<Repair>().Subscribe(ApplyRepair);
+            observable.OfJournalType<RepairAll>().Subscribe(ApplyRepairAll);
         }
 
-        private bool ApplyLoadGame(LoadGame loadGame)
+        private void ApplyLoadGame(LoadGame loadGame)
         {
-            return _tracker.Modify(loadGame.Timestamp, ship =>
+            _tracker.Modify(loadGame.Timestamp, ship =>
             {
                 ship.Type = loadGame.Ship;
                 ship.ShipId = loadGame.ShipID;
@@ -50,9 +46,9 @@ namespace Howatworks.Thumb.Matrix.Core
             });
         }
 
-        private bool ApplyShipyardNew(ShipyardNew shipyardNew)
+        private void ApplyShipyardNew(ShipyardNew shipyardNew)
         {
-            return _tracker.Replace(shipyardNew.Timestamp, ship =>
+            _tracker.Replace(shipyardNew.Timestamp, ship =>
             {
                 ship.Type = shipyardNew.ShipType;
                 ship.ShipId = shipyardNew.NewShipID;
@@ -60,9 +56,9 @@ namespace Howatworks.Thumb.Matrix.Core
             });
         }
 
-        private bool ApplyShipyardSwap(ShipyardSwap shipyardSwap)
+        private void ApplyShipyardSwap(ShipyardSwap shipyardSwap)
         {
-            return _tracker.Modify(shipyardSwap.Timestamp, ship =>
+            _tracker.Modify(shipyardSwap.Timestamp, ship =>
             {
                 ship.Type = shipyardSwap.ShipType;
                 ship.ShipId = shipyardSwap.ShipID;
@@ -70,18 +66,18 @@ namespace Howatworks.Thumb.Matrix.Core
             });
         }
 
-        private bool ApplyHullDamage(HullDamage hullDamage)
+        private void ApplyHullDamage(HullDamage hullDamage)
         {
-            return _tracker.Modify(hullDamage.Timestamp, ship =>
+            _tracker.Modify(hullDamage.Timestamp, ship =>
             {
                 ship.HullIntegrity = hullDamage.Health;
                 return true;
             });
         }
 
-        private bool ApplyShieldState(ShieldState shieldState)
+        private void ApplyShieldState(ShieldState shieldState)
         {
-            return _tracker.Modify(shieldState.Timestamp, ship =>
+            _tracker.Modify(shieldState.Timestamp, ship =>
             {
                 // If shield state was unknown before (i.e. null) we know it now
                 ship.ShieldsUp = shieldState.ShieldsUp;
@@ -89,9 +85,9 @@ namespace Howatworks.Thumb.Matrix.Core
             });
         }
 
-        private bool ApplyRepair(Repair repair)
+        private void ApplyRepair(Repair repair)
         {
-            return _tracker.Modify(repair.Timestamp, ship =>
+            _tracker.Modify(repair.Timestamp, ship =>
             {
                 if (repair.Item != "hull" && repair.Item != "all") return false;
                 ship.HullIntegrity = 1;
@@ -99,20 +95,13 @@ namespace Howatworks.Thumb.Matrix.Core
             });
         }
 
-        private bool ApplyRepairAll(RepairAll repair)
+        private void ApplyRepairAll(RepairAll repair)
         {
-            return _tracker.Modify(repair.Timestamp, ship =>
+            _tracker.Modify(repair.Timestamp, ship =>
             {
                 ship.HullIntegrity = 1;
                 return true;
             });
-        }
-
-        private bool BatchComplete()
-        {
-            _tracker.Commit(() => { _queue.Enqueue(_tracker.GameVersion, _tracker.CommanderName, _tracker.CurrentState); });
-
-            return true;
         }
     }
 }

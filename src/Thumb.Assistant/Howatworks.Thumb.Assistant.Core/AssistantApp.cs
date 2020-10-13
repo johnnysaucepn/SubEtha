@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Reactive.Linq;
 using System.Threading;
 using Howatworks.SubEtha.Bindings;
 using Howatworks.SubEtha.Monitor;
+using Howatworks.SubEtha.Parser;
 using Howatworks.Thumb.Assistant.Core.Messages;
 using Howatworks.Thumb.Core;
 using log4net;
@@ -18,9 +20,9 @@ namespace Howatworks.Thumb.Assistant.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 
-        private readonly JournalMonitorScheduler _monitor;
+        private readonly NewLiveJournalMonitor _monitor;
         private readonly IThumbNotifier _notifier;
-        private readonly JournalEntryRouter _router;
+        private readonly IJournalParser _parser;
 
         private readonly IConfiguration _configuration;
         private readonly WebSocketConnectionManager _connectionManager;
@@ -28,12 +30,15 @@ namespace Howatworks.Thumb.Assistant.Core
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
 
+        private DateTimeOffset? _lastEntry = null;
+        private DateTimeOffset? _lastChecked = null;
+
         private readonly CancellationTokenSource _cancelSource = new CancellationTokenSource();
 
         public AssistantApp(
-            JournalMonitorScheduler monitor,
+            NewLiveJournalMonitor monitor,
             IThumbNotifier notifier,
-            JournalEntryRouter router,
+            IJournalParser parser,
             IConfiguration configuration,
             WebSocketConnectionManager connectionManager,
             StatusManager statusManager,
@@ -41,7 +46,7 @@ namespace Howatworks.Thumb.Assistant.Core
         {
             _monitor = monitor;
             _notifier = notifier;
-            _router = router;
+            _parser = parser;
             _configuration = configuration;
             _connectionManager = connectionManager;
             _statusManager = statusManager;
@@ -52,11 +57,6 @@ namespace Howatworks.Thumb.Assistant.Core
         {
             Log.Info("Starting up");
 
-            _monitor.JournalEntriesParsed += (sender, args) =>
-            {
-                if (args == null) return;
-                _router.Apply(args.Entries, args.BatchMode);
-            };
             _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
 
             _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
@@ -96,21 +96,23 @@ namespace Howatworks.Thumb.Assistant.Core
                     {
                         MessageType = "ControlState",
                         MessageContent = _statusManager.CreateControlStateMessage()
-                    },
+                },
                     Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             };
 
-            _statusManager.ControlStateChanged += (_, args) =>
+            _statusManager.ControlStateObservable
+                .Throttle(TimeSpan.FromSeconds(1))
+                .Subscribe(c=>
             {
-                _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated ship status");
+                _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status");
                 var serializedMessage = JsonConvert.SerializeObject(new
                     {
-                        MessageType = "ControlState", MessageContent = StatusManager.CreateControlStateMessage(args.State)
+                        MessageType = "ControlState", MessageContent = c.CreateControlStateMessage()
                     },
                     Formatting.Indented);
                 _connectionManager.SendMessageToAllClients(serializedMessage);
-            };
+            });
 
             var hostBuilder = new WebHostBuilder()
                 .UseConfiguration(_configuration)
@@ -123,6 +125,29 @@ namespace Howatworks.Thumb.Assistant.Core
             var host = hostBuilder.Build();
 
             host.RunAsync(_cancelSource.Token).ConfigureAwait(false); // Don't block the calling thread
+
+            var startTime = DateTimeOffset.MinValue; // TODO: temporary
+            var source = new JournalEntrySource(_parser, startTime, _monitor);
+
+            var publisher = new JournalEntryPublisher(source);
+            var publication = publisher.GetObservable().Publish();
+
+            _statusManager.SubscribeTo(publication);
+
+            publication.Subscribe(e =>
+            {
+                if (e.JournalEntry.Timestamp > (_lastEntry ?? DateTimeOffset.MinValue)) _lastEntry = e.JournalEntry.Timestamp;
+            });
+
+            publication.Connect();
+
+            while (true)
+            {
+                publisher.Poll();
+                _lastChecked = DateTimeOffset.Now;
+                Console.WriteLine(_lastChecked);
+                if (Console.ReadKey().Key == ConsoleKey.Escape) break;
+            }
         }
 
         public void Shutdown()
@@ -135,24 +160,16 @@ namespace Howatworks.Thumb.Assistant.Core
         public void StartMonitoring()
         {
             Log.Info("Starting monitoring");
-            _monitor.Start();
         }
 
         public void StopMonitoring()
         {
             Log.Info("Stopping monitoring");
-            _monitor.Stop();
         }
 
-        public DateTimeOffset? LastEntry()
-        {
-            return _monitor.LastEntry();
-        }
+        public DateTimeOffset? LastEntry => _lastEntry;
 
-        public DateTimeOffset? LastChecked()
-        {
-            return _monitor.LastChecked();
-        }
+        public DateTimeOffset? LastChecked => _lastChecked;
 
         private void ActivateBinding(ControlRequest controlRequest)
         {

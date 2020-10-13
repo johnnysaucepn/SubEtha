@@ -16,8 +16,8 @@ namespace Howatworks.Thumb.Matrix.Wpf
         public string LastCheckedText =>
             string.Format(
                 Resources.NotifyIconLastUpdatedLabel.Replace("\\n", Environment.NewLine),
-                ViewManager.App.LastEntry().Value.LocalDateTime.ToString("g"),
-                ViewManager.App.LastChecked().Value.LocalDateTime.ToString("g")
+                ViewManager.App.LastEntry.Value.LocalDateTime.ToString("g"),
+                ViewManager.App.LastChecked.Value.LocalDateTime.ToString("g")
                 );
 
         public string DefaultText => Resources.NotifyIconDefaultLabel;
@@ -26,9 +26,9 @@ namespace Howatworks.Thumb.Matrix.Wpf
         {
             get
             {
-                if (ViewManager.App.LastChecked().HasValue)
+                if (ViewManager.App.LastChecked.HasValue)
                 {
-                    if (ViewManager.App.LastEntry().HasValue)
+                    if (ViewManager.App.LastEntry.HasValue)
                         return LastCheckedText;
                     return NotCheckedText;
                 }

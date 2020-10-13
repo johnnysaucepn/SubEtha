@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Howatworks.Thumb.Assistant.Core.Messages;
+using System;
 using System.Collections.Generic;
 
 namespace Howatworks.Thumb.Assistant.Core
 {
     public class ControlStateModel : IControlState
     {
+        public bool IsDirty { get; set; }
+
         private bool _landingGearDown;
         private bool _supercruise;
         private bool _hardpointsDeployed;
@@ -14,8 +17,6 @@ namespace Howatworks.Thumb.Assistant.Core
         private bool _hudAnalysisMode;
         private bool _fssMode;
         private bool _saaMode;
-
-        public event EventHandler Changed;
 
         public bool LandingGearDown
         {
@@ -71,12 +72,28 @@ namespace Howatworks.Thumb.Assistant.Core
             set => UpdateProperty(ref _saaMode, value);
         }
 
+        public ControlState CreateControlStateMessage()
+        {
+            return new ControlState
+            {
+                CargoScoopDeployed = this.CargoScoopDeployed,
+                HardpointsDeployed = this.HardpointsDeployed,
+                HudAnalysisMode = this.HudAnalysisMode,
+                LandingGearDown = this.LandingGearDown,
+                LightsOn = this.LightsOn,
+                NightVision = this.NightVision,
+                Supercruise = this.Supercruise,
+                FssMode = this.FssMode,
+                SaaMode = this.SaaMode
+            };
+        }
+
         private void UpdateProperty<T>(ref T originalValue, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(originalValue, newValue))
             {
                 originalValue = newValue;
-                Changed?.Invoke(this, new EventArgs());
+                IsDirty = true;
             }
         }
 
