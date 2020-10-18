@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using Howatworks.SubEtha.Parser;
 
-namespace Howatworks.SubEtha.Parser
+namespace Howatworks.SubEtha.Monitor
 {
     public class NewJournalReaderFactory : INewJournalReaderFactory
     {

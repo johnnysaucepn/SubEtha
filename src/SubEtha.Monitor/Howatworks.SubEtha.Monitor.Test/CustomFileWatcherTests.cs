@@ -23,7 +23,7 @@ namespace Howatworks.SubEtha.Monitor.Test
 
         private void WaitForNotification()
         {
-            Thread.Sleep(TimeSpan.FromMilliseconds(100));
+            Thread.Sleep(TimeSpan.FromMilliseconds(150));
         }
 
         [Fact]
