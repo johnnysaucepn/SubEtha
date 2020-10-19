@@ -6,19 +6,19 @@ using log4net;
 
 namespace Howatworks.SubEtha.Parser
 {
-    public class NewLogJournalReader : IDisposable
+    public class LogJournalReader : IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NewLogJournalReader));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LogJournalReader));
 
         public FileInfo File { get; }
 
-        public NewJournalLogFileInfo Context { get; }
+        public JournalLogFileInfo Context { get; }
 
         private Lazy<StreamReader> _stream;
         private bool disposedValue;
         private readonly IJournalParser _parser;
 
-        public NewLogJournalReader(FileInfo file, IJournalParser parser)
+        public LogJournalReader(FileInfo file, IJournalParser parser)
         {
             File = file;
             _parser = parser;
@@ -33,10 +33,10 @@ namespace Howatworks.SubEtha.Parser
             return new StreamReader(fileStream);
         }
 
-        private NewJournalLogFileInfo ReadFileInfo()
+        private JournalLogFileInfo ReadFileInfo()
         {
             FileHeader fileHeader = null;
-            var info = new NewJournalLogFileInfo(File);
+            var info = new JournalLogFileInfo(File);
             DateTimeOffset? lastEntry = null;
 
             try
@@ -77,7 +77,7 @@ namespace Howatworks.SubEtha.Parser
 
                 if (fileHeader != null)
                 {
-                    info = new NewJournalLogFileInfo(File, fileHeader.GameVersion, fileHeader.Timestamp, lastEntry ?? fileHeader.Timestamp);
+                    info = new JournalLogFileInfo(File, fileHeader.GameVersion, fileHeader.Timestamp, lastEntry ?? fileHeader.Timestamp);
                 }
             }
             catch (FileNotFoundException e)
@@ -92,7 +92,7 @@ namespace Howatworks.SubEtha.Parser
             return info;
         }
 
-        public IEnumerable<NewJournalLine> ReadLines()
+        public IEnumerable<JournalLine> ReadLines()
         {
             var streamReader = _stream.Value;
 
@@ -102,7 +102,7 @@ namespace Howatworks.SubEtha.Parser
                 Log.Debug(line);
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
-                yield return new NewJournalLine(Context, line);
+                yield return new JournalLine(Context, line);
             }
         }
 

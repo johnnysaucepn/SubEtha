@@ -16,7 +16,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
         private readonly Subject<ControlStateModel> _controlStateSubject = new Subject<ControlStateModel>();
 
-        public void SubscribeTo(IObservable<NewJournalEntry> observable)
+        public void SubscribeTo(IObservable<JournalEntry> observable)
         {
             observable.OfJournalType<Status>().Subscribe(ApplyStatus);
         }

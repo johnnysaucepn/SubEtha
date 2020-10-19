@@ -13,7 +13,7 @@ namespace Howatworks.Thumb.Matrix.Core
         public string CommanderName { get; private set; }
         public string GameVersion { get; private set; }
 
-        public void SubscribeTo(IObservable<NewJournalEntry> observable)
+        public void SubscribeTo(IObservable<JournalEntry> observable)
         {
             // NOTE: inconsistency in events, some use 'Name', some 'Commander'
 

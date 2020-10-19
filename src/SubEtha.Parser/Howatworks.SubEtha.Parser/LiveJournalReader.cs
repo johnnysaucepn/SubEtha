@@ -4,24 +4,24 @@ using Howatworks.SubEtha.Journal;
 
 namespace Howatworks.SubEtha.Parser
 {
-    public class NewLiveJournalReader
+    public class LiveJournalReader
     {
         public FileInfo File { get; }
-        public NewJournalLogFileInfo Context { get; }
+        public JournalLogFileInfo Context { get; }
         private DateTimeOffset _lastSeen;
         private readonly IJournalParser _parser;
 
         public bool FileExists => File.Exists;
 
-        public NewLiveJournalReader(FileInfo file, IJournalParser parser)
+        public LiveJournalReader(FileInfo file, IJournalParser parser)
         {
             File = file;
             _parser = parser;
 
-            Context = new NewJournalLogFileInfo(File);
+            Context = new JournalLogFileInfo(File);
         }
 
-        public NewJournalLine ReadCurrent()
+        public JournalLine ReadCurrent()
         {
             if (!File.Exists) return null;
 
@@ -35,7 +35,7 @@ namespace Howatworks.SubEtha.Parser
                     if (timestamp > _lastSeen)
                     {
                         _lastSeen = timestamp;
-                        return new NewJournalLine(Context, content);
+                        return new JournalLine(Context, content);
                     }
                 }
             }

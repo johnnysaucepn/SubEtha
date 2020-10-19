@@ -19,7 +19,7 @@ namespace Howatworks.Thumb.Matrix.Core
             _tracker = tracker;
         }
 
-        public void SubscribeTo(IObservable<NewJournalEntry> observable)
+        public void SubscribeTo(IObservable<JournalEntry> observable)
         {
             observable.OfJournalType<LoadGame>().Subscribe(ApplyLoadGame);
             observable.OfJournalType<NewCommander>().Subscribe(ApplyNewCommander);

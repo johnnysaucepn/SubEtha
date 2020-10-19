@@ -9,31 +9,31 @@ using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.SubEtha.Monitor
 {
-    public class NewLiveJournalMonitor : INewJournalLineSource
+    public class LiveJournalMonitor : IJournalLineSource
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NewLiveJournalMonitor));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LiveJournalMonitor));
 
-        private readonly List<NewLiveJournalReader> _liveReaders;
+        private readonly List<LiveJournalReader> _liveReaders;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        public NewLiveJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory)
+        public LiveJournalMonitor(IConfiguration config, IJournalReaderFactory readerFactory)
         {
             var folder = config["JournalFolder"];
             var liveFilenames = config["RealTimeFilenames"].Split(';').Select(x => x.Trim());
 
-            _liveReaders = new List<NewLiveJournalReader>();
+            _liveReaders = new List<LiveJournalReader>();
             foreach (var filename in liveFilenames)
             {
                 var file = new FileInfo(Path.Combine(folder, filename));
                 var newReader = readerFactory.CreateLiveJournalReader(file);
                 _liveReaders.Add(newReader);
-                JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(filename)); // TODO: use FileInfo instead?
+                JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(file));
             }
         }
 
-        public IEnumerable<NewJournalLine> GetJournalLines()
+        public IEnumerable<JournalLine> GetJournalLines()
         {
             return _liveReaders
                 .Select(x => x.ReadCurrent())

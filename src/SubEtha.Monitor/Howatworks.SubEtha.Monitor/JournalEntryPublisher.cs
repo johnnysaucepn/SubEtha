@@ -6,11 +6,11 @@ namespace Howatworks.SubEtha.Monitor
 {
     public class JournalEntryPublisher
     {
-        private readonly INewJournalEntrySource _source;
+        private readonly IJournalEntrySource _source;
 
-        private readonly Subject<NewJournalEntry> _subject = new Subject<NewJournalEntry>();
+        private readonly Subject<JournalEntry> _subject = new Subject<JournalEntry>();
 
-        public JournalEntryPublisher(INewJournalEntrySource source)
+        public JournalEntryPublisher(IJournalEntrySource source)
         {
             _source = source;
         }
@@ -22,7 +22,7 @@ namespace Howatworks.SubEtha.Monitor
                 _subject.OnNext(entry);
         }
 
-        public IObservable<NewJournalEntry> GetObservable()
+        public IObservable<JournalEntry> GetObservable()
         {
             return _subject;
         }

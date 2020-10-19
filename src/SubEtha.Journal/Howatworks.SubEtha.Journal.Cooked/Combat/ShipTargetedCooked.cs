@@ -5,7 +5,7 @@ namespace Howatworks.SubEtha.Journal.Cooked.Combat
     // Note: no sample
     public class ShipTargetedCooked : JournalEntryBase
     {
-        public NewJournalLogFileInfo Context { get; }
+        public JournalLogFileInfo Context { get; }
 
         public bool TargetLocked { get; }
 
@@ -29,7 +29,7 @@ namespace Howatworks.SubEtha.Journal.Cooked.Combat
         public decimal? SubSystemHealth { get; } // TODO: check data type
         public string Power { get; } // TODO: based on assumption that all Powers are NPC names
 
-        public ShipTargetedCooked(NewJournalLogFileInfo context, ShipTargeted source)
+        public ShipTargetedCooked(JournalLogFileInfo context, ShipTargeted source)
         {
             Context = context;
 

@@ -46,21 +46,21 @@ namespace ConsoleApp1
             var startOfYear = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
             var parser = new JournalParser();
-            var readerFactory = new NewJournalReaderFactory(parser);
-            var logMonitor = new NewLogJournalMonitor(config, readerFactory, startOfYear);
-            var liveMonitor = new NewLiveJournalMonitor(config, readerFactory);
+            var readerFactory = new JournalReaderFactory(parser);
+            var logMonitor = new LogJournalMonitor(config, readerFactory, startOfYear);
+            var liveMonitor = new LiveJournalMonitor(config, readerFactory);
             var source = new JournalEntrySource(parser, startOfYear, logMonitor, liveMonitor);
 
             var publisher = new JournalEntryPublisher(source);
             var publication = publisher.GetObservable().Publish();
 
             //publication.Subscribe(x => Log.Info($"{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event} {x.JournalEntry.GetType().Name}"));
-            publication.Where(x => x.JournalEntry is Music).Subscribe(x => Log.Info($"#{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
-            publication.Where(x => x.JournalEntry is Shutdown).Subscribe(x => Log.Info($"*{x.Context.Filename} {x.JournalEntry.Timestamp:g}: {x.JournalEntry.Event}"));
-            publication.Where(x => x.JournalEntry is ShipTargeted).Subscribe(s => Log.Info($"@{s.Context.Filename} {s.JournalEntry.Event}"));
+            publication.Where(x => x.Entry is Music).Subscribe(x => Log.Info($"#{x.Context.Filename} {x.Entry.Timestamp:g}: {x.Entry.Event}"));
+            publication.Where(x => x.Entry is Shutdown).Subscribe(x => Log.Info($"*{x.Context.Filename} {x.Entry.Timestamp:g}: {x.Entry.Event}"));
+            publication.Where(x => x.Entry is ShipTargeted).Subscribe(s => Log.Info($"@{s.Context.Filename} {s.Entry.Event}"));
 
-            publication.Where(x => x.JournalEntry is ShipTargeted)
-                .Select(j => new ShipTargetedCooked(j.Context, j.JournalEntry as ShipTargeted))
+            publication.Where(x => x.Entry is ShipTargeted)
+                .Select(j => new ShipTargetedCooked(j.Context, j.Entry as ShipTargeted))
                 .Subscribe(s => Log.Info($":{s.Context.Filename} {s.Ship.Text}"));
 
 

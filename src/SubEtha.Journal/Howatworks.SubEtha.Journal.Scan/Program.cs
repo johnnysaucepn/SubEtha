@@ -47,7 +47,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             foreach (var file in incrementalFiles)
             {
                 Log.Info($"Parsing file '{file}'...");
-                var reader = new NewLogJournalReader(new FileInfo(file), parser);
+                var reader = new LogJournalReader(new FileInfo(file), parser);
                 // Read all entries from all files
                 var _ = reader.ReadLines().ToList();
             }
@@ -56,7 +56,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             foreach (var file in realTimeFiles)
             {
                 Log.Info($"Parsing file '{file}'...");
-                var reader = new NewLiveJournalReader(new FileInfo(file), parser);
+                var reader = new LiveJournalReader(new FileInfo(file), parser);
                 // Read entry from each file
                 var _ = reader.ReadCurrent();
             }

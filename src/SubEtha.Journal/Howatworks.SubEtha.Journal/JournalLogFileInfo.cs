@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Howatworks.SubEtha.Journal
 {
-    public class NewJournalLogFileInfo
+    public class JournalLogFileInfo
     {
         public bool IsValid { get; }
 
@@ -12,13 +12,13 @@ namespace Howatworks.SubEtha.Journal
         public DateTimeOffset HeaderTimestamp { get; }
         public DateTimeOffset LastEntry { get; }
 
-        public NewJournalLogFileInfo(FileInfo file)
+        public JournalLogFileInfo(FileInfo file)
         {
             Filename = file.Name;
             IsValid = false;
         }
 
-        public NewJournalLogFileInfo(FileInfo file, string gameVersion, DateTimeOffset timestamp, DateTimeOffset lastEntry)
+        public JournalLogFileInfo(FileInfo file, string gameVersion, DateTimeOffset timestamp, DateTimeOffset lastEntry)
         {
             IsValid = true;
             Filename = file.Name;

@@ -3,8 +3,8 @@ using Howatworks.SubEtha.Journal;
 
 namespace Howatworks.SubEtha.Monitor
 {
-    public interface INewJournalLineSource
+    public interface IJournalLineSource
     {
-        IEnumerable<NewJournalLine> GetJournalLines();
+        IEnumerable<JournalLine> GetJournalLines();
     }
 }

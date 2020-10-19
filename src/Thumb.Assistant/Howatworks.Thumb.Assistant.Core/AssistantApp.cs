@@ -20,7 +20,7 @@ namespace Howatworks.Thumb.Assistant.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 
-        private readonly NewLiveJournalMonitor _monitor;
+        private readonly LiveJournalMonitor _monitor;
         private readonly IThumbNotifier _notifier;
         private readonly IJournalParser _parser;
 
@@ -36,7 +36,7 @@ namespace Howatworks.Thumb.Assistant.Core
         private readonly CancellationTokenSource _cancelSource = new CancellationTokenSource();
 
         public AssistantApp(
-            NewLiveJournalMonitor monitor,
+            LiveJournalMonitor monitor,
             IThumbNotifier notifier,
             IJournalParser parser,
             IConfiguration configuration,
@@ -57,9 +57,9 @@ namespace Howatworks.Thumb.Assistant.Core
         {
             Log.Info("Starting up");
 
-            _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
+            _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
 
-            _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
+            _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
             var bindingsPath = Path.Combine(_configuration["BindingsFolder"], _configuration["BindingsFilename"]);
 
@@ -136,7 +136,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
             publication.Subscribe(e =>
             {
-                if (e.JournalEntry.Timestamp > (_lastEntry ?? DateTimeOffset.MinValue)) _lastEntry = e.JournalEntry.Timestamp;
+                if (e.Entry.Timestamp > (_lastEntry ?? DateTimeOffset.MinValue)) _lastEntry = e.Entry.Timestamp;
             });
 
             publication.Connect();

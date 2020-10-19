@@ -9,23 +9,23 @@ using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.SubEtha.Monitor
 {
-    public class NewLogJournalMonitor : INewJournalLineSource
+    public class LogJournalMonitor : IJournalLineSource
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NewLogJournalMonitor));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LogJournalMonitor));
 
         private readonly CustomFileWatcher _logFileWatcher;
-        private readonly SortedList<DateTimeOffset, NewLogJournalReader> _logReaders;
+        private readonly SortedList<DateTimeOffset, LogJournalReader> _logReaders;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
-        public NewLogJournalMonitor(IConfiguration config, INewJournalReaderFactory readerFactory, DateTimeOffset? startTime = null)
+        public LogJournalMonitor(IConfiguration config, IJournalReaderFactory readerFactory, DateTimeOffset? startTime = null)
         {
             startTime = startTime ?? DateTimeOffset.MinValue;
             var folder = config["JournalFolder"];
             var logPattern = config["JournalPattern"];
 
-            _logReaders = new SortedList<DateTimeOffset, NewLogJournalReader>();
+            _logReaders = new SortedList<DateTimeOffset, LogJournalReader>();
 
             _logFileWatcher = new CustomFileWatcher(folder, logPattern);
 
@@ -38,7 +38,7 @@ namespace Howatworks.SubEtha.Monitor
                 if (newReader.Context.LastEntry >= startTime)
                 {
                     _logReaders.Add(newReader.Context.HeaderTimestamp, newReader);
-                    JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(f)); // TODO: use FileInfo instead?
+                    JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(file));
                 }
             });
 
@@ -47,13 +47,13 @@ namespace Howatworks.SubEtha.Monitor
                 foreach (var reader in _logReaders.Where(x => x.Value.File.Name.Equals(f)))
                 {
                     _logReaders.Remove(reader.Key);
-                    JournalFileWatchingStopped?.Invoke(this, new JournalFileEventArgs(f)); // TODO: use FileInfo instead?
+                    JournalFileWatchingStopped?.Invoke(this, new JournalFileEventArgs(reader.Value.File));
                 }
             });
             _logFileWatcher.Start();
         }
 
-        public IEnumerable<NewJournalLine> GetJournalLines()
+        public IEnumerable<JournalLine> GetJournalLines()
         {
             return _logReaders
                 .SelectMany(x => x.Value.ReadLines())

@@ -21,7 +21,7 @@ namespace Howatworks.Thumb.Matrix.Core
             _tracker = tracker;
         }
 
-        public void SubscribeTo(IObservable<NewJournalEntry> observable)
+        public void SubscribeTo(IObservable<JournalEntry> observable)
         {
             observable.OfJournalType<Location>().Subscribe(ApplyLocation);
             observable.OfJournalType<FsdJump>().Subscribe(ApplyFsdJump);

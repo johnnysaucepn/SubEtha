@@ -1,14 +1,15 @@
 using System;
+using System.IO;
 
 namespace Howatworks.SubEtha.Monitor
 {
     public class JournalFileEventArgs : EventArgs
     {
-        public JournalFileEventArgs(string path)
-        {
-            Path = path;
-        }
+        public FileInfo File { get; }
 
-        public string Path { get; }
+        public JournalFileEventArgs(FileInfo file)
+        {
+            File = file;
+        }
     }
 }

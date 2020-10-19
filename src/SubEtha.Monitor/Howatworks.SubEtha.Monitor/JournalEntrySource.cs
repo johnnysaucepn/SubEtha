@@ -7,21 +7,21 @@ using Howatworks.SubEtha.Parser;
 
 namespace Howatworks.SubEtha.Monitor
 {
-    public class JournalEntrySource : INewJournalEntrySource
+    public class JournalEntrySource : IJournalEntrySource
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(JournalEntrySource));
         private readonly IJournalParser _parser;
         private readonly DateTimeOffset _startTime;
-        private readonly INewJournalLineSource[] _lineSources;
+        private readonly IJournalLineSource[] _lineSources;
 
-        public JournalEntrySource(IJournalParser parser, DateTimeOffset startTime, params INewJournalLineSource[] lineSources)
+        public JournalEntrySource(IJournalParser parser, DateTimeOffset startTime, params IJournalLineSource[] lineSources)
         {
             _lineSources = lineSources;
             _parser = parser;
             _startTime = startTime;
         }
 
-        public IEnumerable<NewJournalEntry> GetJournalEntries()
+        public IEnumerable<JournalEntry> GetJournalEntries()
         {
             return _lineSources
                 .SelectMany(s => s.GetJournalLines())
@@ -29,7 +29,7 @@ namespace Howatworks.SubEtha.Monitor
                 {
                     try
                     {
-                        return new NewJournalEntry(l.Context, _parser.Parse(l.Line));
+                        return new JournalEntry(l.Context, _parser.Parse(l.Line));
                     }
                     catch (JournalParseException e)
                     {
@@ -43,7 +43,7 @@ namespace Howatworks.SubEtha.Monitor
                     }
                     return null;
                 })
-                .Where(x => x != null && x.JournalEntry != null && x.JournalEntry.Timestamp >= _startTime);
+                .Where(x => x != null && x.Entry != null && x.Entry.Timestamp >= _startTime);
         }
 
     }

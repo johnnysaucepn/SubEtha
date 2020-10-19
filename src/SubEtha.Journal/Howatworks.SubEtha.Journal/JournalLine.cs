@@ -1,11 +1,11 @@
 ﻿namespace Howatworks.SubEtha.Journal
 {
-    public class NewJournalLine
+    public class JournalLine
     {
-        public NewJournalLogFileInfo Context { get; set; }
+        public JournalLogFileInfo Context { get; set; }
         public string Line { get; }
 
-        public NewJournalLine(NewJournalLogFileInfo context, string line)
+        public JournalLine(JournalLogFileInfo context, string line)
         {
             Context = context;
             Line = line;

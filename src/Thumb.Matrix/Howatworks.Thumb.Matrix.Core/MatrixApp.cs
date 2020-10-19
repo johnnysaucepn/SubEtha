@@ -32,8 +32,8 @@ namespace Howatworks.Thumb.Matrix.Core
         public int MaxUsernameLength = 256;
         public int MaxPasswordLength = 100;
         private readonly IJournalParser _parser;
-        private readonly NewLogJournalMonitor _logMonitor;
-        private readonly NewLiveJournalMonitor _liveMonitor;
+        private readonly LogJournalMonitor _logMonitor;
+        private readonly LiveJournalMonitor _liveMonitor;
         private DateTimeOffset? _lastEntry = null;
         private DateTimeOffset? _lastChecked = null;
         private readonly GameContextTracker _gameContextTracker;
@@ -46,8 +46,8 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public MatrixApp(
             IConfiguration config,
-            NewLogJournalMonitor logMonitor,
-            NewLiveJournalMonitor liveMonitor,
+            LogJournalMonitor logMonitor,
+            LiveJournalMonitor liveMonitor,
             IThumbNotifier notifier,
             IJournalParser parser,
             GameContextTracker gameContextTracker,
@@ -107,12 +107,12 @@ namespace Howatworks.Thumb.Matrix.Core
 
             publication.Subscribe(e =>
             {
-                if (e.JournalEntry.Timestamp > (_lastEntry ?? DateTimeOffset.MinValue)) _lastEntry = e.JournalEntry.Timestamp;
+                if (e.Entry.Timestamp > (_lastEntry ?? DateTimeOffset.MinValue)) _lastEntry = e.Entry.Timestamp;
             });
 
-            _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
+            _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
 
-            _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
+            _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
             var username = _config["Username"];
             var password = _config["Password"];
