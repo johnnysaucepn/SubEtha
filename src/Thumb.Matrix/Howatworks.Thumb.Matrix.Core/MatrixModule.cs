@@ -19,10 +19,6 @@ namespace Howatworks.Thumb.Matrix.Core
             builder.RegisterType<Tracker<LocationState>>().AsSelf().SingleInstance();
             builder.RegisterType<Tracker<ShipState>>().AsSelf().SingleInstance();
             builder.RegisterType<Tracker<SessionState>>().AsSelf().SingleInstance();
-
-            builder.RegisterType<LocationUploadQueue>().As<UploadQueue<LocationState>>().SingleInstance();
-            builder.RegisterType<ShipUploadQueue>().As<UploadQueue<ShipState>>().SingleInstance();
-            builder.RegisterType<SessionUploadQueue>().As<UploadQueue<SessionState>>().SingleInstance();
         }
     }
 }

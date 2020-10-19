@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
@@ -73,6 +74,7 @@ namespace Howatworks.Thumb.Matrix.Core
             try
             {
                 Log.Info($"Uploading to '{targetUri.AbsoluteUri}'...");
+                Log.Debug(JsonConvert.SerializeObject(state));
                 var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
                 if (response.StatusCode == HttpStatusCode.Unauthorized)

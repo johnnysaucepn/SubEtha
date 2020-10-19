@@ -20,9 +20,7 @@ namespace Howatworks.Thumb.Matrix.Core
         public event EventHandler OnAuthenticationRequired;
 
         private readonly IConfiguration _config;
-        //private readonly JournalMonitorScheduler _monitor;
         private readonly IThumbNotifier _notifier;
-        //private readonly JournalEntryRouter _router;
         private readonly HttpUploadClient _client;
 
         public bool IsAuthenticated => _client.IsAuthenticated;
@@ -37,11 +35,8 @@ namespace Howatworks.Thumb.Matrix.Core
         private DateTimeOffset? _lastEntry = null;
         private DateTimeOffset? _lastChecked = null;
         private readonly GameContextTracker _gameContextTracker;
-        private readonly UploadQueue<LocationState> _locationQueue;
         private readonly Tracker<LocationState> _locationTracker;
-        private readonly UploadQueue<ShipState> _shipQueue;
         private readonly Tracker<ShipState> _shipTracker;
-        private readonly UploadQueue<SessionState> _sessionQueue;
         private readonly Tracker<SessionState> _sessionTracker;
 
         public MatrixApp(
@@ -54,15 +49,12 @@ namespace Howatworks.Thumb.Matrix.Core
 
             LocationManager location,
             Tracker<LocationState> locationTracker,
-            UploadQueue<LocationState> locationQueue,
             
             ShipManager ship,
             Tracker<ShipState> shipTracker,
-            UploadQueue<ShipState> shipQueue,
             
             SessionManager session,
             Tracker<SessionState> sessionTracker,
-            UploadQueue<SessionState> sessionQueue,
 
             HttpUploadClient client
         )
@@ -74,15 +66,10 @@ namespace Howatworks.Thumb.Matrix.Core
             _config = config;
             _logMonitor = logMonitor;
             _liveMonitor = liveMonitor;
+
             _gameContextTracker = gameContextTracker;
-            
-            _locationQueue = locationQueue;
             _locationTracker = locationTracker;
-
-            _shipQueue = shipQueue;
             _shipTracker = shipTracker;
-
-            _sessionQueue = sessionQueue;
             _sessionTracker = sessionTracker;
             
             _notifier = notifier;
@@ -111,34 +98,51 @@ namespace Howatworks.Thumb.Matrix.Core
             });
 
             _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
-
             _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
             var username = _config["Username"];
             var password = _config["Password"];
 
             // Try username and password from configuration, if possible
-            //var nowAuthenticated = Authenticate(username, password);
+            var nowAuthenticated = Authenticate(username, password);
 
             // TODO: considering remove queue, shouldn't be required if we can queue up observable items
             _locationTracker.Observable
                 .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(l=> _locationQueue.Enqueue(_gameContextTracker.GameVersion, _gameContextTracker.CommanderName, l));
+                .Subscribe(l =>
+                {
+                    var uri = BuildLocationUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
+                    _client.Upload(uri, l);
+                });
+
             _shipTracker.Observable
                 .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(s => _shipQueue.Enqueue(_gameContextTracker.GameVersion, _gameContextTracker.CommanderName, s));
+                .Subscribe(s =>
+                {
+                    var uri = BuildShipUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
+                    _client.Upload(uri, s);
+                });
+
             _sessionTracker.Observable
                 .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(s => _sessionQueue.Enqueue(_gameContextTracker.GameVersion, _gameContextTracker.CommanderName, s));
+                .Subscribe(s =>
+                {
+                    var uri = BuildSessionUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
+                    _client.Upload(uri, s);
+                });
 
             publication.Connect();
-            while (true)
-            {
-                publisher.Poll();
-                _lastChecked = DateTimeOffset.Now;
-                Console.WriteLine(_lastChecked);
-                if (Console.ReadKey().Key == ConsoleKey.Escape) break;
-            }
+            var heartbeat = Observable.Interval(TimeSpan.FromSeconds(5))
+                .Subscribe(x =>
+                {
+                    publisher.Poll();
+                    _lastChecked = DateTimeOffset.Now;
+                    Console.WriteLine(_lastChecked);
+                });
+
+                            
+                
+
 
                 /*try
                 {
@@ -150,6 +154,21 @@ namespace Howatworks.Thumb.Matrix.Core
                 }*/
 
 
+        }
+
+        private Uri BuildLocationUri(string cmdrName, string gameVersion)
+        {
+            return new Uri($"Api/{cmdrName}/{gameVersion}/Location", UriKind.Relative);
+        }
+
+        private Uri BuildShipUri(string cmdrName, string gameVersion)
+        {
+            return new Uri($"Api/{cmdrName}/{gameVersion}/Ship", UriKind.Relative);
+        }
+
+        private Uri BuildSessionUri(string cmdrName, string gameVersion)
+        {
+            return new Uri($"Api/{cmdrName}/{gameVersion}/Session", UriKind.Relative);
         }
 
         public void Shutdown()
