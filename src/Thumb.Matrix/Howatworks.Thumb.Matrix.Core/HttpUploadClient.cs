@@ -8,12 +8,15 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Security.Policy;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
     public class HttpUploadClient : IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HttpUploadClient));
+
+        public string SiteUri => BaseUri.AbsoluteUri;
 
         public Uri BaseUri { get; }
 
@@ -24,6 +27,16 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             BaseUri = new Uri(config["ServiceUri"]);
             _client = new HttpClient();
+        }
+
+        public bool Authenticate(string username, string password)
+        {
+            if (string.IsNullOrWhiteSpace(username)) return false;
+            if (string.IsNullOrWhiteSpace(password)) return false;
+
+            AuthenticateByBearerToken(username, password);
+
+            return IsAuthenticated;
         }
 
         public void AuthenticateByBearerToken(string username, string password)

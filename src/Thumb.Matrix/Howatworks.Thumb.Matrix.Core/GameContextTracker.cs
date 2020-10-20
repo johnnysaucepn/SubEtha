@@ -8,7 +8,7 @@ namespace Howatworks.Thumb.Matrix.Core
 {
     public class GameContextTracker
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GameContextTracker));
 
         public string CommanderName { get; private set; }
         public string GameVersion { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
@@ -24,23 +25,29 @@ namespace Howatworks.Thumb.Matrix.Console
             using (var scope = container.BeginLifetimeScope())
             {
                 var app = scope.Resolve<MatrixApp>();
+                var client = scope.Resolve<HttpUploadClient>();
+
+                var cancelSource = new CancellationTokenSource();
 
                 app.OnAuthenticationRequired += (sender, args) =>
                 {
+                    var authenticated = false;
                     do
                     {
                         (string username, string password) = GetCredentials(app);
 
-                        app.Authenticate(username, password);
-                        if (!app.IsAuthenticated)
+                        authenticated = client.Authenticate(username, password);
+                        if (!authenticated)
                         {
                             System.Console.WriteLine("Authentication failed!");
                         }
-                    } while (!app.IsAuthenticated);
+                    } while (!authenticated);
                 };
 
-                app.Initialize();
-                System.Console.ReadKey();
+                app.StartMonitoring();
+                app.Run(cancelSource.Token);
+                app.StopMonitoring();
+                
             }
         }
 

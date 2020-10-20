@@ -7,6 +7,7 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<HttpUploadQueue>().AsSelf().SingleInstance();
             builder.RegisterType<HttpUploadClient>().AsSelf().SingleInstance();
 
             builder.RegisterType<MatrixApp>().AsSelf().SingleInstance();

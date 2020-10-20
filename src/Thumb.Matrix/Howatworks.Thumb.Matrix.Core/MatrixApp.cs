@@ -1,11 +1,13 @@
-﻿using Howatworks.SubEtha.Monitor;
-using Howatworks.Thumb.Core;
-using System;
-using Microsoft.Extensions.Configuration;
-using log4net;
-using Howatworks.SubEtha.Parser;
+﻿using System;
 using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Howatworks.Matrix.Domain;
+using Howatworks.SubEtha.Monitor;
+using Howatworks.SubEtha.Parser;
+using Howatworks.Thumb.Core;
+using log4net;
+using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
@@ -13,18 +15,16 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApp));
 
-        public LocationManager Location { get; }
-        public ShipManager Ship { get; }
-        public SessionManager Session { get; }
+        private readonly LocationManager _location;
+        private readonly ShipManager _ship;
+        private readonly SessionManager _session;
 
         public event EventHandler OnAuthenticationRequired;
+        public event EventHandler OnAuthenticationReceived;
 
         private readonly IConfiguration _config;
         private readonly IThumbNotifier _notifier;
-        private readonly HttpUploadClient _client;
-
-        public bool IsAuthenticated => _client.IsAuthenticated;
-        public string SiteUri => _client.BaseUri.AbsoluteUri;
+        private readonly HttpUploadQueue _queue;
 
         // Empirically-determined to match the default ASP.NET settings
         public int MaxUsernameLength = 256;
@@ -34,6 +34,7 @@ namespace Howatworks.Thumb.Matrix.Core
         private readonly LiveJournalMonitor _liveMonitor;
         private DateTimeOffset? _lastEntry = null;
         private DateTimeOffset? _lastChecked = null;
+        private DateTimeOffset? _lastUpload = null;
         private readonly GameContextTracker _gameContextTracker;
         private readonly Tracker<LocationState> _locationTracker;
         private readonly Tracker<ShipState> _shipTracker;
@@ -56,13 +57,12 @@ namespace Howatworks.Thumb.Matrix.Core
             SessionManager session,
             Tracker<SessionState> sessionTracker,
 
-            HttpUploadClient client
+            HttpUploadQueue queue
         )
-        {
-            
-            Location = location;
-            Ship = ship;
-            Session = session;
+        {            
+            _location = location;
+            _ship = ship;
+            _session = session;
             _config = config;
             _logMonitor = logMonitor;
             _liveMonitor = liveMonitor;
@@ -74,10 +74,10 @@ namespace Howatworks.Thumb.Matrix.Core
             
             _notifier = notifier;
             _parser = parser;
-            _client = client;
+            _queue = queue;
         }
 
-        public void Initialize()
+        public void Run(CancellationToken token)
         {
             Log.Info("Starting up");
 
@@ -88,9 +88,9 @@ namespace Howatworks.Thumb.Matrix.Core
             var publication = publisher.GetObservable().Publish();
 
             _gameContextTracker.SubscribeTo(publication);
-            Location.SubscribeTo(publication);
-            Ship.SubscribeTo(publication);
-            Session.SubscribeTo(publication);
+            _location.SubscribeTo(publication);
+            _ship.SubscribeTo(publication);
+            _session.SubscribeTo(publication);
 
             publication.Subscribe(e =>
             {
@@ -106,13 +106,13 @@ namespace Howatworks.Thumb.Matrix.Core
             // Try username and password from configuration, if possible
             var nowAuthenticated = Authenticate(username, password);
 
-            // TODO: considering remove queue, shouldn't be required if we can queue up observable items
             _locationTracker.Observable
                 .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(l =>
                 {
                     var uri = BuildLocationUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
-                    _client.Upload(uri, l);
+
+                    _queue.Upload(uri, l);
                 });
 
             _shipTracker.Observable
@@ -120,7 +120,7 @@ namespace Howatworks.Thumb.Matrix.Core
                 .Subscribe(s =>
                 {
                     var uri = BuildShipUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
-                    _client.Upload(uri, s);
+                    _queue.Upload(uri, s);
                 });
 
             _sessionTracker.Observable
@@ -128,32 +128,29 @@ namespace Howatworks.Thumb.Matrix.Core
                 .Subscribe(s =>
                 {
                     var uri = BuildSessionUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
-                    _client.Upload(uri, s);
+                    _queue.Upload(uri, s);
                 });
 
             publication.Connect();
-            var heartbeat = Observable.Interval(TimeSpan.FromSeconds(5))
-                .Subscribe(x =>
+
+            while (!token.IsCancellationRequested)
+            {
+                Task.Delay(TimeSpan.FromSeconds(5)).Wait();
+                publisher.Poll();
+
+                try
                 {
-                    publisher.Poll();
-                    _lastChecked = DateTimeOffset.Now;
-                    Console.WriteLine(_lastChecked);
-                });
-
-                            
-                
-
-
-                /*try
-                {
-                    _locationQueue.Flush();
+                    var lastTimestamp = _queue.Flush(token);
+                    _lastUpload = _lastUpload ?? lastTimestamp;
                 }
                 catch (MatrixAuthenticationException)
                 {
                     OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
-                }*/
+                }
 
-
+                _lastChecked = DateTimeOffset.Now;
+                Console.WriteLine(_lastChecked);
+            }
         }
 
         private Uri BuildLocationUri(string cmdrName, string gameVersion)
@@ -174,16 +171,6 @@ namespace Howatworks.Thumb.Matrix.Core
         public void Shutdown()
         {
             Log.Info("Shutting down");
-        }
-
-        public bool Authenticate(string username, string password)
-        {
-            if (string.IsNullOrWhiteSpace(username)) return false;
-            if (string.IsNullOrWhiteSpace(password)) return false;
-
-            _client.AuthenticateByBearerToken(username, password);
-
-            return _client.IsAuthenticated;
         }
 
         public void StartMonitoring()

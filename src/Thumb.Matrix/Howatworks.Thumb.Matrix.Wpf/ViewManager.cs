@@ -10,12 +10,13 @@ namespace Howatworks.Thumb.Matrix.Wpf
     public static class ViewManager
     {
         public static MatrixApp App;
+        public static HttpUploadClient Client;
 
         private static readonly Lazy<AuthenticationDialog> AuthenticationDialog = new Lazy<AuthenticationDialog>(() => new AuthenticationDialog());
 
         public static AuthenticationResult Authenticate(string username, string password)
         {
-            return App.Authenticate(username, password) ? AuthenticationResult.Success : AuthenticationResult.Failure;
+            return Client.Authenticate(username, password) ? AuthenticationResult.Success : AuthenticationResult.Failure;
         }
 
         public class AuthenticationResult

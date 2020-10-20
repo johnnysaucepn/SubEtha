@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Howatworks.Thumb.Wpf;
+using System.Threading;
 
 namespace Howatworks.Thumb.Assistant.Wpf
 {
@@ -21,6 +22,7 @@ namespace Howatworks.Thumb.Assistant.Wpf
         private TaskbarIcon _tb;
         private IContainer _container;
         private AssistantApp _app;
+        private CancellationTokenSource _cts;
 
         public void Start()
         {
@@ -39,8 +41,10 @@ namespace Howatworks.Thumb.Assistant.Wpf
 
             using (var scope = _container.BeginLifetimeScope())
             {
+                _cts = new CancellationTokenSource();
+
                 _app = _container.Resolve<AssistantApp>();
-                _app.Initialize();
+                _app.Run(_cts.Token);
 
                 ViewManager.App = _app;
                 _app.StartMonitoring();
@@ -59,7 +63,7 @@ namespace Howatworks.Thumb.Assistant.Wpf
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            _app?.Shutdown();
+            _cts.Cancel();
             _tb.Visibility = Visibility.Hidden;
             _tb.Dispose();
         }

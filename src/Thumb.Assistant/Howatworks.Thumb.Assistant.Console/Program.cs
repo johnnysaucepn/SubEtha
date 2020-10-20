@@ -4,6 +4,7 @@ using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Assistant.Core;
+using System.Threading;
 
 namespace Howatworks.Thumb.Assistant.Console
 {
@@ -24,9 +25,10 @@ namespace Howatworks.Thumb.Assistant.Console
 
             using (var scope = container.BeginLifetimeScope())
             {
+                var cts = new CancellationTokenSource();
                 var app = scope.Resolve<AssistantApp>();
                
-                app.Initialize();
+                app.Run(cts.Token);
                 app.StartMonitoring();
                 app.Shutdown();
             }

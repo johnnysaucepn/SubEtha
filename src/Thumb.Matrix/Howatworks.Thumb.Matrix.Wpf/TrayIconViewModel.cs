@@ -50,10 +50,10 @@ namespace Howatworks.Thumb.Matrix.Wpf
             {
                 CommandAction = () =>
                 {
-                    if (!ViewManager.App.IsAuthenticated)
-                    {
+                    //if (!ViewManager.App.IsAuthenticated)
+                    //{
                         ViewManager.ShowAuthenticationDialog();
-                    }
+                    //}
                 }
             };
     }

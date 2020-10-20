@@ -33,8 +33,6 @@ namespace Howatworks.Thumb.Assistant.Core
         private DateTimeOffset? _lastEntry = null;
         private DateTimeOffset? _lastChecked = null;
 
-        private readonly CancellationTokenSource _cancelSource = new CancellationTokenSource();
-
         public AssistantApp(
             LiveJournalMonitor monitor,
             IThumbNotifier notifier,
@@ -53,7 +51,7 @@ namespace Howatworks.Thumb.Assistant.Core
             _keyboard = keyboard;
         }
 
-        public void Initialize()
+        public void Run(CancellationToken token)
         {
             Log.Info("Starting up");
 
@@ -124,7 +122,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
             var host = hostBuilder.Build();
 
-            host.RunAsync(_cancelSource.Token).ConfigureAwait(false); // Don't block the calling thread
+            host.RunAsync(token).ConfigureAwait(false); // Don't block the calling thread
 
             var startTime = DateTimeOffset.MinValue; // TODO: temporary
             var source = new JournalEntrySource(_parser, startTime, _monitor);
@@ -154,7 +152,6 @@ namespace Howatworks.Thumb.Assistant.Core
         {
             Log.Info("Shutting down");
             StopMonitoring();
-            _cancelSource.Cancel();
         }
 
         public void StartMonitoring()

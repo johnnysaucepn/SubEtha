@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
@@ -40,15 +41,19 @@ namespace Howatworks.Thumb.Matrix.Wpf
             using (var scope = _container.BeginLifetimeScope())
             {
                 _app = _container.Resolve<MatrixApp>();
-                _app.Initialize();
+                var client = _container.Resolve<HttpUploadClient>();
+
+                var cancelSource = new CancellationTokenSource();
                 _app.OnAuthenticationRequired += (_, args) =>
                 {
-                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    Current.Dispatcher.Invoke(() =>
                     {
                         ViewManager.ShowAuthenticationDialog();
                     });
                 };
                 ViewManager.App = _app;
+                ViewManager.Client = client;
+                _app.Run(cancelSource.Token);
                 _app.StartMonitoring();
             }
         }
