@@ -87,7 +87,7 @@ namespace Howatworks.Thumb.Matrix.Core
             try
             {
                 Log.Info($"Uploading to '{targetUri.AbsoluteUri}'...");
-                Log.Debug(JsonConvert.SerializeObject(state));
+                Log.Info(JsonConvert.SerializeObject(state));
                 var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
                 Log.Info($"HTTP {response.StatusCode}");
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
