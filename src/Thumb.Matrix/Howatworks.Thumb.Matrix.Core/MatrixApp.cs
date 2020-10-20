@@ -162,14 +162,10 @@ namespace Howatworks.Thumb.Matrix.Core
                 {
                     OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
                 },
-
-                () =>
-                {
-                    Log.Info("Upload complete");
-                });
+                token);
 
                 _lastChecked = DateTimeOffset.Now;
-                Console.WriteLine(_lastChecked);
+                Log.Debug(_lastChecked);
             }
         }
 

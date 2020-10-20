@@ -24,7 +24,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public Uri BaseUri { get; }
         public string SiteUri => BaseUri.AbsoluteUri;
-       
+
         public bool IsAuthenticated { get; private set; }
 
         public HttpUploadClient(IConfiguration config)
@@ -40,28 +40,25 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public IObservable<DateTimeOffset> StartUploading(CancellationToken token)
         {
-            return Observable.Create<DateTimeOffset>(o =>
+            return Observable.Create<DateTimeOffset>(async o =>
                 {
-                    lock (_queue)
+                    while (_queue.Count > 0 && !token.IsCancellationRequested)
                     {
-                        while (_queue.Count > 0 && !token.IsCancellationRequested)
+                        var element = _queue.First();
+                        var timestamp = element.Key;
+                        (var uri, var state) = element.Value;
+                        try
                         {
-                            var element = _queue.First();
-                            var timestamp = element.Key;
-                            (var uri, var state) = element.Value;
-                            try
-                            {
-                                Upload(uri, state);
-                                _queue.RemoveAt(0);
-                                o.OnNext(timestamp);
-                            }
-                            catch (Exception ex)
-                            {
-                                o.OnError(ex);
-                            }
+                            await Upload(uri, state);
+                            _queue.RemoveAt(0);
+                            o.OnNext(timestamp);
                         }
-                        o.OnCompleted();
+                        catch (Exception ex)
+                        {
+                            o.OnError(ex);
+                        }
                     }
+                    o.OnCompleted();
                     return Disposable.Empty;
                 });
         }
@@ -112,7 +109,7 @@ namespace Howatworks.Thumb.Matrix.Core
             throw new MatrixAuthenticationException("Could not authenticate");
         }
 
-        public void Upload(Uri uri, IState state)
+        public async Task Upload(Uri uri, IState state)
         {
             var targetUri = uri.IsAbsoluteUri ? uri : new Uri(BaseUri, uri);
 
@@ -121,29 +118,27 @@ namespace Howatworks.Thumb.Matrix.Core
                 Log.Warn($"Not uploading to '{targetUri.AbsoluteUri}' as not authenticated");
                 throw new MatrixAuthenticationException("Not authenticated");
             }
+            HttpResponseMessage response;
             try
             {
                 Log.Info($"Uploading to '{targetUri.AbsoluteUri}'...");
                 Log.Info(JsonConvert.SerializeObject(state));
-                var response = _client.PostAsJsonAsync(targetUri.AbsoluteUri, state).Result;
+                response = await _client.PostAsJsonAsync(targetUri.AbsoluteUri, state);
                 Log.Info($"HTTP {response.StatusCode}");
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    throw new MatrixAuthenticationException("Upload rejected - authentication failed");
-                }
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new MatrixUploadException(response.ReasonPhrase);
-                }
             }
-            catch (AggregateException a)
+            catch (Exception ex)
             {
-                a.Handle(inner =>
-                {
-                    Log.Error("Connection error", inner);
-                    return true;
-                });
-                throw new MatrixUploadException(a.Message);
+                throw new MatrixUploadException("Connection error", ex);
+            }
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new MatrixAuthenticationException("Upload rejected - authentication failed");
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new MatrixUploadException(response.ReasonPhrase);
             }
         }
 
