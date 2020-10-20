@@ -29,8 +29,6 @@ namespace Howatworks.Thumb.Assistant.Console
                 var app = scope.Resolve<AssistantApp>();
                
                 app.Run(cts.Token);
-                app.StartMonitoring();
-                app.Shutdown();
             }
         }
     }

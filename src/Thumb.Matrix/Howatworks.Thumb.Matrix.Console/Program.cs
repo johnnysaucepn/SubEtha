@@ -27,7 +27,7 @@ namespace Howatworks.Thumb.Matrix.Console
                 var app = scope.Resolve<MatrixApp>();
                 var client = scope.Resolve<HttpUploadClient>();
 
-                var cancelSource = new CancellationTokenSource();
+                var cts = new CancellationTokenSource();
 
                 app.OnAuthenticationRequired += (sender, args) =>
                 {
@@ -44,10 +44,7 @@ namespace Howatworks.Thumb.Matrix.Console
                     } while (!authenticated);
                 };
 
-                app.StartMonitoring();
-                app.Run(cancelSource.Token);
-                app.StopMonitoring();
-                
+                app.Run(cts.Token);
             }
         }
 

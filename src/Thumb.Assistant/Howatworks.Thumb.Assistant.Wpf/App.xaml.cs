@@ -44,10 +44,8 @@ namespace Howatworks.Thumb.Assistant.Wpf
                 _cts = new CancellationTokenSource();
 
                 _app = _container.Resolve<AssistantApp>();
-                _app.Run(_cts.Token);
-
                 ViewManager.App = _app;
-                _app.StartMonitoring();
+                _app.Run(_cts.Token);
             }
         }
 

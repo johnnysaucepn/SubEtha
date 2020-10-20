@@ -148,22 +148,6 @@ namespace Howatworks.Thumb.Assistant.Core
             }
         }
 
-        public void Shutdown()
-        {
-            Log.Info("Shutting down");
-            StopMonitoring();
-        }
-
-        public void StartMonitoring()
-        {
-            Log.Info("Starting monitoring");
-        }
-
-        public void StopMonitoring()
-        {
-            Log.Info("Stopping monitoring");
-        }
-
         public DateTimeOffset? LastEntry => _lastEntry;
 
         public DateTimeOffset? LastChecked => _lastChecked;

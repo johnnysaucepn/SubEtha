@@ -148,41 +148,42 @@ namespace Howatworks.Thumb.Matrix.Core
                     _client.Push(uri, s);
                 });
 
-            publication.Connect();
-
-            while (!token.IsCancellationRequested)
+            using (publication.Connect())
             {
-                Task.Delay(TimeSpan.FromSeconds(5)).Wait();
-                publisher.Poll();
-
-                _client.StartUploading(token).Subscribe(t =>
+                while (!token.IsCancellationRequested)
                 {
-                    _lastUpload = _lastUpload ?? t;
-                }, ex =>
-                {
-                    OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
-                },
-                token);
+                    Task.Delay(TimeSpan.FromSeconds(5)).Wait();
+                    publisher.Poll();
 
-                _lastChecked = DateTimeOffset.Now;
-                Log.Debug(_lastChecked);
+                    _client.StartUploading(token).Subscribe(t =>
+                    {
+                        _lastUpload = _lastUpload ?? t;
+                    }, ex =>
+                    {
+                        OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
+                    },
+                    token);
+
+                    _lastChecked = DateTimeOffset.Now;
+                    Log.Debug(_lastChecked);
+                }
             }
         }
 
-        public void Shutdown()
+        /*public void Shutdown()
         {
             Log.Info("Shutting down");
-        }
+        }*/
 
-        public void StartMonitoring()
+        /*public void StartMonitoring()
         {
             Log.Info("Starting monitoring");
-        }
+        }*/
 
-        public void StopMonitoring()
+        /*public void StopMonitoring()
         {
             Log.Info("Stopping monitoring");
-        }
+        }*/
 
         public DateTimeOffset? LastChecked => _lastChecked;
 

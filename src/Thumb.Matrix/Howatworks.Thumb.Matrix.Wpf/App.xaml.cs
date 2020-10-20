@@ -43,7 +43,8 @@ namespace Howatworks.Thumb.Matrix.Wpf
                 _app = _container.Resolve<MatrixApp>();
                 var client = _container.Resolve<HttpUploadClient>();
 
-                var cancelSource = new CancellationTokenSource();
+                var cts = new CancellationTokenSource();
+
                 _app.OnAuthenticationRequired += (_, args) =>
                 {
                     Current.Dispatcher.Invoke(() =>
@@ -53,8 +54,8 @@ namespace Howatworks.Thumb.Matrix.Wpf
                 };
                 ViewManager.App = _app;
                 ViewManager.Client = client;
-                _app.Run(cancelSource.Token);
-                _app.StartMonitoring();
+
+                _app.Run(cts.Token);
             }
         }
 
@@ -65,14 +66,11 @@ namespace Howatworks.Thumb.Matrix.Wpf
 
             _tb = (TaskbarIcon) FindResource("ThumbTrayIcon");
             _tb?.BringIntoView();
-
-
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            _app?.Shutdown();
             _tb.Visibility = Visibility.Hidden;
             _tb.Dispose();
         }
