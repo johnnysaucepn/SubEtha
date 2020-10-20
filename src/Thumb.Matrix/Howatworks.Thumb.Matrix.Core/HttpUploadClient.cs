@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Howatworks.Matrix.Domain;
 using log4net;
 using Microsoft.Extensions.Configuration;
-using Howatworks.Matrix.Domain;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Security.Policy;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
@@ -16,17 +19,51 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HttpUploadClient));
 
-        public string SiteUri => BaseUri.AbsoluteUri;
+        private readonly HttpClient _client;
+        private readonly SortedList<DateTimeOffset, (Uri, IState)> _queue = new SortedList<DateTimeOffset, (Uri, IState)>();
 
         public Uri BaseUri { get; }
-
-        private readonly HttpClient _client;
+        public string SiteUri => BaseUri.AbsoluteUri;
+       
         public bool IsAuthenticated { get; private set; }
 
         public HttpUploadClient(IConfiguration config)
         {
             BaseUri = new Uri(config["ServiceUri"]);
             _client = new HttpClient();
+        }
+
+        public void Push(Uri uri, IState state)
+        {
+            _queue.Add(state.TimeStamp, (uri, state));
+        }
+
+        public IObservable<DateTimeOffset> StartUploading(CancellationToken token)
+        {
+            return Observable.Create<DateTimeOffset>(o =>
+                {
+                    lock (_queue)
+                    {
+                        while (_queue.Count > 0 && !token.IsCancellationRequested)
+                        {
+                            var element = _queue.First();
+                            var timestamp = element.Key;
+                            (var uri, var state) = element.Value;
+                            try
+                            {
+                                Upload(uri, state);
+                                _queue.RemoveAt(0);
+                                o.OnNext(timestamp);
+                            }
+                            catch (Exception ex)
+                            {
+                                o.OnError(ex);
+                            }
+                        }
+                        o.OnCompleted();
+                    }
+                    return Disposable.Empty;
+                });
         }
 
         public bool Authenticate(string username, string password)
