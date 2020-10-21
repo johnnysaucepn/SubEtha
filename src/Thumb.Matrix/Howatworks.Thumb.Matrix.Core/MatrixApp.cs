@@ -14,28 +14,22 @@ namespace Howatworks.Thumb.Matrix.Core
     public class MatrixApp : IThumbApp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApp));
-        private readonly HttpUploadClient _client;
 
-        private readonly IConfiguration _config;
         private DateTimeOffset? _lastChecked = null;
         private DateTimeOffset? _lastEntry = null;
         private DateTimeOffset? _lastUpload = null;
-        private readonly LiveJournalMonitor _liveMonitor;
 
-        private readonly GameContextTracker _gameContextTracker;
-        private readonly LocationManager _location;
-        private readonly Tracker<LocationState> _locationTracker;
+        private readonly IConfiguration _config;
         private readonly LogJournalMonitor _logMonitor;
+        private readonly LiveJournalMonitor _liveMonitor;
         private readonly IThumbNotifier _notifier;
         private readonly IJournalParser _parser;
-        private readonly SessionManager _session;
-        private readonly Tracker<SessionState> _sessionTracker;
-        private readonly ShipManager _ship;
-        private readonly Tracker<ShipState> _shipTracker;
-        public int MaxPasswordLength = 100;
 
-        // Empirically-determined to match the default ASP.NET settings
-        public int MaxUsernameLength = 256;
+        private readonly GameContextManager _gameContext;
+        private readonly LocationManager _location;
+        private readonly ShipManager _ship;
+        private readonly SessionManager _session;
+        private readonly HttpUploadClient _client;
 
         public MatrixApp(
             IConfiguration config,
@@ -43,34 +37,25 @@ namespace Howatworks.Thumb.Matrix.Core
             LiveJournalMonitor liveMonitor,
             IThumbNotifier notifier,
             IJournalParser parser,
-            GameContextTracker gameContextTracker,
 
+            GameContextManager gameContext,
             LocationManager location,
-            Tracker<LocationState> locationTracker,
-
             ShipManager ship,
-            Tracker<ShipState> shipTracker,
-
             SessionManager session,
-            Tracker<SessionState> sessionTracker,
 
             HttpUploadClient client
         )
         {
-            _location = location;
-            _ship = ship;
-            _session = session;
             _config = config;
             _logMonitor = logMonitor;
             _liveMonitor = liveMonitor;
-
-            _gameContextTracker = gameContextTracker;
-            _locationTracker = locationTracker;
-            _shipTracker = shipTracker;
-            _sessionTracker = sessionTracker;
-
             _notifier = notifier;
             _parser = parser;
+
+            _gameContext = gameContext;
+            _location = location;
+            _ship = ship;
+            _session = session;
 
             _client = client;
         }
@@ -110,7 +95,7 @@ namespace Howatworks.Thumb.Matrix.Core
             var publisher = new JournalEntryPublisher(source);
             var publication = publisher.GetObservable().Publish();
 
-            _gameContextTracker.SubscribeTo(publication);
+            _gameContext.SubscribeTo(publication);
             _location.SubscribeTo(publication);
             _ship.SubscribeTo(publication);
             _session.SubscribeTo(publication);
@@ -123,28 +108,28 @@ namespace Howatworks.Thumb.Matrix.Core
             _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
             _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
-            _locationTracker.Observable
+            _location.Observable
                 .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(l =>
                 {
-                    var uri = BuildLocationUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
+                    var uri = BuildLocationUri(_gameContext.CommanderName, _gameContext.GameVersion);
 
                     _client.Push(uri, l);
                 });
 
-            _shipTracker.Observable
+            _ship.Observable
                 .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(s =>
                 {
-                    var uri = BuildShipUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
+                    var uri = BuildShipUri(_gameContext.CommanderName, _gameContext.GameVersion);
                     _client.Push(uri, s);
                 });
 
-            _sessionTracker.Observable
+            _session.Observable
                 .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(s =>
                 {
-                    var uri = BuildSessionUri(_gameContextTracker.CommanderName, _gameContextTracker.GameVersion);
+                    var uri = BuildSessionUri(_gameContext.CommanderName, _gameContext.GameVersion);
                     _client.Push(uri, s);
                 });
 
@@ -160,7 +145,14 @@ namespace Howatworks.Thumb.Matrix.Core
                         _lastUpload = _lastUpload ?? t;
                     }, ex =>
                     {
-                        OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
+                        if (ex is MatrixAuthenticationException)
+                        {
+                            OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
+                        }
+                        else
+                        {
+                            Log.Error(ex);
+                        }
                     },
                     token);
 
@@ -169,21 +161,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 }
             }
         }
-
-        /*public void Shutdown()
-        {
-            Log.Info("Shutting down");
-        }*/
-
-        /*public void StartMonitoring()
-        {
-            Log.Info("Starting monitoring");
-        }*/
-
-        /*public void StopMonitoring()
-        {
-            Log.Info("Stopping monitoring");
-        }*/
 
         public DateTimeOffset? LastChecked => _lastChecked;
 

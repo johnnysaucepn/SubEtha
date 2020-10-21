@@ -14,9 +14,9 @@ namespace Howatworks.Thumb.Matrix.Wpf
 
         private static readonly Lazy<AuthenticationDialog> AuthenticationDialog = new Lazy<AuthenticationDialog>(() => new AuthenticationDialog());
 
-        public static AuthenticationResult Authenticate(string username, string password)
+        public static async Task<AuthenticationResult> Authenticate(string username, string password)
         {
-            return Client.Authenticate(username, password) ? AuthenticationResult.Success : AuthenticationResult.Failure;
+            return await Client.Authenticate(username, password) ? AuthenticationResult.Success : AuthenticationResult.Failure;
         }
 
         public class AuthenticationResult

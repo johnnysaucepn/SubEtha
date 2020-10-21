@@ -20,12 +20,17 @@ namespace Howatworks.Thumb.Matrix.Core
         private static readonly ILog Log = LogManager.GetLogger(typeof(HttpUploadClient));
 
         private readonly HttpClient _client;
-        private readonly SortedList<DateTimeOffset, (Uri, IState)> _queue = new SortedList<DateTimeOffset, (Uri, IState)>();
+        private readonly List<(Uri, IState)> _queue = new List<(Uri, IState)>();
 
         public Uri BaseUri { get; }
         public string SiteUri => BaseUri.AbsoluteUri;
 
         public bool IsAuthenticated { get; private set; }
+
+        public readonly int MaxPasswordLength = 100;
+
+        // Empirically-determined to match the default ASP.NET settings
+        public readonly int MaxUsernameLength = 256;
 
         public HttpUploadClient(IConfiguration config)
         {
@@ -35,7 +40,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public void Push(Uri uri, IState state)
         {
-            _queue.Add(state.TimeStamp, (uri, state));
+            _queue.Add((uri, state));
         }
 
         public IObservable<DateTimeOffset> StartUploading(CancellationToken token)
@@ -44,14 +49,23 @@ namespace Howatworks.Thumb.Matrix.Core
                 {
                     while (_queue.Count > 0 && !token.IsCancellationRequested)
                     {
-                        var element = _queue.First();
-                        var timestamp = element.Key;
-                        (var uri, var state) = element.Value;
+                        (var uri, var state) = _queue.First();
+                        var timestamp = state.TimeStamp;
                         try
                         {
                             await Upload(uri, state);
                             _queue.RemoveAt(0);
                             o.OnNext(timestamp);
+                        }
+                        catch (MatrixAuthenticationException ex)
+                        {
+                            o.OnError(ex);
+                        }
+                        catch (MatrixUploadException ex)
+                        {
+                            // TODO: Possible too dramatic, all upload failures other than authentication treated as fatal
+                            _queue.RemoveAt(0);
+                            o.OnError(ex);
                         }
                         catch (Exception ex)
                         {
@@ -63,31 +77,27 @@ namespace Howatworks.Thumb.Matrix.Core
                 });
         }
 
-        public bool Authenticate(string username, string password)
+        public async Task<bool> Authenticate(string username, string password)
         {
             if (string.IsNullOrWhiteSpace(username)) return false;
             if (string.IsNullOrWhiteSpace(password)) return false;
 
-            AuthenticateByBearerToken(username, password);
+            await AuthenticateByBearerToken(username, password);
 
             return IsAuthenticated;
         }
 
-        public void AuthenticateByBearerToken(string username, string password)
+        public async Task AuthenticateByBearerToken(string username, string password)
         {
             try
             {
-                var jwtTokenString = GetAuthToken(username, password).Result;
+                var jwtTokenString = await GetAuthToken(username, password);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtTokenString);
                 IsAuthenticated = true;
             }
-            catch (AggregateException a)
+            catch (Exception ex)
             {
-                a.Handle(innerEx =>
-                {
-                    Log.Error("Connection error", innerEx);
-                    return true;
-                });
+                throw new MatrixUploadException("Connection error while authenticating", ex);
             }
         }
 
@@ -103,7 +113,7 @@ namespace Howatworks.Thumb.Matrix.Core
             {
                 if (tokenResponse.IsSuccessStatusCode)
                 {
-                    return tokenResponse.Content.ReadAsStringAsync().Result;
+                    return await tokenResponse.Content.ReadAsStringAsync();
                 }
             }
             throw new MatrixAuthenticationException("Could not authenticate");

@@ -12,12 +12,8 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SessionManager));
 
-        private readonly Tracker<SessionState> _tracker;
-
-        public SessionManager(Tracker<SessionState> tracker)
-        {
-            _tracker = tracker;
-        }
+        private readonly Tracker<SessionState> _tracker = new Tracker<SessionState>();
+        public IObservable<SessionState> Observable => _tracker.Observable;
 
         public void SubscribeTo(IObservable<JournalEntry> observable)
         {

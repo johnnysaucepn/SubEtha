@@ -29,14 +29,14 @@ namespace Howatworks.Thumb.Matrix.Console
 
                 var cts = new CancellationTokenSource();
 
-                app.OnAuthenticationRequired += (sender, args) =>
+                app.OnAuthenticationRequired += async (sender, args) =>
                 {
                     var authenticated = false;
                     do
                     {
-                        (string username, string password) = GetCredentials(app);
+                        (string username, string password) = GetCredentials(client);
 
-                        authenticated = client.Authenticate(username, password);
+                        authenticated = await client.Authenticate(username, password);
                         if (!authenticated)
                         {
                             System.Console.WriteLine("Authentication failed!");
@@ -48,7 +48,7 @@ namespace Howatworks.Thumb.Matrix.Console
             }
         }
 
-        private static (string username, string password) GetCredentials(MatrixApp app)
+        private static (string username, string password) GetCredentials(HttpUploadClient client)
         {
             string username;
             string password;
@@ -58,14 +58,14 @@ namespace Howatworks.Thumb.Matrix.Console
                 System.Console.Write("Username: ");
 
                 username = System.Console.ReadLine();
-                username = username?.Substring(0, Math.Min(username.Length, app.MaxUsernameLength));
+                username = username?.Substring(0, Math.Min(username.Length, client.MaxUsernameLength));
             } while (string.IsNullOrWhiteSpace(username));
             do
             {
                 System.Console.Write("Password: ");
 
                 password = MaskedReadLine();
-                password = password?.Substring(0, Math.Min(password.Length, app.MaxPasswordLength));
+                password = password?.Substring(0, Math.Min(password.Length, client.MaxPasswordLength));
             } while (string.IsNullOrWhiteSpace(password));
 
             return (username, password);

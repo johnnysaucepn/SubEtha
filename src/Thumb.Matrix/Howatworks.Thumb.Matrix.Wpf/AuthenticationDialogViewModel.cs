@@ -34,9 +34,9 @@ namespace Howatworks.Thumb.Matrix.Wpf
         public ICommand OkCommand =>
             new DelegateCommand
             {
-                CommandAction = () =>
+                CommandAction = async () =>
                 {
-                    var authSucceeded = _client.Authenticate(Username, Password);
+                    var authSucceeded = await _client.Authenticate(Username, Password);
                     if (authSucceeded)
                     {
                         ViewManager.ConfirmAuthenticationDialog();

@@ -14,12 +14,8 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
 
-        private readonly Tracker<LocationState> _tracker;
-
-        public LocationManager(Tracker<LocationState> tracker)
-        {
-            _tracker = tracker;
-        }
+        private readonly Tracker<LocationState> _tracker = new Tracker<LocationState>();
+        public IObservable<LocationState> Observable =>_tracker.Observable;
 
         public void SubscribeTo(IObservable<JournalEntry> observable)
         {

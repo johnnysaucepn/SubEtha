@@ -6,9 +6,9 @@ using log4net;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
-    public class GameContextTracker
+    public class GameContextManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GameContextTracker));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GameContextManager));
 
         public string CommanderName { get; private set; }
         public string GameVersion { get; private set; }

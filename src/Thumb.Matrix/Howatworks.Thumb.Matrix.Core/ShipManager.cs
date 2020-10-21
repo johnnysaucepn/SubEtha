@@ -14,12 +14,8 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ShipManager));
 
-        private readonly Tracker<ShipState> _tracker;
-
-        public ShipManager(Tracker<ShipState> tracker)
-        {
-            _tracker = tracker;
-        }
+        private readonly Tracker<ShipState> _tracker = new Tracker<ShipState>();
+        public IObservable<ShipState> Observable => _tracker.Observable;
 
         public void SubscribeTo(IObservable<JournalEntry> observable)
         {
