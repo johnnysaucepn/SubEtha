@@ -38,7 +38,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 ship.ShipId = loadGame.ShipID;
                 ship.Name = loadGame.ShipName;
                 ship.Ident = loadGame.ShipIdent;
-                return true;
             });
         }
 
@@ -48,7 +47,6 @@ namespace Howatworks.Thumb.Matrix.Core
             {
                 ship.Type = shipyardNew.ShipType;
                 ship.ShipId = shipyardNew.NewShipID;
-                return true;
             });
         }
 
@@ -58,7 +56,6 @@ namespace Howatworks.Thumb.Matrix.Core
             {
                 ship.Type = shipyardSwap.ShipType;
                 ship.ShipId = shipyardSwap.ShipID;
-                return true;
             });
         }
 
@@ -67,7 +64,6 @@ namespace Howatworks.Thumb.Matrix.Core
             _tracker.Modify(hullDamage.Timestamp, ship =>
             {
                 ship.HullIntegrity = hullDamage.Health;
-                return true;
             });
         }
 
@@ -77,7 +73,6 @@ namespace Howatworks.Thumb.Matrix.Core
             {
                 // If shield state was unknown before (i.e. null) we know it now
                 ship.ShieldsUp = shieldState.ShieldsUp;
-                return true;
             });
         }
 
@@ -85,9 +80,7 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             _tracker.Modify(repair.Timestamp, ship =>
             {
-                if (repair.Item != "hull" && repair.Item != "all") return false;
-                ship.HullIntegrity = 1;
-                return true;
+                if (repair.Item == "hull" || repair.Item == "all") ship.HullIntegrity = 1;
             });
         }
 
@@ -96,7 +89,6 @@ namespace Howatworks.Thumb.Matrix.Core
             _tracker.Modify(repair.Timestamp, ship =>
             {
                 ship.HullIntegrity = 1;
-                return true;
             });
         }
     }

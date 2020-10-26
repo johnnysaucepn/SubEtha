@@ -1,6 +1,8 @@
-﻿namespace Howatworks.Matrix.Domain
+﻿using System;
+
+namespace Howatworks.Matrix.Domain
 {
-    public class LocalisedString
+    public class LocalisedString : IEquatable<LocalisedString>
     {
         public string Symbol { get; set; }
         public string Text { get; set; }
@@ -9,6 +11,16 @@
         {
             Symbol = symbol;
             Text = text;
+        }
+
+        public bool Equals(LocalisedString other)
+        {
+            if (other == null) return false;
+
+            if (!string.Equals(Symbol, other.Symbol)) return false;
+            if (!string.Equals(Text, other.Text)) return false;
+
+            return true;
         }
     }
 }

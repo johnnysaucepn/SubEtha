@@ -1,10 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.Matrix.Domain
 {
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public class SignalSource
+    public class SignalSource : IEquatable<SignalSource>
     {
         public LocalisedString Type { get; set; }
         public int? Threat { get; set; }
@@ -17,6 +18,16 @@ namespace Howatworks.Matrix.Domain
         {
             Type = type;
             Threat = threat;
+        }
+
+        public bool Equals(SignalSource other)
+        {
+            if (other == null) return false;
+
+            if (!string.Equals(Type, other.Type)) return false;
+            if (!Equals(Threat, other.Threat)) return false;
+
+            return true;
         }
     }
 }

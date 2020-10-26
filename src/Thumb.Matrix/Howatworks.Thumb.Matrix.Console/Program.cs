@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
@@ -44,7 +45,17 @@ namespace Howatworks.Thumb.Matrix.Console
                     } while (!authenticated);
                 };
 
-                app.Run(cts.Token);
+                Task.Run(()=>
+                {
+                    app.Run(cts.Token);
+                });
+
+                while (System.Console.ReadKey().Key != ConsoleKey.Escape)
+                {
+                    // do nothing
+                }
+                
+                cts.Cancel();
             }
         }
 

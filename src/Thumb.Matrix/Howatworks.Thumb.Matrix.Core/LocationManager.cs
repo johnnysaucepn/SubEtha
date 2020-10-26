@@ -39,7 +39,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 x.Body = new Body(location.Body, location.BodyType, location.Docked);
                 x.Station = Station.Create(location.StationName, location.StationType);
                 // All other items set to default
-                return true;
             });
         }
 
@@ -49,7 +48,6 @@ namespace Howatworks.Thumb.Matrix.Core
             {
                 x.StarSystem = new StarSystem(fsdJump.StarSystem, fsdJump.StarPos);
                 // All other items set to default
-                return true;
             });
         }
 
@@ -61,7 +59,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 x.SurfaceLocation = null;
                 x.Station = Station.Create(docked.StationName, docked.StationType);
                 x.SignalSource = null;
-                return true;
             });
         }
 
@@ -73,7 +70,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 x.SurfaceLocation = null;
                 x.Station = null;
                 x.SignalSource = null;
-                return true;
             });
         }
 
@@ -81,11 +77,10 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             _tracker.Modify(touchdown.Timestamp, x =>
             {
-                x.Body = new Body(x.Body.Name, x.Body.Type);
+                x.Body = new Body(x.Body?.Name, x.Body?.Type);
                 x.SurfaceLocation = new SurfaceLocation(true, touchdown.Latitude, touchdown.Longitude);
                 x.Station = null;
                 x.SignalSource = null;
-                return true;
             });
         }
 
@@ -93,11 +88,10 @@ namespace Howatworks.Thumb.Matrix.Core
         {
             _tracker.Modify(liftoff.Timestamp, x =>
             {
-                x.Body = new Body(x.Body.Name, x.Body.Type);
+                x.Body = new Body(x.Body?.Name, x.Body?.Type);
                 x.SurfaceLocation = new SurfaceLocation(false, liftoff.Latitude, liftoff.Longitude);
                 x.Station = null;
                 x.SignalSource = null;
-                return true;
             });
         }
 
@@ -109,7 +103,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 x.SurfaceLocation = null;
                 x.Station = null;
                 x.SignalSource = null;
-                return true;
             });
         }
 
@@ -121,7 +114,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 x.SurfaceLocation = null;
                 x.Station = null;
                 x.SignalSource = null;
-                return true;
             });
         }
 
@@ -133,15 +125,14 @@ namespace Howatworks.Thumb.Matrix.Core
                 x.SurfaceLocation = null;
                 x.Station = null;
                 x.SignalSource = new SignalSource(new LocalisedString(ussDrop.USSType, ussDrop.USSType_Localised), ussDrop.USSThreat);
-                return true;
             });
         }
 
         private void ApplyDied(Died died)
         {
-            // Ignore previous information, return new location
+            // Ignore previous information, return empty location, will be replace by respawn message
 
-            _tracker.Replace(died.Timestamp, x => true);
+            _tracker.Replace(died.Timestamp, x => { });
         }        
     }
 }

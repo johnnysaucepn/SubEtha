@@ -30,7 +30,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 x.CommanderName = loadGame.Commander;
                 x.GameMode = loadGame.GameMode;
                 x.Group = loadGame.Group;
-                return true;
             });
         }
 
@@ -39,7 +38,6 @@ namespace Howatworks.Thumb.Matrix.Core
             _tracker.Replace(newCommander.Timestamp, x =>
             {
                 x.CommanderName = newCommander.Name;
-                return true;
             });
         }
 
@@ -48,7 +46,6 @@ namespace Howatworks.Thumb.Matrix.Core
             _tracker.Replace(clearSavedGame.Timestamp, x =>
             {
                 x.CommanderName = clearSavedGame.Name;
-                return true;
             });
         }
 
@@ -57,7 +54,6 @@ namespace Howatworks.Thumb.Matrix.Core
             _tracker.Modify(fileHeader.Timestamp, x =>
             {
                 x.Build = fileHeader.Build;
-                return true;
             });
         }
     }

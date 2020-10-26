@@ -2,12 +2,13 @@
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Howatworks.Matrix.Domain;
+using System.Timers;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
 using Howatworks.Thumb.Core;
 using log4net;
 using Microsoft.Extensions.Configuration;
+using Timer = System.Timers.Timer;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
@@ -108,37 +109,44 @@ namespace Howatworks.Thumb.Matrix.Core
             _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
             _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
+            var itemsPushed = 0;
             _location.Observable
-                .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(l =>
                 {
                     var uri = BuildLocationUri(_gameContext.CommanderName, _gameContext.GameVersion);
-
                     _client.Push(uri, l);
+                    itemsPushed++;
                 });
 
             _ship.Observable
-                .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(s =>
                 {
                     var uri = BuildShipUri(_gameContext.CommanderName, _gameContext.GameVersion);
                     _client.Push(uri, s);
+                    itemsPushed++;
                 });
 
             _session.Observable
-                .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(s =>
                 {
                     var uri = BuildSessionUri(_gameContext.CommanderName, _gameContext.GameVersion);
                     _client.Push(uri, s);
+                    itemsPushed++;
                 });
 
             using (publication.Connect())
             {
                 while (!token.IsCancellationRequested)
                 {
-                    Task.Delay(TimeSpan.FromSeconds(5)).Wait();
+                    Task.Delay(TimeSpan.FromSeconds(1)).Wait();
+
                     publisher.Poll();
+
+                    _lastChecked = DateTimeOffset.Now;
+
+                    var authenticationRequired = false;
+
+                    var waitHandle = new AutoResetEvent(false);
 
                     _client.StartUploading(token).Subscribe(t =>
                     {
@@ -147,18 +155,27 @@ namespace Howatworks.Thumb.Matrix.Core
                     {
                         if (ex is MatrixAuthenticationException)
                         {
-                            OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
+                            // Don't attempt authentication yet, wait until the sequence has completed
+                            authenticationRequired = true;
                         }
                         else
                         {
                             Log.Error(ex);
                         }
-                    },
-                    token);
+                        waitHandle.Set();
+                    }, () =>
+                    {
+                        Log.Debug($"Total items pushed = {itemsPushed}");
+                        if (authenticationRequired)
+                        {
+                            OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
+                        }
+                        waitHandle.Set();
+                    }, token);
 
-                    _lastChecked = DateTimeOffset.Now;
-                    Log.Debug(_lastChecked);
-                }
+                    // Wait until either the batch is complete, or the app is being shut down
+                    WaitHandle.WaitAny(new[] { waitHandle, token.WaitHandle });
+                };
             }
         }
 

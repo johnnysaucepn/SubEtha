@@ -46,35 +46,39 @@ namespace Howatworks.Thumb.Matrix.Core
         public IObservable<DateTimeOffset> StartUploading(CancellationToken token)
         {
             return Observable.Create<DateTimeOffset>(async o =>
+            {
+                if (_queue.Count > 0)
                 {
-                    while (_queue.Count > 0 && !token.IsCancellationRequested)
+                    Log.Debug($"Uploading {_queue.Count} items from queue...");
+                }
+                while (_queue.Count > 0 && !token.IsCancellationRequested)
+                {
+                    (var uri, var state) = _queue.First();
+                    var timestamp = state.TimeStamp;
+                    try
                     {
-                        (var uri, var state) = _queue.First();
-                        var timestamp = state.TimeStamp;
-                        try
-                        {
-                            await Upload(uri, state);
-                            _queue.RemoveAt(0);
-                            o.OnNext(timestamp);
-                        }
-                        catch (MatrixAuthenticationException ex)
-                        {
-                            o.OnError(ex);
-                        }
-                        catch (MatrixUploadException ex)
-                        {
-                            // TODO: Possible too dramatic, all upload failures other than authentication treated as fatal
-                            _queue.RemoveAt(0);
-                            o.OnError(ex);
-                        }
-                        catch (Exception ex)
-                        {
-                            o.OnError(ex);
-                        }
+                        await Upload(uri, state);
+                        _queue.Remove((uri, state));
+                        o.OnNext(timestamp);
                     }
-                    o.OnCompleted();
-                    return Disposable.Empty;
-                });
+                    catch (MatrixAuthenticationException ex)
+                    {
+                        o.OnError(ex);
+                    }
+                    catch (MatrixUploadException ex)
+                    {
+                        // TODO: Possible too dramatic, all upload failures other than authentication treated as fatal
+                        _queue.RemoveAt(0);
+                        o.OnError(ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        o.OnError(ex);
+                    }
+                }
+                o.OnCompleted();
+                return Disposable.Empty;
+            });
         }
 
         public async Task<bool> Authenticate(string username, string password)
