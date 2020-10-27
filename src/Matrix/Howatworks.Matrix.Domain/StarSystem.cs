@@ -27,7 +27,7 @@ namespace Howatworks.Matrix.Domain
             if (other == null) return false;
 
             if (!string.Equals(Name, other.Name)) return false;
-            if (!Enumerable.SequenceEqual(Coords, other.Coords)) return false;
+            if (!SimpleComparer.SequenceEquals(Coords, other.Coords)) return false;
 
             return true;
         }

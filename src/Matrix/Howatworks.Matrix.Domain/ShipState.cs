@@ -36,12 +36,12 @@ namespace Howatworks.Matrix.Domain
         {
             if (state == null) return false;
 
-            if (!Equals(Type, state.Type)) return true;
-            if (!Equals(ShipId, state.ShipId)) return true;
-            if (!Equals(Name, state.Name)) return true;
-            if (!Equals(Ident, state.Ident)) return true;
-            if (!Equals(ShieldsUp, state.ShieldsUp)) return true;
-            if (!Equals(HullIntegrity, state.HullIntegrity)) return true;
+            if (!string.Equals(Type, state.Type)) return true;
+            if (ShipId != state.ShipId) return true;
+            if (!string.Equals(Name, state.Name)) return true;
+            if (!string.Equals(Ident, state.Ident)) return true;
+            if (ShieldsUp != state.ShieldsUp) return true;
+            if (HullIntegrity != state.HullIntegrity) return true;
 
             return false;
         }

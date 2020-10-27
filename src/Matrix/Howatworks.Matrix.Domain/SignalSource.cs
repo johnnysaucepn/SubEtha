@@ -24,8 +24,8 @@ namespace Howatworks.Matrix.Domain
         {
             if (other == null) return false;
 
-            if (!string.Equals(Type, other.Type)) return false;
-            if (!Equals(Threat, other.Threat)) return false;
+            if (!SimpleComparer.Equals(Type, other.Type)) return false;
+            if (Threat != other.Threat) return false;
 
             return true;
         }
