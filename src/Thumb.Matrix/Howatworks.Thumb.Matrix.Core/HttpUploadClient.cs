@@ -64,16 +64,19 @@ namespace Howatworks.Thumb.Matrix.Core
                     catch (MatrixAuthenticationException ex)
                     {
                         o.OnError(ex);
+                        break;
                     }
                     catch (MatrixUploadException ex)
                     {
                         // TODO: Possible too dramatic, all upload failures other than authentication treated as fatal
-                        _queue.RemoveAt(0);
+                        _queue.Remove((uri, state));
                         o.OnError(ex);
+                        break;
                     }
                     catch (Exception ex)
                     {
                         o.OnError(ex);
+                        break;
                     }
                 }
                 o.OnCompleted();
@@ -86,7 +89,18 @@ namespace Howatworks.Thumb.Matrix.Core
             if (string.IsNullOrWhiteSpace(username)) return false;
             if (string.IsNullOrWhiteSpace(password)) return false;
 
-            await AuthenticateByBearerToken(username, password);
+            try
+            {
+                await AuthenticateByBearerToken(username, password);
+            }
+            catch (MatrixUploadException uex)
+            {
+                Log.Error(uex);
+            }
+            catch (MatrixAuthenticationException aex)
+            {
+                Log.Error(aex);
+            }
 
             return IsAuthenticated;
         }
@@ -113,14 +127,25 @@ namespace Howatworks.Thumb.Matrix.Core
                 ["Username"] = username,
                 ["Password"] = password
             };
-            using (var tokenResponse = await _client.PostAsync(tokenUri, new FormUrlEncodedContent(form)).ConfigureAwait(false))
+            try
             {
-                if (tokenResponse.IsSuccessStatusCode)
+                using (var tokenResponse = await _client.PostAsync(tokenUri, new FormUrlEncodedContent(form)))
                 {
-                    return await tokenResponse.Content.ReadAsStringAsync();
+                    if (tokenResponse.IsSuccessStatusCode)
+                    {
+                        return await tokenResponse.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        throw new MatrixAuthenticationException($"Could not authenticate - {tokenResponse.ReasonPhrase}");
+                    }
                 }
             }
-            throw new MatrixAuthenticationException("Could not authenticate");
+            catch (HttpRequestException ex)
+            {
+                Log.Error(ex);
+                throw new MatrixAuthenticationException("Could not authenticate", ex);
+            }
         }
 
         public async Task Upload(Uri uri, IState state)
@@ -147,7 +172,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                throw new MatrixAuthenticationException("Upload rejected - authentication failed");
+                throw new MatrixAuthenticationException($"Upload rejected - {response.ReasonPhrase}");
             }
 
             if (!response.IsSuccessStatusCode)

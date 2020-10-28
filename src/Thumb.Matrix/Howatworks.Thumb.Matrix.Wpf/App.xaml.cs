@@ -20,11 +20,13 @@ namespace Howatworks.Thumb.Matrix.Wpf
     public partial class App : Application
     {
         private TaskbarIcon _tb;
+        private CancellationTokenSource _cts = new CancellationTokenSource();
         private IContainer _container;
-        private MatrixApp _app;
 
-        public void Start()
+        protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             var config = new ThumbConfigBuilder("Matrix").Build();
 
             var logger = new Log4NetThumbLogging(config);
@@ -35,44 +37,40 @@ namespace Howatworks.Thumb.Matrix.Wpf
             builder.RegisterModule(new ThumbWpfModule(config));
             builder.RegisterModule(new MatrixModule());
             builder.RegisterModule(new MatrixWpfModule());
-
             _container = builder.Build();
-
             using (var scope = _container.BeginLifetimeScope())
             {
-                _app = _container.Resolve<MatrixApp>();
-                var client = _container.Resolve<HttpUploadClient>();
+                var app = _container.Resolve<MatrixApp>();
+                var authDialog = _container.Resolve<AuthenticationDialog>();
+                var trayVm = _container.Resolve<TrayIconViewModel>();
 
-                var cts = new CancellationTokenSource();
-
-                _app.OnAuthenticationRequired += (_, args) =>
+                app.OnAuthenticationRequired += (_, args) =>
                 {
                     Current.Dispatcher.Invoke(() =>
                     {
-                        ViewManager.ShowAuthenticationDialog();
+                        authDialog.Show();
                     });
                 };
-                ViewManager.App = _app;
-                ViewManager.Client = client;
 
-                _app.Run(cts.Token);
+                Task.Run(() =>
+                {
+                    app.Run(_cts.Token);
+                });
+
+                _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
+                _tb.DataContext = trayVm;
+                _tb?.BringIntoView();
+
             }
-        }
-
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
-            Start();
-
-            _tb = (TaskbarIcon) FindResource("ThumbTrayIcon");
-            _tb?.BringIntoView();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
+            _cts.Cancel();
             _tb.Visibility = Visibility.Hidden;
             _tb.Dispose();
+
         }
     }
 }

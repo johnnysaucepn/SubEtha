@@ -3,14 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:Howatworks.Thumb.Matrix.Wpf"
         mc:Ignorable="d"
-        Title="Authenticate to Matrix" SizeToContent="WidthAndHeight" WindowStyle="ToolWindow" Closing="Window_Closing" >
+        Title="Authenticate to Matrix" SizeToContent="WidthAndHeight" WindowStyle="ToolWindow">
 
-    <Window.DataContext>
-        <local:AuthenticationDialogViewModel/>
-    </Window.DataContext>
-
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding CancelCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Grid Margin="5">
         <Grid.ColumnDefinitions>

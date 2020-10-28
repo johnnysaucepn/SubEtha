@@ -16,9 +16,6 @@
                     MenuActivation="All"
                     LeftClickCommand="{Binding ShowAuthDialogCommand}">
 
-        <tb:TaskbarIcon.DataContext>
-            <local:TrayIconViewModel />
-        </tb:TaskbarIcon.DataContext>
     </tb:TaskbarIcon>
 
 </ResourceDictionary>

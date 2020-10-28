@@ -155,8 +155,7 @@ namespace Howatworks.Thumb.Matrix.Core
                     {
                         if (ex is MatrixAuthenticationException)
                         {
-                            // Don't attempt authentication yet, wait until the sequence has completed
-                            authenticationRequired = true;
+                            OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
                         }
                         else
                         {
@@ -166,10 +165,6 @@ namespace Howatworks.Thumb.Matrix.Core
                     }, () =>
                     {
                         Log.Debug($"Total items pushed = {itemsPushed}");
-                        if (authenticationRequired)
-                        {
-                            OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
-                        }
                         waitHandle.Set();
                     }, token);
 

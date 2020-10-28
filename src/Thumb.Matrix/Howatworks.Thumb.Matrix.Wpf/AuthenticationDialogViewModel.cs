@@ -19,17 +19,23 @@ namespace Howatworks.Thumb.Matrix.Wpf
 
         public string SiteName => _client.SiteUri;
 
+        public event EventHandler RequestClose = delegate { };
+
         public AuthenticationDialogViewModel(HttpUploadClient client)
         {
-            // TODO: not sure if this gets runs
             _client = client;
         }
 
         public ICommand CancelCommand =>
             new DelegateCommand
             {
-                CommandAction = () => ViewManager.CloseAuthenticationDialog()
+                CommandAction = () => CloseDialog()
             };
+
+        private void CloseDialog()
+        {
+            RequestClose(this, new EventArgs());
+        }
 
         public ICommand OkCommand =>
             new DelegateCommand
@@ -39,7 +45,7 @@ namespace Howatworks.Thumb.Matrix.Wpf
                     var authSucceeded = await _client.Authenticate(Username, Password);
                     if (authSucceeded)
                     {
-                        ViewManager.ConfirmAuthenticationDialog();
+                        CloseDialog();
                     }
                     else
                     {

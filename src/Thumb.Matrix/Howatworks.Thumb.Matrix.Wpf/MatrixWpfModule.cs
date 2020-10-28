@@ -7,6 +7,10 @@ namespace Howatworks.Thumb.Matrix.Wpf
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<TrayIconViewModel>().AsSelf().SingleInstance();
+
+            builder.RegisterType<AuthenticationDialog>().AsSelf().SingleInstance();
+            builder.RegisterType<AuthenticationDialogViewModel>().AsSelf().SingleInstance();
         }
     }
 }
