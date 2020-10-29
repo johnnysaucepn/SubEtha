@@ -44,14 +44,6 @@ namespace Howatworks.Thumb.Matrix.Wpf
                 var authDialog = _container.Resolve<AuthenticationDialog>();
                 var trayVm = _container.Resolve<TrayIconViewModel>();
 
-                app.OnAuthenticationRequired += (_, args) =>
-                {
-                    Current.Dispatcher.Invoke(() =>
-                    {
-                        authDialog.Show();
-                    });
-                };
-
                 Task.Run(() =>
                 {
                     app.Run(_cts.Token);

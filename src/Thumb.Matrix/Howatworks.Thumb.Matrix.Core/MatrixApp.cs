@@ -2,13 +2,11 @@
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
 using Howatworks.Thumb.Core;
 using log4net;
 using Microsoft.Extensions.Configuration;
-using Timer = System.Timers.Timer;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
@@ -25,6 +23,7 @@ namespace Howatworks.Thumb.Matrix.Core
         private readonly LiveJournalMonitor _liveMonitor;
         private readonly IThumbNotifier _notifier;
         private readonly IJournalParser _parser;
+        private readonly IMatrixAuthenticator _authenticator;
 
         private readonly GameContextManager _gameContext;
         private readonly LocationManager _location;
@@ -38,6 +37,7 @@ namespace Howatworks.Thumb.Matrix.Core
             LiveJournalMonitor liveMonitor,
             IThumbNotifier notifier,
             IJournalParser parser,
+            IMatrixAuthenticator authenticator,
 
             GameContextManager gameContext,
             LocationManager location,
@@ -52,6 +52,7 @@ namespace Howatworks.Thumb.Matrix.Core
             _liveMonitor = liveMonitor;
             _notifier = notifier;
             _parser = parser;
+            _authenticator = authenticator;
 
             _gameContext = gameContext;
             _location = location;
@@ -60,10 +61,6 @@ namespace Howatworks.Thumb.Matrix.Core
 
             _client = client;
         }
-
-        public event EventHandler OnAuthenticationReceived;
-
-        public event EventHandler OnAuthenticationRequired;
 
         private Uri BuildLocationUri(string cmdrName, string gameVersion)
         {
@@ -88,7 +85,14 @@ namespace Howatworks.Thumb.Matrix.Core
             var password = _config["Password"];
 
             // Try username and password from configuration, if possible
-            var nowAuthenticated = _client.Authenticate(username, password);
+            try
+            {
+                var nowAuthenticated = _client.Authenticate(username, password);
+            }
+            catch (MatrixException ex)
+            {
+                Log.Warn(ex.Message);
+            }
 
             var startTime = DateTimeOffset.MinValue; // TODO: temporary
             var source = new JournalEntrySource(_parser, startTime, _logMonitor, _liveMonitor);
@@ -134,6 +138,9 @@ namespace Howatworks.Thumb.Matrix.Core
                     itemsPushed++;
                 });
 
+            var readyForNextBatch = new ManualResetEventSlim(true);
+            var blockedPendingAuthentication = new ManualResetEventSlim(false);
+
             using (publication.Connect())
             {
                 while (!token.IsCancellationRequested)
@@ -144,32 +151,42 @@ namespace Howatworks.Thumb.Matrix.Core
 
                     _lastChecked = DateTimeOffset.Now;
 
-                    var authenticationRequired = false;
-
-                    var waitHandle = new AutoResetEvent(false);
+                    readyForNextBatch.Reset();
 
                     _client.StartUploading(token).Subscribe(t =>
                     {
                         _lastUpload = _lastUpload ?? t;
-                    }, ex =>
+                    }, async ex =>
                     {
                         if (ex is MatrixAuthenticationException)
                         {
-                            OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
+                            Log.Warn(ex.Message);
+                            // Block further processing until we at least attempt authentication
+                            blockedPendingAuthentication.Reset();
+                            try
+                            {
+                                var authenticated = await _authenticator.RequestAuthentication();
+                            }
+                            catch (MatrixException mex)
+                            {
+                                Log.Warn(mex.Message);
+                            }
+                            blockedPendingAuthentication.Set();
                         }
                         else
                         {
                             Log.Error(ex);
                         }
-                        waitHandle.Set();
+                        readyForNextBatch.Set();
                     }, () =>
                     {
+                        // Upload was successful, can proceed with another poll
                         Log.Debug($"Total items pushed = {itemsPushed}");
-                        waitHandle.Set();
+                        readyForNextBatch.Set();
                     }, token);
 
-                    // Wait until either the batch is complete, or the app is being shut down
-                    WaitHandle.WaitAny(new[] { waitHandle, token.WaitHandle });
+                    // Wait until either no longer blocked, or the app is being shut down
+                    WaitHandle.WaitAll(new[] { readyForNextBatch.WaitHandle, blockedPendingAuthentication.WaitHandle});
                 };
             }
         }

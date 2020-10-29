@@ -61,14 +61,10 @@ namespace Howatworks.Thumb.Matrix.Core
                         _queue.Remove((uri, state));
                         o.OnNext(timestamp);
                     }
-                    catch (MatrixAuthenticationException ex)
-                    {
-                        o.OnError(ex);
-                        break;
-                    }
                     catch (MatrixUploadException ex)
                     {
-                        // TODO: Possible too dramatic, all upload failures other than authentication treated as fatal
+                        // In case of bad data, don't re-attempt uploading this dta
+                        // TODO: Possibly too dramatic, all upload failures other than authentication treated as fatal
                         _queue.Remove((uri, state));
                         o.OnError(ex);
                         break;
@@ -89,18 +85,7 @@ namespace Howatworks.Thumb.Matrix.Core
             if (string.IsNullOrWhiteSpace(username)) return false;
             if (string.IsNullOrWhiteSpace(password)) return false;
 
-            try
-            {
-                await AuthenticateByBearerToken(username, password);
-            }
-            catch (MatrixUploadException uex)
-            {
-                Log.Error(uex);
-            }
-            catch (MatrixAuthenticationException aex)
-            {
-                Log.Error(aex);
-            }
+            await AuthenticateByBearerToken(username, password);
 
             return IsAuthenticated;
         }
