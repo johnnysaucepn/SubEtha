@@ -30,16 +30,17 @@ namespace Howatworks.Thumb.Matrix.Console
                 var client = scope.Resolve<HttpUploadClient>();
 
                 var cts = new CancellationTokenSource();
-                var reset = new ManualResetEvent(false);
+                var reset = new ManualResetEventSlim(false);
 
                 Task.Run(()=>
                 {
                     app.Run(cts.Token);
                 });
 
-                // Wait forever
-                reset.WaitOne();
-                
+                // Wait forever, unless something trips the switch
+                reset.Wait();
+
+                // Cancel the token to shut any pending operations down
                 cts.Cancel();
             }
         }

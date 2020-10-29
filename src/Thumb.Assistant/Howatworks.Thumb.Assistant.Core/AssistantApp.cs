@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Howatworks.Thumb.Assistant.Core
 {
-    public class AssistantApp : IThumbApp
+    public class AssistantApp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 

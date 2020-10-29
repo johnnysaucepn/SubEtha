@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
-    public class MatrixApp : IThumbApp
+    public class MatrixApp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApp));
 
@@ -171,7 +171,10 @@ namespace Howatworks.Thumb.Matrix.Core
                             {
                                 Log.Warn(mex.Message);
                             }
-                            blockedPendingAuthentication.Set();
+                            finally
+                            {
+                                blockedPendingAuthentication.Set();
+                            }                            
                         }
                         else
                         {
