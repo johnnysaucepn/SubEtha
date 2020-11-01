@@ -174,7 +174,7 @@ namespace Howatworks.Thumb.Matrix.Core
                             finally
                             {
                                 blockedPendingAuthentication.Set();
-                            }                            
+                            }
                         }
                         else
                         {

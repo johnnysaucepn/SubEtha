@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -28,14 +29,14 @@ namespace Howatworks.Thumb.Matrix.Console
             {
                 var app = scope.Resolve<MatrixApp>();
                 var client = scope.Resolve<HttpUploadClient>();
+                var keyListener = scope.Resolve<ConsoleKeyListener>();
 
                 var cts = new CancellationTokenSource();
                 var reset = new ManualResetEventSlim(false);
 
-                Task.Run(()=>
-                {
-                    app.Run(cts.Token);
-                });
+                Task.Run(() => app.Run(cts.Token));
+
+                keyListener.Observable.Where(k => k.Key == ConsoleKey.Escape).Subscribe(_ => reset.Set());
 
                 // Wait forever, unless something trips the switch
                 reset.Wait();
@@ -46,4 +47,5 @@ namespace Howatworks.Thumb.Matrix.Console
         }
 
     }
+
 }
