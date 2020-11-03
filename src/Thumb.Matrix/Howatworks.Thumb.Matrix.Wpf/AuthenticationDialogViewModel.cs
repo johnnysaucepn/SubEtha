@@ -40,7 +40,7 @@ namespace Howatworks.Thumb.Matrix.Wpf
 
         private void CloseDialog()
         {
-            RequestClose(this, new EventArgs());
+            RequestClose(this, EventArgs.Empty);
         }
 
         public ICommand OkCommand =>

@@ -41,18 +41,14 @@ namespace Howatworks.Thumb.Matrix.Wpf
             using (var scope = _container.BeginLifetimeScope())
             {
                 var app = _container.Resolve<MatrixApp>();
-                var authDialog = _container.Resolve<AuthenticationDialog>();
-                var trayVm = _container.Resolve<TrayIconViewModel>();
+
+                _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
+                LoadTaskbarIcon();
 
                 Task.Run(() =>
                 {
                     app.Run(_cts.Token);
                 });
-
-                _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
-                _tb.DataContext = trayVm;
-                _tb?.BringIntoView();
-
             }
         }
 
@@ -62,6 +58,18 @@ namespace Howatworks.Thumb.Matrix.Wpf
             _cts.Cancel();
             _tb.Visibility = Visibility.Hidden;
             _tb.Dispose();
+        }
+
+        public void LoadTaskbarIcon()
+        {
+            var trayVm = _container.Resolve<TrayIconViewModel>();
+            var authDialog = _container.Resolve<AuthenticationDialog>();
+
+            trayVm.OnExitApplication += (s, e) => Application.Current.Shutdown();
+            trayVm.OnAuthenticationRequested += (s, e) => authDialog.Show();
+            
+            _tb.DataContext = trayVm;
+            _tb?.BringIntoView();
 
         }
     }

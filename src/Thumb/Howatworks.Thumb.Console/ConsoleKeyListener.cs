@@ -14,11 +14,11 @@ namespace Howatworks.Thumb.Console
         private static IEnumerable<ConsoleKeyInfo> KeyPresses()
         {
             ConsoleKeyInfo key;
-            do
+            while (true)
             {
                 key = System.Console.ReadKey(true);
                 yield return key;
-            } while (true);
+            }
         }
 
         private static IObservable<ConsoleKeyInfo> GetObservable()

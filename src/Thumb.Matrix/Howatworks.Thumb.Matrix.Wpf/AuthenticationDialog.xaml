@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <Image Width="32" Height="32" Grid.Column="0" Grid.Row="0" Margin="5" Source="Resources/thumb_red.ico" />
+            <Image Width="32" Height="32" Grid.Column="0" Grid.Row="0" Margin="5" Source="{StaticResource AppIcon}" />
             <StackPanel Orientation="Vertical">
                 <TextBlock Margin="5" Text="{x:Static local:Resources.LoginPrompt}"></TextBlock>
                 <TextBlock Margin="5" Text="{Binding SiteName}"></TextBlock>

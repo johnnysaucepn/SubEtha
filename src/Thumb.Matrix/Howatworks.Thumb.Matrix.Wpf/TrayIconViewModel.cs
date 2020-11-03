@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.DirectoryServices;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,23 +13,22 @@ using Howatworks.Thumb.Wpf;
 
 namespace Howatworks.Thumb.Matrix.Wpf
 {
-    public class TrayIconViewModel
+    public class TrayIconViewModel /*: INotifyPropertyChanged*/
     {
-        readonly MatrixApp _app;
-        readonly AuthenticationDialog _authDialog;
-        public TrayIconViewModel(MatrixApp app, AuthenticationDialog authDialog)
-        {
-            _app = app;
-            _authDialog = authDialog;
-        }
+        public MatrixApp App { get; private set; }
+
+        public static TrayIconViewModel Create(MatrixApp app) => new TrayIconViewModel() { App = app };
+
+        public event EventHandler OnExitApplication = delegate { };
+        public event EventHandler OnAuthenticationRequested = delegate { };
 
         public string NotCheckedText => Resources.NotifyIconNeverUpdatedLabel;
 
         public string LastCheckedText =>
             string.Format(
                 Resources.NotifyIconLastUpdatedLabel.Replace("\\n", Environment.NewLine),
-                _app.LastEntry.Value.LocalDateTime.ToString("g"),
-                _app.LastChecked.Value.LocalDateTime.ToString("g")
+                App?.LastEntry.Value.LocalDateTime.ToString("g"),
+                App?.LastChecked.Value.LocalDateTime.ToString("g")
                 );
 
         public string DefaultText => Resources.NotifyIconDefaultLabel;
@@ -35,9 +37,9 @@ namespace Howatworks.Thumb.Matrix.Wpf
         {
             get
             {
-                if (_app.LastChecked.HasValue)
+                if (App?.LastChecked != null)
                 {
-                    if (_app.LastEntry.HasValue)
+                    if (App?.LastEntry != null)
                         return LastCheckedText;
                     return NotCheckedText;
                 }
@@ -51,16 +53,20 @@ namespace Howatworks.Thumb.Matrix.Wpf
         public ICommand ExitApplicationCommand =>
             new DelegateCommand
             {
-                CommandAction = () => Application.Current.Shutdown()
+                CommandAction = () => OnExitApplication(this, EventArgs.Empty)
             };
 
         public ICommand ShowAuthDialogCommand =>
             new DelegateCommand
             {
-                CommandAction = () =>
-                {
-                    _authDialog.Show();
-                }
+                CommandAction = () => OnAuthenticationRequested(this, EventArgs.Empty)
             };
+
+        /*public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }*/
     }
 }
