@@ -35,14 +35,14 @@
         </StackPanel>
         
         <Label Grid.Column="0" Grid.Row="1" MinWidth="100" Margin="5" VerticalAlignment="Center">Username</Label>
-        <TextBox Text="{Binding Username}" Grid.Column="1" Grid.Row="1" MinWidth="200" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center"></TextBox>
+        <TextBox Text="{Binding Username}" Grid.Column="1" Grid.Row="1" MinWidth="200" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="{Binding DialogEnabled}"></TextBox>
         
         <Label Grid.Column="0" Grid.Row="2" MinWidth="100" Margin="5" VerticalAlignment="Center">Password</Label>
-        <PasswordBox Grid.Column="1" Grid.Row="2" MinWidth="200" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged"></PasswordBox>
+        <PasswordBox Grid.Column="1" Grid.Row="2" MinWidth="200" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged" IsEnabled="{Binding DialogEnabled}"></PasswordBox>
 
         <WrapPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Command="{Binding CancelCommand}" Content="Cancel" MinWidth="100" IsCancel="True" Margin="5" />
-            <Button Command="{Binding OkCommand}" MinWidth="100" Content="Ok" IsDefault="true" Margin="5" />
+            <Button Command="{Binding CancelCommand}" Content="Cancel" MinWidth="100" IsCancel="True" Margin="5" IsEnabled="{Binding DialogEnabled}" />
+            <Button Command="{Binding OkCommand}" MinWidth="100" Content="Ok" IsDefault="true" Margin="5" IsEnabled="{Binding DialogEnabled}" />
         </WrapPanel>
     </Grid>
 </Window>

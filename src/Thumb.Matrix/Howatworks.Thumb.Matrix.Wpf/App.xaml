@@ -14,7 +14,7 @@
         </ContextMenu>
 
         <tb:TaskbarIcon x:Key="ThumbTrayIcon"
-                    ToolTipText="{Binding PlainStatusDisplayText}"
+                    ToolTipText="{Binding TooltipText}"
                     IconSource="{StaticResource AppIcon}"
                     ContextMenu="{StaticResource TrayMenu}"
                     MenuActivation="All"

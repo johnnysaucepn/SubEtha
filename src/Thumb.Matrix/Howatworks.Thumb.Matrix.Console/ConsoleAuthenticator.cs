@@ -21,6 +21,7 @@ namespace Howatworks.Thumb.Matrix.Console
 
         public async Task<bool> RequestAuthentication()
         {
+            await Task.Delay(TimeSpan.FromSeconds(0.5));
             (string username, string password) = await ReadCredentials(_client);
             var authenticated = await _client.Authenticate(username, password);
             if (!authenticated)

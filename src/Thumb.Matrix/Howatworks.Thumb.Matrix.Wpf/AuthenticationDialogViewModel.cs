@@ -1,9 +1,6 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using Howatworks.Thumb.Matrix.Core;
@@ -12,24 +9,31 @@ using log4net;
 
 namespace Howatworks.Thumb.Matrix.Wpf
 {
-    public class AuthenticationDialogViewModel
+    public class AuthenticationDialogViewModel : INotifyPropertyChanged
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AuthenticationDialogViewModel));
 
         private readonly HttpUploadClient _client;
+        private bool _dialogEnabled = true;
 
         public string Username { get; set; }
         public string Password { get; set; }
 
         public string SiteName => _client.SiteUri;
 
-        public event EventHandler RequestClose = delegate { };
+        public event EventHandler OnCloseRequested = delegate { };
 
         public event EventHandler<AuthenticationDialogEventArgs> OnAuthenticationCompleted = delegate { };
 
         public AuthenticationDialogViewModel(HttpUploadClient client)
         {
             _client = client;
+        }
+
+        public bool DialogEnabled
+        {
+            get { return _dialogEnabled; }
+            set { _dialogEnabled = value; NotifyPropertyChanged(); }
         }
 
         public ICommand CancelCommand =>
@@ -40,7 +44,7 @@ namespace Howatworks.Thumb.Matrix.Wpf
 
         private void CloseDialog()
         {
-            RequestClose(this, EventArgs.Empty);
+            OnCloseRequested(this, EventArgs.Empty);
         }
 
         public ICommand OkCommand =>
@@ -49,6 +53,7 @@ namespace Howatworks.Thumb.Matrix.Wpf
                 CommandAction = async () =>
                 {
                     bool authSucceeded = false;
+                    DialogEnabled = false;
                     try
                     {
                         authSucceeded = await _client.Authenticate(Username, Password);
@@ -58,7 +63,11 @@ namespace Howatworks.Thumb.Matrix.Wpf
                     {
                         Log.Error(ex);
                     }
-                    
+                    finally
+                    {
+                        DialogEnabled = true;
+                    }
+
                     if (authSucceeded)
                     {
                         CloseDialog();
@@ -70,5 +79,11 @@ namespace Howatworks.Thumb.Matrix.Wpf
                 }
             };
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

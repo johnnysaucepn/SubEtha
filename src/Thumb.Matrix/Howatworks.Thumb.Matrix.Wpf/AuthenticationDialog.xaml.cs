@@ -27,7 +27,7 @@ namespace Howatworks.Thumb.Matrix.Wpf
             _viewModel = viewModel;
             DataContext = _viewModel;
             Closing += AuthenticationDialog_Closing;
-            _viewModel.RequestClose += (s, e) => { Hide(); };
+            _viewModel.OnCloseRequested += (s, e) => { Hide(); };
             InitializeComponent();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Howatworks.SubEtha.Monitor;
@@ -14,10 +15,6 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApp));
 
-        private DateTimeOffset? _lastChecked = null;
-        private DateTimeOffset? _lastEntry = null;
-        private DateTimeOffset? _lastUpload = null;
-
         private readonly IConfiguration _config;
         private readonly LogJournalMonitor _logMonitor;
         private readonly LiveJournalMonitor _liveMonitor;
@@ -30,6 +27,10 @@ namespace Howatworks.Thumb.Matrix.Core
         private readonly ShipManager _ship;
         private readonly SessionManager _session;
         private readonly HttpUploadClient _client;
+
+        private BehaviorSubject<DateTimeOffset> _updateSubject = new BehaviorSubject<DateTimeOffset>(DateTimeOffset.MinValue);
+
+        public IObservable<DateTimeOffset> Updates => _updateSubject.AsObservable();
 
         public MatrixApp(
             IConfiguration config,
@@ -105,11 +106,6 @@ namespace Howatworks.Thumb.Matrix.Core
             _ship.SubscribeTo(publication);
             _session.SubscribeTo(publication);
 
-            publication.Subscribe(e =>
-            {
-                if (e.Entry.Timestamp > (_lastEntry ?? DateTimeOffset.MinValue)) _lastEntry = e.Entry.Timestamp;
-            });
-
             _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
             _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
@@ -139,7 +135,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 });
 
             var readyForNextBatch = new ManualResetEventSlim(true);
-            var blockedPendingAuthentication = new ManualResetEventSlim(false);
 
             using (publication.Connect())
             {
@@ -149,20 +144,17 @@ namespace Howatworks.Thumb.Matrix.Core
 
                     publisher.Poll();
 
-                    _lastChecked = DateTimeOffset.Now;
-
                     readyForNextBatch.Reset();
 
                     _client.StartUploading(token).Subscribe(t =>
                     {
-                        _lastUpload = _lastUpload ?? t;
+                        _updateSubject.OnNext(t);
                     }, async ex =>
                     {
                         if (ex is MatrixAuthenticationException)
                         {
                             Log.Warn(ex.Message);
                             // Block further processing until we at least attempt authentication
-                            blockedPendingAuthentication.Reset();
                             try
                             {
                                 var authenticated = await _authenticator.RequestAuthentication();
@@ -170,10 +162,6 @@ namespace Howatworks.Thumb.Matrix.Core
                             catch (MatrixException mex)
                             {
                                 Log.Warn(mex.Message);
-                            }
-                            finally
-                            {
-                                blockedPendingAuthentication.Set();
                             }
                         }
                         else
@@ -189,13 +177,9 @@ namespace Howatworks.Thumb.Matrix.Core
                     }, token);
 
                     // Wait until either no longer blocked, or the app is being shut down
-                    WaitHandle.WaitAll(new[] { readyForNextBatch.WaitHandle, blockedPendingAuthentication.WaitHandle});
-                };
+                    WaitHandle.WaitAny(new[] { readyForNextBatch.WaitHandle, token.WaitHandle });
+                }
             }
         }
-
-        public DateTimeOffset? LastChecked => _lastChecked;
-
-        public DateTimeOffset? LastEntry => _lastEntry;
     }
 }

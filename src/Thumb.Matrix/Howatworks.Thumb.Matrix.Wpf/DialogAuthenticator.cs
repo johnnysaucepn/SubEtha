@@ -25,14 +25,22 @@ namespace Howatworks.Thumb.Matrix.Wpf
             Application.Current.Dispatcher.Invoke(() =>
             {
                 _dialog.Show();
-            });            
+            });
+            // This is a little clunky - block the whole thread from continuing until the close event is triggered
 
-            return await Observable.FromEventPattern<AuthenticationDialogEventArgs>(
+            var result = await Observable.FromEventPattern<AuthenticationDialogEventArgs>(
                 h => _vm.OnAuthenticationCompleted += h,
                 h => _vm.OnAuthenticationCompleted -= h
             )
             .Select(x => x.EventArgs.AuthenticationSuccess)
             .FirstAsync();
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _dialog.Hide();
+            });
+
+            return result;
         }
     }
 }
