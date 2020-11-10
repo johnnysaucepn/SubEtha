@@ -2,7 +2,7 @@
 
 namespace Howatworks.Matrix.Domain
 {
-    public class SessionState : ISessionState, ICloneable<SessionState>
+    public class SessionState : ISessionState, ICloneable<SessionState>, IStateComparable<SessionState>
     {
         public DateTimeOffset TimeStamp { get; set; }
 
@@ -21,6 +21,18 @@ namespace Howatworks.Matrix.Domain
                 GameMode = this.GameMode,
                 Group = this.Group
             };
+        }
+
+        public bool HasChangedSince(SessionState state)
+        {
+            if (state == null) return false;
+
+            if (Build != state.Build) return true;
+            if (!Equals(CommanderName, state.CommanderName)) return true;
+            if (!Equals(GameMode, state.GameMode)) return true;
+            if (!Equals(Group, state.Group)) return true;
+             
+            return false;
         }
     }
 }

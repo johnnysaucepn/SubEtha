@@ -1,20 +1,16 @@
 ﻿using System;
+using System.Reactive.Subjects;
 using Howatworks.Matrix.Domain;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
-    public class Tracker<T> where T:IState, ICloneable<T>,new()
+    public class Tracker<T> where T : IState, ICloneable<T>, IStateComparable<T>, new()
     {
-        private readonly CommanderTracker _commander;
-        public string GameVersion { get; private set; } = string.Empty;
-        public string CommanderName { get; private set; } = string.Empty;
-        public T CurrentState { get; private set; } = new T();
-        private bool _isDirty;
+        private readonly Subject<T> _subject = new Subject<T>();
 
-        public Tracker(CommanderTracker commander)
-        {
-            _commander = commander;
-        }
+        private T _currentState = new T() { TimeStamp = DateTimeOffset.MinValue };
+
+        public IObservable<T> Observable => _subject;
 
         /// <summary>
         /// Ignore previous information, return new state
@@ -22,19 +18,23 @@ namespace Howatworks.Thumb.Matrix.Core
         /// <param name="timestamp"></param>
         /// <param name="stateChange"></param>
         /// <returns></returns>
-        public bool Replace(DateTimeOffset timestamp, Func<T, bool> stateChange)
+        public void Replace(DateTimeOffset timestamp, Action<T> stateChange)
         {
-            var newState = new T {TimeStamp = timestamp};
+            var newState = new T { TimeStamp = timestamp };
 
             // If handler didn't apply the change, don't update state
-            if (!stateChange(newState)) return false;
-
-            GameVersion = _commander.GameVersion;
-            CommanderName = _commander.CommanderName;
-            CurrentState = newState;
-            _isDirty = true;
-
-            return true;
+            try
+            {
+                stateChange(newState);
+            }
+            finally
+            {
+                if (newState.HasChangedSince(_currentState))
+                {
+                    _subject.OnNext(newState);
+                    _currentState = newState;
+                }
+            }
         }
 
         /// <summary>
@@ -43,26 +43,24 @@ namespace Howatworks.Thumb.Matrix.Core
         /// <param name="timestamp"></param>
         /// <param name="stateChange"></param>
         /// <returns></returns>
-        public bool Modify(DateTimeOffset timestamp, Func<T, bool> stateChange)
+        public void Modify(DateTimeOffset timestamp, Action<T> stateChange)
         {
-            var newState = CurrentState.Clone();
+            var newState = _currentState.Clone();
             newState.TimeStamp = timestamp;
 
             // If handler didn't apply the change, don't update state
-            if (!stateChange(newState)) return false;
-
-            GameVersion = _commander.GameVersion;
-            CommanderName = _commander.CommanderName;
-            CurrentState = newState;
-            _isDirty = true;
-
-            return true;
-        }
-
-        public void Commit(Action commitAction)
-        {
-            if (_isDirty) commitAction();
-            _isDirty = false;
+            try
+            {
+                stateChange(newState);
+            }
+            finally
+            {
+                if (newState.HasChangedSince(_currentState))
+                {
+                    _subject.OnNext(newState);
+                    _currentState = newState;
+                }
+            }
         }
     }
 }

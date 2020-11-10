@@ -1,8 +1,10 @@
 ﻿using System;
 using Howatworks.SubEtha.Journal.Status;
-using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Assistant.Core.Messages;
 using log4net;
+using System.Reactive.Subjects;
+using Howatworks.SubEtha.Journal;
+using Howatworks.SubEtha.Monitor;
 
 namespace Howatworks.Thumb.Assistant.Core
 {
@@ -11,25 +13,17 @@ namespace Howatworks.Thumb.Assistant.Core
         private static readonly ILog Log = LogManager.GetLogger(typeof(StatusManager));
 
         private readonly ControlStateModel _status = new ControlStateModel();
-        private bool _updateRequired;
 
-        public event EventHandler<ControlStateModelChangedEventArgs> ControlStateChanged = (sender, args) => { };
+        private readonly Subject<ControlStateModel> _controlStateSubject = new Subject<ControlStateModel>();
 
-        public StatusManager(JournalEntryRouter router)
+        public void SubscribeTo(IObservable<JournalEntry> observable)
         {
-            router.RegisterFor<Status>(ApplyStatus, BatchPolicy.OnlyOngoing);
-
-            router.RegisterForBatchComplete(BatchComplete, BatchPolicy.OnlyOngoing);
-
-            _status.Changed += Status_Changed;
+            observable.OfJournalType<Status>().Subscribe(ApplyStatus);
         }
 
-        private void Status_Changed(object sender, EventArgs e)
-        {
-            _updateRequired = true;
-        }
+        public IObservable<ControlStateModel> ControlStateObservable => _controlStateSubject;
 
-        private bool ApplyStatus(Status status)
+        private void ApplyStatus(Status status)
         {
             _status.LandingGearDown = status.HasFlag(StatusFlags.LandingGearDown);
             _status.Supercruise = status.HasFlag(StatusFlags.Supercruise);
@@ -41,38 +35,18 @@ namespace Howatworks.Thumb.Assistant.Core
             _status.FssMode = status.GuiFocus == GuiFocus.FssMode;
             _status.SaaMode = status.GuiFocus == GuiFocus.SaaMode;
 
-            return true;
+            if (_status.IsDirty)
+            {
+                _controlStateSubject.OnNext(_status);
+                _status.IsDirty = false;
+            }
         }
 
         public ControlState CreateControlStateMessage()
         {
-            return CreateControlStateMessage(_status);
+            return _status.CreateControlStateMessage();
         }
-
-        public static ControlState CreateControlStateMessage(ControlStateModel model)
-        {
-            return new ControlState
-            {
-                CargoScoopDeployed = model.CargoScoopDeployed,
-                HardpointsDeployed = model.HardpointsDeployed,
-                HudAnalysisMode = model.HudAnalysisMode,
-                LandingGearDown = model.LandingGearDown,
-                LightsOn = model.LightsOn,
-                NightVision = model.NightVision,
-                Supercruise = model.Supercruise,
-                FssMode = model.FssMode,
-                SaaMode = model.SaaMode
-            };
-        }
-
-        private bool BatchComplete()
-        {
-            if (!_updateRequired) return false;
-
-            ControlStateChanged?.Invoke(this, new ControlStateModelChangedEventArgs(_status));
-            _updateRequired = false;
-            return true;
-        }
+               
 
     }
 }

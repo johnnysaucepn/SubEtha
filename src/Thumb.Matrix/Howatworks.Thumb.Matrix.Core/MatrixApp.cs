@@ -1,123 +1,185 @@
-﻿using Howatworks.SubEtha.Monitor;
+﻿using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
+using Howatworks.SubEtha.Monitor;
+using Howatworks.SubEtha.Parser;
 using Howatworks.Thumb.Core;
-using System;
-using Microsoft.Extensions.Configuration;
 using log4net;
+using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
-    public class MatrixApp : IThumbApp
+    public class MatrixApp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApp));
 
-        public LocationManager Location { get; }
-        public ShipManager Ship { get; }
-        public SessionManager Session { get; }
-
-        public event EventHandler OnAuthenticationRequired;
-
         private readonly IConfiguration _config;
-        private readonly JournalMonitorScheduler _monitor;
+        private readonly LogJournalMonitor _logMonitor;
+        private readonly LiveJournalMonitor _liveMonitor;
         private readonly IThumbNotifier _notifier;
-        private readonly JournalEntryRouter _router;
+        private readonly IJournalParser _parser;
+        private readonly IMatrixAuthenticator _authenticator;
+
+        private readonly GameContextManager _gameContext;
+        private readonly LocationManager _location;
+        private readonly ShipManager _ship;
+        private readonly SessionManager _session;
         private readonly HttpUploadClient _client;
 
-        public bool IsAuthenticated => _client.IsAuthenticated;
-        public string SiteUri => _client.BaseUri.AbsoluteUri;
+        private BehaviorSubject<DateTimeOffset> _updateSubject = new BehaviorSubject<DateTimeOffset>(DateTimeOffset.MinValue);
 
-        // Empirically-determined to match the default ASP.NET settings
-        public int MaxUsernameLength = 256;
-        public int MaxPasswordLength = 100;
+        public IObservable<DateTimeOffset> Updates => _updateSubject.AsObservable();
 
         public MatrixApp(
             IConfiguration config,
-            JournalMonitorScheduler monitor,
+            LogJournalMonitor logMonitor,
+            LiveJournalMonitor liveMonitor,
             IThumbNotifier notifier,
-            JournalEntryRouter router,
+            IJournalParser parser,
+            IMatrixAuthenticator authenticator,
+
+            GameContextManager gameContext,
             LocationManager location,
             ShipManager ship,
             SessionManager session,
+
             HttpUploadClient client
         )
         {
-            Location = location;
-            Ship = ship;
-            Session = session;
             _config = config;
-            _monitor = monitor;
+            _logMonitor = logMonitor;
+            _liveMonitor = liveMonitor;
             _notifier = notifier;
-            _router = router;
+            _parser = parser;
+            _authenticator = authenticator;
+
+            _gameContext = gameContext;
+            _location = location;
+            _ship = ship;
+            _session = session;
+
             _client = client;
         }
 
-        public void Initialize()
+        private Uri BuildLocationUri(string cmdrName, string gameVersion)
+        {
+            return new Uri($"Api/{cmdrName}/{gameVersion}/Location", UriKind.Relative);
+        }
+
+        private Uri BuildSessionUri(string cmdrName, string gameVersion)
+        {
+            return new Uri($"Api/{cmdrName}/{gameVersion}/Session", UriKind.Relative);
+        }
+
+        private Uri BuildShipUri(string cmdrName, string gameVersion)
+        {
+            return new Uri($"Api/{cmdrName}/{gameVersion}/Ship", UriKind.Relative);
+        }
+
+        public void Run(CancellationToken token)
         {
             Log.Info("Starting up");
-
-            _monitor.JournalEntriesParsed += (sender, args) =>
-            {
-                if (args == null) return;
-
-                _router.Apply(args.Entries, args.BatchMode);
-
-                try
-                {
-                    Location.FlushQueue();
-                    Ship.FlushQueue();
-                    Session.FlushQueue();
-                }
-                catch (MatrixAuthenticationException)
-                {
-                    OnAuthenticationRequired?.Invoke(this, EventArgs.Empty);
-                }
-            };
-            _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.Path}'");
-
-            _monitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.Path}'");
 
             var username = _config["Username"];
             var password = _config["Password"];
 
             // Try username and password from configuration, if possible
-            var nowAuthenticated = Authenticate(username, password);
-        }
+            try
+            {
+                var nowAuthenticated = _client.Authenticate(username, password);
+            }
+            catch (MatrixException ex)
+            {
+                Log.Warn(ex.Message);
+            }
 
-        public void Shutdown()
-        {
-            Log.Info("Shutting down");
-            StopMonitoring();
-        }
+            var startTime = DateTimeOffset.MinValue; // TODO: temporary
+            var source = new JournalEntrySource(_parser, startTime, _logMonitor, _liveMonitor);
 
-        public bool Authenticate(string username, string password)
-        {
-            if (string.IsNullOrWhiteSpace(username)) return false;
-            if (string.IsNullOrWhiteSpace(password)) return false;
+            var publisher = new JournalEntryPublisher(source);
+            var publication = publisher.GetObservable().Publish();
 
-            _client.AuthenticateByBearerToken(username, password);
+            _gameContext.SubscribeTo(publication);
+            _location.SubscribeTo(publication);
+            _ship.SubscribeTo(publication);
+            _session.SubscribeTo(publication);
 
-            return _client.IsAuthenticated;
-        }
+            _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
+            _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
-        public void StartMonitoring()
-        {
-            Log.Info("Starting monitoring");
-            _monitor.Start();
-        }
+            var itemsPushed = 0;
+            _location.Observable
+                .Subscribe(l =>
+                {
+                    var uri = BuildLocationUri(_gameContext.CommanderName, _gameContext.GameVersion);
+                    _client.Push(uri, l);
+                    itemsPushed++;
+                });
 
-        public void StopMonitoring()
-        {
-            Log.Info("Stopping monitoring");
-            _monitor.Stop();
-        }
+            _ship.Observable
+                .Subscribe(s =>
+                {
+                    var uri = BuildShipUri(_gameContext.CommanderName, _gameContext.GameVersion);
+                    _client.Push(uri, s);
+                    itemsPushed++;
+                });
 
-        public DateTimeOffset? LastEntry()
-        {
-            return _monitor.LastEntry();
-        }
+            _session.Observable
+                .Subscribe(s =>
+                {
+                    var uri = BuildSessionUri(_gameContext.CommanderName, _gameContext.GameVersion);
+                    _client.Push(uri, s);
+                    itemsPushed++;
+                });
 
-        public DateTimeOffset? LastChecked()
-        {
-            return _monitor.LastChecked();
+            var readyForNextBatch = new ManualResetEventSlim(true);
+
+            using (publication.Connect())
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    Task.Delay(TimeSpan.FromSeconds(1)).Wait();
+
+                    publisher.Poll();
+
+                    readyForNextBatch.Reset();
+
+                    _client.StartUploading(token).Subscribe(t =>
+                    {
+                        _updateSubject.OnNext(t);
+                    }, async ex =>
+                    {
+                        if (ex is MatrixAuthenticationException)
+                        {
+                            Log.Warn(ex.Message);
+                            // Block further processing until we at least attempt authentication
+                            try
+                            {
+                                var authenticated = await _authenticator.RequestAuthentication();
+                            }
+                            catch (MatrixException mex)
+                            {
+                                Log.Warn(mex.Message);
+                            }
+                        }
+                        else
+                        {
+                            Log.Error(ex.Message);
+                        }
+                        readyForNextBatch.Set();
+                    }, () =>
+                    {
+                        // Upload was successful, can proceed with another poll
+                        Log.Debug($"Total items pushed = {itemsPushed}");
+                        readyForNextBatch.Set();
+                    }, token);
+
+                    // Wait until either no longer blocked, or the app is being shut down
+                    WaitHandle.WaitAny(new[] { readyForNextBatch.WaitHandle, token.WaitHandle });
+                }
+            }
         }
     }
 }

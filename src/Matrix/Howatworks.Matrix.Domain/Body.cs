@@ -1,10 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.Matrix.Domain
 {
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public class Body
+    public class Body : IEquatable<Body>
     {
         public string Name { get; set; }
         public string Type { get; set; }
@@ -25,6 +26,15 @@ namespace Howatworks.Matrix.Domain
             : this(name, type)
         {
             Docked = docked;
+        }
+
+        public bool Equals(Body other)
+        {
+            if (!string.Equals(Name, other.Name)) return false;
+            if (!string.Equals(Type, other.Type)) return false;
+            if (Docked != other.Docked) return false;
+
+            return true;
         }
     }
 }

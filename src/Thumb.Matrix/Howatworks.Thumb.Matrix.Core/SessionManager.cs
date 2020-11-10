@@ -1,7 +1,9 @@
-﻿using Howatworks.Matrix.Domain;
+﻿using System;
+using System.Reactive.Linq;
+using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
-using Howatworks.Thumb.Core;
+using Howatworks.SubEtha.Monitor;
 using log4net;
 
 namespace Howatworks.Thumb.Matrix.Core
@@ -10,70 +12,49 @@ namespace Howatworks.Thumb.Matrix.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SessionManager));
 
-        private readonly UploadQueue<SessionState> _queue;
-        private readonly Tracker<SessionState> _tracker;
+        private readonly Tracker<SessionState> _tracker = new Tracker<SessionState>();
+        public IObservable<SessionState> Observable => _tracker.Observable;
 
-        public SessionManager(JournalEntryRouter router, CommanderTracker commander, UploadQueue<SessionState> queue)
+        public void SubscribeTo(IObservable<JournalEntry> observable)
         {
-            _tracker = new Tracker<SessionState>(commander);
-            _queue = queue;
-
-            router.RegisterFor<LoadGame>(ApplyLoadGame);
-            router.RegisterFor<NewCommander>(ApplyNewCommander);
-            router.RegisterFor<ClearSavedGame>(ApplyClearSavedGame);
-            router.RegisterFor<FileHeader>(ApplyFileHeader);
-
-            router.RegisterForBatchComplete(BatchComplete);
+            observable.OfJournalType<LoadGame>().Subscribe(ApplyLoadGame);
+            observable.OfJournalType<NewCommander>().Subscribe(ApplyNewCommander);
+            observable.OfJournalType<ClearSavedGame>().Subscribe(ApplyClearSavedGame);
+            observable.OfJournalType<FileHeader>().Subscribe(ApplyFileHeader);
         }
 
-        public void FlushQueue()
+        private void ApplyLoadGame(LoadGame loadGame)
         {
-            _queue.Flush();
-        }
-
-        private bool ApplyLoadGame(LoadGame loadGame)
-        {
-            return _tracker.Replace(loadGame.Timestamp, x =>
+            _tracker.Replace(loadGame.Timestamp, x =>
             {
                 x.CommanderName = loadGame.Commander;
                 x.GameMode = loadGame.GameMode;
                 x.Group = loadGame.Group;
-                return true;
             });
         }
 
-        private bool ApplyNewCommander(NewCommander newCommander)
+        private void ApplyNewCommander(NewCommander newCommander)
         {
-            return _tracker.Replace(newCommander.Timestamp, x =>
+            _tracker.Replace(newCommander.Timestamp, x =>
             {
                 x.CommanderName = newCommander.Name;
-                return true;
             });
         }
 
-        private bool ApplyClearSavedGame(ClearSavedGame clearSavedGame)
+        private void ApplyClearSavedGame(ClearSavedGame clearSavedGame)
         {
-            return _tracker.Replace(clearSavedGame.Timestamp, x =>
+            _tracker.Replace(clearSavedGame.Timestamp, x =>
             {
                 x.CommanderName = clearSavedGame.Name;
-                return true;
             });
         }
 
-        private bool ApplyFileHeader(FileHeader fileHeader)
+        private void ApplyFileHeader(FileHeader fileHeader)
         {
-            return _tracker.Modify(fileHeader.Timestamp, x =>
+            _tracker.Modify(fileHeader.Timestamp, x =>
             {
                 x.Build = fileHeader.Build;
-                return true;
             });
-        }
-
-        private bool BatchComplete()
-        {
-            _tracker.Commit(() => { _queue.Enqueue(_tracker.GameVersion, _tracker.CommanderName, _tracker.CurrentState); });
-
-            return true;
         }
     }
 }

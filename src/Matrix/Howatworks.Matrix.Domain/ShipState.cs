@@ -2,7 +2,7 @@
 
 namespace Howatworks.Matrix.Domain
 {
-    public class ShipState : IShipState, ICloneable<ShipState>
+    public class ShipState : IShipState, ICloneable<ShipState>, IStateComparable<ShipState>
     {
         public DateTimeOffset TimeStamp { get; set; }
 
@@ -30,6 +30,20 @@ namespace Howatworks.Matrix.Domain
                 ShieldsUp = this.ShieldsUp,
                 HullIntegrity = this.HullIntegrity
             };
+        }
+
+        public bool HasChangedSince(ShipState state)
+        {
+            if (state == null) return false;
+
+            if (!string.Equals(Type, state.Type)) return true;
+            if (ShipId != state.ShipId) return true;
+            if (!string.Equals(Name, state.Name)) return true;
+            if (!string.Equals(Ident, state.Ident)) return true;
+            if (ShieldsUp != state.ShieldsUp) return true;
+            if (HullIntegrity != state.HullIntegrity) return true;
+
+            return false;
         }
     }
 }

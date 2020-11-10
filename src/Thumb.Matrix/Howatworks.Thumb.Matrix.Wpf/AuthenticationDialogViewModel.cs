@@ -1,37 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using Howatworks.Thumb.Matrix.Core;
 using Howatworks.Thumb.Wpf;
+using log4net;
 
 namespace Howatworks.Thumb.Matrix.Wpf
 {
-    public class AuthenticationDialogViewModel
+    public class AuthenticationDialogViewModel : INotifyPropertyChanged
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(AuthenticationDialogViewModel));
+
+        private readonly HttpUploadClient _client;
+        private bool _dialogEnabled = true;
+
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public string SiteName => ViewManager.App.SiteUri;
+        public string SiteName => _client.SiteUri;
 
+        public event EventHandler OnCloseRequested = delegate { };
+
+        public event EventHandler<AuthenticationDialogEventArgs> OnAuthenticationCompleted = delegate { };
+
+        public AuthenticationDialogViewModel(HttpUploadClient client)
+        {
+            _client = client;
+        }
+
+        public bool DialogEnabled
+        {
+            get { return _dialogEnabled; }
+            set { _dialogEnabled = value; NotifyPropertyChanged(); }
+        }
 
         public ICommand CancelCommand =>
             new DelegateCommand
             {
-                CommandAction = () => ViewManager.CloseAuthenticationDialog()
+                CommandAction = () => CloseDialog()
             };
+
+        private void CloseDialog()
+        {
+            OnCloseRequested(this, EventArgs.Empty);
+        }
 
         public ICommand OkCommand =>
             new DelegateCommand
             {
-                CommandAction = () =>
+                CommandAction = async () =>
                 {
-                    var authResult = ViewManager.Authenticate(Username, Password);
-                    if (authResult.Succeeded)
+                    bool authSucceeded = false;
+                    DialogEnabled = false;
+                    try
                     {
-                        ViewManager.ConfirmAuthenticationDialog();
+                        authSucceeded = await _client.Authenticate(Username, Password);
+                        OnAuthenticationCompleted(this, new AuthenticationDialogEventArgs(authSucceeded));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex);
+                    }
+                    finally
+                    {
+                        DialogEnabled = true;
+                    }
+
+                    if (authSucceeded)
+                    {
+                        CloseDialog();
                     }
                     else
                     {
@@ -40,5 +79,11 @@ namespace Howatworks.Thumb.Matrix.Wpf
                 }
             };
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

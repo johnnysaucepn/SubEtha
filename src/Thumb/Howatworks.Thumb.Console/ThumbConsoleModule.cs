@@ -14,6 +14,7 @@ namespace Howatworks.Thumb.Console
 
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<ConsoleKeyListener>().AsSelf().SingleInstance();
         }
     }
 }

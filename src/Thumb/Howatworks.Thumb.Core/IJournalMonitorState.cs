@@ -1,6 +1,6 @@
 using System;
 
-namespace Howatworks.SubEtha.Monitor
+namespace Howatworks.Thumb.Core
 {
     public interface IJournalMonitorState
     {

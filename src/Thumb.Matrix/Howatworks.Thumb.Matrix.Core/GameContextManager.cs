@@ -1,56 +1,46 @@
-﻿using Howatworks.SubEtha.Journal;
+﻿using System;
+using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Journal.Startup;
-using Howatworks.Thumb.Core;
+using Howatworks.SubEtha.Monitor;
 using log4net;
-using System;
 
 namespace Howatworks.Thumb.Matrix.Core
 {
-    public class CommanderTracker
+    public class GameContextManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationManager));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GameContextManager));
 
         public string CommanderName { get; private set; }
         public string GameVersion { get; private set; }
 
-        public CommanderTracker(JournalEntryRouter router)
+        public void SubscribeTo(IObservable<JournalEntry> observable)
         {
             // NOTE: inconsistency in events, some use 'Name', some 'Commander'
 
-            router.RegisterFor<FileHeader>(e =>
+            observable.OfJournalType<FileHeader>().Subscribe(h =>
             {
-                UpdateGameVersion(e.GameVersion);
-                return true;
+                UpdateGameVersion(h.GameVersion);
             });
 
-            router.RegisterFor<Commander>(e =>
+            observable.OfJournalType<Commander>().Subscribe(c =>
             {
-                UpdateCommander(e.Name);
-                return true;
+                UpdateCommander(c.Name);
             });
-            router.RegisterFor<LoadGame>(e =>
-            {
-                UpdateCommander(e.Commander);
-                return true;
-            });
-            router.RegisterFor<ClearSavedGame>(e =>
-            {
-                UpdateCommander(e.Name);
-                return true;
-            });
-            router.RegisterFor<NewCommander>(e =>
-            {
-                UpdateCommander(e.Name);
-                return true;
-            });
-        }
 
-        internal GameContext GetContext()
-        {
-            if (string.IsNullOrWhiteSpace(CommanderName)) return null;
-            if (string.IsNullOrWhiteSpace(GameVersion)) return null;
+            observable.OfJournalType<LoadGame>().Subscribe(l =>
+            {
+                UpdateCommander(l.Commander);
+            });
 
-            return new GameContext(GameVersion, CommanderName);
+            observable.OfJournalType<ClearSavedGame>().Subscribe(c =>
+            {
+                UpdateCommander(c.Name);
+            });
+
+            observable.OfJournalType<NewCommander>().Subscribe(n =>
+            {
+                UpdateCommander(n.Name);
+            });
         }
 
         private void UpdateGameVersion(string newGameVersion)

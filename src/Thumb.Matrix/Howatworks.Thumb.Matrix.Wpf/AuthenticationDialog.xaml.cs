@@ -20,22 +20,27 @@ namespace Howatworks.Thumb.Matrix.Wpf
     /// </summary>
     public partial class AuthenticationDialog : Window
     {
-        public AuthenticationDialogViewModel ViewModel => (AuthenticationDialogViewModel)DataContext;
-
-        public AuthenticationDialog()
+        readonly AuthenticationDialogViewModel _viewModel;
+        
+        public AuthenticationDialog(AuthenticationDialogViewModel viewModel)
         {
+            _viewModel = viewModel;
+            DataContext = _viewModel;
+            Closing += AuthenticationDialog_Closing;
+            _viewModel.OnCloseRequested += (s, e) => { Hide(); };
             InitializeComponent();
-            Closing += (sender, evt) => evt.Cancel = true;
+        }
+
+        private void AuthenticationDialog_Closing(object sender, CancelEventArgs e)
+        {
+            // Don't actually close the dialog - we're also binding the dialog close event to the viewmodel CloseCommand so we can handle consistently
+            e.Cancel = true;
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            ViewModel.Password = ((PasswordBox)sender).Password;
+            _viewModel.Password = ((PasswordBox)sender).Password;
         }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            ViewModel.CancelCommand.Execute(null);
-        }
     }
 }

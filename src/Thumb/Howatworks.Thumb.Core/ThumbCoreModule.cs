@@ -19,10 +19,10 @@ namespace Howatworks.Thumb.Core
             builder.Register(_ => _config).As<IConfiguration>().SingleInstance();
 
             builder.RegisterType<JsonJournalMonitorState>().As<IJournalMonitorState>().SingleInstance();
-            builder.RegisterType<JournalMonitorScheduler>().AsSelf().SingleInstance();
             builder.RegisterType<JournalParser>().As<IJournalParser>().SingleInstance();
             builder.RegisterType<JournalReaderFactory>().As<IJournalReaderFactory>().SingleInstance();
-            builder.RegisterType<JournalEntryRouter>().AsSelf().SingleInstance();
+            builder.RegisterType<LogJournalMonitor>().AsSelf().SingleInstance();
+            builder.RegisterType<LiveJournalMonitor>().AsSelf().SingleInstance();
 
             if (_config.GetValue<bool>("AudioNotifications"))
             {

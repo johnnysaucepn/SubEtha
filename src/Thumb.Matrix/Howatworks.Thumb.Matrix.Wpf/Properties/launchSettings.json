@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Howatworks.Thumb.Tray": {
+    "Howatworks.Thumb.Matrix.Wpf": {
       "commandName": "Project",
       "environmentVariables": {
         "HOSTINGENVIRONMENT": "vs"

@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Howatworks.SubEtha.Monitor;
 
 namespace Howatworks.Thumb.Core
 {

@@ -7,6 +7,7 @@ namespace Howatworks.SubEtha.Parser
     {
         IJournalEntry Parse(string eventType, string line);
         T Parse<T>(string line) where T : class;
+        IJournalEntry Parse(string line);
 
         /// <summary>
         /// Parse the absolute minimum required for an entry - saves time in deserialising
@@ -14,6 +15,7 @@ namespace Howatworks.SubEtha.Parser
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        (string, DateTimeOffset) ParseCommonProperties(string line);
+        (string eventType, DateTimeOffset timestamp) ParseCommonProperties(string line);
+        bool Validate(string line);
     }
 }

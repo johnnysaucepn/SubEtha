@@ -47,18 +47,18 @@ namespace Howatworks.SubEtha.Journal.Scan
             foreach (var file in incrementalFiles)
             {
                 Log.Info($"Parsing file '{file}'...");
-                var reader = new IncrementalJournalReader(file, parser);
+                var reader = new LogJournalReader(new FileInfo(file), parser);
                 // Read all entries from all files
-                var _ = reader.ReadAll(DateTimeOffset.MinValue).ToList();
+                var _ = reader.ReadLines().ToList();
             }
 
             var realTimeFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
             foreach (var file in realTimeFiles)
             {
                 Log.Info($"Parsing file '{file}'...");
-                var reader = new RealTimeJournalReader(file, parser);
-                // Read all entries from all files
-                var _ = reader.ReadAll(DateTimeOffset.MinValue).ToList();
+                var reader = new LiveJournalReader(new FileInfo(file), parser);
+                // Read entry from each file
+                var _ = reader.ReadCurrent();
             }
         }
     }

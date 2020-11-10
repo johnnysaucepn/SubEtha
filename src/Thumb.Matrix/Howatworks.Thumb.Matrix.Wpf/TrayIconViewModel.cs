@@ -1,39 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.ComponentModel;
+using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Howatworks.Thumb.Matrix.Core;
 using Howatworks.Thumb.Wpf;
 
 namespace Howatworks.Thumb.Matrix.Wpf
 {
-    public class TrayIconViewModel
+    public class TrayIconViewModel : INotifyPropertyChanged
     {
-        public string NotCheckedText => Resources.NotifyIconNeverUpdatedLabel;
+        private string _plainStatusDisplayText;
 
-        public string LastCheckedText =>
-            string.Format(
-                Resources.NotifyIconLastUpdatedLabel.Replace("\\n", Environment.NewLine),
-                ViewManager.App.LastEntry().Value.LocalDateTime.ToString("g"),
-                ViewManager.App.LastChecked().Value.LocalDateTime.ToString("g")
-                );
+        public static TrayIconViewModel Create(MatrixApp app) => new TrayIconViewModel(app);
 
-        public string DefaultText => Resources.NotifyIconDefaultLabel;
-
-        public string PlainStatusDisplayText
+        public TrayIconViewModel(MatrixApp app)
         {
-            get
+            TooltipText = FormatLabel(DateTime.MinValue, DateTime.MinValue);
+            // Update the tooltip description as new items come in
+
+            app.Updates
+                .Throttle(TimeSpan.FromSeconds(10))
+                .Timestamp()
+                .Subscribe(x =>
             {
-                if (ViewManager.App.LastChecked().HasValue)
+                var lastEntry = x.Value;
+                var lastChecked = x.Timestamp;
+                TooltipText = FormatLabel(lastEntry, lastChecked);
+            });
+        }
+
+        private string FormatLabel(DateTimeOffset lastEntry, DateTimeOffset lastChecked)
+        {
+            if (lastChecked != DateTimeOffset.MinValue)
+            {
+                if (lastEntry != DateTimeOffset.MinValue)
                 {
-                    if (ViewManager.App.LastEntry().HasValue)
-                        return LastCheckedText;
-                    return NotCheckedText;
+                    var labelPattern = Resources.NotifyIconLastUpdatedLabel.Replace("\\n", Environment.NewLine);
+                    return string.Format(labelPattern, lastEntry.LocalDateTime.ToString("g"), lastChecked.LocalDateTime.ToString("g"));
                 }
-                return DefaultText;
+                return Resources.NotifyIconNeverUpdatedLabel;
             }
+            return Resources.NotifyIconDefaultLabel;
+        }
+
+        public event EventHandler OnExitApplication = delegate { };
+        public event EventHandler OnAuthenticationRequested = delegate { };
+
+        public string TooltipText
+        {
+            get { return _plainStatusDisplayText; }
+            set { _plainStatusDisplayText = value; NotifyPropertyChanged(); }
         }
 
         /// <summary>
@@ -42,19 +59,20 @@ namespace Howatworks.Thumb.Matrix.Wpf
         public ICommand ExitApplicationCommand =>
             new DelegateCommand
             {
-                CommandAction = () => Application.Current.Shutdown()
+                CommandAction = () => OnExitApplication(this, EventArgs.Empty)
             };
 
         public ICommand ShowAuthDialogCommand =>
             new DelegateCommand
             {
-                CommandAction = () =>
-                {
-                    if (!ViewManager.App.IsAuthenticated)
-                    {
-                        ViewManager.ShowAuthenticationDialog();
-                    }
-                }
+                CommandAction = () => OnAuthenticationRequested(this, EventArgs.Empty)
             };
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

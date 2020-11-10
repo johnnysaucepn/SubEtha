@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
@@ -19,69 +22,30 @@ namespace Howatworks.Thumb.Matrix.Console
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbConsoleModule(config));
             builder.RegisterModule(new MatrixModule());
+            builder.RegisterModule(new MatrixConsoleModule());
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
                 var app = scope.Resolve<MatrixApp>();
+                var client = scope.Resolve<HttpUploadClient>();
+                var keyListener = scope.Resolve<ConsoleKeyListener>();
 
-                app.OnAuthenticationRequired += (sender, args) => {
-                    do
-                    {
-                        (string username, string password) = GetCredentials(app);
+                var cts = new CancellationTokenSource();
+                var reset = new ManualResetEventSlim(false);
 
-                        app.Authenticate(username, password);
-                        if (!app.IsAuthenticated)
-                        {
-                            System.Console.WriteLine("Authentication failed!");
-                        }
-                    } while (!app.IsAuthenticated);
-                };
+                Task.Run(() => app.Run(cts.Token));
 
-                app.Initialize();
-                app.StartMonitoring();
-                System.Console.ReadKey();
-                app.Shutdown();
+                keyListener.Observable.Where(k => k.Key == ConsoleKey.Escape).Subscribe(_ => reset.Set());
+
+                // Wait forever, unless something trips the switch
+                reset.Wait();
+
+                // Cancel the token to shut any pending operations down
+                cts.Cancel();
             }
         }
 
-        private static (string username, string password) GetCredentials(MatrixApp app)
-        {
-            string username;
-            string password;
-            System.Console.WriteLine("Authentication required");
-            do
-            {
-                System.Console.Write("Username: ");
-
-                username = System.Console.ReadLine();
-                username = username?.Substring(0, Math.Min(username.Length, app.MaxUsernameLength));
-            } while (string.IsNullOrWhiteSpace(username));
-            do
-            {
-                System.Console.Write("Password: ");
-
-                password = MaskedReadLine();
-                password = password?.Substring(0, Math.Min(password.Length, app.MaxPasswordLength));
-            } while (string.IsNullOrWhiteSpace(password));
-
-            return (username, password);
-        }
-
-        private static string MaskedReadLine()
-        {
-            var input = string.Empty;
-
-            ConsoleKeyInfo ch = System.Console.ReadKey(true);
-            while (ch.Key != ConsoleKey.Enter)
-            {
-                input += ch.KeyChar;
-                System.Console.Write('*');
-
-                ch = System.Console.ReadKey(true);
-            }
-            System.Console.WriteLine();
-            return input;
-        }
     }
+
 }

@@ -2,7 +2,7 @@
 
 namespace Howatworks.Matrix.Domain
 {
-    public class LocationState : ILocationState, ICloneable<LocationState>
+    public class LocationState : ILocationState, ICloneable<LocationState>, IStateComparable<LocationState>
     {
         public DateTimeOffset TimeStamp { get; set; }
 
@@ -23,6 +23,19 @@ namespace Howatworks.Matrix.Domain
                 Station = this.Station,
                 SignalSource = this.SignalSource
             };
+        }
+
+        public bool HasChangedSince(LocationState state)
+        {
+            if (state == null) return false;
+
+            if (!SimpleComparer.Equals(StarSystem, state.StarSystem)) return true;
+            if (!SimpleComparer.Equals(Body, state.Body)) return true;
+            if (!SimpleComparer.Equals(SurfaceLocation, state.SurfaceLocation)) return true;
+            if (!SimpleComparer.Equals(Station, state.Station)) return true;
+            if (!SimpleComparer.Equals(SignalSource, state.SignalSource)) return true;
+
+            return false;
         }
     }
 }

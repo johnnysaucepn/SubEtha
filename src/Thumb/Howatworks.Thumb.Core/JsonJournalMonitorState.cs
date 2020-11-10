@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Howatworks.SubEtha.Monitor;
 using log4net;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
