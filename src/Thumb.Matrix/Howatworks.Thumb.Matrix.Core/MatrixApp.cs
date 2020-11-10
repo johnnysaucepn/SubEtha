@@ -178,7 +178,7 @@ namespace Howatworks.Thumb.Matrix.Core
                         }
                         else
                         {
-                            Log.Error(ex);
+                            Log.Error(ex.Message);
                         }
                         readyForNextBatch.Set();
                     }, () =>

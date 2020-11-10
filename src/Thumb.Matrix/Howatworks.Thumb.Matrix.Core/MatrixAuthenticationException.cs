@@ -5,7 +5,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
     public class MatrixAuthenticationException : MatrixException
     {
-        public MatrixAuthenticationException() : base()
+        public MatrixAuthenticationException()
         {
         }
 

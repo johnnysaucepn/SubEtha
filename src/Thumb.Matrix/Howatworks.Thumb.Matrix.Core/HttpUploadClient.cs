@@ -17,10 +17,35 @@ namespace Howatworks.Thumb.Matrix.Core
 {
     public class HttpUploadClient : IDisposable
     {
+        private class UploadItem
+        {
+            public const int MaxAttempts = 3;
+
+            public Uri Uri { get; }
+            public IState State { get; }
+            public int Attempts { get; private set; }
+            public bool Expired { get; private set; }
+
+            public UploadItem(Uri uri, IState state)
+            {
+                Uri = uri;
+                State = state;
+            }
+
+            public void FlagAttempt()
+            {
+                Attempts++;
+                if (Attempts >= MaxAttempts)
+                {
+                    Expired = true;
+                }
+            }
+        }
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(HttpUploadClient));
 
         private readonly HttpClient _client;
-        private readonly List<(Uri, IState)> _queue = new List<(Uri, IState)>();
+        private readonly List<UploadItem> _queue = new List<UploadItem>();
 
         public Uri BaseUri { get; }
         public string SiteUri => BaseUri.AbsoluteUri;
@@ -40,7 +65,7 @@ namespace Howatworks.Thumb.Matrix.Core
 
         public void Push(Uri uri, IState state)
         {
-            _queue.Add((uri, state));
+            _queue.Add(new UploadItem(uri, state));
         }
 
         public IObservable<DateTimeOffset> StartUploading(CancellationToken token)
@@ -53,25 +78,34 @@ namespace Howatworks.Thumb.Matrix.Core
                 }
                 while (_queue.Count > 0 && !token.IsCancellationRequested)
                 {
-                    (var uri, var state) = _queue.First();
-                    var timestamp = state.TimeStamp;
+                    var item = _queue.First();
+                    var timestamp = item.State.TimeStamp;
                     try
                     {
-                        await Upload(uri, state);
-                        _queue.Remove((uri, state));
+                        await Upload(item.Uri, item.State);
+                        _queue.Remove(item);
                         o.OnNext(timestamp);
                     }
                     catch (MatrixUploadException ex)
                     {
-                        // In case of bad data, don't re-attempt uploading this dta
-                        // TODO: Possibly too dramatic, all upload failures other than authentication treated as fatal
-                        _queue.Remove((uri, state));
+                        // In case of bad data, don't re-attempt uploading this data
+                        item.FlagAttempt();
+                        if (item.Expired) _queue.Remove(item);
+
+                        o.OnError(ex);
+                        break;
+                    }
+                    catch (MatrixAuthenticationException ex)
+                    {
                         o.OnError(ex);
                         break;
                     }
                     catch (Exception ex)
                     {
-                        o.OnError(ex);
+                        item.FlagAttempt();
+                        if (item.Expired) _queue.Remove(item);
+
+                        o.OnError(new MatrixUploadException("Unexpected error", ex));
                         break;
                     }
                 }
@@ -128,7 +162,7 @@ namespace Howatworks.Thumb.Matrix.Core
             }
             catch (HttpRequestException ex)
             {
-                Log.Error(ex);
+                Log.Error(ex.Message);
                 throw new MatrixAuthenticationException("Could not authenticate", ex);
             }
         }
