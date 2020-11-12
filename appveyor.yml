@@ -17,8 +17,6 @@ test_script:
 
 after_test:
   - pwsh: dotnet dotnet-cake --target=PublishCoverage
-  
-before_package:
   - pwsh: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -DeploymentName NuGetPackages }
   - pwsh: Get-ChildItem -Recurse ./src/*/Artifacts/*.msi | % { Push-AppveyorArtifact $_.FullName -DeploymentName WindowsInstallers }
   - pwsh: Get-ChildItem -Recurse ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -DeploymentName Apps }
