@@ -17,33 +17,12 @@ test_script:
 
 after_test:
   - pwsh: dotnet dotnet-cake --target=PublishCoverage
-  - pwsh: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - pwsh: Get-ChildItem -Recurse ./.build/*.msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - pwsh: Get-ChildItem -Recurse ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - pwsh: Get-ChildItem -Recurse ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-
-#artifacts:
-#  - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
-#    name: Thumb Assistant Installer
-#    type: file
-#  - path: .build/PublishedApps/Howatworks.Thumb.Assistant.Console-*.zip
-#    name: Thumb Assistant Console
-#    type: file
-#  - path: src/Thumb.Matrix/Howatworks.Thumb.Matrix.Installer/Artifacts/SubEthaThumbMatrix.msi
-#    name: Thumb Matrix Installer
-#    type: file
-#  - path: .build/PublishedApps/Howatworks.Thumb.Matrix.Console-*.zip
-#    name: Thumb Matrix Console
-#    type: file
-#  - path: .build/PublishedApps/Howatworks.Matrix.Site-*.zip
-#    name: Matrix Site
-#    type: zip
-#  - path: .build/Packages/*.nupkg
-#    name: Packages
-#    type: file
-#  - path: .build/CoverageResults/Coverage.*.cobertura.xml
-#    name: Coverlet Reports
-#    type: file
+  
+before_package:
+  - pwsh: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -DeploymentName NuGetPackages }
+  - pwsh: Get-ChildItem -Recurse ./src/*/Artifacts/*.msi | % { Push-AppveyorArtifact $_.FullName -DeploymentName WindowsInstallers }
+  - pwsh: Get-ChildItem -Recurse ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -DeploymentName Apps }
+  - pwsh: Get-ChildItem -Recurse ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -DeploymentName CoverageReports }
 
 notifications:
 - provider: Email
