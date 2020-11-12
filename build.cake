@@ -2,7 +2,7 @@
 #addin "nuget:?package=Cake.Incubator&version=5.1.0"
 #tool "nuget:?package=coverlet.console&version=1.7.2"
 #addin "nuget:?package=Cake.Coverlet&version=2.5.1"
-#tool "nuget:?package=Codecov&version=1.23.3"
+#tool "nuget:?package=Codecov&version=1.12.3"
 #addin "nuget:?package=Cake.Codecov&version=0.9.1"
 
 var target = Argument("target", "Build");
