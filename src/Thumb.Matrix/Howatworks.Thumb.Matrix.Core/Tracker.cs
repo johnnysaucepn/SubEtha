@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Howatworks.Matrix.Domain;
 
@@ -7,17 +8,15 @@ namespace Howatworks.Thumb.Matrix.Core
     public class Tracker<T> where T : IState, ICloneable<T>, IStateComparable<T>, new()
     {
         private readonly Subject<T> _subject = new Subject<T>();
+        public IObservable<T> Observable => _subject.AsObservable();
 
         private T _currentState = new T() { TimeStamp = DateTimeOffset.MinValue };
-
-        public IObservable<T> Observable => _subject;
 
         /// <summary>
         /// Ignore previous information, return new state
         /// </summary>
         /// <param name="timestamp"></param>
         /// <param name="stateChange"></param>
-        /// <returns></returns>
         public void Replace(DateTimeOffset timestamp, Action<T> stateChange)
         {
             var newState = new T { TimeStamp = timestamp };

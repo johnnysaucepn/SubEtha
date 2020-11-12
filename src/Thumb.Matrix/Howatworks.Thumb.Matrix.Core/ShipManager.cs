@@ -30,6 +30,18 @@ namespace Howatworks.Thumb.Matrix.Core
             observable.OfJournalType<RepairAll>().Subscribe(ApplyRepairAll);
         }
 
+        public bool TryBuildUri(string cmdrName, string gameVersion, out Uri uri)
+        {
+            if (string.IsNullOrWhiteSpace(cmdrName) || string.IsNullOrWhiteSpace(gameVersion))
+            {
+                uri = null;
+                return false;
+            }
+
+            uri = new Uri($"Api/{cmdrName}/{gameVersion}/Ship", UriKind.Relative);
+            return true;
+        }
+
         private void ApplyLoadGame(LoadGame loadGame)
         {
             _tracker.Modify(loadGame.Timestamp, ship =>

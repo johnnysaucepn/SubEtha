@@ -23,6 +23,18 @@ namespace Howatworks.Thumb.Matrix.Core
             observable.OfJournalType<FileHeader>().Subscribe(ApplyFileHeader);
         }
 
+        public bool TryBuildUri(string cmdrName, string gameVersion, out Uri uri)
+        {
+            if (string.IsNullOrWhiteSpace(cmdrName) || string.IsNullOrWhiteSpace(gameVersion))
+            {
+                uri = null;
+                return false;
+            }
+
+            uri = new Uri($"Api/{cmdrName}/{gameVersion}/Session", UriKind.Relative);
+            return true;
+        }
+
         private void ApplyLoadGame(LoadGame loadGame)
         {
             _tracker.Replace(loadGame.Timestamp, x =>

@@ -128,7 +128,7 @@ namespace Howatworks.Thumb.Assistant.Core
             var source = new JournalEntrySource(_parser, startTime, _monitor);
 
             var publisher = new JournalEntryPublisher(source);
-            var publication = publisher.GetObservable().Publish();
+            var publication = publisher.Observable.Publish();
 
             _statusManager.SubscribeTo(publication);
 
