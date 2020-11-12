@@ -17,10 +17,10 @@ test_script:
 
 after_test:
   - pwsh: dotnet dotnet-cake --target=PublishCoverage
-  - pwsh: Get-ChildItem ./build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - pwsh: Get-ChildItem -Recurse ./build/*.msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - pwsh: Get-ChildItem -Recurse ./PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - pwsh: Get-ChildItem -Recurse ./CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - pwsh: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - pwsh: Get-ChildItem -Recurse ./.build/*.msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - pwsh: Get-ChildItem -Recurse ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - pwsh: Get-ChildItem -Recurse ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
 #artifacts:
 #  - path: src/Thumb.Assistant/Howatworks.Thumb.Assistant.Installer/Artifacts/SubEthaThumbAssistant.msi
