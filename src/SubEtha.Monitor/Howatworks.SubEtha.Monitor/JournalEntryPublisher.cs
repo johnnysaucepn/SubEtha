@@ -23,6 +23,5 @@ namespace Howatworks.SubEtha.Monitor
             foreach (var entry in allEntries)
                 _subject.OnNext(entry);
         }
-
     }
 }

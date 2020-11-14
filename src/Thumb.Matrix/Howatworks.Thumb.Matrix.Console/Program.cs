@@ -45,7 +45,5 @@ namespace Howatworks.Thumb.Matrix.Console
                 cts.Cancel();
             }
         }
-
     }
-
 }

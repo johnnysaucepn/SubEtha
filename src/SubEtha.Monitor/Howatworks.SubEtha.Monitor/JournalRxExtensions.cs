@@ -11,7 +11,7 @@ namespace Howatworks.SubEtha.Monitor
             return source.Select(x => x.Entry).OfType<TResult>();
         }
 
-        public static IObservable<JournalLogFileInfo> SelectContext<TResult>(this IObservable<JournalEntry> source)
+        public static IObservable<JournalLogFileInfo> SelectContext(this IObservable<JournalEntry> source)
         {
             return source.Select(x => x.Context);
         }

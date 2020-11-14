@@ -46,7 +46,5 @@ namespace Howatworks.Thumb.Assistant.Core
         {
             return _status.CreateControlStateMessage();
         }
-               
-
     }
 }
