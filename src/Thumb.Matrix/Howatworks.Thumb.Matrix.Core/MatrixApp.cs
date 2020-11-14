@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -30,7 +31,7 @@ namespace Howatworks.Thumb.Matrix.Core
         private readonly HttpUploadClient _client;
 
         private readonly Subject<DateTimeOffset> _updateSubject = new Subject<DateTimeOffset>();
-        public IObservable<DateTimeOffset> Updates => _updateSubject.AsObservable();
+        public IObservable<Timestamped<DateTimeOffset>> Updates => _updateSubject.Timestamp().AsObservable();
 
         public MatrixApp(
             IConfiguration config,
@@ -124,7 +125,7 @@ namespace Howatworks.Thumb.Matrix.Core
                 });
 
             Updates
-                .Timestamp()
+                .Throttle(TimeSpan.FromSeconds(5))
                 .Subscribe(x =>
                 {
                     var lastEntry = x.Value;

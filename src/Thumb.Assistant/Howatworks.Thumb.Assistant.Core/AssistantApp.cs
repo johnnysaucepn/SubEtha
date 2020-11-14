@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Howatworks.SubEtha.Bindings;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
@@ -20,32 +21,35 @@ namespace Howatworks.Thumb.Assistant.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantApp));
 
+        private readonly IConfiguration _configuration;
+        private readonly IJournalMonitorState _state;
+
         private readonly LiveJournalMonitor _monitor;
         private readonly IThumbNotifier _notifier;
         private readonly IJournalParser _parser;
 
-        private readonly IConfiguration _configuration;
         private readonly WebSocketConnectionManager _connectionManager;
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
 
-        private DateTimeOffset? _lastEntry = null;
-        private DateTimeOffset? _lastChecked = null;
-
         public AssistantApp(
+            IConfiguration configuration,
+            IJournalMonitorState state,
             LiveJournalMonitor monitor,
             IThumbNotifier notifier,
             IJournalParser parser,
-            IConfiguration configuration,
             WebSocketConnectionManager connectionManager,
             StatusManager statusManager,
             GameControlBridge keyboard)
         {
+            _configuration = configuration;
+            _state = state;
+
             _monitor = monitor;
             _notifier = notifier;
             _parser = parser;
-            _configuration = configuration;
+
             _connectionManager = connectionManager;
             _statusManager = statusManager;
             _keyboard = keyboard;
@@ -124,7 +128,7 @@ namespace Howatworks.Thumb.Assistant.Core
 
             host.RunAsync(token).ConfigureAwait(false); // Don't block the calling thread
 
-            var startTime = DateTimeOffset.MinValue; // TODO: temporary
+            var startTime = _state.LastEntrySeen ?? DateTimeOffset.MinValue;
             var source = new JournalEntrySource(_parser, startTime, _monitor);
 
             var publisher = new JournalEntryPublisher(source);
@@ -132,25 +136,31 @@ namespace Howatworks.Thumb.Assistant.Core
 
             _statusManager.SubscribeTo(publication);
 
-            publication.Subscribe(e =>
+            publication
+                .Throttle(TimeSpan.FromSeconds(5))
+                .Subscribe(e =>
             {
-                if (e.Entry.Timestamp > (_lastEntry ?? DateTimeOffset.MinValue)) _lastEntry = e.Entry.Timestamp;
+                var lastEntry = e.Entry.Timestamp;
+                var lastChecked = DateTimeOffset.Now;
+                _state.Update(lastChecked, lastEntry);
             });
 
             publication.Connect();
 
-            while (true)
+            using (publication.Connect())
             {
-                publisher.Poll();
-                _lastChecked = DateTimeOffset.Now;
-                Console.WriteLine(_lastChecked);
-                if (Console.ReadKey().Key == ConsoleKey.Escape) break;
+                while (!token.IsCancellationRequested)
+                {
+                    Task.Delay(TimeSpan.FromSeconds(1)).Wait();
+
+                    publisher.Poll();
+                }
             }
         }
 
-        public DateTimeOffset? LastEntry => _lastEntry;
+        public DateTimeOffset? LastEntry => _state.LastEntrySeen;
 
-        public DateTimeOffset? LastChecked => _lastChecked;
+        public DateTimeOffset? LastChecked => _state.LastChecked;
 
         private void ActivateBinding(ControlRequest controlRequest)
         {

@@ -5,6 +5,8 @@ using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
 using Howatworks.Thumb.Assistant.Core;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Reactive.Linq;
 
 namespace Howatworks.Thumb.Assistant.Console
 {
@@ -25,10 +27,21 @@ namespace Howatworks.Thumb.Assistant.Console
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var cts = new CancellationTokenSource();
                 var app = scope.Resolve<AssistantApp>();
-               
-                app.Run(cts.Token);
+                var keyListener = scope.Resolve<ConsoleKeyListener>();
+
+                var cts = new CancellationTokenSource();
+                var reset = new ManualResetEventSlim(false);
+
+                Task.Run(() => app.Run(cts.Token));
+
+                keyListener.Observable.Where(k => k.Key == ConsoleKey.Escape).Subscribe(_ => reset.Set());
+
+                // Wait forever, unless something trips the switch
+                reset.Wait();
+
+                // Cancel the token to shut any pending operations down
+                cts.Cancel();
             }
         }
     }
