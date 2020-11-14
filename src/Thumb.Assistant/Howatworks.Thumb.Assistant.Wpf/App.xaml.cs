@@ -2,11 +2,6 @@
 using Hardcodet.Wpf.TaskbarNotification;
 using Howatworks.Thumb.Assistant.Core;
 using Howatworks.Thumb.Core;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Howatworks.Thumb.Wpf;
@@ -21,8 +16,7 @@ namespace Howatworks.Thumb.Assistant.Wpf
     {
         private TaskbarIcon _tb;
         private IContainer _container;
-        private AssistantApp _app;
-        private CancellationTokenSource _cts;
+        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
         public void Start()
         {
@@ -41,11 +35,15 @@ namespace Howatworks.Thumb.Assistant.Wpf
 
             using (var scope = _container.BeginLifetimeScope())
             {
-                _cts = new CancellationTokenSource();
+                var app = _container.Resolve<AssistantApp>();
 
-                _app = _container.Resolve<AssistantApp>();
-                ViewManager.App = _app;
-                _app.Run(_cts.Token);
+                _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
+                LoadTaskbarIcon();
+
+                Task.Run(() =>
+                {
+                    app.Run(_cts.Token);
+                });
             }
         }
 
@@ -64,6 +62,17 @@ namespace Howatworks.Thumb.Assistant.Wpf
             _cts.Cancel();
             _tb.Visibility = Visibility.Hidden;
             _tb.Dispose();
+        }
+
+        public void LoadTaskbarIcon()
+        {
+            var trayVm = _container.Resolve<TrayIconViewModel>();
+
+            trayVm.OnExitApplication += (s, e) => Application.Current.Shutdown();
+
+            _tb.DataContext = trayVm;
+            _tb?.BringIntoView();
+
         }
     }
 }

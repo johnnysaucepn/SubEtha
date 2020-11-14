@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Howatworks.Thumb.Matrix.Core;
 
 namespace Howatworks.Thumb.Matrix.Wpf

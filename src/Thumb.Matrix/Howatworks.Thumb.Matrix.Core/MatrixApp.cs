@@ -31,7 +31,10 @@ namespace Howatworks.Thumb.Matrix.Core
         private readonly HttpUploadClient _client;
 
         private readonly Subject<DateTimeOffset> _updateSubject = new Subject<DateTimeOffset>();
-        public IObservable<Timestamped<DateTimeOffset>> Updates => _updateSubject.Timestamp().AsObservable();
+        public IObservable<Timestamped<DateTimeOffset>> Updates => _updateSubject
+                                                                    .Throttle(TimeSpan.FromSeconds(5))
+                                                                    .Timestamp()
+                                                                    .AsObservable();
 
         public MatrixApp(
             IConfiguration config,
@@ -125,7 +128,6 @@ namespace Howatworks.Thumb.Matrix.Core
                 });
 
             Updates
-                .Throttle(TimeSpan.FromSeconds(5))
                 .Subscribe(x =>
                 {
                     var lastEntry = x.Value;

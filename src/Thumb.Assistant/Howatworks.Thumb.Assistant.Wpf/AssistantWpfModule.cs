@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Howatworks.Thumb.Core;
+using Howatworks.Thumb.Assistant.Core;
 
 namespace Howatworks.Thumb.Assistant.Wpf
 {
@@ -7,6 +7,7 @@ namespace Howatworks.Thumb.Assistant.Wpf
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => TrayIconViewModel.Create(c.Resolve<AssistantApp>()));
         }
     }
 }

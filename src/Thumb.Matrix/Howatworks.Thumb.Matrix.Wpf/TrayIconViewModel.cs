@@ -10,7 +10,15 @@ namespace Howatworks.Thumb.Matrix.Wpf
 {
     public class TrayIconViewModel : INotifyPropertyChanged
     {
-        private string _plainStatusDisplayText;
+        public event EventHandler OnExitApplication = delegate { };
+        public event EventHandler OnAuthenticationRequested = delegate { };
+
+        private string _tooltipText;
+        public string TooltipText
+        {
+            get { return _tooltipText; }
+            set { _tooltipText = value; NotifyPropertyChanged(); }
+        }
 
         public static TrayIconViewModel Create(MatrixApp app) => new TrayIconViewModel(app);
 
@@ -40,15 +48,6 @@ namespace Howatworks.Thumb.Matrix.Wpf
                 return Resources.NotifyIconNeverUpdatedLabel;
             }
             return Resources.NotifyIconDefaultLabel;
-        }
-
-        public event EventHandler OnExitApplication = delegate { };
-        public event EventHandler OnAuthenticationRequested = delegate { };
-
-        public string TooltipText
-        {
-            get { return _plainStatusDisplayText; }
-            set { _plainStatusDisplayText = value; NotifyPropertyChanged(); }
         }
 
         /// <summary>
