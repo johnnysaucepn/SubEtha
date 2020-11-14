@@ -5,6 +5,7 @@ namespace Howatworks.SubEtha.Journal.Status
     [Flags]
     public enum StatusFlags
     {
+        None = 0,
         Docked = 1 << 0,
         Landed = 1 << 1,
         LandingGearDown = 1 << 2,

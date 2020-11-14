@@ -27,7 +27,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void CreatedFiles_MatchingFileCreated_Found()
+        public void CreatedFiles_MatchingFileCreated_Found()
         {
             var found = false;
             var expectedFilePath = Path.Combine(TestDir.FullName, "created.txt");
@@ -44,7 +44,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void CreatedFiles_NonMatchingFileCreated_NotFound()
+        public void CreatedFiles_NonMatchingFileCreated_NotFound()
         {
             var found = false;
             var expectedFilePath = Path.Combine(TestDir.FullName, "created.bad");
@@ -61,7 +61,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void CreatedFiles_MatchingFileRenamed_Found()
+        public void CreatedFiles_MatchingFileRenamed_Found()
         {
             var found = false;
             var originalFilePath = Path.Combine(TestDir.FullName, "renamed.bad");
@@ -80,7 +80,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void CreatedFiles_NonMatchingFileRenamed_NotFound()
+        public void CreatedFiles_NonMatchingFileRenamed_NotFound()
         {
             var found = false;
             var originalFilePath = Path.Combine(TestDir.FullName, "renamed.txt");
@@ -99,7 +99,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void DeletedFiles_MatchingFileDeleted_Found()
+        public void DeletedFiles_MatchingFileDeleted_Found()
         {
             var found = false;
             var expectedFilePath = Path.Combine(TestDir.FullName, "deleted.txt");
@@ -117,7 +117,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void DeletedFiles_NonMatchingFileDeleted_NotFound()
+        public void DeletedFiles_NonMatchingFileDeleted_NotFound()
         {
             var found = false;
             var expectedFilePath = Path.Combine(TestDir.FullName, "deleted.bad");
@@ -135,7 +135,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void DeletedFiles_MatchingFileRenamed_Found()
+        public void DeletedFiles_MatchingFileRenamed_Found()
         {
             var found = false;
             var originalFilePath = Path.Combine(TestDir.FullName, "renamed.txt");
@@ -154,7 +154,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void DeletedFiles_NonMatchingFileRenamed_NotFound()
+        public void DeletedFiles_NonMatchingFileRenamed_NotFound()
         {
             var found = false;
             var originalFilePath = Path.Combine(TestDir.FullName, "renamed.bad");
@@ -173,7 +173,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void ChangedFiles_MatchingFileChanged_Found()
+        public void ChangedFiles_MatchingFileChanged_Found()
         {
             var found = false;
             var expectedFilePath = Path.Combine(TestDir.FullName, "changed.txt");
@@ -191,7 +191,7 @@ namespace Howatworks.SubEtha.Monitor.Test
         }
 
         [Fact]
-        private void ChangedFiles_NonMatchingFileChanged_NotFound()
+        public void ChangedFiles_NonMatchingFileChanged_NotFound()
         {
             var found = false;
             var expectedFilePath = Path.Combine(TestDir.FullName, "changed.bad");

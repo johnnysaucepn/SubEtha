@@ -96,6 +96,5 @@ namespace Howatworks.Thumb.Assistant.Core
                 IsDirty = true;
             }
         }
-
     }
 }

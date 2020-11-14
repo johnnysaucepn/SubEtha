@@ -20,8 +20,6 @@ namespace Howatworks.Thumb.Matrix.Wpf
             // Update the tooltip description as new items come in
 
             app.Updates
-                .Throttle(TimeSpan.FromSeconds(10))
-                .Timestamp()
                 .Subscribe(x =>
             {
                 var lastEntry = x.Value;

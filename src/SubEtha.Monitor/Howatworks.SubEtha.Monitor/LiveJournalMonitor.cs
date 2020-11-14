@@ -16,7 +16,6 @@ namespace Howatworks.SubEtha.Monitor
         private readonly List<LiveJournalReader> _liveReaders;
 
         public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
-        public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
 
         public LiveJournalMonitor(IConfiguration config, IJournalReaderFactory readerFactory)
         {

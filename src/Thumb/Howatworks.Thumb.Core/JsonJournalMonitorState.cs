@@ -9,7 +9,7 @@ namespace Howatworks.Thumb.Core
 {
     public class JsonJournalMonitorState : IJournalMonitorState
     {
-        private const string StorageFileName = @"journalmonitor.json";
+        private const string StorageFileName = "journalmonitor.json";
         private readonly string _storageFilePath;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(JsonJournalMonitorState));
@@ -50,13 +50,14 @@ namespace Howatworks.Thumb.Core
             try
             {
                 var jsonState = File.ReadAllText(_storageFilePath);
-                return JsonConvert.DeserializeObject<InMemoryJournalMonitorState>(jsonState, _serializerSettings);
+                var state = JsonConvert.DeserializeObject<InMemoryJournalMonitorState>(jsonState, _serializerSettings);
+                if (state != null) return state;
             }
             catch (IOException)
             {
                 Log.Warn($"No '{StorageFileName}' found, creating new file");
-                return new InMemoryJournalMonitorState();
             }
+            return new InMemoryJournalMonitorState();
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]

@@ -43,7 +43,7 @@ namespace Howatworks.SubEtha.Monitor
                     }
                     return null;
                 })
-                .Where(x => x != null && x.Entry != null && x.Entry.Timestamp >= _startTime);
+                .Where(x => x?.Entry != null && x.Entry.Timestamp >= _startTime);
         }
 
     }

@@ -31,6 +31,18 @@ namespace Howatworks.Thumb.Matrix.Core
             observable.OfJournalType<Died>().Subscribe(ApplyDied);
         }
 
+        public bool TryBuildUri(string cmdrName, string gameVersion, out Uri uri)
+        {
+            if (string.IsNullOrWhiteSpace(cmdrName) || string.IsNullOrWhiteSpace(gameVersion))
+            {
+                uri = null;
+                return false;
+            }
+
+            uri = new Uri($"Api/{cmdrName}/{gameVersion}/Location", UriKind.Relative);
+            return true;
+        }
+
         private void ApplyLocation(Location location)
         {
             _tracker.Replace(location.Timestamp, x =>
@@ -133,6 +145,6 @@ namespace Howatworks.Thumb.Matrix.Core
             // Ignore previous information, return empty location, will be replace by respawn message
 
             _tracker.Replace(died.Timestamp, x => { });
-        }        
+        }
     }
 }

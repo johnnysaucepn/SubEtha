@@ -17,6 +17,5 @@ namespace Howatworks.SubEtha.Journal.Combat
         public int? SharedWithOthers { get; set; } // Note: number of players
         public string Faction { get; set; } // Note: skimmers only
         public long? Reward { get; set; } // Note: skimmers only
-
     }
 }

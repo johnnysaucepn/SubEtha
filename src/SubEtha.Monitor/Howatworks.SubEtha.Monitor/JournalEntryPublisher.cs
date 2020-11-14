@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Howatworks.SubEtha.Journal;
 
@@ -9,6 +10,7 @@ namespace Howatworks.SubEtha.Monitor
         private readonly IJournalEntrySource _source;
 
         private readonly Subject<JournalEntry> _subject = new Subject<JournalEntry>();
+        public IObservable<JournalEntry> Observable => _subject.AsObservable();
 
         public JournalEntryPublisher(IJournalEntrySource source)
         {
@@ -21,11 +23,5 @@ namespace Howatworks.SubEtha.Monitor
             foreach (var entry in allEntries)
                 _subject.OnNext(entry);
         }
-
-        public IObservable<JournalEntry> GetObservable()
-        {
-            return _subject;
-        }
-
     }
 }

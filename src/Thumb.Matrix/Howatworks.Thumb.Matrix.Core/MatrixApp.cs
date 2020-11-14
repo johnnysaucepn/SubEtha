@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -16,6 +17,7 @@ namespace Howatworks.Thumb.Matrix.Core
         private static readonly ILog Log = LogManager.GetLogger(typeof(MatrixApp));
 
         private readonly IConfiguration _config;
+        private readonly IJournalMonitorState _state;
         private readonly LogJournalMonitor _logMonitor;
         private readonly LiveJournalMonitor _liveMonitor;
         private readonly IThumbNotifier _notifier;
@@ -28,12 +30,12 @@ namespace Howatworks.Thumb.Matrix.Core
         private readonly SessionManager _session;
         private readonly HttpUploadClient _client;
 
-        private BehaviorSubject<DateTimeOffset> _updateSubject = new BehaviorSubject<DateTimeOffset>(DateTimeOffset.MinValue);
-
-        public IObservable<DateTimeOffset> Updates => _updateSubject.AsObservable();
+        private readonly Subject<DateTimeOffset> _updateSubject = new Subject<DateTimeOffset>();
+        public IObservable<Timestamped<DateTimeOffset>> Updates => _updateSubject.Timestamp().AsObservable();
 
         public MatrixApp(
             IConfiguration config,
+            IJournalMonitorState state,
             LogJournalMonitor logMonitor,
             LiveJournalMonitor liveMonitor,
             IThumbNotifier notifier,
@@ -49,6 +51,7 @@ namespace Howatworks.Thumb.Matrix.Core
         )
         {
             _config = config;
+            _state = state;
             _logMonitor = logMonitor;
             _liveMonitor = liveMonitor;
             _notifier = notifier;
@@ -61,21 +64,6 @@ namespace Howatworks.Thumb.Matrix.Core
             _session = session;
 
             _client = client;
-        }
-
-        private Uri BuildLocationUri(string cmdrName, string gameVersion)
-        {
-            return new Uri($"Api/{cmdrName}/{gameVersion}/Location", UriKind.Relative);
-        }
-
-        private Uri BuildSessionUri(string cmdrName, string gameVersion)
-        {
-            return new Uri($"Api/{cmdrName}/{gameVersion}/Session", UriKind.Relative);
-        }
-
-        private Uri BuildShipUri(string cmdrName, string gameVersion)
-        {
-            return new Uri($"Api/{cmdrName}/{gameVersion}/Ship", UriKind.Relative);
         }
 
         public void Run(CancellationToken token)
@@ -95,11 +83,11 @@ namespace Howatworks.Thumb.Matrix.Core
                 Log.Warn(ex.Message);
             }
 
-            var startTime = DateTimeOffset.MinValue; // TODO: temporary
+            var startTime = _state.LastEntrySeen ?? DateTimeOffset.MinValue;
             var source = new JournalEntrySource(_parser, startTime, _logMonitor, _liveMonitor);
 
             var publisher = new JournalEntryPublisher(source);
-            var publication = publisher.GetObservable().Publish();
+            var publication = publisher.Observable.Publish();
 
             _gameContext.SubscribeTo(publication);
             _location.SubscribeTo(publication);
@@ -109,29 +97,40 @@ namespace Howatworks.Thumb.Matrix.Core
             _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
             _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
 
-            var itemsPushed = 0;
             _location.Observable
                 .Subscribe(l =>
                 {
-                    var uri = BuildLocationUri(_gameContext.CommanderName, _gameContext.GameVersion);
-                    _client.Push(uri, l);
-                    itemsPushed++;
+                    if (_location.TryBuildUri(_gameContext.CommanderName, _gameContext.GameVersion, out var uri))
+                    {
+                        _client.Push(uri, l);
+                    }
                 });
 
             _ship.Observable
                 .Subscribe(s =>
                 {
-                    var uri = BuildShipUri(_gameContext.CommanderName, _gameContext.GameVersion);
-                    _client.Push(uri, s);
-                    itemsPushed++;
+                    if (_ship.TryBuildUri(_gameContext.CommanderName, _gameContext.GameVersion, out var uri))
+                    {
+                        _client.Push(uri, s);
+                    }
                 });
 
             _session.Observable
                 .Subscribe(s =>
                 {
-                    var uri = BuildSessionUri(_gameContext.CommanderName, _gameContext.GameVersion);
-                    _client.Push(uri, s);
-                    itemsPushed++;
+                    if (_session.TryBuildUri(_gameContext.CommanderName, _gameContext.GameVersion, out var uri))
+                    {
+                        _client.Push(uri, s);
+                    }
+                });
+
+            Updates
+                .Throttle(TimeSpan.FromSeconds(5))
+                .Subscribe(x =>
+                {
+                    var lastEntry = x.Value;
+                    var lastChecked = x.Timestamp;
+                    _state.Update(lastChecked, lastEntry);
                 });
 
             var readyForNextBatch = new ManualResetEventSlim(true);
@@ -172,7 +171,7 @@ namespace Howatworks.Thumb.Matrix.Core
                     }, () =>
                     {
                         // Upload was successful, can proceed with another poll
-                        Log.Debug($"Total items pushed = {itemsPushed}");
+                        Log.Debug("Completed pending uploads");
                         readyForNextBatch.Set();
                     }, token);
 

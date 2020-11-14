@@ -5,6 +5,7 @@ using log4net;
 using System.Reactive.Subjects;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Monitor;
+using System.Reactive.Linq;
 
 namespace Howatworks.Thumb.Assistant.Core
 {
@@ -15,13 +16,12 @@ namespace Howatworks.Thumb.Assistant.Core
         private readonly ControlStateModel _status = new ControlStateModel();
 
         private readonly Subject<ControlStateModel> _controlStateSubject = new Subject<ControlStateModel>();
+        public IObservable<ControlStateModel> ControlStateObservable => _controlStateSubject.AsObservable();
 
         public void SubscribeTo(IObservable<JournalEntry> observable)
         {
             observable.OfJournalType<Status>().Subscribe(ApplyStatus);
         }
-
-        public IObservable<ControlStateModel> ControlStateObservable => _controlStateSubject;
 
         private void ApplyStatus(Status status)
         {
@@ -46,7 +46,5 @@ namespace Howatworks.Thumb.Assistant.Core
         {
             return _status.CreateControlStateMessage();
         }
-               
-
     }
 }
