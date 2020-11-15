@@ -1,6 +1,9 @@
-﻿namespace Howatworks.SubEtha.Journal.Combat
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Combat
 {
     // Note: no sample
+    [ExcludeFromCodeCoverage]
     [JournalName("PVPKill")]
     public class PvpKill : JournalEntryBase
     {

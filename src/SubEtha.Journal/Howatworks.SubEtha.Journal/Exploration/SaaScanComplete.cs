@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Exploration
 {
+    [ExcludeFromCodeCoverage]
     [JournalName("SAAScanComplete")]
     public class SaaScanComplete : JournalEntryBase
     {

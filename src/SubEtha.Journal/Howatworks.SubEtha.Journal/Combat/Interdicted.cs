@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Combat
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Combat
 {
+    [ExcludeFromCodeCoverage]
     public class Interdicted : JournalEntryBase
     {
         public bool Submitted { get; set; }

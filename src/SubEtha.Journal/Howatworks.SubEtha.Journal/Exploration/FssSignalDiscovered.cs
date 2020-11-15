@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Exploration
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Exploration
 {
+    [ExcludeFromCodeCoverage]
     // Note: no sample
     [JournalName("FSSSignalDiscovered")]
     public class FssSignalDiscovered : JournalEntryBase

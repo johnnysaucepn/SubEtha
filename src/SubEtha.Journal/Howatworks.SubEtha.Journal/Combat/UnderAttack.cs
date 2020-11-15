@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Combat
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Combat
 {
+    [ExcludeFromCodeCoverage]
     // TODO: no sample
     public class UnderAttack : JournalEntryBase
     {

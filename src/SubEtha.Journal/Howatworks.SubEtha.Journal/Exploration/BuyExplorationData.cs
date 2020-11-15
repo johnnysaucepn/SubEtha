@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Exploration
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Exploration
 {
+    [ExcludeFromCodeCoverage]
     public class BuyExplorationData : JournalEntryBase
     {
         public string System { get; set; } // Note: name

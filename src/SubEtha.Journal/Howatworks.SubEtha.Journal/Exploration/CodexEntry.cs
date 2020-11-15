@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.Exploration
 {
+    [ExcludeFromCodeCoverage]
     public class CodexEntry : JournalEntryBase
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]

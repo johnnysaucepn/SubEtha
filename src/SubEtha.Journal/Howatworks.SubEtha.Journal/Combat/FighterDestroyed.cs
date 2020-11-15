@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Combat
 {
+    [ExcludeFromCodeCoverage]
     public class FighterDestroyed : JournalEntryBase
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
