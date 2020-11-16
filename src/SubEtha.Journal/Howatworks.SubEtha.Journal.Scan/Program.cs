@@ -2,24 +2,25 @@
 using log4net;
 using log4net.Config;
 using Microsoft.Extensions.Configuration;
-using System;
+using PInvoke;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
 namespace Howatworks.SubEtha.Journal.Scan
 {
+    [ExcludeFromCodeCoverage]
     internal class Program
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
         private static void Main(string[] args)
         {
-            // TODO: In tray, we can use the Win32 add-on package that extends SpecialFolder to retrieve SavedGames directly
+            var savedGames = Shell32.SHGetKnownFolderPath(Shell32.KNOWNFOLDERID.FOLDERID_SavedGames);
             var defaultJournalFolder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "..", "Saved Games", "Frontier Developments", "Elite Dangerous"
+                savedGames, "Frontier Developments", "Elite Dangerous"
             );
 
             var defaultConfig = new Dictionary<string, string>
@@ -42,23 +43,37 @@ namespace Howatworks.SubEtha.Journal.Scan
 
             var basePath = config["JournalFolder"];
 
-            var incrementalPattern = config["JournalPattern"];
-            var incrementalFiles = Directory.EnumerateFiles(basePath, incrementalPattern, SearchOption.TopDirectoryOnly);
-            foreach (var file in incrementalFiles)
+            var logPattern = config["JournalPattern"];
+            var logFiles = Directory.EnumerateFiles(basePath, logPattern, SearchOption.TopDirectoryOnly);
+            foreach (var file in logFiles)
             {
-                Log.Info($"Parsing file '{file}'...");
+                Log.Info($"Checking file '{file}'...");
                 var reader = new LogJournalReader(new FileInfo(file), parser);
                 // Read all entries from all files
-                var _ = reader.ReadLines().ToList();
+                reader.ReadLines().ToList().ForEach(l => AttemptParse(l.Line, parser));
             }
 
-            var realTimeFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
-            foreach (var file in realTimeFiles)
+            var liveFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
+            foreach (var file in liveFiles)
             {
-                Log.Info($"Parsing file '{file}'...");
+                Log.Info($"Checking file '{file}'...");
                 var reader = new LiveJournalReader(new FileInfo(file), parser);
                 // Read entry from each file
-                var _ = reader.ReadCurrent();
+                AttemptParse(reader.ReadCurrent().Line, parser);
+            }
+        }
+
+        private static void AttemptParse(string line, JournalParser parser)
+        {
+            Log.Debug(line);
+            try
+            {
+                parser.Parse(line);
+            }
+            catch (JournalParseException ex)
+            {
+                Log.Warn(line);
+                Log.Warn(ex.Message);
             }
         }
     }
