@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
@@ -37,7 +32,9 @@ namespace Howatworks.Thumb.Matrix.Wpf
             builder.RegisterModule(new ThumbWpfModule(config));
             builder.RegisterModule(new MatrixModule());
             builder.RegisterModule(new MatrixWpfModule());
+
             _container = builder.Build();
+
             using (var scope = _container.BeginLifetimeScope())
             {
                 var app = _container.Resolve<MatrixApp>();
@@ -67,10 +64,9 @@ namespace Howatworks.Thumb.Matrix.Wpf
 
             trayVm.OnExitApplication += (s, e) => Application.Current.Shutdown();
             trayVm.OnAuthenticationRequested += (s, e) => authDialog.Show();
-            
+
             _tb.DataContext = trayVm;
             _tb?.BringIntoView();
-
         }
     }
 }

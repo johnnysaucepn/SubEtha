@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Howatworks.SubEtha.Bindings;
@@ -32,6 +34,12 @@ namespace Howatworks.Thumb.Assistant.Core
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
+
+        private readonly Subject<DateTimeOffset> _updateSubject = new Subject<DateTimeOffset>();
+        public IObservable<Timestamped<DateTimeOffset>> Updates => _updateSubject
+                                                                    .Throttle(TimeSpan.FromSeconds(5))
+                                                                    .Timestamp()
+                                                                    .AsObservable();
 
         public AssistantApp(
             IConfiguration configuration,
@@ -134,16 +142,18 @@ namespace Howatworks.Thumb.Assistant.Core
 
             _statusManager.SubscribeTo(publication);
 
-            publication
-                .Throttle(TimeSpan.FromSeconds(5))
-                .Subscribe(e =>
+            publication.Subscribe(t =>
             {
-                var lastEntry = e.Entry.Timestamp;
-                var lastChecked = DateTimeOffset.Now;
-                _state.Update(lastChecked, lastEntry);
+                _updateSubject.OnNext(t.Entry.Timestamp);
             });
 
-            publication.Connect();
+            Updates
+                .Subscribe(e =>
+                {
+                    var lastEntry = e.Value;
+                    var lastChecked = e.Timestamp;
+                    _state.Update(lastChecked, lastEntry);
+                });
 
             using (publication.Connect())
             {
