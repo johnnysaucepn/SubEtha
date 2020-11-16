@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Trade
 {
+    [ExcludeFromCodeCoverage]
     public class MarketSell : JournalEntryBase
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]

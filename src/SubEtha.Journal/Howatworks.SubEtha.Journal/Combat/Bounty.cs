@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.Combat
 {
+    [ExcludeFromCodeCoverage]
     public class Bounty : JournalEntryBase
     {
         public class FactionRewardItem

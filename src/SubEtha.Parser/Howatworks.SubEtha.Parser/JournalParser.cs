@@ -28,6 +28,8 @@ namespace Howatworks.SubEtha.Parser
 
             });
 
+        public static IList<JsonConverter> AllConverters = new List<JsonConverter> { new ParentItemConverter() };
+
         private readonly JsonSerializerSettings _serializerSettings;
 
         private static readonly JsonSerializerSettings Strict = new JsonSerializerSettings
@@ -39,7 +41,8 @@ namespace Howatworks.SubEtha.Parser
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
             DateParseHandling = DateParseHandling.DateTimeOffset,
-            MaxDepth = 7
+            MaxDepth = 7,
+            Converters = AllConverters
         };
 
         private static readonly JsonSerializerSettings Loose = new JsonSerializerSettings
@@ -49,7 +52,8 @@ namespace Howatworks.SubEtha.Parser
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
             DateParseHandling = DateParseHandling.DateTimeOffset,
-            MaxDepth = 7
+            MaxDepth = 7,
+            Converters = AllConverters
         };
 
         public JournalParser(bool strict = false)

@@ -1,6 +1,9 @@
-﻿namespace Howatworks.SubEtha.Journal.Combat
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Combat
 {
     // TODO: no sample
+    [ExcludeFromCodeCoverage]
     public class CapShipBond : JournalEntryBase
     {
         public long Reward { get; set; }

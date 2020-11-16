@@ -3,6 +3,7 @@
 namespace Howatworks.SubEtha.Journal.StationServices
 {
     // Note: no sample
+    [ExcludeFromCodeCoverage]
     public class FetchRemoteModule : JournalEntryBase
     {
         public int StorageSlot { get; set; }

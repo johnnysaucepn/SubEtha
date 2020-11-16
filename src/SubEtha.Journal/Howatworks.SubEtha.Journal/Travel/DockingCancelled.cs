@@ -3,6 +3,7 @@
 namespace Howatworks.SubEtha.Journal.Travel
 {
     // TODO: no sample
+    [ExcludeFromCodeCoverage]
     public class DockingCancelled : JournalEntryBase
     {
         public string StationName { get; set; }

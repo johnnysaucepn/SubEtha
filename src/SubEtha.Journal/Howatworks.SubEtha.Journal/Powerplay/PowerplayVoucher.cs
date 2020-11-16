@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Powerplay
 {
+    // TODO: get sample for PowerplayVoucher
     public class PowerplayVoucher : JournalEntryBase
     {
         public string Power { get; set; }

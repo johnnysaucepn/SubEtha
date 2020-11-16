@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     public class LaunchFighter : JournalEntryBase
     {
         public string Loadout { get; set; } // TODO: enum?

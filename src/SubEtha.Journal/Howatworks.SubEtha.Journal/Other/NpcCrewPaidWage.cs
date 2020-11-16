@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Other
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     public class NpcCrewPaidWage : JournalEntryBase
     {
         public string NpcCrewId { get; set; } // TODO: check data type

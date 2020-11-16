@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.StationServices
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class SellDrones : JournalEntryBase
     {
         public string Type { get; set; } // TODO: localised?

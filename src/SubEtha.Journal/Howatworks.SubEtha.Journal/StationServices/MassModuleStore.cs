@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Howatworks.SubEtha.Journal.StationServices
 {
     // Note: no sample
+    [ExcludeFromCodeCoverage]
     public class MassModuleStore : JournalEntryBase
     {
         public class ModuleItem
@@ -18,7 +19,6 @@ namespace Howatworks.SubEtha.Journal.StationServices
             public string EngineerModifications { get; set; } // TODO: check data type
             public int Level { get; set; } // TODO: check datatype
             public decimal Quality { get; set; }  // TODO: check datatype
-
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]

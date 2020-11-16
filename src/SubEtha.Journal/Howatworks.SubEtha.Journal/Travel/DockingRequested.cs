@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Travel
 {
+    [ExcludeFromCodeCoverage]
     public class DockingRequested : JournalEntryBase
     {
         public string StationName { get; set; }

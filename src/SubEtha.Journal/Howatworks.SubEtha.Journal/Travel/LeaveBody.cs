@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Travel
 {
+    [ExcludeFromCodeCoverage]
     public class LeaveBody : JournalEntryBase
     {
         public string StarSystem { get; set; }

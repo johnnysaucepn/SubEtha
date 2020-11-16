@@ -7,6 +7,7 @@ namespace Howatworks.SubEtha.Journal
     /// Apply an alternative name matching the event in the log, in case
     /// the canonical name isn't representable in idiomatic C#
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class JournalNameAttribute : Attribute
     {
         public string Name { get; }

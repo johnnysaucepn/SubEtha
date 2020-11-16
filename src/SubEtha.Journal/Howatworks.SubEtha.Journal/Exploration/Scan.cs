@@ -5,6 +5,19 @@ namespace Howatworks.SubEtha.Journal.Exploration
 {
     public class Scan : JournalEntryBase
     {
+        /// <summary>
+        /// This is expressed slightly differently that similar Item classes,
+        /// this is serialised more like a dictionary of arbitrary strings rather than properties.
+        /// Instead of forcing parser-specific attributes, create a key-value-pair type with BodyType
+        /// and BodyID members, analogous to Location and similar entries.
+        /// </summary>
+        public class ParentItem
+        {
+            public string BodyType { get; set; }
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            public int BodyID { get; set; }
+        }
+
         public class MaterialItem
         {
             public string Name { get; set; }
@@ -61,7 +74,7 @@ namespace Howatworks.SubEtha.Journal.Exploration
         #endregion
 
         #region Planets and Moons only
-        public List<dynamic> Parents { get; set; } // TODO: spec suggests that key name in each pair varies
+        public List<ParentItem> Parents { get; set; } // NOTE: key name in each pair varies so is deserialized differently
         public bool? TidalLock { get; set; } // WARNING: specs say int
         public string TerraformState { get; set; } // TODO: enum, Terraformable, Terraforming, Terraformed, or null
         public string PlanetClass { get; set; } // TODO: See 13.3

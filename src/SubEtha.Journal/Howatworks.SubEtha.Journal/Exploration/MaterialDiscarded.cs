@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Exploration
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Exploration
 {
+    [ExcludeFromCodeCoverage]
     public class MaterialDiscarded : JournalEntryBase
     {
         public string Category { get; set; } // TODO: enum? Raw/Encoded/Manufactured

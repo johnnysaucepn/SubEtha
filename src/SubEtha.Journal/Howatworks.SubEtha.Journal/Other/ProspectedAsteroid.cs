@@ -1,5 +1,6 @@
 ﻿namespace Howatworks.SubEtha.Journal.Other
 {
+    // TODO: Find sample of ProspectedAsteroid
     public class ProspectedAsteroid : JournalEntryBase
     {
         public class MaterialItem

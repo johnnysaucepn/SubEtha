@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class PayBounties : JournalEntryBase
     {
         public int Amount { get; set; }

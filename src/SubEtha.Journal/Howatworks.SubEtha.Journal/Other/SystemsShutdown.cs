@@ -1,6 +1,9 @@
-﻿namespace Howatworks.SubEtha.Journal.Other
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Other
 {
-    class SystemsShutdown
+    [ExcludeFromCodeCoverage]
+    public class SystemsShutdown
     {
     }
 }

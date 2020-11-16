@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal
 {
+    [ExcludeFromCodeCoverage]
     [JournalName("fileheader")]
     public class FileHeader : JournalEntryBase
     {

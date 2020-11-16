@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.StationServices
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class Repair : JournalEntryBase
     {
         public string Item { get; set; } // TODO: enum: all, wear, hull, paint, or name of module

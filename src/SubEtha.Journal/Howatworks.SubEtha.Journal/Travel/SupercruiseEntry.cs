@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Travel
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Travel
 {
+    [ExcludeFromCodeCoverage]
     public class SupercruiseEntry : JournalEntryBase
     {
         public string StarSystem { get; set; }

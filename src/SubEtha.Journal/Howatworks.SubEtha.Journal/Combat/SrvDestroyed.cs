@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Combat
 {
+    [ExcludeFromCodeCoverage]
     [JournalName("SRVDestroyed")]
     public class SrvDestroyed : JournalEntryBase
     {

@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     [JournalName("DockSRV")]
     public class DockSrv : JournalEntryBase
     {

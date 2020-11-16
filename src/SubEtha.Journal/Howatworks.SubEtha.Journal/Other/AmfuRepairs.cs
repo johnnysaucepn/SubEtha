@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Other
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     public class AmfuRepairs : JournalEntryBase
     {
         public string Model { get; set; } // Note: name

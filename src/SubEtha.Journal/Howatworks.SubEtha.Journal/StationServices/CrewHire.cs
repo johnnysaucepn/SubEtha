@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class CrewHire : JournalEntryBase
     {
         public string Name { get; set; }
