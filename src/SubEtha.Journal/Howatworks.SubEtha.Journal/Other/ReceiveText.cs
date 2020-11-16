@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Other
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     public class ReceiveText : JournalEntryBase
     {
         public string From { get; set; }

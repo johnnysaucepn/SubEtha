@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     [JournalName("LaunchSRV")]
     public class LaunchSrv : JournalEntryBase
     {

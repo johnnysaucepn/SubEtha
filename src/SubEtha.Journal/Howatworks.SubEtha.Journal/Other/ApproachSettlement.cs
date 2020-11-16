@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     public class ApproachSettlement : JournalEntryBase
     {
         public string Name { get; set; }

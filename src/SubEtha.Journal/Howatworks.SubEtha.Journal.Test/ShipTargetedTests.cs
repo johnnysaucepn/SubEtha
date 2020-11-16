@@ -6,10 +6,10 @@ namespace Howatworks.SubEtha.Journal.Test
 {
     public class ShipTargetedTests
     {
-        private static string Stage0Sample = @"{ ""timestamp"":""2018-12-12T23:54:54Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""diamondbackxl"", ""Ship_Localised"":""Diamondback Explorer"", ""ScanStage"":0 }";
-        private static string Stage1Sample = @"{ ""timestamp"":""2018-12-23T01:28:37Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""empire_eagle"", ""Ship_Localised"":""Imperial Eagle"", ""ScanStage"":1, ""PilotName"":""$npc_name_decorate:#name=Krackenhead;"", ""PilotName_Localised"":""Krackenhead"", ""PilotRank"":""Master"" }";
-        private static string Stage2Sample = @"{ ""timestamp"":""2019-01-06T22:52:24Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""belugaliner"", ""Ship_Localised"":""Beluga Liner"", ""ScanStage"":2, ""PilotName"":""$npc_name_decorate:#name=Beautiful Corner Tours;"", ""PilotName_Localised"":""Beautiful Corner Tours"", ""PilotRank"":""Deadly"", ""ShieldHealth"":100.000000, ""HullHealth"":100.000000 }";
-        private static string Stage3Sample = @"{ ""timestamp"":""2019-01-07T01:19:21Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""type9"", ""Ship_Localised"":""Type-9 Heavy"", ""ScanStage"":3, ""PilotName"":""$npc_name_decorate:#name=Paul Anderson;"", ""PilotName_Localised"":""Paul Anderson"", ""PilotRank"":""Dangerous"", ""ShieldHealth"":100.000000, ""HullHealth"":100.000000, ""Faction"":""Oddyssey Explorers"", ""LegalStatus"":""Clean"" }";
+        private const string Stage0Sample = @"{ ""timestamp"":""2018-12-12T23:54:54Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""diamondbackxl"", ""Ship_Localised"":""Diamondback Explorer"", ""ScanStage"":0 }";
+        private const string Stage1Sample = @"{ ""timestamp"":""2018-12-23T01:28:37Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""empire_eagle"", ""Ship_Localised"":""Imperial Eagle"", ""ScanStage"":1, ""PilotName"":""$npc_name_decorate:#name=Krackenhead;"", ""PilotName_Localised"":""Krackenhead"", ""PilotRank"":""Master"" }";
+        private const string Stage2Sample = @"{ ""timestamp"":""2019-01-06T22:52:24Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""belugaliner"", ""Ship_Localised"":""Beluga Liner"", ""ScanStage"":2, ""PilotName"":""$npc_name_decorate:#name=Beautiful Corner Tours;"", ""PilotName_Localised"":""Beautiful Corner Tours"", ""PilotRank"":""Deadly"", ""ShieldHealth"":100.000000, ""HullHealth"":100.000000 }";
+        private const string Stage3Sample = @"{ ""timestamp"":""2019-01-07T01:19:21Z"", ""event"":""ShipTargeted"", ""TargetLocked"":true, ""Ship"":""type9"", ""Ship_Localised"":""Type-9 Heavy"", ""ScanStage"":3, ""PilotName"":""$npc_name_decorate:#name=Paul Anderson;"", ""PilotName_Localised"":""Paul Anderson"", ""PilotRank"":""Dangerous"", ""ShieldHealth"":100.000000, ""HullHealth"":100.000000, ""Faction"":""Oddyssey Explorers"", ""LegalStatus"":""Clean"" }";
 
         [Fact]
         public void TargetLocked()
@@ -34,7 +34,6 @@ namespace Howatworks.SubEtha.Journal.Test
             Assert.Null(stage1.ShieldHealth);
             Assert.Null(stage1.LegalStatus);
         }
-
 
         [Fact]
         public void Stage2Scan()

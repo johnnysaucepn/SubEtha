@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Other
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Other
 {
+    [ExcludeFromCodeCoverage]
     public class DataScanned : JournalEntryBase
     {
         public string Type { get; set; } // TODO: enum?  "DataLink", "DataPoint", "ListeningPost", "AbandonedDataLog", "WreckedShip", etc

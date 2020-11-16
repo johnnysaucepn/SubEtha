@@ -6,10 +6,10 @@ namespace Howatworks.SubEtha.Journal.Test
 {
     public class SaaSignalsFoundTests
     {
-        private static string Sample = @"{ ""timestamp"":""2019-04-17T13:38:18Z"", ""event"":""SAASignalsFound"", ""BodyName"":""Hermitage 4 A Ring"", ""SystemAddress"":5363877956440, ""BodyID"":11, ""Signals"":[ { ""Type"":""LowTemperatureDiamond"", ""Type_Localised"":""Low Temperature Diamonds"", ""Count"":1 }, { ""Type"":""Alexandrite"", ""Count"":1 } ] }";
+        private const string Sample = @"{ ""timestamp"":""2019-04-17T13:38:18Z"", ""event"":""SAASignalsFound"", ""BodyName"":""Hermitage 4 A Ring"", ""SystemAddress"":5363877956440, ""BodyID"":11, ""Signals"":[ { ""Type"":""LowTemperatureDiamond"", ""Type_Localised"":""Low Temperature Diamonds"", ""Count"":1 }, { ""Type"":""Alexandrite"", ""Count"":1 } ] }";
 
         [Fact]
-        public void Signals()
+        public void SignalItems()
         {
             var signals = JsonConvert.DeserializeObject<SaaSignalsFound>(Sample);
 

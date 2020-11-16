@@ -6,8 +6,8 @@ namespace Howatworks.SubEtha.Journal.Test
 {
     public class DiedTests
     {
-        private static string OneKillerSample = @"{""timestamp"":""2016-06-10T14:32:03Z"", ""event"":""Died"", ""KillerName"":""$ShipName_Police_Independent;"", ""KillerShip"":""viper"", ""KillerRank"":""Deadly"" }";
-        private static string ManyKillersSample = @"{ ""timestamp"":""2016-06-10T14:32:03Z"", ""event"":""Died"", ""Killers"":[ { ""Name"":""Cmdr HRC1"", ""Ship"":""Vulture"", ""Rank"":""Competent"" }, { ""Name"":""Cmdr HRC2"", ""Ship"":""Python"", ""Rank"":""Master"" } ] }";
+        private const string OneKillerSample = @"{""timestamp"":""2016-06-10T14:32:03Z"", ""event"":""Died"", ""KillerName"":""$ShipName_Police_Independent;"", ""KillerShip"":""viper"", ""KillerRank"":""Deadly"" }";
+        private const string ManyKillersSample = @"{ ""timestamp"":""2016-06-10T14:32:03Z"", ""event"":""Died"", ""Killers"":[ { ""Name"":""Cmdr HRC1"", ""Ship"":""Vulture"", ""Rank"":""Competent"" }, { ""Name"":""Cmdr HRC2"", ""Ship"":""Python"", ""Rank"":""Master"" } ] }";
 
         [Fact]
         public void DiedSolo()
