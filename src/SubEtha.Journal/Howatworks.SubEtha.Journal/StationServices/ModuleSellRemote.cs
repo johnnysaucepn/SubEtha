@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class ModuleSellRemote : JournalEntryBase
     {
         public int StorageSlot { get; set; }

@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class EngineerContribution : JournalEntryBase
     {
         public string Engineer { get; set; }

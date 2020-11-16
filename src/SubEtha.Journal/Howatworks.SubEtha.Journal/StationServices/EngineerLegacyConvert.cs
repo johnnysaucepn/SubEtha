@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Howatworks.SubEtha.Journal.StationServices
 {
     // Note: no sample
+    [ExcludeFromCodeCoverage]
     [Obsolete]
     public class EngineerLegacyConvert : JournalEntryBase
     {

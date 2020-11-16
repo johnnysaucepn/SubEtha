@@ -2,7 +2,8 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
-    // Note: no sample
+    // TODO: obtain sample for CommunityGoalDiscard
+    [ExcludeFromCodeCoverage]
     public class CommunityGoalDiscard : JournalEntryBase
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]

@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Trade
 {
+    [ExcludeFromCodeCoverage]
     public class CollectCargo : JournalEntryBase
     {
         public string Type { get; set; }

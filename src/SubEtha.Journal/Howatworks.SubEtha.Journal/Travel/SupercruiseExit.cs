@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Travel
 {
+    [ExcludeFromCodeCoverage]
     public class SupercruiseExit : JournalEntryBase
     {
         public long SystemAddress { get; set; } // WARNING: not in docs

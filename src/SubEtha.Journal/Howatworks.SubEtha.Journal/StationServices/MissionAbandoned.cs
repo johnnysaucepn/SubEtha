@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class MissionAbandoned : JournalEntryBase
     {
         // TODO: is this localised?

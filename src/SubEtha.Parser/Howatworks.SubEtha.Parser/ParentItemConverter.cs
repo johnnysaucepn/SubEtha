@@ -12,12 +12,8 @@ namespace Howatworks.SubEtha.Parser
         {
             JObject jObject = JObject.Load(reader);
             var prop = jObject.Properties().First();
-            //return new ParentItem { BodyType = prop.Name, BodyID = jObject.Value<int>() };
-            //return new ParentItem { BodyType = prop.Name, BodyID = prop.Value.Value<int>() };
 
-            //return new ParentItem();
             return new ParentItem { BodyType = prop.Name, BodyID = prop.Value.Value<int>() };
-            //return new ParentItem { BodyType = reader.Path, BodyID = value.Value };
         }
 
         public override void WriteJson(JsonWriter writer, ParentItem value, JsonSerializer serializer)

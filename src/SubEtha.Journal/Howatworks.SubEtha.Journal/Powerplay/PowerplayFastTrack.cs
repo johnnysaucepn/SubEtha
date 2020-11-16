@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Powerplay
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Powerplay
 {
+    [ExcludeFromCodeCoverage]
     public class PowerplayFastTrack : JournalEntryBase
     {
         public string Power { get; set; }

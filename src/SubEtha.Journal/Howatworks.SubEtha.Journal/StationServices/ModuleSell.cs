@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class ModuleSell : JournalEntryBase
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]

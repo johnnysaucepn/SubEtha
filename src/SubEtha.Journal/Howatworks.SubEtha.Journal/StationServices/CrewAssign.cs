@@ -3,6 +3,7 @@
 namespace Howatworks.SubEtha.Journal.StationServices
 {
     // Note: no sample
+    [ExcludeFromCodeCoverage]
     public class CrewAssign : JournalEntryBase
     {
         public string Name { get; set; }

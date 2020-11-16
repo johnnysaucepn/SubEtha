@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class SetUserShipName : JournalEntryBase
     {
         public string Ship { get; set; } // Note: ship type

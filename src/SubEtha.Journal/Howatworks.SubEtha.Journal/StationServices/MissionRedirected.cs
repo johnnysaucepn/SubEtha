@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class MissionRedirected : JournalEntryBase
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
