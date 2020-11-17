@@ -23,7 +23,7 @@
 
   <!-- Use GitVersionTask: https://gitversion.net/docs/usage/msbuild-task -->
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+    <PackageReference Include="GitVersionTask" Version="5.5.1" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- GitVersionTask properties -->
