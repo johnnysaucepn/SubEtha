@@ -74,7 +74,6 @@ namespace Howatworks.Thumb.Assistant.Wpf
 
             _tb.DataContext = trayVm;
             _tb?.BringIntoView();
-
         }
     }
 }

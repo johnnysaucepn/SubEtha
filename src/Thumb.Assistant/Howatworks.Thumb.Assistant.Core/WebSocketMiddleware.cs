@@ -18,18 +18,14 @@ namespace Howatworks.Thumb.Assistant.Core
         {
             if (httpContext.WebSockets.IsWebSocketRequest)
             {
-                var socket = await httpContext.WebSockets.AcceptWebSocketAsync();
+                var socket = await httpContext.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
 
-                await _connectionManager.Connect(socket);
-
-
+                await _connectionManager.Connect(socket).ConfigureAwait(false);
             }
             else
             {
-                await _next.Invoke(httpContext);
+                await _next.Invoke(httpContext).ConfigureAwait(false);
             }
         }
-
-
     }
 }

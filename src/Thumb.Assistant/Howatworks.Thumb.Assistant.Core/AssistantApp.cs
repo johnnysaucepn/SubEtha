@@ -170,8 +170,7 @@ namespace Howatworks.Thumb.Assistant.Core
             .ConfigureServices((_, services) =>
             {
                 services.AddSingleton(_connectionManager);
-            }
-            );
+            });
 
         public DateTimeOffset? LastEntry => _state.LastEntrySeen;
 
