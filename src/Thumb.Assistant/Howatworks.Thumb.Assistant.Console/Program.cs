@@ -10,9 +10,9 @@ using System.Reactive.Linq;
 
 namespace Howatworks.Thumb.Assistant.Console
 {
-    internal static class Program
+    public static class Program
     {
-        private static void Main()
+        public static void Main(string[] args)
         {
             var config = new ThumbConfigBuilder("Assistant").Build();
 
@@ -33,7 +33,7 @@ namespace Howatworks.Thumb.Assistant.Console
                 var cts = new CancellationTokenSource();
                 var reset = new ManualResetEventSlim(false);
 
-                Task.Run(() => app.Run(cts.Token));
+                Task.Run(() => app.Run(args, cts.Token));
 
                 keyListener.Observable.Where(k => k.Key == ConsoleKey.Escape).Subscribe(_ => reset.Set());
 

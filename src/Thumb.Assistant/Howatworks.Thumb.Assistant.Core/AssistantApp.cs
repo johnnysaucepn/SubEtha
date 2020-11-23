@@ -14,6 +14,7 @@ using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -63,19 +64,19 @@ namespace Howatworks.Thumb.Assistant.Core
             _keyboard = keyboard;
         }
 
-        public void Run(CancellationToken token)
+        public void Run(string[] args, CancellationToken token)
         {
             Log.Info("Starting up");
 
-            _monitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
+            _monitor.JournalFileWatchingStarted += (s, e) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'");
 
             var bindingsPath = Path.Combine(_configuration["BindingsFolder"], _configuration["BindingsFilename"]);
 
             _bindingMapper = BindingMapper.FromFile(bindingsPath);
 
-            _connectionManager.MessageReceived += (_, args) =>
+            _connectionManager.MessageReceived += (_, e) =>
             {
-                var messageWrapper = JObject.Parse(args.Message);
+                var messageWrapper = JObject.Parse(e.Message);
                 switch (messageWrapper["MessageType"].Value<string>())
                 {
                     case "ActivateBinding":
@@ -93,12 +94,12 @@ namespace Howatworks.Thumb.Assistant.Core
                         _connectionManager.SendMessageToAllClients(serializedMessage);
                         break;
                     default:
-                        Log.Warn($"Unrecognised message format: {args.Message}");
+                        Log.Warn($"Unrecognised message format: {e.Message}");
                         break;
                 }
             };
 
-            _connectionManager.ClientConnected += (sender, args) =>
+            _connectionManager.ClientConnected += (sender, e) =>
             {
                 var serializedMessage = JsonConvert.SerializeObject(new
                     {
@@ -122,17 +123,7 @@ namespace Howatworks.Thumb.Assistant.Core
                 _connectionManager.SendMessageToAllClients(serializedMessage);
             });
 
-            var hostBuilder = new WebHostBuilder()
-                .UseConfiguration(_configuration)
-                // Use our existing Autofac context in the web app services
-                .ConfigureServices(services => services.AddSingleton(_connectionManager))
-                .UseStartup<Startup>()
-                .UseKestrel()
-                .UseUrls("http://*:5984");
-
-            var host = hostBuilder.Build();
-
-            host.RunAsync(token).ConfigureAwait(false); // Don't block the calling thread
+            CreateHostBuilder(args).Build().RunAsync(token); // Don't block the calling thread
 
             var startTime = _state.LastEntrySeen ?? DateTimeOffset.MinValue;
             var source = new JournalEntrySource(_parser, startTime, _monitor);
@@ -165,6 +156,22 @@ namespace Howatworks.Thumb.Assistant.Core
                 }
             }
         }
+
+        public IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder
+                .UseStartup<Startup>()
+                .UseConfiguration(_configuration)
+                .UseKestrel()
+                .UseUrls("http://*:5984");
+            })
+            .ConfigureServices((_, services) =>
+            {
+                services.AddSingleton(_connectionManager);
+            }
+            );
 
         public DateTimeOffset? LastEntry => _state.LastEntrySeen;
 
