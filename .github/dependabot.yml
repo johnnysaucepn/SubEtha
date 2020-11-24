@@ -8,38 +8,12 @@ updates:
     time: "22:00"
   open-pull-requests-limit: 10
   ignore:
-  - dependency-name: GitVersionTask
+  - dependency-name: Microsoft.AspNetCore*
     versions:
-    - "> 5.1.2"
-  - dependency-name: Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
+    - ">= 5.x"
+  - dependency-name: Microsoft.EntityFrameworkCore*
     versions:
-    - ">= 3.a"
-    - "< 5"
-  - dependency-name: Microsoft.AspNetCore.Identity.EntityFrameworkCore
+    - ">= 5.x"
+  - dependency-name: Npgsql.EntityFrameworkCore*
     versions:
-    - ">= 3.a"
-    - "< 5"
-  - dependency-name: Microsoft.EntityFrameworkCore
-    versions:
-    - ">= 3.a"
-    - "< 5"
-  - dependency-name: Microsoft.EntityFrameworkCore.Analyzers
-    versions:
-    - ">= 3.a"
-    - "< 5"
-  - dependency-name: Microsoft.EntityFrameworkCore.Design
-    versions:
-    - ">= 3.a"
-    - "< 5"
-  - dependency-name: Microsoft.EntityFrameworkCore.InMemory
-    versions:
-    - ">= 3.a"
-    - "< 5"
-  - dependency-name: Microsoft.EntityFrameworkCore.Tools
-    versions:
-    - ">= 3.a"
-    - "< 5"
-  - dependency-name: Npgsql.EntityFrameworkCore.PostgreSQL
-    versions:
-    - ">= 3.a"
-    - "< 5"
+    - ">= 5.x"
