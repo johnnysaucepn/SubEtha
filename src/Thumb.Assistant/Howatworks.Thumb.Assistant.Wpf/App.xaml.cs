@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Howatworks.Thumb.Wpf;
 using System.Threading;
+using System;
 
 namespace Howatworks.Thumb.Assistant.Wpf
 {
@@ -42,7 +43,8 @@ namespace Howatworks.Thumb.Assistant.Wpf
 
                 Task.Run(() =>
                 {
-                    app.Run(_cts.Token);
+                    var args = Environment.GetCommandLineArgs();
+                    app.Run(args, _cts.Token);
                 });
             }
         }
@@ -72,7 +74,6 @@ namespace Howatworks.Thumb.Assistant.Wpf
 
             _tb.DataContext = trayVm;
             _tb?.BringIntoView();
-
         }
     }
 }

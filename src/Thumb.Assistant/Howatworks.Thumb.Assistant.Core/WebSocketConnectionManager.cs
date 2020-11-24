@@ -72,6 +72,7 @@ namespace Howatworks.Thumb.Assistant.Core
                         socket.Abort();
                     }
                 }
+                attempts++;
             }
             if (attempts >= 3)
             {

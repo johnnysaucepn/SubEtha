@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 
@@ -10,12 +11,13 @@ namespace Howatworks.Thumb.Assistant.Core
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvcCore();
+            services.AddControllers();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
-        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app)
         {
-            var webSocketConnectionManager = serviceProvider.GetService<WebSocketConnectionManager>();
+            var webSocketConnectionManager = app.ApplicationServices.GetService<WebSocketConnectionManager>();
             var staticContentAssembly = Assembly.GetExecutingAssembly();
             var staticContentFileProvider = new ManifestEmbeddedFileProvider(staticContentAssembly, "StaticContent");
 
@@ -26,7 +28,8 @@ namespace Howatworks.Thumb.Assistant.Core
                 {
                     FileProvider = staticContentFileProvider
                 })
-                .UseMvcWithDefaultRoute();
+                .UseMvc()
+                .UseRouting();
         }
     }
 }
