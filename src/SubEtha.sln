@@ -75,6 +75,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Assistant.Core.Test", "Assistant\Howatworks.Assistant.Core.Test\Howatworks.Assistant.Core.Test.csproj", "{F202D78B-2D39-4E3C-A471-EBE2504D103D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Assistant.Installer", "Assistant\Howatworks.Assistant.Installer\Howatworks.Assistant.Installer.csproj", "{082C244E-1333-42ED-B778-4C03688E612A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EEF5C505-A576-4581-A4DD-35E25C2C11CD} = {EEF5C505-A576-4581-A4DD-35E25C2C11CD}
+		{BA4B53D4-9029-4A2B-87A4-FD02CCF200F4} = {BA4B53D4-9029-4A2B-87A4-FD02CCF200F4}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Assistant.Wpf", "Assistant\Howatworks.Assistant.Wpf\Howatworks.Assistant.Wpf.csproj", "{BA4B53D4-9029-4A2B-87A4-FD02CCF200F4}"
 EndProject
