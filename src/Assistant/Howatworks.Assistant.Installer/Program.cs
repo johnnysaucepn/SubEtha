@@ -39,7 +39,7 @@ namespace Howatworks.Assistant.Installer
                     Manufacturer = "Howatworks"
                 },
                 Version = Version.Parse(GitVersionInformation.AssemblySemFileVer),
-                OutFileName = "Howatworks.Assistant"
+                OutFileName = Path.Combine(root, @"..\.build\Installers", "Howatworks.Assistant")
             };
 
             project.Load += Msi_Load;

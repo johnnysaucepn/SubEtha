@@ -13,6 +13,7 @@ public class BuildData
     public DirectoryPath CoverageResultsDirectory;
     public DirectoryPath AppDirectory;
     public DirectoryPath PackageDirectory;
+    public DirectoryPath InstallerDirectory;
     public string Configuration;
     public int BuildNumber;
 }
@@ -23,6 +24,7 @@ Setup<BuildData>(ctx => new BuildData()
         CoverageResultsDirectory = Directory(@"./.build/CoverageResults/"),
         AppDirectory = Directory(@"./.build/PublishedApps/"),
         PackageDirectory = Directory(@"./.build/Packages/"),
+        InstallerDirectory = Directory(@"./.build/Installers/"),
         Configuration = "Release",
         BuildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0
     });
@@ -30,6 +32,9 @@ Setup<BuildData>(ctx => new BuildData()
 Task("Build")
     .Does<BuildData>(data =>
     {
+    	CleanDirectory(data.PackageDirectory);
+    	CleanDirectory(data.InstallerDirectory);
+    	
         DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
         { 
             Configuration = data.Configuration,
@@ -37,14 +42,13 @@ Task("Build")
             {
                 MaxCpuCount = 1
             }
-        });        
+        });
     });
 
 Task("PublishApps")
     .Does<BuildData>(data =>
     {
         CleanDirectory(data.AppDirectory);
-        CleanDirectory(data.PackageDirectory);
 
         var publishSettings = new DotNetCorePublishSettings
         { 
@@ -56,7 +60,7 @@ Task("PublishApps")
         };
 
         DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", publishSettings);
-        DotNetCorePublish("./src/Thumb.Assistant/Howatworks.Thumb.Assistant.Console/Howatworks.Thumb.Assistant.Console.csproj", publishSettings);
+        DotNetCorePublish("./src/Assistant/Howatworks.Assistant.Console/Howatworks.Assistant.Console.csproj", publishSettings);
         DotNetCorePublish("./src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj", publishSettings);
     });
 
