@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Howatworks.Matrix.Core;
-using Howatworks.Matrix.Core.Entities;
+using Howatworks.Matrix.Data;
+using Howatworks.Matrix.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

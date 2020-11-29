@@ -1,4 +1,4 @@
-﻿using Howatworks.Matrix.Core.Entities;
+﻿using Howatworks.Matrix.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +20,7 @@ namespace Howatworks.Matrix.EntityFramework
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ForNpgsqlUseIdentityColumns();
+            builder.UseIdentityColumns();
 
             builder.HasDefaultSchema("public");
 

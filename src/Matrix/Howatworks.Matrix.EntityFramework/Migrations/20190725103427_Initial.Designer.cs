@@ -22,7 +22,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                 .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.CommanderGroup", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Data.Entities.CommanderGroup", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -38,7 +38,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("CommanderGroups");
                 });
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.Group", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Data.Entities.Group", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -54,7 +54,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     );
                 });
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.LocationStateEntity", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Data.Entities.LocationStateEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -100,7 +100,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.MatrixIdentityUser", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Data.Entities.MatrixIdentityUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -152,7 +152,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.SessionStateEntity", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Data.Entities.SessionStateEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -174,7 +174,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("Sessions");
                 });
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.ShipStateEntity", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Data.Entities.ShipStateEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -313,9 +313,9 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Howatworks.Matrix.Core.Entities.CommanderGroup", b =>
+            modelBuilder.Entity("Howatworks.Matrix.Data.Entities.CommanderGroup", b =>
                 {
-                    b.HasOne("Howatworks.Matrix.Core.Entities.Group", "Group")
+                    b.HasOne("Howatworks.Matrix.Data.Entities.Group", "Group")
                         .WithMany("CommanderGroups")
                         .HasForeignKey("GroupId");
                 });
@@ -330,7 +330,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
+                    b.HasOne("Howatworks.Matrix.Data.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -338,7 +338,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
+                    b.HasOne("Howatworks.Matrix.Data.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -351,7 +351,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
+                    b.HasOne("Howatworks.Matrix.Data.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -359,7 +359,7 @@ namespace Howatworks.Matrix.EntityFramework.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Howatworks.Matrix.Core.Entities.MatrixIdentityUser")
+                    b.HasOne("Howatworks.Matrix.Data.Entities.MatrixIdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Howatworks.Matrix.Core.Entities;
-using Howatworks.Matrix.Core.Repositories;
+using Howatworks.Matrix.Data.Entities;
+using Howatworks.Matrix.Data.Repositories;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

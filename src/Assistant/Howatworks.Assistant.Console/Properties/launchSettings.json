@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Howatworks.Assistant.Console": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "HOSTINGENVIRONMENT": "vs"
+      }
+    }
+  }
+}

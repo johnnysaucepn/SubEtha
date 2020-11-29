@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Howatworks.Matrix.Core.Entities;
-using Howatworks.Matrix.Core.Repositories;
+using Howatworks.Matrix.Data.Entities;
+using Howatworks.Matrix.Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Howatworks.Matrix.EntityFramework

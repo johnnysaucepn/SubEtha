@@ -6,12 +6,14 @@
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/johnnysaucepn/subetha/master)](https://ci.appveyor.com/project/johnnysaucepn/subetha/build/tests?branch=master)
 [![Coverlet code coverage](https://img.shields.io/codecov/c/github/johnnysaucepn/SubEtha/master)](https://codecov.io/gh/johnnysaucepn/SubEtha)
 
-At its core, this is a set of .NET (Standard, Core and Framework) packages and tools for parsing and consuming Elite: Dangerous Player's Journal log events, allowing the creation of new tools for tracking player progress.
+At its core, this is a set of .NET (Standard/Core) packages and tools for parsing and consuming Elite: Dangerous Player's Journal log events, allowing the creation of new tools for tracking player progress.
 
 The intent is to free developers from the burden of maintaining repetitive parsing and processing
 code, particularly when new iterations of the journal spec are published.
 
-Layered upon this, there are standalone tools (called *Thumb Matrix* and *Thumb Assistant*) that illustrate the use of these packages and offers a re-usable architecture to add new capabilities - this should provide a starter kit for developing journal-based apps.
+Layered upon this, there are standalone tools (called *Matrix* and *Assistant*) that illustrate the use of these packages and offers a re-usable architecture to add new capabilities - this should provide a starter kit for developing journal-based apps.
+
+These make use of a set of additional libraries (called *Thumb*) that offer some useful capabilities for getting started in making tools.
 
 ### Howatworks.SubEtha.Journal
 
@@ -30,7 +32,7 @@ This is a higher level again, providing a fully-operational file monitor that wi
 
 This contains structured data types for the various game control bindings, and methods to access that information per device.
 
-### Howatworks.Thumb.Matrix and Howatworks.Thumb.Assistant
+### Howatworks.Matrix and Howatworks.Assistant
 
 These working applications use the libraries to illustrate some of the possibilities.
 
@@ -60,5 +62,7 @@ SubEtha and associated tools make use of the following libraries and application
 
 * 0.1
   * First public release
+* 0.5
+  * Rearchitected to use Reactive Extensions (Rx) to simplify data flow
   
 Distributed under the MIT license. See ``LICENSE.md`` for more information.

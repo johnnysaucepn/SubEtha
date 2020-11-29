@@ -18,9 +18,9 @@ test_script:
 after_test:
   - pwsh: dotnet dotnet-cake --target=PublishCoverage
   - pwsh: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -DeploymentName NuGetPackages }
-  - pwsh: Get-ChildItem -Recurse ./src/*/*.msi | % { Push-AppveyorArtifact $_.FullName -DeploymentName WindowsInstallers }
-  - pwsh: Get-ChildItem -Recurse ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -DeploymentName Apps }
-  - pwsh: Get-ChildItem -Recurse ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -DeploymentName CoverageReports }
+  - pwsh: Get-ChildItem ./.build/Installers/*.msi | % { Push-AppveyorArtifact $_.FullName -DeploymentName WindowsInstallers }
+  - pwsh: Get-ChildItem ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -DeploymentName Apps }
+  - pwsh: Get-ChildItem ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -DeploymentName CoverageReports }
 
 notifications:
 - provider: Email
