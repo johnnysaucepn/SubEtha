@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
+  <!-- Custom properties -->
+  <PropertyGroup>
+    <BuildOutputPath>$(MSBuildThisFileDirectory)\..\.build\</BuildOutputPath>
+    <AppOutputPath>$(BuildOutputPath)\PublishedApps\</AppOutputPath>
+    <InstallerOutputPath>$(BuildOutputPath)\Installers\</InstallerOutputPath>
+  </PropertyGroup>
+
   <PropertyGroup>
     <GenerateAssemblyCopyrightVersionAttribute>false</GenerateAssemblyCopyrightVersionAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <Company>Howatworks</Company>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) James Howat</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)\..\.build\Packages\</PackageOutputPath>
+    <PackageOutputPath>$(BuildOutputPath)\Packages\</PackageOutputPath>
   </PropertyGroup>
 
-  <!-- Custom properties -->
-  <PropertyGroup>
-    <AppOutputPath>$(MSBuildThisFileDirectory)\..\.build\PublishedApps\</AppOutputPath>
-  </PropertyGroup>
 
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)\..\LICENSE.md" Pack="true" Visible="true" PackagePath="">
@@ -32,7 +35,7 @@
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
   </PropertyGroup>
 
-  <Target Name="ZipPublishArtifacts" Condition="'$(GitVersion_FullSemVer' != ''" AfterTargets="Publish">
+  <Target Name="ZipPublishArtifacts" Condition="'$(GitVersion_FullSemVer)' != ''" AfterTargets="Publish">
     <MakeDir Directories="$(AppOutputPath)" />
     <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(AppOutputPath)\$(ProjectName)-$(GitVersion_FullSemVer).zip" />
   </Target>

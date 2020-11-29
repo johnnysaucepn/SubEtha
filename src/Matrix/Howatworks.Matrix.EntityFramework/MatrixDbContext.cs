@@ -20,7 +20,7 @@ namespace Howatworks.Matrix.EntityFramework
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ForNpgsqlUseIdentityColumns();
+            builder.UseIdentityColumns();
 
             builder.HasDefaultSchema("public");
 
