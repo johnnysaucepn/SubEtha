@@ -1,4 +1,10 @@
 assembly-versioning-scheme: MajorMinor
 next-version: 0.1.0
+branches: 
+  feature:
+    tag: alpha
+    increment: Minor
+  release:
+    tag: beta
 ignore:
   sha: []
