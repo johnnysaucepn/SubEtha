@@ -1,4 +1,4 @@
-﻿using Howatworks.Matrix.Core.Entities;
+﻿using Howatworks.Matrix.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

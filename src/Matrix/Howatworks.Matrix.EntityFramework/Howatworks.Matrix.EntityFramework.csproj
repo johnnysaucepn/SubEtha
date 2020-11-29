@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Howatworks.Matrix.Core\Howatworks.Matrix.Core.csproj" />
+    <ProjectReference Include="..\Howatworks.Matrix.Data\Howatworks.Matrix.Data.csproj" />
   </ItemGroup>
 
 </Project>

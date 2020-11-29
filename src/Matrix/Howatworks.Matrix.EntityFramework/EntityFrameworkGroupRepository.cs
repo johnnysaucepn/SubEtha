@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Howatworks.Matrix.Core.Entities;
-using Howatworks.Matrix.Core.Repositories;
+using Howatworks.Matrix.Data.Entities;
+using Howatworks.Matrix.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Howatworks.Matrix.EntityFramework

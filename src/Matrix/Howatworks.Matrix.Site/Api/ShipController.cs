@@ -1,5 +1,5 @@
-﻿using Howatworks.Matrix.Core.Entities;
-using Howatworks.Matrix.Core.Repositories;
+﻿using Howatworks.Matrix.Data.Entities;
+using Howatworks.Matrix.Data.Repositories;
 using Howatworks.Matrix.Domain;
 using log4net;
 using Microsoft.AspNetCore.Authorization;

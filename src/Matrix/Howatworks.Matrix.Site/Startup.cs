@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
-using Howatworks.Matrix.Core;
-using Howatworks.Matrix.Core.Entities;
+using Howatworks.Matrix.Data;
+using Howatworks.Matrix.Data.Entities;
 using Howatworks.Matrix.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

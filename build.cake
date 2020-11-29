@@ -61,7 +61,7 @@ Task("PublishApps")
 
         DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", publishSettings);
         DotNetCorePublish("./src/Assistant/Howatworks.Assistant.Console/Howatworks.Assistant.Console.csproj", publishSettings);
-        DotNetCorePublish("./src/Thumb.Matrix/Howatworks.Thumb.Matrix.Console/Howatworks.Thumb.Matrix.Console.csproj", publishSettings);
+        DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Console/Howatworks.Matrix.Console.csproj", publishSettings);
     });
 
 Task("NuGetPush")
