@@ -70,7 +70,7 @@ namespace Howatworks.Assistant.Wpf {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SubEtha Thumb Assistant.
+        ///   Looks up a localized string similar to SubEtha Assistant.
         /// </summary>
         public static string NotifyIconDefaultLabel {
             get {

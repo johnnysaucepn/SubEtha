@@ -13,7 +13,7 @@
             <MenuItem Header="{x:Static local:Resources.ExitLabel}" Command="{Binding ExitApplicationCommand}" />
         </ContextMenu>
 
-        <tb:TaskbarIcon x:Key="ThumbTrayIcon"
+        <tb:TaskbarIcon x:Key="TrayIcon"
                     ToolTipText="{Binding TooltipText}"
                     IconSource="{StaticResource AppIcon}"
                     ContextMenu="{StaticResource TrayMenu}"

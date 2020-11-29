@@ -97,7 +97,7 @@ namespace Howatworks.Matrix.Wpf {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SubEtha Thumb Matrix.
+        ///   Looks up a localized string similar to SubEtha Matrix.
         /// </summary>
         public static string NotifyIconDefaultLabel {
             get {

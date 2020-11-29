@@ -130,7 +130,7 @@
     <value>Please enter your username and password for</value>
   </data>
   <data name="NotifyIconDefaultLabel" xml:space="preserve">
-    <value>SubEtha Thumb Matrix</value>
+    <value>SubEtha Matrix</value>
   </data>
   <data name="NotifyIconLastUpdatedLabel" xml:space="preserve">
     <value>Last entry {0}\nLast checked {1}</value>

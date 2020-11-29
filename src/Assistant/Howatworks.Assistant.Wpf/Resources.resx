@@ -121,7 +121,7 @@
     <value>Exit</value>
   </data>
   <data name="NotifyIconDefaultLabel" xml:space="preserve">
-    <value>SubEtha Thumb Assistant</value>
+    <value>SubEtha Assistant</value>
   </data>
   <data name="NotifyIconLastUpdatedLabel" xml:space="preserve">
     <value>Last entry {0}\nLast checked {1}</value>

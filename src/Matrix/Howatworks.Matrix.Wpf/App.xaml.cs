@@ -39,7 +39,7 @@ namespace Howatworks.Matrix.Wpf
             {
                 var app = _container.Resolve<MatrixApp>();
 
-                _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
+                _tb = (TaskbarIcon)FindResource("TrayIcon");
                 LoadTaskbarIcon();
 
                 Task.Run(() =>

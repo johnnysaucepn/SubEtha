@@ -38,7 +38,7 @@ namespace Howatworks.Assistant.Wpf
             {
                 var app = _container.Resolve<AssistantApp>();
 
-                _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
+                _tb = (TaskbarIcon)FindResource("TrayIcon");
                 LoadTaskbarIcon();
 
                 Task.Run(() =>
@@ -53,9 +53,6 @@ namespace Howatworks.Assistant.Wpf
         {
             base.OnStartup(e);
             Start();
-
-            _tb = (TaskbarIcon)FindResource("ThumbTrayIcon");
-            _tb?.BringIntoView();
         }
 
         protected override void OnExit(ExitEventArgs e)
