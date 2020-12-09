@@ -29,7 +29,7 @@ namespace Howatworks.Thumb.Core
                 savedGamesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Saved Games");
             }
 
-            _defaultAppStoragePath = Path.Combine(appData, "Howatworks", "Thumb", appName);
+            _defaultAppStoragePath = Path.Combine(appData, "Howatworks", appName);
             _defaultJournalPath = Path.Combine(savedGamesPath, "Frontier Developments", "Elite Dangerous");
             _defaultBindingsPath = Path.Combine(appData, "Frontier Developments", "Elite Dangerous", "Options", "Bindings");
         }
