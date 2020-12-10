@@ -15,11 +15,10 @@ namespace Howatworks.Thumb.Wpf
                 case NotificationEventType.Update:
                     SystemSounds.Hand.Play();
                     break;
-                default:
-                    SystemSounds.Beep.Play();
+                case NotificationEventType.Error:
+                    SystemSounds.Exclamation.Play();
                     break;
             }
-
         }
     }
 }

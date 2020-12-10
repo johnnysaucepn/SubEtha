@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Howatworks.Matrix.Domain;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
 using Howatworks.Thumb.Core;
@@ -105,6 +106,7 @@ namespace Howatworks.Matrix.Core
                 {
                     if (_location.TryBuildUri(_gameContext.CommanderName, _gameContext.GameVersion, out var uri))
                     {
+                        _notifier.Notify(NotificationPriority.Low, NotificationEventType.Update, $"Pushed {nameof(LocationState)} update");
                         _client.Push(uri, l);
                     }
                 });
@@ -114,6 +116,7 @@ namespace Howatworks.Matrix.Core
                 {
                     if (_ship.TryBuildUri(_gameContext.CommanderName, _gameContext.GameVersion, out var uri))
                     {
+                        _notifier.Notify(NotificationPriority.Low, NotificationEventType.Update, $"Pushed {nameof(ShipState)} update");
                         _client.Push(uri, s);
                     }
                 });
@@ -123,6 +126,7 @@ namespace Howatworks.Matrix.Core
                 {
                     if (_session.TryBuildUri(_gameContext.CommanderName, _gameContext.GameVersion, out var uri))
                     {
+                        _notifier.Notify(NotificationPriority.Low, NotificationEventType.Update, $"Pushed {nameof(SessionState)} update");
                         _client.Push(uri, s);
                     }
                 });
@@ -133,6 +137,7 @@ namespace Howatworks.Matrix.Core
                     var lastEntry = x.Value;
                     var lastChecked = x.Timestamp;
                     _state.Update(lastChecked, lastEntry);
+                    _notifier.Notify(NotificationPriority.Low, NotificationEventType.JournalEntry, "Journal entries applied");
                 });
 
             var readyForNextBatch = new ManualResetEventSlim(true);
@@ -149,11 +154,13 @@ namespace Howatworks.Matrix.Core
 
                     _client.StartUploading(token).Subscribe(t =>
                     {
+                        _notifier.Notify(NotificationPriority.Low, NotificationEventType.Update, "Uploaded data");
                         _updateSubject.OnNext(t);
                     }, async ex =>
                     {
                         if (ex is MatrixAuthenticationException)
                         {
+                            _notifier.Notify(NotificationPriority.High, NotificationEventType.Error, "Authentication failure");
                             Log.Warn(ex.Message);
                             // Block further processing until we at least attempt authentication
                             try
@@ -162,6 +169,7 @@ namespace Howatworks.Matrix.Core
                             }
                             catch (MatrixException mex)
                             {
+                                _notifier.Notify(NotificationPriority.Medium, NotificationEventType.Error, "Authentication failure");
                                 Log.Warn(mex.Message);
                             }
                         }

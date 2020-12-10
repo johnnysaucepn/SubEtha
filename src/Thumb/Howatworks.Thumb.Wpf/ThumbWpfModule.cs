@@ -15,6 +15,10 @@ namespace Howatworks.Thumb.Wpf
 
         protected override void Load(ContainerBuilder builder)
         {
+            if (_config.GetValue<bool>("AudioNotifications"))
+            {
+                builder.RegisterType<WindowsThumbNotifier>().As<IThumbNotifier>().SingleInstance();
+            }
         }
     }
 }

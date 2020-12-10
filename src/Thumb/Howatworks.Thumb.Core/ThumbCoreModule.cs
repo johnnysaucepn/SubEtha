@@ -24,14 +24,7 @@ namespace Howatworks.Thumb.Core
             builder.RegisterType<LogJournalMonitor>().AsSelf().SingleInstance();
             builder.RegisterType<LiveJournalMonitor>().AsSelf().SingleInstance();
 
-            if (_config.GetValue<bool>("AudioNotifications"))
-            {
-                builder.RegisterType<BeepThumbNotifier>().As<IThumbNotifier>().SingleInstance();
-            }
-            else
-            {
-                builder.RegisterType<SilentThumbNotifier>().As<IThumbNotifier>().SingleInstance();
-            }
+            builder.RegisterType<SilentThumbNotifier>().As<IThumbNotifier>().SingleInstance();
         }
     }
 }

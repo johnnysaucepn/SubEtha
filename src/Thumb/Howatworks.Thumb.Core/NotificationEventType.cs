@@ -3,8 +3,8 @@
     public enum NotificationEventType
     {
         JournalEntry,
-        JournalEntryBatch,
         Update,
-        FileSystem
+        FileSystem,
+        Error
     }
 }
