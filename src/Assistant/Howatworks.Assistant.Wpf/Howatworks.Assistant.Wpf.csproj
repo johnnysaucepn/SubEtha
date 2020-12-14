@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Howatworks.Assistant.Wpf</AssemblyName>
+    <ApplicationIcon>Resources\thumb_blue.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

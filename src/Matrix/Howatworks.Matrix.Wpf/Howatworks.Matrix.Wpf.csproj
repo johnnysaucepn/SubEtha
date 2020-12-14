@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Howatworks.Matrix.Wpf</AssemblyName>
+    <ApplicationIcon>Resources\thumb_red.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
