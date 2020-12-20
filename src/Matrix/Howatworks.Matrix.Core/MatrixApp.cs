@@ -98,10 +98,21 @@ namespace Howatworks.Matrix.Core
             _ship.SubscribeTo(publication);
             _session.SubscribeTo(publication);
 
-            _logMonitor.JournalFileWatchingStarted += (sender, args) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{args.File.FullName}'");
-            _logMonitor.JournalFileWatchingStopped += (sender, args) => _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{args.File.FullName}'");
+            _logMonitor.JournalFileWatch.Subscribe(
+                e =>
+                {
+                    switch (e.Action)
+                    {
+                        case JournalWatchAction.Started:
+                            _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'");
+                            break;
+                        case JournalWatchAction.Stopped:
+                            _notifier.Notify(NotificationPriority.Medium, NotificationEventType.FileSystem, $"Stopped watching '{e.File.FullName}'");
+                            break;
+                    }
+                });
 
-            _location.Observable
+                _location.Observable
                 .Subscribe(l =>
                 {
                     if (_location.TryBuildUri(_gameContext.CommanderName, _gameContext.GameVersion, out var uri))

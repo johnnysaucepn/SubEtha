@@ -13,7 +13,7 @@ namespace Howatworks.Assistant.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StatusManager));
 
-        private readonly ControlStateModel _status = new ControlStateModel();
+        public ControlStateModel State { get; } = new ControlStateModel();
 
         private readonly Subject<ControlStateModel> _controlStateSubject = new Subject<ControlStateModel>();
         public IObservable<ControlStateModel> ControlStateObservable => _controlStateSubject.AsObservable();
@@ -25,26 +25,21 @@ namespace Howatworks.Assistant.Core
 
         private void ApplyStatus(Status status)
         {
-            _status.LandingGearDown = status.HasFlag(StatusFlags.LandingGearDown);
-            _status.Supercruise = status.HasFlag(StatusFlags.Supercruise);
-            _status.HardpointsDeployed = status.HasFlag(StatusFlags.HardPointsDeployed);
-            _status.LightsOn = status.HasFlag(StatusFlags.LightsOn);
-            _status.CargoScoopDeployed = status.HasFlag(StatusFlags.CargoScoopDeployed);
-            _status.NightVision = status.HasFlag(StatusFlags.NightVision);
-            _status.HudAnalysisMode = status.HasFlag(StatusFlags.HudAnalysisMode);
-            _status.FssMode = status.GuiFocus == GuiFocus.FssMode;
-            _status.SaaMode = status.GuiFocus == GuiFocus.SaaMode;
+            State.LandingGearDown = status.HasFlag(StatusFlags.LandingGearDown);
+            State.Supercruise = status.HasFlag(StatusFlags.Supercruise);
+            State.HardpointsDeployed = status.HasFlag(StatusFlags.HardPointsDeployed);
+            State.LightsOn = status.HasFlag(StatusFlags.LightsOn);
+            State.CargoScoopDeployed = status.HasFlag(StatusFlags.CargoScoopDeployed);
+            State.NightVision = status.HasFlag(StatusFlags.NightVision);
+            State.HudAnalysisMode = status.HasFlag(StatusFlags.HudAnalysisMode);
+            State.FssMode = status.GuiFocus == GuiFocus.FssMode;
+            State.SaaMode = status.GuiFocus == GuiFocus.SaaMode;
 
-            if (_status.IsDirty)
+            if (State.IsDirty)
             {
-                _controlStateSubject.OnNext(_status);
-                _status.IsDirty = false;
+                _controlStateSubject.OnNext(State);
+                State.IsDirty = false;
             }
-        }
-
-        public ControlState CreateControlStateMessage()
-        {
-            return _status.CreateControlStateMessage();
         }
     }
 }

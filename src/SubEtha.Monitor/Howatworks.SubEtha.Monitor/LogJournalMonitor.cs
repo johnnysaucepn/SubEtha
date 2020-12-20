@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Parser;
 using log4net;
@@ -16,8 +18,8 @@ namespace Howatworks.SubEtha.Monitor
         private readonly CustomFileWatcher _logFileWatcher;
         private readonly SortedList<DateTimeOffset, LogJournalReader> _logReaders;
 
-        public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
-        public event EventHandler<JournalFileEventArgs> JournalFileWatchingStopped;
+        private readonly ISubject<JournalWatchActivity> _journalFileWatch = new Subject<JournalWatchActivity>();
+        public IObservable<JournalWatchActivity> JournalFileWatch => _journalFileWatch.AsObservable();
 
         public LogJournalMonitor(IConfiguration config, IJournalReaderFactory readerFactory, DateTimeOffset? startTime = null)
         {
@@ -38,7 +40,7 @@ namespace Howatworks.SubEtha.Monitor
                 if (newReader.Context.LastEntry >= startTime)
                 {
                     _logReaders.Add(newReader.Context.HeaderTimestamp, newReader);
-                    JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(file));
+                    _journalFileWatch.OnNext(new JournalWatchActivity(JournalWatchAction.Started, file));
                 }
             });
 
@@ -47,7 +49,7 @@ namespace Howatworks.SubEtha.Monitor
                 foreach (var reader in _logReaders.Where(x => x.Value.File.Name.Equals(f)))
                 {
                     _logReaders.Remove(reader.Key);
-                    JournalFileWatchingStopped?.Invoke(this, new JournalFileEventArgs(reader.Value.File));
+                    _journalFileWatch.OnNext(new JournalWatchActivity(JournalWatchAction.Stopped, reader.Value.File));
                 }
             });
             _logFileWatcher.Start();

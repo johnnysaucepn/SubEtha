@@ -68,61 +68,49 @@ namespace Howatworks.Assistant.Core
         {
             Log.Info("Starting up");
 
-            _monitor.JournalFileWatchingStarted += (s, e) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'");
+            _monitor.JournalFileWatch.Where(x => x.Action == JournalWatchAction.Started).Subscribe(
+                e => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'")
+            );
 
             var bindingsPath = Path.Combine(_configuration["BindingsFolder"], _configuration["BindingsFilename"]);
 
+            Log.Info($"Reading bindings from {bindingsPath}");
             _bindingMapper = BindingMapper.FromFile(bindingsPath);
 
-            _connectionManager.MessageReceived += (_, e) =>
+            _connectionManager.MessagesReceived.Subscribe(m =>
             {
-                var messageWrapper = JObject.Parse(e.Message);
-                switch (messageWrapper["MessageType"].Value<string>())
+                Log.Info($"Received '{m.MessageType}' message '{m.MessageContent}'");
+                switch (m.MessageType)
                 {
-                    case "ActivateBinding":
-                        var controlRequest = messageWrapper["MessageContent"].ToObject<ControlRequest>();
+                    case AssistantMessageType.ActivateBinding:
+                        var controlRequest = m.MessageContent.ToObject<ControlRequest>();
                         ActivateBinding(controlRequest);
                         break;
-                    case "GetAvailableBindings":
-                        var bindingList = _bindingMapper.GetBoundButtons("Keyboard", "Mouse");
-                        var serializedMessage = JsonConvert.SerializeObject(new
-                            {
-                                MessageType = "AvailableBindings",
-                                MessageContent = bindingList
-                            },
-                            Formatting.Indented);
-                        _connectionManager.SendMessageToAllClients(serializedMessage);
+                    case AssistantMessageType.GetAvailableBindings:
+                        ReportAllBindings();
                         break;
                     default:
-                        Log.Warn($"Unrecognised message format: {e.Message}");
+                        Log.Warn($"Unrecognised message type: {m.MessageType}");
                         break;
                 }
-            };
+            });
 
-            _connectionManager.ClientConnected += (sender, e) =>
+            // Every new connection gets the current state
+            _connectionManager.ConnectionChanges.Where(c => c.NewState == ClientConnectionState.Connected).Subscribe(_ =>
             {
-                var serializedMessage = JsonConvert.SerializeObject(new
-                    {
-                        MessageType = "ControlState",
-                        MessageContent = _statusManager.CreateControlStateMessage()
-                },
-                    Formatting.Indented);
-                _connectionManager.SendMessageToAllClients(serializedMessage);
-            };
+                RefreshAllClients(_statusManager.State);
+            });
 
             _statusManager.ControlStateObservable
                 .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(c=>
             {
                 _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status");
-                var serializedMessage = JsonConvert.SerializeObject(new
-                    {
-                        MessageType = "ControlState", MessageContent = c.CreateControlStateMessage()
-                    },
-                    Formatting.Indented);
-                _connectionManager.SendMessageToAllClients(serializedMessage);
+
+                RefreshAllClients(c);
             });
 
+            Log.Info("Creating app configuration and running ASP.NET pipeline");
             CreateHostBuilder(args).Build().RunAsync(token); // Don't block the calling thread
 
             var startTime = _state.LastEntrySeen ?? DateTimeOffset.MinValue;
@@ -143,6 +131,7 @@ namespace Howatworks.Assistant.Core
                 {
                     var lastEntry = e.Value;
                     var lastChecked = e.Timestamp;
+                    Log.Info($"Updated at {lastChecked}, last entry stamped {lastEntry}");
                     _state.Update(lastChecked, lastEntry);
                 });
 
@@ -157,8 +146,32 @@ namespace Howatworks.Assistant.Core
             }
         }
 
+        private void ReportAllBindings()
+        {
+            var bindingList = _bindingMapper.GetBoundButtons("Keyboard", "Mouse");
+            var message = new AssistantMessage(AssistantMessageType.AvailableBindings, JObject.FromObject(bindingList));
+            /*var serializedMessage = JsonConvert.SerializeObject(new
+            {
+                MessageType = "AvailableBindings",
+                MessageContent = bindingList
+            },
+                Formatting.Indented);*/
+            _connectionManager.SendMessageToAllClients(message);
+        }
+
+        private void RefreshAllClients(ControlStateModel state)
+        {
+            var message = new AssistantMessage(AssistantMessageType.ControlState, JObject.FromObject(state.CreateControlStateMessage()));
+            /*var serializedMessage = JsonConvert.SerializeObject(new
+            {
+                MessageType = "ControlState",
+                MessageContent = state.CreateControlStateMessage()
+            }, Formatting.Indented);*/
+            _connectionManager.SendMessageToAllClients(message);
+        }
+
         public IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder
