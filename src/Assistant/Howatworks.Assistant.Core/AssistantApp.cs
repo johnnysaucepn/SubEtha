@@ -15,8 +15,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Howatworks.Assistant.WebSockets;
 
 namespace Howatworks.Assistant.Core
 {
@@ -31,12 +30,16 @@ namespace Howatworks.Assistant.Core
         private readonly IThumbNotifier _notifier;
         private readonly IJournalParser _parser;
 
-        private readonly WebSocketConnectionManager _connectionManager;
+        private readonly ConnectionManager _connectionManager;
+        private readonly AssistantWebSocketHandler _handler;
+        private readonly AssistantMessageProcessor _processor;
+
         private readonly StatusManager _statusManager;
         private readonly GameControlBridge _keyboard;
         private BindingMapper _bindingMapper;
 
         private readonly Subject<DateTimeOffset> _updateSubject = new Subject<DateTimeOffset>();
+
         public IObservable<Timestamped<DateTimeOffset>> Updates => _updateSubject
                                                                     .Throttle(TimeSpan.FromSeconds(5))
                                                                     .Timestamp()
@@ -48,7 +51,9 @@ namespace Howatworks.Assistant.Core
             LiveJournalMonitor monitor,
             IThumbNotifier notifier,
             IJournalParser parser,
-            WebSocketConnectionManager connectionManager,
+            ConnectionManager connectionManager,
+            AssistantWebSocketHandler handler,
+            AssistantMessageProcessor processor,
             StatusManager statusManager,
             GameControlBridge keyboard)
         {
@@ -60,8 +65,11 @@ namespace Howatworks.Assistant.Core
             _parser = parser;
 
             _connectionManager = connectionManager;
+            _handler = handler;
+            _processor = processor;
             _statusManager = statusManager;
             _keyboard = keyboard;
+
         }
 
         public void Run(string[] args, CancellationToken token)
@@ -77,37 +85,22 @@ namespace Howatworks.Assistant.Core
             Log.Info($"Reading bindings from {bindingsPath}");
             _bindingMapper = BindingMapper.FromFile(bindingsPath);
 
-            _connectionManager.MessagesReceived.Subscribe(m =>
-            {
-                Log.Info($"Received '{m.MessageType}' message '{m.MessageContent}'");
-                switch (m.MessageType)
-                {
-                    case AssistantMessageType.ActivateBinding:
-                        var controlRequest = m.MessageContent.ToObject<ControlRequest>();
-                        ActivateBinding(controlRequest);
-                        break;
-                    case AssistantMessageType.GetAvailableBindings:
-                        ReportAllBindings();
-                        break;
-                    default:
-                        Log.Warn($"Unrecognised message type: {m.MessageType}");
-                        break;
-                }
-            });
+            _processor.BindingActivatedObservable.Subscribe(x => ActivateBinding(x));
+            _processor.BindingListRequestObservable.Subscribe(async id => await ReportAllBindings(id).ConfigureAwait(false));
 
             // Every new connection gets the current state
-            _connectionManager.ConnectionChanges.Where(c => c.NewState == ClientConnectionState.Connected).Subscribe(_ =>
+            _processor.NewConnection.Subscribe(async id =>
             {
-                RefreshAllClients(_statusManager.State);
+                await RefreshClient(id, _statusManager.State).ConfigureAwait(false);
             });
 
             _statusManager.ControlStateObservable
                 .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(c=>
+                .Subscribe(async c =>
             {
                 _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status");
 
-                RefreshAllClients(c);
+                await RefreshAllClients(c).ConfigureAwait(false);
             });
 
             Log.Info("Creating app configuration and running ASP.NET pipeline");
@@ -146,28 +139,20 @@ namespace Howatworks.Assistant.Core
             }
         }
 
-        private void ReportAllBindings()
+        private async Task ReportAllBindings(string socketId)
         {
             var bindingList = _bindingMapper.GetBoundButtons("Keyboard", "Mouse");
-            var message = new AssistantMessage(AssistantMessageType.AvailableBindings, JObject.FromObject(bindingList));
-            /*var serializedMessage = JsonConvert.SerializeObject(new
-            {
-                MessageType = "AvailableBindings",
-                MessageContent = bindingList
-            },
-                Formatting.Indented);*/
-            _connectionManager.SendMessageToAllClients(message);
+            await _processor.ReportAllBindings(socketId, bindingList).ConfigureAwait(false);
         }
 
-        private void RefreshAllClients(ControlStateModel state)
+        private async Task RefreshClient(string socketId, ControlStateModel state)
         {
-            var message = new AssistantMessage(AssistantMessageType.ControlState, JObject.FromObject(state.CreateControlStateMessage()));
-            /*var serializedMessage = JsonConvert.SerializeObject(new
-            {
-                MessageType = "ControlState",
-                MessageContent = state.CreateControlStateMessage()
-            }, Formatting.Indented);*/
-            _connectionManager.SendMessageToAllClients(message);
+            await _processor.RefreshClient(socketId, state).ConfigureAwait(false);
+        }
+
+        private async Task RefreshAllClients(ControlStateModel state)
+        {
+            await _processor.RefreshAllClients(state).ConfigureAwait(false);
         }
 
         public IHostBuilder CreateHostBuilder(string[] args) =>
@@ -182,6 +167,11 @@ namespace Howatworks.Assistant.Core
             })
             .ConfigureServices((_, services) =>
             {
+                // Since we can't pass pre-existing Autofac container into aspnetcore configuration
+                // register specific service instances by hand
+                // TODO: find a way to do this without making AssistantApp dependent on all of them?
+                services.AddSingleton(_processor);
+                services.AddSingleton<WebSocketHandler>(_handler);
                 services.AddSingleton(_connectionManager);
             });
 
@@ -189,7 +179,7 @@ namespace Howatworks.Assistant.Core
 
         public DateTimeOffset? LastChecked => _state.LastChecked;
 
-        private void ActivateBinding(ControlRequest controlRequest)
+        private void ActivateBinding(BindingActivationRequest controlRequest)
         {
             Log.Info($"Activated a control: '{controlRequest.BindingName}'");
 

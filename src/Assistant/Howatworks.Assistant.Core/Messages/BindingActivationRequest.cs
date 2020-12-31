@@ -1,6 +1,6 @@
 ﻿namespace Howatworks.Assistant.Core.Messages
 {
-    public class ControlRequest
+    public class BindingActivationRequest
     {
         public string BindingName { get; set; }
     }
