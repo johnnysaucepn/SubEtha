@@ -72,9 +72,9 @@ namespace Howatworks.Assistant.Core
             set => UpdateProperty(ref _saaMode, value);
         }
 
-        public ControlState CreateControlStateMessage()
+        public ControlStateMessage CreateControlStateMessage()
         {
-            return new ControlState
+            return new ControlStateMessage
             {
                 CargoScoopDeployed = this.CargoScoopDeployed,
                 HardpointsDeployed = this.HardpointsDeployed,

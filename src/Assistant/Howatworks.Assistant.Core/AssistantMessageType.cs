@@ -2,6 +2,7 @@
 {
     public enum AssistantMessageType
     {
+        Unknown,
         ActivateBinding,
         GetAvailableBindings,
         ControlState,

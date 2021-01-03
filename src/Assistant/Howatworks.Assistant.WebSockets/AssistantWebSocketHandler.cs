@@ -1,10 +1,5 @@
 ﻿using log4net;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -16,15 +11,6 @@ namespace Howatworks.Assistant.WebSockets
     public class AssistantWebSocketHandler : WebSocketHandler
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantWebSocketHandler));
-
-        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
-        {
-            MissingMemberHandling = MissingMemberHandling.Ignore,
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-            DateFormatHandling = DateFormatHandling.IsoDateFormat,
-            DateParseHandling = DateParseHandling.DateTimeOffset,
-            Converters = { new StringEnumConverter() }
-        };
 
         private readonly ISubject<IncomingMessage> _messageReceived = new Subject<IncomingMessage>();
         public IObservable<IncomingMessage> MessageReceived => _messageReceived.AsObservable();
@@ -59,14 +45,7 @@ namespace Howatworks.Assistant.WebSockets
 
             Log.Info($"Received '{rawString}' from '{socketId}'");
 
-            var messageJObject = JObject.Parse(rawString);
-            var messageType = messageJObject["MessageType"].Value<string>(); // TODO: make more robust?
-            var messageContent = messageJObject.SelectToken("MessageContent");
-            var message = new IncomingMessage(socketId, messageType, messageContent);
-
-            Log.Info($"Received '{message.MessageType}' message '{message.MessageContent}'");
-
-            _messageReceived.OnNext(message);
+            _messageReceived.OnNext(new IncomingMessage(socketId, rawString));
         }
     }
 }

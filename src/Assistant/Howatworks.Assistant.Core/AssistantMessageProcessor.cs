@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Howatworks.Assistant.Core.Messages;
 using Howatworks.Assistant.WebSockets;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 
 namespace Howatworks.Assistant.Core
 {
@@ -22,20 +15,28 @@ namespace Howatworks.Assistant.Core
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantMessageProcessor));
 
-        private event Action<BindingActivationRequest> BindingActivated;
-        public IObservable<BindingActivationRequest> BindingActivatedObservable;
+        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
+        {
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            DateParseHandling = DateParseHandling.DateTimeOffset,
+            Converters = { new StringEnumConverter() }
+        };
+
+        private event Action<ActivateBindingMessage> BindingActivated;
+        public IObservable<ActivateBindingMessage> BindingActivatedObservable;
 
         private event Action<string> BindingListRequested;
         public IObservable<string> BindingListRequestObservable;
 
         private readonly AssistantWebSocketHandler _handler;
-        private readonly IDisposable _messageSub;
 
         public IObservable<string> NewConnection => _handler.NewConnection;
 
         public AssistantMessageProcessor(AssistantWebSocketHandler handler)
         {
-            BindingActivatedObservable = Observable.FromEvent<BindingActivationRequest>(
+            BindingActivatedObservable = Observable.FromEvent<ActivateBindingMessage>(
                 h => BindingActivated += h,
                 h => BindingActivated -= h
             );
@@ -47,43 +48,30 @@ namespace Howatworks.Assistant.Core
 
             _handler = handler;
 
-            _messageSub = _handler.MessageReceived.Subscribe(m =>
-            {
-                var messageType = (AssistantMessageType)Enum.Parse(typeof(AssistantMessageType), m.MessageType);
+            var parser = new AssistantMessageParser();
 
-                Log.Info($"Received '{m.MessageType}' message '{m.MessageContent}'");
-                switch (messageType)
-                {
-                    case AssistantMessageType.ActivateBinding:
-                        var bindingActivationRequest = m.MessageContent.ToObject<BindingActivationRequest>();
-                        BindingActivated?.Invoke(bindingActivationRequest);
-                        break;
-                    case AssistantMessageType.GetAvailableBindings:
-                        BindingListRequested?.Invoke(m.SourceSocketId);
-                        break;
-                    default:
-                        Log.Warn($"Unrecognised message type: {m.MessageType}");
-                        break;
-                }
-            });
+            var parsed = _handler.MessageReceived.Select(m => (sourceSocketId: m.SourceSocketId, message: parser.Parse(m.Message)));
+
+            parsed.Where(m => m.message is ActivateBindingMessage).Subscribe(m => BindingActivated?.Invoke(m.message as ActivateBindingMessage));
+            parsed.Where(m => m.message is GetAvailableBindingsMessage).Subscribe(m => BindingListRequested?.Invoke(m.sourceSocketId));
         }
 
         public async Task ReportAllBindings(string socketId, IReadOnlyCollection<string> bindingList)
         {
-            var message = new OutgoingMessage(nameof(AssistantMessageType.AvailableBindings), JArray.FromObject(bindingList));
-            await _handler.SendMessageAsync(socketId, JsonConvert.SerializeObject(message));
+            var message = new AvailableBindingsMessage(bindingList);
+            await _handler.SendMessageAsync(socketId, JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
         }
 
         public async Task RefreshAllClients(ControlStateModel state)
         {
-            var message = new OutgoingMessage(nameof(AssistantMessageType.ControlState), JObject.FromObject(state.CreateControlStateMessage()));
-            await _handler.SendMessageToAllAsync(JsonConvert.SerializeObject(message)).ConfigureAwait(false);
+            var message = state.CreateControlStateMessage();
+            await _handler.SendMessageToAllAsync(JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
         }
 
         public async Task RefreshClient(string socketId, ControlStateModel state)
         {
-            var message = new OutgoingMessage(nameof(AssistantMessageType.ControlState), JObject.FromObject(state.CreateControlStateMessage()));
-            await _handler.SendMessageAsync(socketId, JsonConvert.SerializeObject(message)).ConfigureAwait(false);
+            var message = state.CreateControlStateMessage();
+            await _handler.SendMessageAsync(socketId, JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
         }
     }
 }

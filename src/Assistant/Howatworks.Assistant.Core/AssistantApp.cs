@@ -179,7 +179,7 @@ namespace Howatworks.Assistant.Core
 
         public DateTimeOffset? LastChecked => _state.LastChecked;
 
-        private void ActivateBinding(BindingActivationRequest controlRequest)
+        private void ActivateBinding(ActivateBindingMessage controlRequest)
         {
             Log.Info($"Activated a control: '{controlRequest.BindingName}'");
 
