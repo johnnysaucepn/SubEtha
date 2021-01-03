@@ -22,7 +22,8 @@ var AssistantConnection = function (uri) {
 
     this.sendKeyBindingRequest = function (message) {
         if (!this.isOpen) return;
-        var wrappedMessage = { MessageType: 'ActivateBinding', MessageContent: message };
+        var wrappedMessage = message;
+        wrappedMessage.MessageType = 'ActivateBinding';
         var stringifiedMessage = JSON.stringify(wrappedMessage);
 
         writeToScreen("SENT: " + stringifiedMessage);
@@ -86,11 +87,11 @@ function onClose(evt) {
 }
 
 function onMessage(evt) {
-    writeToScreen('RESPONSE: ' + evt.data + '');
+    writeToScreen('RECEIVED: ' + evt.data + '');
     var parsedMessage = JSON.parse(evt.data);
 
     if (parsedMessage.MessageType === "AvailableBindings") {
-        var bindingList = parsedMessage.MessageContent;
+        var bindingList = parsedMessage.Bindings;
 
         // Special case for Jump button: activate HyperSuperCombination if possible, plain Hyperspace otherwise
         // As long as you have one of those, you should be able to hyper-jump.
@@ -114,10 +115,10 @@ function onMessage(evt) {
         });
 
     } else if (parsedMessage.MessageType === "ControlState") {
-        var supercruise = parsedMessage.MessageContent.Supercruise === true;
-        var analysis = parsedMessage.MessageContent.HudAnalysisMode === true;
-        var fssMode = parsedMessage.MessageContent.FssMode === true;
-        var saaMode = parsedMessage.MessageContent.SaaMode === true;
+        var supercruise = parsedMessage.Supercruise === true;
+        var analysis = parsedMessage.HudAnalysisMode === true;
+        var fssMode = parsedMessage.FssMode === true;
+        var saaMode = parsedMessage.SaaMode === true;
 
         // open slide 0 if real-space, 1 if supercruise
         $("#travel-carousel").carousel(supercruise ? 1 : 0);

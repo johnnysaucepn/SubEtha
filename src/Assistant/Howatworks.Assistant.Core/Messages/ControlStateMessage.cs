@@ -2,8 +2,10 @@
 
 namespace Howatworks.Assistant.Core.Messages
 {
-    public class ControlState : IControlState
+    public class ControlStateMessage : IControlState, IAssistantMessage
     {
+        public AssistantMessageType MessageType => AssistantMessageType.ControlState;
+
         [JsonProperty]
         public bool LandingGearDown { get; set; }
 

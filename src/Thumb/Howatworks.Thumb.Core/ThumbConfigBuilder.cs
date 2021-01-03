@@ -43,7 +43,7 @@ namespace Howatworks.Thumb.Core
                 ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json",
                 ["UpdateInterval"] = new TimeSpan(0, 0, 5).ToString(),
                 ["BindingsFolder"] = _defaultBindingsPath,
-                ["BindingsFilename"] = "Custom.3.0.binds",
+                ["BindingsFilename"] = "Custom.3.0.binds", // TODO: must read bindings name from StartPreset.start and reliably map to binding file somehow
                 ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)",
                 ["JournalMonitorStateFolder"] = _defaultAppStoragePath,
                 ["LogFolder"] = _defaultAppStoragePath

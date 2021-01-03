@@ -1,22 +1,18 @@
 ﻿using System;
-using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using Howatworks.SubEtha.Bindings;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
-using Howatworks.Assistant.Core.Messages;
 using Howatworks.Thumb.Core;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Howatworks.Assistant.WebSockets;
 
 namespace Howatworks.Assistant.Core
 {
@@ -31,12 +27,14 @@ namespace Howatworks.Assistant.Core
         private readonly IThumbNotifier _notifier;
         private readonly IJournalParser _parser;
 
-        private readonly WebSocketConnectionManager _connectionManager;
+        private readonly ConnectionManager _connectionManager;
+        private readonly AssistantWebSocketHandler _handler;
+        private readonly AssistantMessageHub _processor;
+
         private readonly StatusManager _statusManager;
-        private readonly GameControlBridge _keyboard;
-        private BindingMapper _bindingMapper;
 
         private readonly Subject<DateTimeOffset> _updateSubject = new Subject<DateTimeOffset>();
+
         public IObservable<Timestamped<DateTimeOffset>> Updates => _updateSubject
                                                                     .Throttle(TimeSpan.FromSeconds(5))
                                                                     .Timestamp()
@@ -48,9 +46,10 @@ namespace Howatworks.Assistant.Core
             LiveJournalMonitor monitor,
             IThumbNotifier notifier,
             IJournalParser parser,
-            WebSocketConnectionManager connectionManager,
-            StatusManager statusManager,
-            GameControlBridge keyboard)
+            ConnectionManager connectionManager,
+            AssistantWebSocketHandler handler,
+            AssistantMessageHub processor,
+            StatusManager statusManager)
         {
             _configuration = configuration;
             _state = state;
@@ -60,69 +59,24 @@ namespace Howatworks.Assistant.Core
             _parser = parser;
 
             _connectionManager = connectionManager;
+            _handler = handler;
+            _processor = processor;
             _statusManager = statusManager;
-            _keyboard = keyboard;
         }
 
         public void Run(string[] args, CancellationToken token)
         {
             Log.Info("Starting up");
 
-            _monitor.JournalFileWatchingStarted += (s, e) => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'");
-
-            var bindingsPath = Path.Combine(_configuration["BindingsFolder"], _configuration["BindingsFilename"]);
-
-            _bindingMapper = BindingMapper.FromFile(bindingsPath);
-
-            _connectionManager.MessageReceived += (_, e) =>
-            {
-                var messageWrapper = JObject.Parse(e.Message);
-                switch (messageWrapper["MessageType"].Value<string>())
-                {
-                    case "ActivateBinding":
-                        var controlRequest = messageWrapper["MessageContent"].ToObject<ControlRequest>();
-                        ActivateBinding(controlRequest);
-                        break;
-                    case "GetAvailableBindings":
-                        var bindingList = _bindingMapper.GetBoundButtons("Keyboard", "Mouse");
-                        var serializedMessage = JsonConvert.SerializeObject(new
-                            {
-                                MessageType = "AvailableBindings",
-                                MessageContent = bindingList
-                            },
-                            Formatting.Indented);
-                        _connectionManager.SendMessageToAllClients(serializedMessage);
-                        break;
-                    default:
-                        Log.Warn($"Unrecognised message format: {e.Message}");
-                        break;
-                }
-            };
-
-            _connectionManager.ClientConnected += (sender, e) =>
-            {
-                var serializedMessage = JsonConvert.SerializeObject(new
-                    {
-                        MessageType = "ControlState",
-                        MessageContent = _statusManager.CreateControlStateMessage()
-                },
-                    Formatting.Indented);
-                _connectionManager.SendMessageToAllClients(serializedMessage);
-            };
+            _monitor.JournalFileWatch.Where(x => x.Action == JournalWatchAction.Started).Subscribe(
+                e => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'")
+            );
 
             _statusManager.ControlStateObservable
                 .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(c=>
-            {
-                _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status");
-                var serializedMessage = JsonConvert.SerializeObject(new
-                    {
-                        MessageType = "ControlState", MessageContent = c.CreateControlStateMessage()
-                    },
-                    Formatting.Indented);
-                _connectionManager.SendMessageToAllClients(serializedMessage);
-            });
+                .Subscribe(_ => _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status"));
 
+            Log.Info("Creating app configuration and running ASP.NET pipeline");
             CreateHostBuilder(args).Build().RunAsync(token); // Don't block the calling thread
 
             var startTime = _state.LastEntrySeen ?? DateTimeOffset.MinValue;
@@ -143,6 +97,7 @@ namespace Howatworks.Assistant.Core
                 {
                     var lastEntry = e.Value;
                     var lastChecked = e.Timestamp;
+                    Log.Info($"Updated at {lastChecked}, last entry stamped {lastEntry}");
                     _state.Update(lastChecked, lastEntry);
                 });
 
@@ -158,7 +113,7 @@ namespace Howatworks.Assistant.Core
         }
 
         public IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder
@@ -169,26 +124,16 @@ namespace Howatworks.Assistant.Core
             })
             .ConfigureServices((_, services) =>
             {
+                // Since we can't pass pre-existing Autofac container into aspnetcore configuration
+                // register specific service instances by hand
+                // TODO: find a way to do this without making AssistantApp dependent on all of them?
+                services.AddSingleton(_processor);
+                services.AddSingleton<WebSocketHandler>(_handler);
                 services.AddSingleton(_connectionManager);
             });
 
         public DateTimeOffset? LastEntry => _state.LastEntrySeen;
 
         public DateTimeOffset? LastChecked => _state.LastChecked;
-
-        private void ActivateBinding(ControlRequest controlRequest)
-        {
-            Log.Info($"Activated a control: '{controlRequest.BindingName}'");
-
-            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
-            if (button == null)
-            {
-                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
-            }
-            else
-            {
-                _keyboard.TriggerKeyCombination(button);
-            }
-        }
     }
 }

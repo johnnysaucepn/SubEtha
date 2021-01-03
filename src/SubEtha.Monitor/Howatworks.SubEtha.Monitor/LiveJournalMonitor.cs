@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Parser;
 using log4net;
@@ -15,7 +17,9 @@ namespace Howatworks.SubEtha.Monitor
 
         private readonly List<LiveJournalReader> _liveReaders;
 
-        public event EventHandler<JournalFileEventArgs> JournalFileWatchingStarted;
+        private readonly ISubject<JournalWatchActivity> _journalFileWatch = new Subject<JournalWatchActivity>();
+
+        public IObservable<JournalWatchActivity> JournalFileWatch => _journalFileWatch.AsObservable();
 
         public LiveJournalMonitor(IConfiguration config, IJournalReaderFactory readerFactory)
         {
@@ -28,7 +32,7 @@ namespace Howatworks.SubEtha.Monitor
                 var file = new FileInfo(Path.Combine(folder, filename));
                 var newReader = readerFactory.CreateLiveJournalReader(file);
                 _liveReaders.Add(newReader);
-                JournalFileWatchingStarted?.Invoke(this, new JournalFileEventArgs(file));
+                _journalFileWatch.OnNext(new JournalWatchActivity(JournalWatchAction.Started, file));
             }
         }
 
@@ -37,7 +41,6 @@ namespace Howatworks.SubEtha.Monitor
             return _liveReaders
                 .Select(x => x.ReadCurrent())
                 .Where(l => l != null);
-
         }
     }
 }

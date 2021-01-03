@@ -31,6 +31,8 @@ namespace Howatworks.Assistant.Installer
             {
                 Platform = Platform.x64,
                 GUID = new Guid("ff2b008b-9c7b-4965-bc02-7c72c66400cb"),
+                InstallerVersion = 500,
+                InstallScope = InstallScope.perMachine,
                 ManagedUI = ManagedUI.Default,
                 LicenceFile = "LICENSE.rtf",
                 ControlPanelInfo = new ProductInfo()
