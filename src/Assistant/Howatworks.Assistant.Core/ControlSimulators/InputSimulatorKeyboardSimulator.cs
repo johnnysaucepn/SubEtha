@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using InputSimulatorStandard;
@@ -16,6 +17,7 @@ namespace Howatworks.Assistant.Core.ControlSimulators
         private static readonly ILog Log = LogManager.GetLogger(typeof(InputSimulatorKeyboardSimulator));
 
         private readonly IKeyboardSimulator _keyboard = new KeyboardSimulator();
+        private static readonly VirtualKeyCodeFinder _vkFinder = new VirtualKeyCodeFinder(CultureInfo.CurrentCulture);
 
         private readonly Dictionary<string, VirtualKeyCode> _mapping = new Dictionary<string, VirtualKeyCode>
         {
@@ -30,8 +32,8 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             ["Key_8"] = VirtualKeyCode.VK_8,
             ["Key_9"] = VirtualKeyCode.VK_9,
             ["Key_0"] = VirtualKeyCode.VK_0,
-            ["Key_Minus"] = VirtualKeyCode.OEM_MINUS,
-            ["Key_Equals"] = VirtualKeyCode.OEM_PLUS, // TODO: unmodified
+            ["Key_Minus"] = _vkFinder.GetKeyOrDefault('-', VirtualKeyCode.OEM_MINUS),
+            ["Key_Equals"] = _vkFinder.GetKeyOrDefault('=', VirtualKeyCode.OEM_PLUS), // TODO: unmodified
             ["Key_Backspace"] = VirtualKeyCode.BACK,
             ["Key_Tab"] = VirtualKeyCode.TAB,
             ["Key_Q"] = VirtualKeyCode.VK_Q,
@@ -44,8 +46,8 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             ["Key_I"] = VirtualKeyCode.VK_I,
             ["Key_O"] = VirtualKeyCode.VK_O,
             ["Key_P"] = VirtualKeyCode.VK_P,
-            ["Key_LeftBracket"] = VirtualKeyCode.OEM_4, // { US
-            ["Key_RightBracket"] = VirtualKeyCode.OEM_6, // } US
+            ["Key_LeftBracket"] = _vkFinder.GetKeyOrDefault('{', VirtualKeyCode.OEM_4), // { US
+            ["Key_RightBracket"] = _vkFinder.GetKeyOrDefault('}', VirtualKeyCode.OEM_6), // } US
             ["Key_Enter"] = VirtualKeyCode.RETURN,
             ["Key_LeftControl"] = VirtualKeyCode.LCONTROL,
             ["Key_A"] = VirtualKeyCode.VK_A,
@@ -57,11 +59,11 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             ["Key_J"] = VirtualKeyCode.VK_J,
             ["Key_K"] = VirtualKeyCode.VK_K,
             ["Key_L"] = VirtualKeyCode.VK_L,
-            ["Key_SemiColon"] = VirtualKeyCode.OEM_1, // ; US
-            ["Key_Apostrophe"] = VirtualKeyCode.OEM_7, // ' US?
-            ["Key_Grave"] = VirtualKeyCode.OEM_3, // ` US?
+            ["Key_SemiColon"] = _vkFinder.GetKeyOrDefault(';', VirtualKeyCode.OEM_1), // ; US
+            ["Key_Apostrophe"] = _vkFinder.GetKeyOrDefault('\'', VirtualKeyCode.OEM_7), // ' US?
+            ["Key_Grave"] = _vkFinder.GetKeyOrDefault('`', VirtualKeyCode.OEM_3), // ` US?
             ["Key_LeftShift"] = VirtualKeyCode.LSHIFT,
-            ["Key_BackSlash"] = VirtualKeyCode.OEM_5, // \ US? or OEM_102?
+            ["Key_BackSlash"] = _vkFinder.GetKeyOrDefault('\\', VirtualKeyCode.OEM_5), // \ US? or OEM_102?
             ["Key_Z"] = VirtualKeyCode.VK_Z,
             ["Key_X"] = VirtualKeyCode.VK_X,
             ["Key_C"] = VirtualKeyCode.VK_C,
@@ -69,11 +71,11 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             ["Key_B"] = VirtualKeyCode.VK_B,
             ["Key_N"] = VirtualKeyCode.VK_N,
             ["Key_M"] = VirtualKeyCode.VK_M,
-            ["Key_Comma"] = VirtualKeyCode.OEM_COMMA,
-            ["Key_Period"] = VirtualKeyCode.OEM_PERIOD,
+            ["Key_Comma"] = _vkFinder.GetKeyOrDefault(',', VirtualKeyCode.OEM_COMMA),
+            ["Key_Period"] = _vkFinder.GetKeyOrDefault('.', VirtualKeyCode.OEM_PERIOD),
             ["Key_Slash"] = VirtualKeyCode.DIVIDE,
             ["Key_RightShift"] = VirtualKeyCode.RSHIFT,
-            ["Key_Numpad_Multiply"] = VirtualKeyCode.MULTIPLY, // TODO: No numpad equivalent?
+            ["Key_Numpad_Multiply"] = VirtualKeyCode.MULTIPLY,
             ["Key_LeftAlt"] = VirtualKeyCode.MENU,
             ["Key_Space"] = VirtualKeyCode.SPACE,
             ["Key_CapsLock"] = VirtualKeyCode.CAPITAL,
@@ -92,16 +94,16 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             ["Key_Numpad_7"] = VirtualKeyCode.NUMPAD7,
             ["Key_Numpad_8"] = VirtualKeyCode.NUMPAD8,
             ["Key_Numpad_9"] = VirtualKeyCode.NUMPAD9,
-            ["Key_Numpad_Subtract"] = VirtualKeyCode.SUBTRACT, // TODO: No numpad equivalent?
+            ["Key_Numpad_Subtract"] = VirtualKeyCode.SUBTRACT,
             ["Key_Numpad_4"] = VirtualKeyCode.NUMPAD4,
             ["Key_Numpad_5"] = VirtualKeyCode.NUMPAD5,
             ["Key_Numpad_6"] = VirtualKeyCode.NUMPAD6,
-            ["Key_Numpad_Add"] = VirtualKeyCode.ADD, // TODO: No numpad equivalent?
+            ["Key_Numpad_Add"] = VirtualKeyCode.ADD,
             ["Key_Numpad_1"] = VirtualKeyCode.NUMPAD1,
             ["Key_Numpad_2"] = VirtualKeyCode.NUMPAD2,
             ["Key_Numpad_3"] = VirtualKeyCode.NUMPAD3,
             ["Key_Numpad_0"] = VirtualKeyCode.NUMPAD0,
-            ["Key_Numpad_Decimal"] = VirtualKeyCode.DECIMAL, // TODO: is this numpad only?
+            ["Key_Numpad_Decimal"] = VirtualKeyCode.DECIMAL,
             ["Key_OEM_102"] = VirtualKeyCode.OEM_102,
             ["Key_F11"] = VirtualKeyCode.F11,
             ["Key_F12"] = VirtualKeyCode.F12,
@@ -114,11 +116,11 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             ["Key_NoConvert"] = VirtualKeyCode.NONAME, // TODO: how to test?
             ["Key_Yen"] = VirtualKeyCode.NONAME, // TODO: how to test?
             ["Key_ABNT_C2"] = VirtualKeyCode.NONAME, // TODO: how to test?
-            ["Key_Numpad_Equals"] = VirtualKeyCode.NONAME, // TODO: how to test?
+            ["Key_Numpad_Equals"] = VirtualKeyCode.RETURN,
             ["Key_PrevTrack"] = VirtualKeyCode.MEDIA_PREV_TRACK,
-            ["Key_AT"] = VirtualKeyCode.NONAME, // TODO: is this dupe of unmodified key?
-            ["Key_Colon"] = VirtualKeyCode.NONAME, // TODO: is this dupe of unmodified key?
-            ["Key_Underline"] = VirtualKeyCode.NONAME, // TODO: is this dupe of unmodified key?
+            ["Key_AT"] = _vkFinder.GetKeyOrDefault('@', VirtualKeyCode.NONAME), // TODO: is this dupe of unmodified key?
+            ["Key_Colon"] = _vkFinder.GetKeyOrDefault(':', VirtualKeyCode.NONAME), // TODO: is this dupe of unmodified key?
+            ["Key_Underline"] = _vkFinder.GetKeyOrDefault('_', VirtualKeyCode.NONAME), // TODO: is this dupe of unmodified key?
             ["Key_Kanji"] = VirtualKeyCode.KANJI, // TODO: how to test?
             ["Key_Stop"] = VirtualKeyCode.BROWSER_STOP, // TODO: is this browser?
             ["Key_AX"] = VirtualKeyCode.NONAME, // TODO: how to test?
@@ -134,7 +136,7 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             ["Key_VolumeUp"] = VirtualKeyCode.NONAME,
             ["Key_WebHome"] = VirtualKeyCode.NONAME,
             ["Key_Numpad_Comma"] = VirtualKeyCode.NONAME, // TODO: how to test?
-            ["Key_Numpad_Divide"] = VirtualKeyCode.DIVIDE, // TODO: is this numpad only?
+            ["Key_Numpad_Divide"] = VirtualKeyCode.DIVIDE,
             ["Key_SYSRQ"] = VirtualKeyCode.SNAPSHOT, // SysReq/PrintScreen
             ["Key_RightAlt"] = VirtualKeyCode.NONAME, // TODO: ???
             ["Key_Pause"] = VirtualKeyCode.PAUSE, // TODO: ???
