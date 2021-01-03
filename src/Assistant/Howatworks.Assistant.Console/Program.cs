@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
@@ -22,7 +21,7 @@ namespace Howatworks.Assistant.Console
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbConsoleModule(config));
-            builder.RegisterModule(new AssistantModule());
+            builder.RegisterModule(new AssistantModule(config));
             var container = builder.Build();
 
             using (var scope = container.BeginLifetimeScope())

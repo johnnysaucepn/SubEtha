@@ -1,6 +1,5 @@
 ﻿using System;
 using Howatworks.SubEtha.Journal.Status;
-using Howatworks.Assistant.Core.Messages;
 using log4net;
 using System.Reactive.Subjects;
 using Howatworks.SubEtha.Journal;

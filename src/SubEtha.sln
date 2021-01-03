@@ -81,7 +81,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Matrix.Installer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Matrix.Wpf", "Matrix\Howatworks.Matrix.Wpf\Howatworks.Matrix.Wpf.csproj", "{5644C6C2-D928-4672-BC83-D6421B8D2A82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.Assistant.WebSockets", "Assistant\Howatworks.Assistant.WebSockets\Howatworks.Assistant.WebSockets.csproj", "{67A14EF3-01A7-42B5-B3BF-A79EF89310D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Assistant.WebSockets", "Assistant\Howatworks.Assistant.WebSockets\Howatworks.Assistant.WebSockets.csproj", "{67A14EF3-01A7-42B5-B3BF-A79EF89310D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,7 +170,6 @@ Global
 		{F202D78B-2D39-4E3C-A471-EBE2504D103D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F202D78B-2D39-4E3C-A471-EBE2504D103D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{082C244E-1333-42ED-B778-4C03688E612A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{082C244E-1333-42ED-B778-4C03688E612A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{082C244E-1333-42ED-B778-4C03688E612A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{082C244E-1333-42ED-B778-4C03688E612A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA4B53D4-9029-4A2B-87A4-FD02CCF200F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

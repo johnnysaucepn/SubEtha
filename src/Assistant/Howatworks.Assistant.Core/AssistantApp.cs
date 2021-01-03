@@ -1,14 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using Howatworks.SubEtha.Bindings;
 using Howatworks.SubEtha.Monitor;
 using Howatworks.SubEtha.Parser;
-using Howatworks.Assistant.Core.Messages;
 using Howatworks.Thumb.Core;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
@@ -32,11 +29,9 @@ namespace Howatworks.Assistant.Core
 
         private readonly ConnectionManager _connectionManager;
         private readonly AssistantWebSocketHandler _handler;
-        private readonly AssistantMessageProcessor _processor;
+        private readonly AssistantMessageHub _processor;
 
         private readonly StatusManager _statusManager;
-        private readonly GameControlBridge _keyboard;
-        private BindingMapper _bindingMapper;
 
         private readonly Subject<DateTimeOffset> _updateSubject = new Subject<DateTimeOffset>();
 
@@ -53,9 +48,8 @@ namespace Howatworks.Assistant.Core
             IJournalParser parser,
             ConnectionManager connectionManager,
             AssistantWebSocketHandler handler,
-            AssistantMessageProcessor processor,
-            StatusManager statusManager,
-            GameControlBridge keyboard)
+            AssistantMessageHub processor,
+            StatusManager statusManager)
         {
             _configuration = configuration;
             _state = state;
@@ -68,8 +62,6 @@ namespace Howatworks.Assistant.Core
             _handler = handler;
             _processor = processor;
             _statusManager = statusManager;
-            _keyboard = keyboard;
-
         }
 
         public void Run(string[] args, CancellationToken token)
@@ -80,28 +72,9 @@ namespace Howatworks.Assistant.Core
                 e => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'")
             );
 
-            var bindingsPath = Path.Combine(_configuration["BindingsFolder"], _configuration["BindingsFilename"]);
-
-            Log.Info($"Reading bindings from {bindingsPath}");
-            _bindingMapper = BindingMapper.FromFile(bindingsPath);
-
-            _processor.BindingActivatedObservable.Subscribe(x => ActivateBinding(x));
-            _processor.BindingListRequestObservable.Subscribe(async id => await ReportAllBindings(id).ConfigureAwait(false));
-
-            // Every new connection gets the current state
-            _processor.NewConnection.Subscribe(async id =>
-            {
-                await RefreshClient(id, _statusManager.State).ConfigureAwait(false);
-            });
-
             _statusManager.ControlStateObservable
                 .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(async c =>
-            {
-                _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status");
-
-                await RefreshAllClients(c).ConfigureAwait(false);
-            });
+                .Subscribe(_ => _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status"));
 
             Log.Info("Creating app configuration and running ASP.NET pipeline");
             CreateHostBuilder(args).Build().RunAsync(token); // Don't block the calling thread
@@ -139,22 +112,6 @@ namespace Howatworks.Assistant.Core
             }
         }
 
-        private async Task ReportAllBindings(string socketId)
-        {
-            var bindingList = _bindingMapper.GetBoundButtons("Keyboard", "Mouse");
-            await _processor.ReportAllBindings(socketId, bindingList).ConfigureAwait(false);
-        }
-
-        private async Task RefreshClient(string socketId, ControlStateModel state)
-        {
-            await _processor.RefreshClient(socketId, state).ConfigureAwait(false);
-        }
-
-        private async Task RefreshAllClients(ControlStateModel state)
-        {
-            await _processor.RefreshAllClients(state).ConfigureAwait(false);
-        }
-
         public IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
@@ -178,20 +135,5 @@ namespace Howatworks.Assistant.Core
         public DateTimeOffset? LastEntry => _state.LastEntrySeen;
 
         public DateTimeOffset? LastChecked => _state.LastChecked;
-
-        private void ActivateBinding(ActivateBindingMessage controlRequest)
-        {
-            Log.Info($"Activated a control: '{controlRequest.BindingName}'");
-
-            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
-            if (button == null)
-            {
-                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
-            }
-            else
-            {
-                _keyboard.TriggerKeyCombination(button);
-            }
-        }
     }
 }
