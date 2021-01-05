@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using InputSimulatorStandard;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Assistant.Core.ControlSimulators
 {
+    [ExcludeFromCodeCoverage]
     public class InputSimulatorKeyboardSimulator : IVirtualKeyboardSimulator
     {
         private readonly TimeSpan KeyDownTime = TimeSpan.FromMilliseconds(500);

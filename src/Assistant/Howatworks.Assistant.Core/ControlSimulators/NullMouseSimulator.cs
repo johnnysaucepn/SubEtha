@@ -1,5 +1,8 @@
-﻿namespace Howatworks.Assistant.Core.ControlSimulators
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.Assistant.Core.ControlSimulators
 {
+    [ExcludeFromCodeCoverage]
     public class NullMouseSimulator : IVirtualMouseSimulator
     {
         public void Activate(string button)

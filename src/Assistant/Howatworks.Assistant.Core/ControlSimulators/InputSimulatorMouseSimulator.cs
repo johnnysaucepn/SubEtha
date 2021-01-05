@@ -1,10 +1,12 @@
 ﻿using InputSimulatorStandard;
 using log4net;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Howatworks.Assistant.Core.ControlSimulators
 {
+    [ExcludeFromCodeCoverage]
     public class InputSimulatorMouseSimulator : IVirtualMouseSimulator
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(InputSimulatorMouseSimulator));

@@ -8,6 +8,7 @@ using PInvoke;
 
 namespace Howatworks.Assistant.Core.ControlSimulators
 {
+    [ExcludeFromCodeCoverage]
     public class SimpleKeyboardSimulator : IVirtualKeyboardSimulator
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SimpleKeyboardSimulator));
