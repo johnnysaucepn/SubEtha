@@ -24,7 +24,22 @@ namespace Howatworks.Assistant.Core
             _activeWindowTitle = configuration["ActiveWindowTitle"];
         }
 
-        public void TriggerKeyCombination(Button button)
+        public void ActivateKeyCombination(Button button)
+        {
+            TriggerKeyCombination(button, _keyboard.Activate, _mouse.Activate);
+        }
+
+        public void HoldKeyCombination(Button button)
+        {
+            TriggerKeyCombination(button, _keyboard.Hold, _mouse.Hold);
+        }
+
+        public void ReleaseKeyCombination(Button button)
+        {
+            TriggerKeyCombination(button, _keyboard.Release, _mouse.Release);
+        }
+
+        private void TriggerKeyCombination(Button button, Action<string,string[]> keyboardAction, Action<string> mouseAction)
         {
             if (!DoesWindowHaveFocus(_activeWindowTitle))
             {
@@ -59,12 +74,12 @@ namespace Howatworks.Assistant.Core
 
             if (selectedButtonBinding.Device == "Keyboard")
             {
-                _keyboard.Activate(selectedButtonBinding.Key, modifierNames);
+                keyboardAction(selectedButtonBinding.Key, modifierNames);
             }
             else if (selectedButtonBinding.Device == "Mouse")
             {
                 // Expect no modifiers for mouse controls - change if required
-                _mouse.Activate(selectedButtonBinding.Key);
+                mouseAction(selectedButtonBinding.Key);
             }
         }
 

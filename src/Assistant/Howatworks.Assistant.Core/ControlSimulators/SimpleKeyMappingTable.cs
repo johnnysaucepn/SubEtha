@@ -8,7 +8,7 @@ namespace Howatworks.Assistant.Core.ControlSimulators
         /// <summary>
         /// Sourced from https://github.com/richardbuckle/EDRefCard/blob/1f1d65c3f55eda18d1923ee8175026125fd65e44/bindings/testCases/Help.txt
         /// </summary>
-        public readonly IReadOnlyDictionary<string, (ScanCode, VirtualKey)> Table = new Dictionary<string, (ScanCode, VirtualKey)>
+        private readonly IReadOnlyDictionary<string, (ScanCode, VirtualKey)> _table = new Dictionary<string, (ScanCode, VirtualKey)>
         {
             ["Key_Escape"] = (ScanCode.ESCAPE, VirtualKey.VK_ESCAPE),
             ["Key_1"] = (ScanCode.KEY_1, VirtualKey.VK_KEY_1),
@@ -160,12 +160,12 @@ namespace Howatworks.Assistant.Core.ControlSimulators
 
         public ScanCode GetScanCode(string keyName)
         {
-            return Table[keyName].Item1;
+            return _table[keyName].Item1;
         }
 
         public VirtualKey GetVirtualKey(string keyName)
         {
-            return Table[keyName].Item2;
+            return _table[keyName].Item2;
         }
 
     }

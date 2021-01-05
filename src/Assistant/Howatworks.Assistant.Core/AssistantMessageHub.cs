@@ -57,6 +57,12 @@ namespace Howatworks.Assistant.Core
                     case ActivateBindingMessage binding:
                         ActivateBinding(binding);
                         break;
+                    case StartActivateBindingMessage binding:
+                        StartActivateBinding(binding);
+                        break;
+                    case EndActivateBindingMessage binding:
+                        EndActivateBinding(binding);
+                        break;
                     case GetAvailableBindingsMessage getBindings:
                         await ReportAllBindings(sourceSocketId).ConfigureAwait(false);
                         break;
@@ -97,7 +103,37 @@ namespace Howatworks.Assistant.Core
             }
             else
             {
-                _keyboard.TriggerKeyCombination(button);
+                _keyboard.ActivateKeyCombination(button);
+            }
+        }
+
+        private void StartActivateBinding(StartActivateBindingMessage controlRequest)
+        {
+            Log.Info($"Started a control: '{controlRequest.BindingName}'");
+
+            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
+            if (button == null)
+            {
+                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
+            }
+            else
+            {
+                _keyboard.HoldKeyCombination(button);
+            }
+        }
+
+        private void EndActivateBinding(EndActivateBindingMessage controlRequest)
+        {
+            Log.Info($"Ended a control: '{controlRequest.BindingName}'");
+
+            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
+            if (button == null)
+            {
+                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
+            }
+            else
+            {
+                _keyboard.ReleaseKeyCombination(button);
             }
         }
     }

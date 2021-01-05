@@ -20,10 +20,30 @@ var AssistantConnection = function (uri) {
         this.websocket.close();
     }
 
-    this.sendKeyBindingRequest = function (message) {
+    this.sendBindingActivationRequest = function (message) {
         if (!this.isOpen) return;
         var wrappedMessage = message;
         wrappedMessage.MessageType = 'ActivateBinding';
+        var stringifiedMessage = JSON.stringify(wrappedMessage);
+
+        writeToScreen("SENT: " + stringifiedMessage);
+        this.websocket.send(stringifiedMessage);
+    }
+
+    this.sendBindingStartActivationRequest = function (message) {
+        if (!this.isOpen) return;
+        var wrappedMessage = message;
+        wrappedMessage.MessageType = 'StartActivateBinding';
+        var stringifiedMessage = JSON.stringify(wrappedMessage);
+
+        writeToScreen("SENT: " + stringifiedMessage);
+        this.websocket.send(stringifiedMessage);
+    }
+
+    this.sendBindingEndActivationRequest = function (message) {
+        if (!this.isOpen) return;
+        var wrappedMessage = message;
+        wrappedMessage.MessageType = 'EndActivateBinding';
         var stringifiedMessage = JSON.stringify(wrappedMessage);
 
         writeToScreen("SENT: " + stringifiedMessage);
@@ -42,18 +62,40 @@ var AssistantConnection = function (uri) {
 }
 
 var connection = new AssistantConnection(wsUri);
+var heldBindingName = "";
 
 function init() {
     connection.open();
 
-    $(".edbutton").each(function(i) {
+    $(".edbutton:not(.press-and-hold)").each(function(i) {
         $(this).on("click", function() {
             var bindingName = $(this).attr('data-edbutton');
             console.log("clicked " + bindingName);
             if (connection.isOpen()) {
-                connection.sendKeyBindingRequest({ 'BindingName': bindingName });
+                connection.sendBindingActivationRequest({ 'BindingName': bindingName });
             }
         });
+    });
+
+    $(".edbutton.press-and-hold").each(function (i) {
+        $(this).on("mousedown", function () {
+            var bindingName = $(this).attr('data-edbutton');
+            console.log("down " + bindingName);
+            heldBindingName = bindingName;
+            if (connection.isOpen()) {
+                connection.sendBindingStartActivationRequest({ 'BindingName': bindingName });
+            }
+        });
+    });
+
+    $(document).on("mouseup", function () {
+        if (heldBindingName !== "") {
+            console.log("up " + heldBindingName);
+            if (connection.isOpen()) {
+                connection.sendBindingEndActivationRequest({ 'BindingName': heldBindingName });
+            }
+            heldBindingName = "";
+        }
     });
 
     $(window).on("focus", function () {

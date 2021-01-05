@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using InputSimulatorStandard;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Assistant.Core.ControlSimulators
 {
+    [ExcludeFromCodeCoverage]
     public class InputSimulatorKeyboardSimulator : IVirtualKeyboardSimulator
     {
         private readonly TimeSpan KeyDownTime = TimeSpan.FromMilliseconds(500);
@@ -178,7 +180,7 @@ namespace Howatworks.Assistant.Core.ControlSimulators
 
         public void Activate(string key, params string[] modifierNames)
         {
-            var modifiers = modifierNames.Select(MapKey).Where(x => x.HasValue).Select(x => x.Value).ToList();
+            var modifiers = MapKeys(modifierNames);
             var keyCode = MapKey(key);
             if (!keyCode.HasValue)
             {
@@ -195,11 +197,45 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             foreach (var mod in modifiers) _keyboard.KeyUp(mod);
         }
 
+        public void Hold(string key, params string[] modifierNames)
+        {
+            var modifiers = MapKeys(modifierNames);
+            var keyCode = MapKey(key);
+            if (!keyCode.HasValue)
+            {
+                Log.Warn($"No mapped key for '{key}'");
+                return;
+            }
+
+            foreach (var mod in modifiers) _keyboard.KeyDown(mod);
+            _keyboard.KeyDown(keyCode.Value);
+        }
+
+        public void Release(string key, params string[] modifierNames)
+        {
+            var modifiers = MapKeys(modifierNames);
+            var keyCode = MapKey(key);
+            if (!keyCode.HasValue)
+            {
+                Log.Warn($"No mapped key for '{key}'");
+                return;
+            }
+
+            foreach (var mod in modifiers) _keyboard.KeyUp(mod);
+            _keyboard.KeyUp(keyCode.Value);
+        }
+
         private VirtualKeyCode? MapKey(string key)
         {
             if (!_mapping.ContainsKey(key)) return null;
 
             return _mapping[key];
         }
+
+        private List<VirtualKeyCode> MapKeys(IEnumerable<string> keys)
+        {
+            return keys.Select(MapKey).Where(x => x.HasValue).Select(x => x.Value).ToList();
+        }
+
     }
 }
