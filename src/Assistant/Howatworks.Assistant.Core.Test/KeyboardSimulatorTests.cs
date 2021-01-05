@@ -43,7 +43,7 @@ namespace Howatworks.Assistant.Core.Test
             {
                 Primary = new Button.ButtonBinding() { Device = "Keyboard", Key = keyId }
             };
-            keyboard.TriggerKeyCombination(button);
+            keyboard.ActivateKeyCombination(button);
         }
     }
 }

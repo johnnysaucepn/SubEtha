@@ -8,6 +8,7 @@ using PInvoke;
 
 namespace Howatworks.Assistant.Core.ControlSimulators
 {
+    [ExcludeFromCodeCoverage]
     public class SimpleKeyboardSimulator : IVirtualKeyboardSimulator
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SimpleKeyboardSimulator));
@@ -22,7 +23,24 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             Press(modifiers);
             PressAndRelease(mainKey);
             Release(modifiers);
+        }
 
+        public void Hold(string key, params string[] modifierNames)
+        {
+            var modifiers = MapModifiers(modifierNames);
+            var mainKey = MapKey(key);
+
+            Press(modifiers);
+            Press(mainKey);
+        }
+
+        public void Release(string key, params string[] modifierNames)
+        {
+            var modifiers = MapModifiers(modifierNames);
+            var mainKey = MapKey(key);
+
+            Release(mainKey);
+            Release(modifiers);
         }
 
         private User32.ScanCode MapKey(string key)
@@ -150,5 +168,6 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             var response = User32.SendInput(inputs.Length, inputs, Marshal.SizeOf(key));
             return response;
         }
+
     }
 }
