@@ -32,6 +32,10 @@ namespace Howatworks.Assistant.Core
             {
                 case AssistantMessageType.ActivateBinding:
                     return JsonConvert.DeserializeObject<ActivateBindingMessage>(messageString, _serializerSettings);
+                case AssistantMessageType.StartActivateBinding:
+                    return JsonConvert.DeserializeObject<StartActivateBindingMessage>(messageString, _serializerSettings);
+                case AssistantMessageType.EndActivateBinding:
+                    return JsonConvert.DeserializeObject<EndActivateBindingMessage>(messageString, _serializerSettings);
                 case AssistantMessageType.GetAvailableBindings:
                     return JsonConvert.DeserializeObject<GetAvailableBindingsMessage>(messageString, _serializerSettings);
                 default:

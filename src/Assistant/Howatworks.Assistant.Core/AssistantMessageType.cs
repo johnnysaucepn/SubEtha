@@ -6,6 +6,8 @@
         ActivateBinding,
         GetAvailableBindings,
         ControlState,
-        AvailableBindings
+        AvailableBindings,
+        StartActivateBinding,
+        EndActivateBinding
     }
 }
