@@ -16,19 +16,18 @@ namespace Howatworks.SubEtha.Bindings
         {
             _bindingSet = bindingSet;
 
-            _buttonLookup = new Lazy<Dictionary<string, Button>>(
-                () =>
-                {
-                    return _bindingSet.GetType().GetProperties()
-                        .Where(x => typeof(Button).IsAssignableFrom(x.PropertyType))
-                        .ToDictionary(
-                            // Key is either the attribute value, if it exists, or otherwise the class name itself
-                            p => p.Name,
-                            p => p.GetValue(_bindingSet) as Button,
-                            StringComparer.OrdinalIgnoreCase
-                        );
+            _buttonLookup = new Lazy<Dictionary<string, Button>>(() =>
+            {
+                return _bindingSet.GetType().GetProperties()
+                    .Where(x => typeof(Button).IsAssignableFrom(x.PropertyType))
+                    .ToDictionary(
+                        // Key is either the attribute value, if it exists, or otherwise the class name itself
+                        p => p.Name,
+                        p => p.GetValue(_bindingSet) as Button,
+                        StringComparer.OrdinalIgnoreCase
+                    );
 
-                });
+            });
         }
 
         public static BindingMapper FromFile(string bindingsPath)
@@ -38,6 +37,11 @@ namespace Howatworks.SubEtha.Bindings
             {
                 return new BindingMapper((BindingSet) serializer.Deserialize(file));
             }
+        }
+
+        public string GetPresetName()
+        {
+            return _bindingSet.PresetName;
         }
 
         public Button GetButtonBindingByName(string name)

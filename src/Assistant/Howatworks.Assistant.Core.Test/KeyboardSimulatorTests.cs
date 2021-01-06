@@ -23,7 +23,7 @@ namespace Howatworks.Assistant.Core.Test
                 })
                 .Build();
 
-            var controls = new GameControlBridge(config, new NativeKeyboardSimulator(), new NullMouseSimulator());
+            var controls = new GameControlBridge(config, null, new NativeKeyboardSimulator(), new NullMouseSimulator());
 
             using (var process = Process.Start("notepad.exe", fileName))
             {

@@ -29,13 +29,7 @@ namespace Howatworks.Assistant.Core
             builder.RegisterType<GameControlBridge>().AsSelf().SingleInstance();
             builder.RegisterType<InputSimulatorKeyboardSimulator>().As<IVirtualKeyboardSimulator>().SingleInstance();
             builder.RegisterType<InputSimulatorMouseSimulator>().As<IVirtualMouseSimulator>().SingleInstance();
-            builder.Register(_ =>
-            {
-                var bindingsPath = Path.Combine(_config["BindingsFolder"], _config["BindingsFilename"]);
-
-                Log.Info($"Reading bindings from {bindingsPath}");
-                return BindingMapper.FromFile(bindingsPath);
-            });
+            builder.RegisterType<BindingFileMonitor>().AsSelf().SingleInstance();
             builder.RegisterType<AssistantMessageParser>().AsSelf().SingleInstance();
         }
     }

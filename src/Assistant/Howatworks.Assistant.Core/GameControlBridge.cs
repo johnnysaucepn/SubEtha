@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Howatworks.Assistant.Core.ControlSimulators;
 using static PInvoke.User32;
 using Howatworks.SubEtha.Bindings;
+using System.Collections.Generic;
 
 namespace Howatworks.Assistant.Core
 {
@@ -14,14 +15,30 @@ namespace Howatworks.Assistant.Core
 
         private readonly string _activeWindowTitle;
 
+        private readonly BindingFileMonitor _bindingMonitor;
         private readonly IVirtualKeyboardSimulator _keyboard;
         private readonly IVirtualMouseSimulator _mouse;
 
-        public GameControlBridge(IConfiguration configuration, IVirtualKeyboardSimulator keyboard, IVirtualMouseSimulator mouse)
+        public GameControlBridge(IConfiguration configuration, BindingFileMonitor monitor, IVirtualKeyboardSimulator keyboard, IVirtualMouseSimulator mouse)
         {
+            _bindingMonitor = monitor;
             _keyboard = keyboard;
             _mouse = mouse;
             _activeWindowTitle = configuration["ActiveWindowTitle"];
+        }
+
+        public IReadOnlyCollection<string> GetAllBoundButtons()
+        {
+            return _bindingMonitor.GetCurrentBindingMapper()?.GetBoundButtons("Keyboard", "Mouse") ?? new List<string>();
+        }
+
+        public void ActivateKeyCombination(string bindingName)
+        {
+            var button = LookupButton(bindingName);
+            if (button != null)
+            {
+                TriggerKeyCombination(button, _keyboard.Activate, _mouse.Activate);
+            }
         }
 
         public void ActivateKeyCombination(Button button)
@@ -29,14 +46,43 @@ namespace Howatworks.Assistant.Core
             TriggerKeyCombination(button, _keyboard.Activate, _mouse.Activate);
         }
 
+        public void HoldKeyCombination(string bindingName)
+        {
+            var button = LookupButton(bindingName);
+            if (button != null)
+            {
+                TriggerKeyCombination(button, _keyboard.Hold, _mouse.Hold);
+            }
+        }
+
         public void HoldKeyCombination(Button button)
         {
             TriggerKeyCombination(button, _keyboard.Hold, _mouse.Hold);
         }
 
+        public void ReleaseKeyCombination(string bindingName)
+        {
+            var button = LookupButton(bindingName);
+            if (button != null)
+            {
+                TriggerKeyCombination(button, _keyboard.Release, _mouse.Release);
+            }
+        }
+
         public void ReleaseKeyCombination(Button button)
         {
             TriggerKeyCombination(button, _keyboard.Release, _mouse.Release);
+        }
+
+        private Button LookupButton(string bindingName)
+        {
+            var button = _bindingMonitor.GetCurrentBindingMapper()?.GetButtonBindingByName(bindingName);
+            if (button != null)
+            {
+                return button;
+            }
+            Log.Warn($"Unknown binding name found: '{bindingName}'");
+            return null;
         }
 
         private void TriggerKeyCombination(Button button, Action<string,string[]> keyboardAction, Action<string> mouseAction)
