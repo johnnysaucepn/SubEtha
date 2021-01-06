@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Howatworks.SubEtha.Bindings
 {
-    public class BindingMapper
+    public class BindingMapper : IBindingMapper
     {
         private readonly BindingSet _bindingSet;
 
@@ -35,7 +35,7 @@ namespace Howatworks.SubEtha.Bindings
             var serializer = new XmlSerializer(typeof(BindingSet), new XmlRootAttribute("Root"));
             using (var file = File.OpenRead(bindingsPath))
             {
-                return new BindingMapper((BindingSet) serializer.Deserialize(file));
+                return new BindingMapper((BindingSet)serializer.Deserialize(file));
             }
         }
 

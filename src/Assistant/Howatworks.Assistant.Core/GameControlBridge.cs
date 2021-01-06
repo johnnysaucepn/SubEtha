@@ -15,13 +15,13 @@ namespace Howatworks.Assistant.Core
 
         private readonly string _activeWindowTitle;
 
-        private readonly BindingFileMonitor _bindingMonitor;
+        private readonly IBindingMapper _bindingMapper;
         private readonly IVirtualKeyboardSimulator _keyboard;
         private readonly IVirtualMouseSimulator _mouse;
 
-        public GameControlBridge(IConfiguration configuration, BindingFileMonitor monitor, IVirtualKeyboardSimulator keyboard, IVirtualMouseSimulator mouse)
+        public GameControlBridge(IConfiguration configuration, IBindingMapper mapper, IVirtualKeyboardSimulator keyboard, IVirtualMouseSimulator mouse)
         {
-            _bindingMonitor = monitor;
+            _bindingMapper = mapper;
             _keyboard = keyboard;
             _mouse = mouse;
             _activeWindowTitle = configuration["ActiveWindowTitle"];
@@ -29,7 +29,7 @@ namespace Howatworks.Assistant.Core
 
         public IReadOnlyCollection<string> GetAllBoundButtons()
         {
-            return _bindingMonitor.GetCurrentBindingMapper()?.GetBoundButtons("Keyboard", "Mouse") ?? new List<string>();
+            return _bindingMapper?.GetBoundButtons("Keyboard", "Mouse") ?? new List<string>();
         }
 
         public void ActivateKeyCombination(string bindingName)
@@ -76,7 +76,7 @@ namespace Howatworks.Assistant.Core
 
         private Button LookupButton(string bindingName)
         {
-            var button = _bindingMonitor.GetCurrentBindingMapper()?.GetButtonBindingByName(bindingName);
+            var button = _bindingMapper?.GetButtonBindingByName(bindingName);
             if (button != null)
             {
                 return button;

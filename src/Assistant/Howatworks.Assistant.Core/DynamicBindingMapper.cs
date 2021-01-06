@@ -5,15 +5,19 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 
 namespace Howatworks.Assistant.Core
 {
-    public class BindingFileMonitor : IDisposable
+    /// <summary>
+    /// An implementation of IBindingMapper that, instead of statically presenting a single binding set,
+    /// monitors changes to .binds and config files to select the current set chosen by the player.
+    /// <remarks>TODO: CustomFileWatcher doesn't appear to correctly track the file changes, therefore switching
+    /// sets requires an app restart.</remarks>
+    /// </summary>
+    public class DynamicBindingMapper : IBindingMapper, IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(BindingFileMonitor));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DynamicBindingMapper));
 
         private readonly Dictionary<string, BindingMapper> _allBindingsByPresetName = new Dictionary<string, BindingMapper>();
 
@@ -22,10 +26,10 @@ namespace Howatworks.Assistant.Core
         private string _currentSelectedBindingName;
         private bool disposedValue;
 
-        private IDisposable _allBindingSubscription;
-        private IDisposable _selectedBindingSubscription;
+        private readonly IDisposable _allBindingSubscription;
+        private readonly IDisposable _selectedBindingSubscription;
 
-        public BindingFileMonitor(IConfiguration config)
+        public DynamicBindingMapper(IConfiguration config)
         {
             var folder = config["BindingsFolder"];
             _allBindingFileWatcher = new CustomFileWatcher(folder, "*.binds");
@@ -49,7 +53,22 @@ namespace Howatworks.Assistant.Core
                 });
         }
 
-        public BindingMapper GetCurrentBindingMapper()
+        public IReadOnlyCollection<string> GetBoundButtons(params string[] devices)
+        {
+            return GetCurrentBindingMapper()?.GetBoundButtons(devices);
+        }
+
+        public Button GetButtonBindingByName(string name)
+        {
+            return GetCurrentBindingMapper()?.GetButtonBindingByName(name);
+        }
+
+        public string GetPresetName()
+        {
+            return GetCurrentBindingMapper()?.GetPresetName();
+        }
+
+        private BindingMapper GetCurrentBindingMapper()
         {
             if (_allBindingsByPresetName.TryGetValue(_currentSelectedBindingName, out var selectedBindingMapper))
             {
@@ -111,5 +130,6 @@ namespace Howatworks.Assistant.Core
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
     }
 }
