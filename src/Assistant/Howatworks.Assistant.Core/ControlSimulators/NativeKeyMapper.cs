@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using static PInvoke.User32;
 
 namespace Howatworks.Assistant.Core.ControlSimulators
 {
-    public class SimpleKeyMappingTable
+    [ExcludeFromCodeCoverage]
+    public class NativeKeyMapper
     {
         /// <summary>
         /// Sourced from https://github.com/richardbuckle/EDRefCard/blob/1f1d65c3f55eda18d1923ee8175026125fd65e44/bindings/testCases/Help.txt

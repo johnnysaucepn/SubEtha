@@ -8,12 +8,16 @@ using PInvoke;
 
 namespace Howatworks.Assistant.Core.ControlSimulators
 {
+    /// <summary>
+    /// Uses direct Win32 calls to map keyboard codes.
+    /// Presented for comparison - not known to work for Elite: Dangerous.
+    /// </summary>
     [ExcludeFromCodeCoverage]
-    public class SimpleKeyboardSimulator : IVirtualKeyboardSimulator
+    public class NativeKeyboardSimulator : IVirtualKeyboardSimulator
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SimpleKeyboardSimulator));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NativeKeyboardSimulator));
 
-        private readonly SimpleKeyMappingTable _keyMapping = new SimpleKeyMappingTable();
+        private readonly NativeKeyMapper _keyMapping = new NativeKeyMapper();
 
         public void Activate(string key, params string[] modifierNames)
         {
@@ -78,7 +82,6 @@ namespace Howatworks.Assistant.Core.ControlSimulators
                 }
 
                 SendKeyAction(true, scanCode, true);
-
             }
         }
 
