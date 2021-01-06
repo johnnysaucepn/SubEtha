@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Howatworks.Assistant.Core.Messages;
 using Howatworks.Assistant.WebSockets;
+using Howatworks.SubEtha.Bindings;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -30,13 +31,13 @@ namespace Howatworks.Assistant.Core
 
         public AssistantMessageHub(
             AssistantWebSocketHandler handler,
-            GameControlBridge keyboard,
+            GameControlBridge controlBridge,
             StatusManager statusManager,
             AssistantMessageParser messageParser
             )
         {
             _handler = handler;
-            _controlBridge = keyboard;
+            _controlBridge = controlBridge;
             _statusManager = statusManager;
             _messageParser = messageParser;
 
@@ -67,6 +68,15 @@ namespace Howatworks.Assistant.Core
 
             // Every new connection gets the current state
             _handler.NewConnection.Subscribe(async id => await RefreshClient(id, _statusManager.State).ConfigureAwait(false));
+
+            _controlBridge.SelectedBindingsChanged.Subscribe(async _ => await ReportAllBindingsToAllClients().ConfigureAwait(false));
+        }
+
+        private async Task ReportAllBindingsToAllClients()
+        {
+            var bindingList = _controlBridge.GetAllBoundButtons();
+            var message = new AvailableBindingsMessage(bindingList);
+            await _handler.SendMessageToAllAsync(JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
         }
 
         private async Task ReportAllBindings(string socketId)

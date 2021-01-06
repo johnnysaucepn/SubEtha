@@ -12,6 +12,8 @@ namespace Howatworks.SubEtha.Bindings
 
         private readonly Lazy<Dictionary<string, Button>> _buttonLookup;
 
+        public event EventHandler BindingsChanged; // not currently used - static bindings don't change
+
         public BindingMapper(BindingSet bindingSet)
         {
             _bindingSet = bindingSet;

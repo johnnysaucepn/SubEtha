@@ -6,6 +6,8 @@ using Howatworks.Assistant.Core.ControlSimulators;
 using static PInvoke.User32;
 using Howatworks.SubEtha.Bindings;
 using System.Collections.Generic;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace Howatworks.Assistant.Core
 {
@@ -19,12 +21,21 @@ namespace Howatworks.Assistant.Core
         private readonly IVirtualKeyboardSimulator _keyboard;
         private readonly IVirtualMouseSimulator _mouse;
 
+        public readonly IObservable<Unit> SelectedBindingsChanged;
+
         public GameControlBridge(IConfiguration configuration, IBindingMapper mapper, IVirtualKeyboardSimulator keyboard, IVirtualMouseSimulator mouse)
         {
             _bindingMapper = mapper;
             _keyboard = keyboard;
             _mouse = mouse;
             _activeWindowTitle = configuration["ActiveWindowTitle"];
+
+            SelectedBindingsChanged =
+                Observable.FromEventPattern(
+                    h => _bindingMapper.BindingsChanged += h,
+                    h => _bindingMapper.BindingsChanged -= h
+                )
+                .Select(_ => Unit.Default);
         }
 
         public IReadOnlyCollection<string> GetAllBoundButtons()

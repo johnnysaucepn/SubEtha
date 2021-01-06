@@ -23,34 +23,63 @@ namespace Howatworks.Assistant.Core
 
         private readonly CustomFileWatcher _allBindingFileWatcher;
         private readonly CustomFileWatcher _selectedBindingFileWatcher;
-        private string _currentSelectedBindingName;
+        private string _currentSelectedPresetName;
         private bool disposedValue;
 
         private readonly IDisposable _allBindingSubscription;
         private readonly IDisposable _selectedBindingSubscription;
 
+        public event EventHandler BindingsChanged;
+
         public DynamicBindingMapper(IConfiguration config)
         {
             var folder = config["BindingsFolder"];
+
+            // Watch for any new binding files coming in or being changed
             _allBindingFileWatcher = new CustomFileWatcher(folder, "*.binds");
+
+            // When they do, make sure we've read and parsed the file and add it to our list.
+            // This lets us switch as soon as the value in StartPreset.start changes, without
+            // having to scan all the files again to find the one with that name.
             _allBindingSubscription = _allBindingFileWatcher.CreatedFiles
                 .Merge(_allBindingFileWatcher.ChangedFiles)
                 .Subscribe(x =>
                 {
+                    // Load the .binds file
                     var updatedBinding = BindingMapper.FromFile(Path.Combine(folder, x));
                     var presetName = updatedBinding.GetPresetName();
                     _allBindingsByPresetName[presetName] = updatedBinding;
+
+                    // If we've seen a change in the current selected preset, then refresh everyone
+                    if (string.Equals(presetName, _currentSelectedPresetName))
+                    {
+                        BindingsChanged?.Invoke(this, EventArgs.Empty);
+                    }
                 });
 
+            // Now start raising file events
+            _allBindingFileWatcher.Start();
+
+            // Watch for a new preset being selected
             _selectedBindingFileWatcher = new CustomFileWatcher(folder, "StartPreset.start");
+
+            // When it does, switch to that binding set, and notify clients
             _selectedBindingSubscription = _selectedBindingFileWatcher.CreatedFiles
                 .Merge(_selectedBindingFileWatcher.ChangedFiles)
+                // FileWatcher can still produce multiple notifications for the same thing. For that matter,
+                // users may flick through a few selection before setting. Throttle the updates.
+                .Throttle(TimeSpan.FromSeconds(3))
                 .Subscribe(x =>
                 {
                     Log.Info("Checking for new binding preset");
-                    _currentSelectedBindingName = ReadStartPreset(Path.Combine(folder, x));
-                    Log.Info($"Selecting binding preset {_currentSelectedBindingName}");
+                    _currentSelectedPresetName = ReadStartPreset(Path.Combine(folder, x));
+                    Log.Info($"Selecting binding preset {_currentSelectedPresetName}");
+                    // Refresh everyone's list of available bindings
+                    BindingsChanged?.Invoke(this, EventArgs.Empty);
                 });
+
+            // Now start raising file events
+            _selectedBindingFileWatcher.Start();
         }
 
         public IReadOnlyCollection<string> GetBoundButtons(params string[] devices)
@@ -70,7 +99,7 @@ namespace Howatworks.Assistant.Core
 
         private BindingMapper GetCurrentBindingMapper()
         {
-            if (_allBindingsByPresetName.TryGetValue(_currentSelectedBindingName, out var selectedBindingMapper))
+            if (_allBindingsByPresetName.TryGetValue(_currentSelectedPresetName, out var selectedBindingMapper))
             {
                 return selectedBindingMapper;
             }

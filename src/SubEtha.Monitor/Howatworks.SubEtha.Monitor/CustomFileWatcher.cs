@@ -34,7 +34,8 @@ namespace Howatworks.SubEtha.Monitor
             _matcher = new Matcher(StringComparison.InvariantCultureIgnoreCase).AddInclude(Pattern);
             _journalWatcher = new FileSystemWatcher(Folder)
             {
-                EnableRaisingEvents = false
+                EnableRaisingEvents = false,
+                NotifyFilter = NotifyFilters.LastWrite
             };
 
             CreatedFiles =
