@@ -99,6 +99,10 @@ namespace Howatworks.Assistant.Core
 
         private BindingMapper GetCurrentBindingMapper()
         {
+            if (_currentSelectedPresetName == null)
+            {
+                return null;
+            }
             if (_allBindingsByPresetName.TryGetValue(_currentSelectedPresetName, out var selectedBindingMapper))
             {
                 return selectedBindingMapper;
