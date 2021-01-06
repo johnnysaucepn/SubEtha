@@ -39,7 +39,7 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             UnloadKeyboardLayout(pointer);
         }
 
-        public bool GetKey(char character, out VirtualKeyCode key)
+        public bool TryGetKey(char character, out VirtualKeyCode key)
         {
             short keyNumber = VkKeyScanEx(character, pointer);
             if (keyNumber == -1)
@@ -55,7 +55,7 @@ namespace Howatworks.Assistant.Core.ControlSimulators
 
         public VirtualKeyCode GetKeyOrDefault(char character, VirtualKeyCode defaultKeyCode)
         {
-            return GetKey(character, out var key) ? key : defaultKeyCode;
+            return TryGetKey(character, out var key) ? key : defaultKeyCode;
         }
     }
 }
