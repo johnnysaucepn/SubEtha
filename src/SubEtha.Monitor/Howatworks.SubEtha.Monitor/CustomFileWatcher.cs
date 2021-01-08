@@ -56,7 +56,7 @@ namespace Howatworks.SubEtha.Monitor
                 .Do(x => Log.Warn($"Seen deletion of file '{x}'"));
 
             Errors = GetErrors()
-                   .Do(x => Log.Error("Seen file error", x));
+                .Do(x => Log.Error("Seen file error", x));
         }
 
         private IObservable<string> GetCreatedFiles() =>

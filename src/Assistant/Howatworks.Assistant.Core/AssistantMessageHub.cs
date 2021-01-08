@@ -23,8 +23,7 @@ namespace Howatworks.Assistant.Core
             Converters = { new StringEnumConverter() }
         };
 
-        private readonly GameControlBridge _keyboard;
-        private readonly BindingMapper _bindingMapper;
+        private readonly GameControlBridge _controlBridge;
         private readonly StatusManager _statusManager;
         private readonly AssistantMessageParser _messageParser;
 
@@ -32,15 +31,13 @@ namespace Howatworks.Assistant.Core
 
         public AssistantMessageHub(
             AssistantWebSocketHandler handler,
-            GameControlBridge keyboard,
-            BindingMapper bindingMapper,
+            GameControlBridge controlBridge,
             StatusManager statusManager,
             AssistantMessageParser messageParser
             )
         {
             _handler = handler;
-            _keyboard = keyboard;
-            _bindingMapper = bindingMapper;
+            _controlBridge = controlBridge;
             _statusManager = statusManager;
             _messageParser = messageParser;
 
@@ -71,11 +68,20 @@ namespace Howatworks.Assistant.Core
 
             // Every new connection gets the current state
             _handler.NewConnection.Subscribe(async id => await RefreshClient(id, _statusManager.State).ConfigureAwait(false));
+
+            _controlBridge.SelectedBindingsChanged.Subscribe(async _ => await ReportAllBindingsToAllClients().ConfigureAwait(false));
+        }
+
+        private async Task ReportAllBindingsToAllClients()
+        {
+            var bindingList = _controlBridge.GetAllBoundButtons();
+            var message = new AvailableBindingsMessage(bindingList);
+            await _handler.SendMessageToAllAsync(JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
         }
 
         private async Task ReportAllBindings(string socketId)
         {
-            var bindingList = _bindingMapper.GetBoundButtons("Keyboard", "Mouse");
+            var bindingList = _controlBridge.GetAllBoundButtons();
             var message = new AvailableBindingsMessage(bindingList);
             await _handler.SendMessageAsync(socketId, JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
         }
@@ -96,45 +102,21 @@ namespace Howatworks.Assistant.Core
         {
             Log.Info($"Activated a control: '{controlRequest.BindingName}'");
 
-            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
-            if (button == null)
-            {
-                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
-            }
-            else
-            {
-                _keyboard.ActivateKeyCombination(button);
-            }
+            _controlBridge.ActivateKeyCombination(controlRequest.BindingName);
         }
 
         private void StartActivateBinding(StartActivateBindingMessage controlRequest)
         {
             Log.Info($"Started a control: '{controlRequest.BindingName}'");
 
-            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
-            if (button == null)
-            {
-                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
-            }
-            else
-            {
-                _keyboard.HoldKeyCombination(button);
-            }
+            _controlBridge.HoldKeyCombination(controlRequest.BindingName);
         }
 
         private void EndActivateBinding(EndActivateBindingMessage controlRequest)
         {
             Log.Info($"Ended a control: '{controlRequest.BindingName}'");
 
-            var button = _bindingMapper.GetButtonBindingByName(controlRequest.BindingName);
-            if (button == null)
-            {
-                Log.Warn($"Unknown binding name found: '{controlRequest.BindingName}'");
-            }
-            else
-            {
-                _keyboard.ReleaseKeyCombination(button);
-            }
+            _controlBridge.ReleaseKeyCombination(controlRequest.BindingName);
         }
     }
 }
