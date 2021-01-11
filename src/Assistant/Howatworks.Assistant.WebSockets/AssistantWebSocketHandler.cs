@@ -15,8 +15,8 @@ namespace Howatworks.Assistant.WebSockets
         private readonly ISubject<IncomingMessage> _messageReceived = new Subject<IncomingMessage>();
         public IObservable<IncomingMessage> MessageReceived => _messageReceived.AsObservable();
 
-        private readonly ISubject<string> _newConnection = new Subject<string>();
-        public IObservable<string> NewConnection => _newConnection.AsObservable();
+        private readonly ISubject<ConnectionChangeEvent> _connectionChanges = new Subject<ConnectionChangeEvent>();
+        public IObservable<ConnectionChangeEvent> ConnectionChanges => _connectionChanges.AsObservable();
 
         public AssistantWebSocketHandler(ConnectionManager webSocketConnectionManager) : base(webSocketConnectionManager)
         {
@@ -24,18 +24,20 @@ namespace Howatworks.Assistant.WebSockets
 
         public override async Task OnConnected(WebSocket socket)
         {
-            await base.OnConnected(socket);
+            await base.OnConnected(socket).ConfigureAwait(false);
 
             var socketId = WebSocketConnectionManager.GetId(socket);
             Log.Info($"Connected '{socketId}'");
-            _newConnection.OnNext(socketId);
+            _connectionChanges.OnNext(new ConnectionChangeEvent(socketId, ConnectionChange.Connected));
         }
 
         public override async Task OnDisconnected(WebSocket socket)
         {
+            await base.OnDisconnected(socket).ConfigureAwait(false);
+
             var socketId = WebSocketConnectionManager.GetId(socket);
-            await base.OnDisconnected(socket);
             Log.Info($"Disconnected '{socketId}'");
+            _connectionChanges.OnNext(new ConnectionChangeEvent(socketId, ConnectionChange.Disconnected));
         }
 
         public override async Task ReceiveAsync(WebSocket socket, WebSocketReceiveResult result, byte[] buffer)
