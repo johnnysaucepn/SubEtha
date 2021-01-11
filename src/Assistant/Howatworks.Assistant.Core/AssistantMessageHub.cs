@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Howatworks.Assistant.Core.Messages;
 using Howatworks.Assistant.WebSockets;
-using Howatworks.SubEtha.Bindings;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -67,9 +66,12 @@ namespace Howatworks.Assistant.Core
             });
 
             // Every new connection gets the current state
-            _handler.NewConnection.Subscribe(async id => await RefreshClient(id, _statusManager.State).ConfigureAwait(false));
+            _handler.ConnectionChanges
+                .Where(c => c.Change == ConnectionChange.Connected)
+                .Subscribe(async c => await RefreshClient(c.SocketId, _statusManager.State).ConfigureAwait(false));
 
-            _controlBridge.SelectedBindingsChanged.Subscribe(async _ => await ReportAllBindingsToAllClients().ConfigureAwait(false));
+            _controlBridge.SelectedBindingsChanged
+                .Subscribe(async _ => await ReportAllBindingsToAllClients().ConfigureAwait(false));
         }
 
         private async Task ReportAllBindingsToAllClients()
