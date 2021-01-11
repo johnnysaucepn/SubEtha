@@ -65,6 +65,7 @@ var connection = new AssistantConnection(wsUri);
 var heldBindingName = "";
 
 function init() {
+
     connection.open();
 
     $(".edbutton:not(.press-and-hold)").each(function(i) {
@@ -78,7 +79,7 @@ function init() {
     });
 
     $(".edbutton.press-and-hold").each(function (i) {
-        $(this).on("mousedown", function () {
+        $(this).on("pointerdown", function () {
             var bindingName = $(this).attr('data-edbutton');
             console.log("down " + bindingName);
             heldBindingName = bindingName;
@@ -86,16 +87,15 @@ function init() {
                 connection.sendBindingStartActivationRequest({ 'BindingName': bindingName });
             }
         });
-    });
-
-    $(document).on("mouseup", function () {
-        if (heldBindingName !== "") {
-            console.log("up " + heldBindingName);
-            if (connection.isOpen()) {
-                connection.sendBindingEndActivationRequest({ 'BindingName': heldBindingName });
+        $(this).on("pointerup pointerout", function () {
+            if (heldBindingName !== "") {
+                console.log("up " + heldBindingName);
+                if (connection.isOpen()) {
+                    connection.sendBindingEndActivationRequest({ 'BindingName': heldBindingName });
+                }
+                heldBindingName = "";
             }
-            heldBindingName = "";
-        }
+        });
     });
 
     $(window).on("focus", function () {
