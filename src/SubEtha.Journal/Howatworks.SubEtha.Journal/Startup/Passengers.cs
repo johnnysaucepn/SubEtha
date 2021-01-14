@@ -14,5 +14,7 @@ namespace Howatworks.SubEtha.Journal.Startup
             public bool Wanted { get; set; }
             public int Count { get; set; }
         }
+
+        public List<ManifestItem> Manifest { get; set; }
     }
 }
