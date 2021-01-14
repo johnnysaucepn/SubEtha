@@ -1,6 +1,9 @@
-﻿namespace Howatworks.SubEtha.Journal.Other
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Other
 {
     // TODO: Find sample of ProspectedAsteroid
+    [ExcludeFromCodeCoverage]
     public class ProspectedAsteroid : JournalEntryBase
     {
         public class MaterialItem

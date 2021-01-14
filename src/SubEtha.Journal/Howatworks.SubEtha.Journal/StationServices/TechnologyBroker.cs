@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class TechnologyBroker : JournalEntryBase
     {
         public class ItemsUnlockedItem

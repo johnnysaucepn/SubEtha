@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Startup
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Startup
 {
+    [ExcludeFromCodeCoverage]
     public class Powerplay : JournalEntryBase
     {
         public string Power { get; set; } // Note: name
@@ -7,6 +10,5 @@
         public int Merits { get; set; }
         public int Votes { get; set; }
         public long TimePledged { get; set; } // Note: time in seconds
-
     }
 }
