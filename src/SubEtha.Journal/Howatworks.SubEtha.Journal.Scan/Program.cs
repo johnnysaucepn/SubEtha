@@ -27,7 +27,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             {
                 ["JournalFolder"] = defaultJournalFolder,
                 ["JournalPattern"] = "Journal.*.log",
-                ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json;NavRoute.json"
+                ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json;NavRoute.json;ModulesInfo.json;Cargo.json"
             };
 
             var config = new ConfigurationBuilder()
