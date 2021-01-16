@@ -29,6 +29,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long MarketID { get; set; }
         public string StationName { get; set; }
+        public string StationType { get; set; } // TODO: enum // NOTE: not documented
         public string StarSystem { get; set; } // Note: name
 
         #region Full market prices, used in market.json
