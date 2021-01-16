@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.StationServices
 {
+    [ExcludeFromCodeCoverage]
     public class RedeemVoucher : JournalEntryBase
     {
         public class FactionItem

@@ -1,7 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.Startup
 {
+    [ExcludeFromCodeCoverage]
     public class Passengers : JournalEntryBase
     {
         // NOTE: no sample
@@ -14,5 +16,7 @@ namespace Howatworks.SubEtha.Journal.Startup
             public bool Wanted { get; set; }
             public int Count { get; set; }
         }
+
+        public List<ManifestItem> Manifest { get; set; }
     }
 }

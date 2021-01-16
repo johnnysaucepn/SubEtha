@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Startup
 {
+    [ExcludeFromCodeCoverage]
     public class NewCommander : JournalEntryBase
     {
         public string Name { get; set; } // NOTE: Commander name

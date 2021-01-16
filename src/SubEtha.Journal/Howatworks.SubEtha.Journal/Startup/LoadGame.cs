@@ -2,6 +2,7 @@
 
 namespace Howatworks.SubEtha.Journal.Startup
 {
+    [ExcludeFromCodeCoverage]
     public class LoadGame : JournalEntryBase
     {
         public string Commander { get; set; } // NOTE: Commander name

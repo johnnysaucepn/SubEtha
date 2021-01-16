@@ -62,7 +62,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         public decimal FuelLevel { get; set; }
         public bool BoostUsed { get; set; }
         public SystemFactionItem SystemFaction { get; set; }
-        public string SystemAllegiance { get; set; }
+        public string SystemAllegiance { get; set; } // TODO: enum?
         public string SystemEconomy { get; set; }
         public string SystemEconomy_Localised { get; set; }
         public string SystemSecondEconomy { get; set; }

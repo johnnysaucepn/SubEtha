@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.Combat
 {
-    [ExcludeFromCodeCoverage]
     public class Bounty : JournalEntryBase
     {
-        public class FactionRewardItem
+        public class RewardItem
         {
             public string Faction { get; set; }
             public long Reward { get; set; }
         }
 
-        public List<FactionRewardItem> Rewards { get; set; }
-        public string Target { get; set; } // TODO: UNDOCUMENTED - ship type
+        public List<RewardItem> Rewards { get; set; }
+        public string Target { get; set; }
         public string VictimFaction { get; set; }
         public long? TotalReward { get; set; }
         public int? SharedWithOthers { get; set; } // Note: number of players

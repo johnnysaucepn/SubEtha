@@ -1,5 +1,8 @@
-﻿namespace Howatworks.SubEtha.Journal.Startup
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Startup
 {
+    [ExcludeFromCodeCoverage]
     public class Progress : JournalEntryBase
     {
         public decimal Combat { get; set; } // Note: sample suggests int

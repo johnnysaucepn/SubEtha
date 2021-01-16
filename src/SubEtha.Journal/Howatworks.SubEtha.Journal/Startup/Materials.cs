@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.Startup
 {
+    [ExcludeFromCodeCoverage]
     public class Materials : JournalEntryBase
     {
         public class MaterialItem

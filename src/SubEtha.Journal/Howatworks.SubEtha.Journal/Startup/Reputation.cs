@@ -1,6 +1,9 @@
-﻿namespace Howatworks.SubEtha.Journal.Startup
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Howatworks.SubEtha.Journal.Startup
 {
     // no sample
+    [ExcludeFromCodeCoverage]
     public class Reputation : JournalEntryBase
     {
         public decimal Empire { get; set; } // TODO: check data type

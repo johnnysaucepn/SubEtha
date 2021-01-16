@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.Startup
 {
+    [ExcludeFromCodeCoverage]
     public class Cargo : JournalEntryBase
     {
         public class CargoItem

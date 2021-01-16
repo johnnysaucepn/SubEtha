@@ -34,6 +34,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         public string StationGovernment_Localised { get; set; }
         public decimal DistFromStarLS { get; set; }
         // TODO: consider enum - Dock, Autodock, BlackMarket, Commodities, Contacts, Exploration, Initiatives, Missions, Outfitting, CrewLounge, Rearm, Refuel, Repair, Shipyard, Tuning, Workshop, MissionsGenerated, Facilitator, Research, FlightController, StationOperations, OnDockMission, Powerplay, SearchAndRescue
+        // new in 3.7: Shop, CarrierManagement, CarrierFuel, CarrierVendor, Livery, ModulePacks, VoucherRedemption
         public List<string> StationServices { get; set; }
         public bool Wanted { get; set; } // TODO: check data type
         public bool ActiveFine { get; set; }
