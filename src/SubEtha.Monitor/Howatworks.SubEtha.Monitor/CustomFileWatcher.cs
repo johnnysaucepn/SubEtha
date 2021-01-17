@@ -43,20 +43,20 @@ namespace Howatworks.SubEtha.Monitor
                 .Merge(GetIncomingRenamedFiles())
                 // Include files that exist at the time the watcher is created
                 .Merge(GetExistingFiles())
-                .Do(x => Log.Warn($"Seen new file '{x}'"));
+                .Do(x => Log.Info($"Seen new file '{x}'"));
 
             ChangedFiles =
                 GetModifiedFiles()
-                .Do(x => Log.Warn($"Seen modified file '{x}'"));
+                .Do(x => Log.Info($"Seen modified file '{x}'"));
 
             DeletedFiles =
                 GetDeletedFiles()
                 // Treat renamed files as ones that have been created in one place and deleted in another
                 .Merge(GetOutgoingRenamedFiles())
-                .Do(x => Log.Warn($"Seen deletion of file '{x}'"));
+                .Do(x => Log.Info($"Seen deletion of file '{x}'"));
 
             Errors = GetErrors()
-                .Do(x => Log.Error("Seen file error", x));
+                .Do(x => Log.Warn("Seen file error", x));
         }
 
         private IObservable<string> GetCreatedFiles() =>
