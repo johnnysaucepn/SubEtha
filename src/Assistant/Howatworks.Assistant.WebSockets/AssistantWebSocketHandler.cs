@@ -33,10 +33,11 @@ namespace Howatworks.Assistant.WebSockets
 
         public override async Task OnDisconnected(WebSocket socket)
         {
-            await base.OnDisconnected(socket).ConfigureAwait(false);
-
             var socketId = WebSocketConnectionManager.GetId(socket);
             Log.Info($"Disconnected '{socketId}'");
+
+            await base.OnDisconnected(socket).ConfigureAwait(false);
+
             _connectionChanges.OnNext(new ConnectionChangeEvent(socketId, ConnectionChange.Disconnected));
         }
 
