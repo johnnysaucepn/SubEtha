@@ -19,30 +19,30 @@ namespace Howatworks.Assistant.Core.ControlSimulators
         {
             int buttonNumber = ParseMouseButtonNumber(button);
 
-            if (buttonNumber > 0)
-            {
-                _mouse.XButtonClick(buttonNumber);
-            }
+            if (buttonNumber == 1) _mouse.LeftButtonClick();
+            else if (buttonNumber == 2) _mouse.RightButtonClick();
+            else if (buttonNumber == 3) _mouse.MiddleButtonClick();
+            else if (buttonNumber > 3) _mouse.XButtonClick(buttonNumber - 3);
         }
 
         public void Hold(string button)
         {
             int buttonNumber = ParseMouseButtonNumber(button);
 
-            if (buttonNumber > 0)
-            {
-                _mouse.XButtonDown(buttonNumber);
-            }
+            if (buttonNumber == 1) _mouse.LeftButtonDown();
+            else if (buttonNumber == 2) _mouse.RightButtonDown();
+            else if (buttonNumber == 3) _mouse.MiddleButtonDown();
+            else if (buttonNumber > 3) _mouse.XButtonDown(buttonNumber - 3);
         }
 
         public void Release(string button)
         {
             int buttonNumber = ParseMouseButtonNumber(button);
 
-            if (buttonNumber > 0)
-            {
-                _mouse.XButtonUp(buttonNumber);
-            }
+            if (buttonNumber == 1) _mouse.LeftButtonUp();
+            else if (buttonNumber == 2) _mouse.RightButtonUp();
+            else if (buttonNumber == 3) _mouse.MiddleButtonUp();
+            else if (buttonNumber > 3) _mouse.XButtonUp(buttonNumber - 3);
         }
 
         private int ParseMouseButtonNumber(string button)
