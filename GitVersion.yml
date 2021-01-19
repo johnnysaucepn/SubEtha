@@ -1,6 +1,8 @@
 assembly-versioning-scheme: MajorMinor
 mode: Mainline
-branches: {}
+branches:
+  feature:
+    increment: Patch
 ignore:
   sha: []
 merge-message-formats: {}
