@@ -19,12 +19,23 @@
 
     <div class="container-fluid px-0">
 
-        <nav class="nav nav-tabs nav-justified" role="tablist">
-            <a class="nav-link active" data-toggle="tab" role="tab" href="#general-panel">General</a>
-            <a class="nav-link disabled" data-toggle="tab" role="tab" href="#wing-panel">Wing</a>
-            <a class="nav-link disabled" data-toggle="tab" role="tab" href="#camera-panel">Camera</a>
-            <a class="nav-link disabled" data-toggle="tab" role="tab" href="#settings-panel">Settings</a>
-        </nav>
+        <ul class="nav nav-tabs nav-fill" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" role="tab" href="#general-panel">General</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" data-toggle="tab" role="tab" href="#wing-panel">Wing</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" data-toggle="tab" role="tab" href="#camera-panel">Camera</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" data-toggle="tab" role="tab" href="#settings-panel">Settings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" role="tab" href="#log-panel">Log</a>
+            </li>
+        </ul>
 
         <div class="tab-content" id="mode-panels">
 
@@ -223,19 +234,22 @@
 
             </div>
 
-
-
-            <div class="row no-gutters">
-
-                <div class="card overflow-auto" style="max-height: 10em">
-                    <pre class="card-body" id="output"></pre>
+            <div id="log-panel" class="tab-pane fade show">
+                <div class="row no-gutters">
+                    <div class="col p-1">
+                        <div class="card overflow-auto" style="height: 40em">
+                            <pre class="card-body" id="output"></pre>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col p-1">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row no-gutters">
-                <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
-            </div>
-
-
         </div>
     </div>
 
