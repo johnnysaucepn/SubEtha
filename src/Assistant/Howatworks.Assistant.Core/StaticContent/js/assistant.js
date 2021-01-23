@@ -121,11 +121,13 @@ function init() {
 
 function onOpen(evt) {
     writeToScreen("CONNECTED");
+    $(".tab-pane").css("background-color", "");
     connection.sendAvailableBindingsRequest();
 }
 
 function onClose(evt) {
     writeToScreen("DISCONNECTED");
+    $(".tab-pane").css("background-color", "#600");
 }
 
 function onMessage(evt) {
@@ -151,8 +153,10 @@ function onMessage(evt) {
             var bindingName = button.attr("data-edbutton");
             if (isInList(bindingList, bindingName)) {
                 button.removeClass("disabled");
+                button.prop("disabled", false);
             } else {
                 button.addClass("disabled");
+                button.prop("disabled", true);
             }
         });
 
@@ -179,12 +183,12 @@ function isInList(list, element) {
 }
 
 function onError(evt) {
-    writeToScreen('ERROR: ' + evt.data);
+    writeToScreen("ERROR: " + evt.data);
 }
 
 function writeToScreen(message) {
-    var pre = $("<pre/>").text(message);
-    $("#output").append(pre);
+    $("#output").append(message);
+    if (!message.endsWith("\n")) $("#output").append("\n");
 }
 
 $(init);
