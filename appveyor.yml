@@ -4,23 +4,23 @@ configuration:
   - Release
 
 install:
-  - pwsh: dotnet tool restore
+  - ps: dotnet tool restore
 
 build_script:
-  - pwsh: dotnet dotnet-cake
+  - ps: dotnet cake
 
 after_build:
-  - pwsh: dotnet dotnet-cake --target=PublishApps
+  - ps: dotnet cake --target=PublishApps
 
 test_script:
-  - pwsh: dotnet dotnet-cake --target=Test
+  - ps: dotnet cake --target=Test
 
 after_test:
-  - pwsh: dotnet dotnet-cake --target=PublishCoverage
-  - pwsh: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -DeploymentName NuGetPackages }
-  - pwsh: Get-ChildItem ./.build/Installers/*.msi | % { Push-AppveyorArtifact $_.FullName -DeploymentName WindowsInstallers }
-  - pwsh: Get-ChildItem ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -DeploymentName Apps }
-  - pwsh: Get-ChildItem ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -DeploymentName CoverageReports }
+  - ps: dotnet cake --target=PublishCoverage
+  - ps: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -DeploymentName NuGetPackages }
+  - ps: Get-ChildItem ./.build/Installers/*.msi | % { Push-AppveyorArtifact $_.FullName -DeploymentName WindowsInstallers }
+  - ps: Get-ChildItem ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -DeploymentName Apps }
+  - ps: Get-ChildItem ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -DeploymentName CoverageReports }
 
 notifications:
 - provider: Email
