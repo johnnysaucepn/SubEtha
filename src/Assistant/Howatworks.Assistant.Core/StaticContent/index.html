@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" class="vh-100">
 <head>
     <meta charset="utf-8" />
     <title>Howatworks.Assistant WebSocket Test</title>
@@ -14,12 +14,16 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <script src="js/assistant.js" language="javascript" type="text/javascript"></script>
+
+    <style>
+        .edbutton { height:100%;}
+    </style>
 </head>
 <body class="vh-100">
 
-    <div class="container-fluid px-0">
+    <div class="d-flex flex-column">
 
-        <ul class="nav nav-tabs nav-fill" role="tablist">
+        <ul class="nav nav-tabs nav-fill flex-grow-0" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" role="tab" href="#general-panel">General</a>
             </li>
@@ -37,20 +41,20 @@
             </li>
         </ul>
 
-        <div class="tab-content" id="mode-panels">
+        <div class="tab-content flex-grow-1" id="mode-panels">
 
-            <div class="tab-pane fade show active" id="general-panel" role="tabpanel">
+            <div class="tab-pane fade show active container-fluid h-100" id="general-panel" role="tabpanel">
 
-                <div id="power-panel">
+                <div id="general-zone" class="h-50">
 
-                    <div class="row no-gutters">
+                    <div class="row no-gutters h-50">
                         <div class="col-6 p-0">
-                            <div class="row no-gutters">
+                            <div class="row no-gutters h-50">
                                 <div class="col-4 offset-4 p-1">
                                     <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button>
                                 </div>
                             </div>
-                            <div class="row no-gutters">
+                            <div class="row no-gutters h-50">
                                 <div class="col-4 p-1">
                                     <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button>
                                 </div>
@@ -69,11 +73,8 @@
                             <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="SystemMapOpen">SYS&nbsp;MAP</button>
                         </div>
                     </div>
-                </div>
 
-                <div id="navigation-panel">
-
-                    <div class="row no-gutters">
+                    <div class="row no-gutters h-25">
                         <div class="col-3 p-1">
                             <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" id="meta-jump">JUMP</button>
                         </div>
@@ -83,7 +84,7 @@
 
                     </div>
 
-                    <div class="row no-gutters">
+                    <div class="row no-gutters h-25">
                         <div class="col-3 p-1">
                             <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SelectTarget">TARGET</button>
                         </div>
@@ -97,12 +98,12 @@
 
                 </div>
 
-                <div class="carousel slide" id="travel-carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" id="travel-realspace">
+                <div class="carousel slide h-25" id="travel-carousel">
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item h-100 active" id="travel-realspace">
 
-                            <div id="realspace-panel">
-                                <div class="row no-gutters">
+                            <div id="realspace-panel" class="h-100">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1">
                                         <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="UseBoostJuice">BOOST</button>
                                     </div>
@@ -116,7 +117,7 @@
                                         <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="Supercruise">CRUISE</button>
                                     </div>
                                 </div>
-                                <div class="row no-gutters">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1">
                                         <button type="button" class="edbutton btn btn-info btn-lg btn-block py-4" data-edbutton="ToggleFlightAssist">FL/ASSIST</button>
                                     </div>
@@ -131,9 +132,9 @@
 
                         </div>
 
-                        <div class="carousel-item" id="travel-supercruise">
-                            <div id="supercruise-panel">
-                                <div class="row no-gutters">
+                        <div class="carousel-item h-100" id="travel-supercruise">
+                            <div id="supercruise-panel" class="h-100">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1">
                                         <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="SetSpeedZero">SPEED&nbsp;0</button>
                                     </div>
@@ -147,7 +148,7 @@
                                         <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="Supercruise">Drop</button>
                                     </div>
                                 </div>
-                                <div class="row no-gutters">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1 offset-9">
                                         <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationFSSEnter">FSS</button>
                                     </div>
@@ -157,13 +158,12 @@
                     </div>
                 </div>
 
-                <div class="carousel slide" id="mode-carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" id="mode-combat">
+                <div class="carousel slide h-25" id="mode-carousel">
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item h-100 active" id="mode-combat">
 
-
-                            <div id="combat-panel">
-                                <div class="row no-gutters">
+                            <div id="combat-panel" class="h-100">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1">
                                         <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="SelectHighestThreat">THREAT</button>
                                     </div>
@@ -177,7 +177,7 @@
                                         <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="FireChaffLauncher">CHAFF</button>
                                     </div>
                                 </div>
-                                <div class="row no-gutters">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1">
                                         <button type="button" class="edbutton btn btn-danger btn-lg btn-block py-4" data-edbutton="CyclePreviousSubsystem">&lt;&nbsp;SUBSYS</button>
                                     </div>
@@ -194,10 +194,10 @@
                             </div>
                         </div>
 
-                        <div class="carousel-item" id="mode-fss">
+                        <div class="carousel-item h-100" id="mode-fss">
 
-                            <div id="fss-panel">
-                                <div class="row no-gutters">
+                            <div id="fss-panel" class="h-100">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1">
                                         <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4 press-and-hold" data-edbutton="ExplorationFSSRadioTuningX_Decrease">&lt;&nbsp;TUNING</button>
                                     </div>
@@ -214,10 +214,10 @@
                             </div>
                         </div>
 
-                        <div class="carousel-item" id="mode-saa">
+                        <div class="carousel-item h-100" id="mode-saa">
 
-                            <div id="saa-panel">
-                                <div class="row no-gutters">
+                            <div id="saa-panel" class="h-100">
+                                <div class="row no-gutters h-50">
                                     <div class="col-3 p-1">
                                         <button type="button" class="edbutton btn btn-primary btn-lg btn-block py-4" data-edbutton="ExplorationSAAChangeScannedAreaViewToggle">SAA&nbsp;FLIP</button>
                                     </div>
@@ -231,17 +231,16 @@
 
                     </div>
                 </div>
-
             </div>
 
-            <div id="log-panel" class="tab-pane fade show">
-                <div class="row no-gutters">
+            <div id="log-panel" class="tab-pane fade show h-100">
+                <div class="row no-gutters h-50">
                     <div class="col p-1">
                         <div class="card overflow-auto" style="height: 40em">
                             <pre class="card-body" id="output"></pre>
                         </div>
                     </div>
-                    <div class="row no-gutters">
+                    <div class="row no-gutters h-50">
                         <div class="col p-1">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
@@ -250,6 +249,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
