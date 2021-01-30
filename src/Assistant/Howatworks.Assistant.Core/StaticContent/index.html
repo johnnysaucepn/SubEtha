@@ -38,209 +38,107 @@
 
     <div class="tab-content flex-grow-1" id="mode-panels">
 
-        <div class="tab-pane fade show active container-fluid p-0 h-100" id="general-panel" role="tabpanel">
+        <div class="tab-pane fade show active p-0" id="general-panel" role="tabpanel">
 
-            <div id="general-zone" class="h-50">
+            <div id="zone-layout" class="d-flex flex-column">
 
-                <div class="row no-gutters h-25">
-                    <div class="col-3 offset-3 p-1">
-                        <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseEnginesPower">ENG</button>
-                    </div>
-                    <div class="col-3 offset-3 p-1">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="GalaxyMapOpen">GAL&nbsp;MAP</button>
-                    </div>
+                <div id="navigation-zone">
 
-                </div>
+                    <div class="button-grid">
+                        <button type="button" class="edbutton btn btn-secondary btn-lg" data-edbutton="IncreaseEnginesPower">ENG</button>
+                        <button type="button" class="edbutton btn btn-secondary btn-lg" data-edbutton="IncreaseSystemsPower">SYS</button>
+                        <button type="button" class="edbutton btn btn-secondary btn-lg" data-edbutton="IncreaseWeaponsPower">WEP</button>
+                        <button type="button" class="edbutton btn btn-secondary btn-lg" data-edbutton="ResetPowerDistribution">Reset</button>
 
-                <div class="row no-gutters h-25">
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseSystemsPower">SYS</button>
-                    </div>
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="ResetPowerDistribution">Reset</button>
-                    </div>
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-secondary btn-lg btn-block" data-edbutton="IncreaseWeaponsPower">WEP</button>
-                    </div>
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="SystemMapOpen">SYS&nbsp;MAP</button>
-                    </div>
-                </div>
+                        <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="GalaxyMapOpen">GAL&nbsp;MAP</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="SystemMapOpen">SYS&nbsp;MAP</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg" id="meta-jump">JUMP</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="TargetNextRouteSystem">&gt;&nbsp;SYSTEM</button>
 
 
-
-                <div class="row no-gutters h-25">
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block" id="meta-jump">JUMP</button>
-                    </div>
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="TargetNextRouteSystem">&gt;&nbsp;SYSTEM</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="SelectTarget">TARGET</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="CyclePreviousTarget">&lt;&nbsp;TARGET</button>
+                        <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="CycleNextTarget">&gt;&nbsp;TARGET</button>
                     </div>
 
                 </div>
 
-                <div class="row no-gutters h-25">
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="SelectTarget">TARGET</button>
-                    </div>
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="CyclePreviousTarget">&lt;&nbsp;TARGET</button>
-                    </div>
-                    <div class="col-3 p-1">
-                        <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="CycleNextTarget">&gt;&nbsp;TARGET</button>
-                    </div>
-                </div>
+                <div id="travel-zone" class="carousel slide">
+                    <div class="carousel-inner">
 
-            </div>
+                        <div class="carousel-item active" id="travel-realspace">
+                            <div class="button-grid">
+                                <button type="button" class="edbutton btn btn-info btn-lg" data-edbutton="UseBoostJuice">BOOST</button>
+                                <button type="button" class="edbutton btn btn-info btn-lg" data-edbutton="ToggleCargoScoop">SCOOP</button>
+                                <button type="button" class="edbutton btn btn-info btn-lg" data-edbutton="LandingGearToggle">LANDING</button>
+                                <button type="button" class="edbutton btn btn-info btn-lg" data-edbutton="Supercruise">CRUISE</button>
 
-            <div class="carousel slide h-25" id="travel-carousel">
-                <div class="carousel-inner h-100">
-                    <div class="carousel-item h-100 active" id="travel-realspace">
-
-                        <div id="realspace-panel" class="h-100">
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-info btn-lg btn-block" data-edbutton="UseBoostJuice">BOOST</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-info btn-lg btn-block" data-edbutton="ToggleCargoScoop">SCOOP</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-info btn-lg btn-block" data-edbutton="LandingGearToggle">LANDING</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-info btn-lg btn-block" data-edbutton="Supercruise">CRUISE</button>
-                                </div>
-                            </div>
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-info btn-lg btn-block" data-edbutton="ToggleFlightAssist">FL/ASSIST</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-info btn-lg btn-block" data-edbutton="ToggleButtonUpInput">SILENT</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-info btn-lg btn-block" data-edbutton="DeployHeatSink">HEATSINK</button>
-                                </div>
+                                <button type="button" class="edbutton btn btn-info btn-lg" data-edbutton="ToggleFlightAssist">FL/ASSIST</button>
+                                <button type="button" class="edbutton btn btn-info btn-lg" data-edbutton="ToggleButtonUpInput">SILENT</button>
+                                <button type="button" class="edbutton btn btn-info btn-lg" data-edbutton="DeployHeatSink">HEATSINK</button>
                             </div>
                         </div>
 
-                    </div>
+                        <div class="carousel-item" id="travel-supercruise">
+                            <div class="button-grid">
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="SetSpeedZero">SPEED&nbsp;0</button>
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="SetSpeed75">SPEED&nbsp;75</button>
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="SetSpeed100">SPEED&nbsp;100</button>
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="Supercruise">Drop</button>
 
-                    <div class="carousel-item h-100" id="travel-supercruise">
-                        <div id="supercruise-panel" class="h-100">
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="SetSpeedZero">SPEED&nbsp;0</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="SetSpeed75">SPEED&nbsp;75</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="SetSpeed100">SPEED&nbsp;100</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="Supercruise">Drop</button>
-                                </div>
-                            </div>
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1 offset-9">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="ExplorationFSSEnter">FSS</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="carousel slide h-25" id="mode-carousel">
-                <div class="carousel-inner h-100">
-                    <div class="carousel-item h-100 active" id="mode-combat">
-
-                        <div id="combat-panel" class="h-100">
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="SelectHighestThreat">THREAT</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="CyclePreviousHostileTarget">&lt;&nbsp;HOSTILE</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="CycleNextHostileTarget">&gt;&nbsp;HOSTILE</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="FireChaffLauncher">CHAFF</button>
-                                </div>
-                            </div>
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="CyclePreviousSubsystem">&lt;&nbsp;SUBSYS</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="CycleNextSubsystem">&gt;&nbsp;SUBSYS</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="UseShieldCell">SHIELD</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-danger btn-lg btn-block" data-edbutton="ChargeECM">ECM</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-item h-100" id="mode-fss">
-
-                        <div id="fss-panel" class="h-100">
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block press-and-hold" data-edbutton="ExplorationFSSRadioTuningX_Decrease">&lt;&nbsp;TUNING</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block press-and-hold" data-edbutton="ExplorationFSSRadioTuningX_Increase">&gt;&nbsp;TUNING</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block press-and-hold" data-edbutton="ExplorationFSSDiscoveryScan">FSS&nbsp;HONK</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="ExplorationFSSQuit">FSS&nbsp;QUIT</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-item h-100" id="mode-saa">
-
-                        <div id="saa-panel" class="h-100">
-                            <div class="row no-gutters h-50">
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="ExplorationSAAChangeScannedAreaViewToggle">SAA&nbsp;FLIP</button>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <button type="button" class="edbutton btn btn-primary btn-lg btn-block" data-edbutton="ExplorationSAAExitThirdPerson">SAA&nbsp;QUIT</button>
-                                </div>
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="ExplorationFSSEnter">FSS</button>
                             </div>
                         </div>
 
-                    </div>
+                    </div><!-- .carousel-inner -->
+                </div><!-- .carousel -->
 
-                </div>
+                <div id="mode-zone" class="carousel slide">
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active" id="mode-combat">
+                            <div class="button-grid">
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="SelectHighestThreat">THREAT</button>
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="CyclePreviousHostileTarget">&lt;&nbsp;HOSTILE</button>
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="CycleNextHostileTarget">&gt;&nbsp;HOSTILE</button>
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="FireChaffLauncher">CHAFF</button>
+
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="CyclePreviousSubsystem">&lt;&nbsp;SUBSYS</button>
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="CycleNextSubsystem">&gt;&nbsp;SUBSYS</button>
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="UseShieldCell">SHIELD</button>
+                                <button type="button" class="edbutton btn btn-danger btn-lg" data-edbutton="ChargeECM">ECM</button>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item" id="mode-fss">
+                            <div class="button-grid">
+                                <button type="button" class="edbutton btn btn-primary btn-lg press-and-hold" data-edbutton="ExplorationFSSRadioTuningX_Decrease">&lt;&nbsp;TUNING</button>
+                                <button type="button" class="edbutton btn btn-primary btn-lg press-and-hold" data-edbutton="ExplorationFSSRadioTuningX_Increase">&gt;&nbsp;TUNING</button>
+                                <button type="button" class="edbutton btn btn-primary btn-lg press-and-hold" data-edbutton="ExplorationFSSDiscoveryScan">FSS&nbsp;HONK</button>
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="ExplorationFSSQuit">FSS&nbsp;QUIT</button>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item" id="mode-saa">
+                            <div class="button-grid">
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="ExplorationSAAChangeScannedAreaViewToggle">SAA&nbsp;FLIP</button>
+                                <button type="button" class="edbutton btn btn-primary btn-lg" data-edbutton="ExplorationSAAExitThirdPerson">SAA&nbsp;QUIT</button>
+                            </div>
+                        </div>
+
+                    </div><!-- .carousel-inner -->
+                </div><!-- .carousel -->
+
             </div>
         </div>
 
-        <div id="log-panel" class="tab-pane fade show h-100">
-            <div class="row no-gutters h-50">
-                <div class="col p-1">
-                    <div class="card overflow-auto" style="height: 40em">
-                        <pre class="card-body" id="output"></pre>
-                    </div>
+        <div id="log-panel" class="tab-pane fade show">
+            <div class="d-flex flex-column h-100">
+                <div class="card overflow-auto flex-grow-1" >
+                    <pre class="card-body" id="output"></pre>
                 </div>
-                <div class="row no-gutters h-50">
-                    <div class="col p-1">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger btn-lg btn-block" id="disconnect">Disconnect</button>
-                        </div>
-                    </div>
+                <div class="btn-group flex-grow-0">
+                    <button type="button" class="btn btn-danger btn-lg" id="disconnect">Disconnect</button>
                 </div>
             </div>
         </div>
