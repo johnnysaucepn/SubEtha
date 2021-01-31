@@ -1,4 +1,16 @@
-﻿#zone-layout {
+﻿.edbutton {
+    /* use same left/right padding as top/bottom */
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+    /* use tips on avoiding grid blowout from https://css-tricks.com/preventing-a-grid-blowout/ */
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    min-height:100%;
+    max-height:100%;
+}
+
+#zone-layout {
     width: 100%;
     height: 100%;
 }
