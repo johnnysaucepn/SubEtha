@@ -50,7 +50,7 @@ namespace Howatworks.Assistant.Core.Test
         {
             var file = _provider.GetFileInfo(@"StaticContent\index.html");
             var content = new StreamReader(file.CreateReadStream(), Encoding.UTF8).ReadToEnd();
-            Assert.Contains("Howatworks.Assistant", content);
+            Assert.Contains("Howatworks Assistant", content);
         }
     }
 }
