@@ -1,4 +1,23 @@
-﻿.edbutton {
+﻿body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.nav {
+    flex: initial;
+}
+
+.tab-content {
+    flex: auto;
+    display: flex;
+}
+
+.tab-pane {
+    flex: 1;
+}
+
+.edbutton {
     /* use same left/right padding as top/bottom */
     padding-left: 0.375rem;
     padding-right: 0.375rem;
@@ -6,30 +25,26 @@
     max-width: 100%;
     min-width: 0;
     overflow: hidden;
-    min-height:100%;
-    max-height:100%;
 }
 
 #zone-layout {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 #navigation-zone {
-    height: 50%;
+    flex:2;
     padding-top: 8px;
 }
 
 #travel-zone {
-    height: 25%;
+    flex: 1;
 }
 
 #mode-zone {
-    height: 25%;
-}
-
-.tab-pane {
-    height: 100%;
+    flex: 1;
 }
 
 .carousel {
@@ -42,7 +57,6 @@
 
 .carousel-item {
     height: 100%;
-
 }
 
 .button-grid {
@@ -53,6 +67,29 @@
     padding: 8px;
     padding-top: 0;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#log-panel{
+    min-width:0;
+    min-height:0;
+}
+
+#log-panel > div {
+    display: flex;
+    flex-direction: column;
+}
+
+#log-panel .card {
+    flex: auto;
+}
+
+#log-panel .card-body {
+    overflow: auto;
+    max-height:40em;
+}
+
+#log-panel .btn-group {
+    flex: initial;
 }
 
 /* #navigation-zone */
