@@ -1,5 +1,5 @@
 ﻿.button-grid {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 /* #navigation-zone */
@@ -21,31 +21,31 @@ button[data-edbutton="IncreaseWeaponsPower"] {
 }
 
 button[data-edbutton="GalaxyMapOpen"] {
-    grid-area: 1/4;
+    grid-area: 1/5;
 }
 
 button[data-edbutton="SystemMapOpen"] {
-    grid-area: 2/4;
+    grid-area: 2/5;
 }
 
 button#meta-jump {
-    grid-area: 3/4;
+    grid-area: 1/7;
 }
 
 button[data-edbutton="TargetNextRouteSystem"] {
-    grid-area: 4/4;
+    grid-area: 1/6;
 }
 
 button[data-edbutton="SelectTarget"] {
-    grid-area: 4/1;
+    grid-area: 2/6;
 }
 
 button[data-edbutton="CyclePreviousTarget"] {
-    grid-area: 4/2;
+    grid-area: 2/7;
 }
 
 button[data-edbutton="CycleNextTarget"] {
-    grid-area: 4/3;
+    grid-area: 2/8;
 }
 
 /* #travel-realspace */
@@ -67,17 +67,16 @@ button[data-edbutton="Supercruise"] {
     grid-area: 1/4;
 }
 
-
 button[data-edbutton="ToggleFlightAssist"] {
-    grid-area: 2/1;
+    grid-area: 1/5;
 }
 
 button[data-edbutton="ToggleButtonUpInput"] {
-    grid-area: 2/2;
+    grid-area: 1/6;
 }
 
 button[data-edbutton="DeployHeatSink"] {
-    grid-area: 2/3;
+    grid-area: 1/7;
 }
 
 /* #travel-supercruise */
@@ -97,7 +96,7 @@ button[data-edbutton="SetSpeed100"] {
 /* Supercruise drop in same location as #travel-realspace */
 
 button[data-edbutton="ExplorationFSSEnter"] {
-    grid-area: 2/4;
+    grid-area: 1/5;
 }
 
 /* #mode-combat */
@@ -120,19 +119,19 @@ button[data-edbutton="FireChaffLauncher"] {
 
 
 button[data-edbutton="CyclePreviousSubsystem"] {
-    grid-area: 2/1;
+    grid-area: 1/5;
 }
 
 button[data-edbutton="CycleNextSubsystem"] {
-    grid-area: 2/2;
+    grid-area: 1/6;
 }
 
 button[data-edbutton="UseShieldCell"] {
-    grid-area: 2/3;
+    grid-area: 1/7;
 }
 
 button[data-edbutton="ChargeECM"] {
-    grid-area: 2/4;
+    grid-area: 1/8;
 }
 
 /* #mode-fss */
