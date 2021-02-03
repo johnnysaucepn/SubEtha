@@ -1,0 +1,21 @@
+﻿.edbutton {
+    position: relative;
+}
+
+.edbutton::before {
+    content: "";
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.1;
+}
+
+
+button[data-edbutton="ToggleCargoScoop"]::before {
+    background-image: url(../img/database.svg);
+}
