@@ -1,4 +1,6 @@
-﻿.edbutton {
+﻿/* using tips on image backgrounds from https://coder-coder.com/background-image-opacity/ */
+
+.edbutton {
     position: relative;
 }
 
