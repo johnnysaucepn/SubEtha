@@ -10,6 +10,8 @@
   <ItemGroup>
     <None Remove="SocketTest.html" />
     <None Remove="StaticContent\css\custom.css" />
+    <None Remove="StaticContent\css\landscape.css" />
+    <None Remove="StaticContent\css\portrait.css" />
     <None Remove="StaticContent\css\theme-ed.css" />
     <None Remove="StaticContent\favicon.ico" />
     <None Remove="StaticContent\fonts\EUROCAPS.TTF" />
@@ -19,6 +21,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="StaticContent\css\custom.css" />
+    <EmbeddedResource Include="StaticContent\css\landscape.css" />
+    <EmbeddedResource Include="StaticContent\css\portrait.css" />
     <EmbeddedResource Include="StaticContent\css\theme-ed.css" />
     <EmbeddedResource Include="StaticContent\favicon.ico" />
     <EmbeddedResource Include="StaticContent\fonts\EUROCAPS.TTF" />
