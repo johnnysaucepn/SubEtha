@@ -10,6 +10,7 @@ namespace Howatworks.Assistant.Core
 
         private bool _landingGearDown;
         private bool _supercruise;
+        private bool _srv;
         private bool _hardpointsDeployed;
         private bool _lightsOn;
         private bool _cargoScoopDeployed;
@@ -28,6 +29,12 @@ namespace Howatworks.Assistant.Core
         {
             get => _supercruise;
             set => UpdateProperty(ref _supercruise, value);
+        }
+
+        public bool Srv
+        {
+            get => _srv;
+            set => UpdateProperty(ref _srv, value);
         }
 
         public bool HardpointsDeployed
@@ -83,6 +90,7 @@ namespace Howatworks.Assistant.Core
                 LightsOn = this.LightsOn,
                 NightVision = this.NightVision,
                 Supercruise = this.Supercruise,
+                Srv = this.Srv,
                 FssMode = this.FssMode,
                 SaaMode = this.SaaMode
             };

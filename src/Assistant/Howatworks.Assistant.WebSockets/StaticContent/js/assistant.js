@@ -162,15 +162,16 @@ function onMessage(evt) {
 
     } else if (parsedMessage.MessageType === "ControlState") {
         var supercruise = parsedMessage.Supercruise === true;
+        var srv = parsedMessage.Srv === true;
         var analysis = parsedMessage.HudAnalysisMode === true;
         var fssMode = parsedMessage.FssMode === true;
         var saaMode = parsedMessage.SaaMode === true;
 
-        // open slide 0 if real-space, 1 if supercruise
-        $("#travel-carousel").carousel(supercruise ? 1 : 0);
+        // open slide 0 if real-space, 1 if supercruise, 2 if SRV
+        $("#travel-carousel").carousel(srv ? 2 : supercruise ? 1 : 0);
 
-        // open slide 2 if surface analysis, 1 for system scan, 0 for combat otherwise
-        $("#mode-carousel").carousel(saaMode ? 2 : fssMode ? 1 : 0);
+        // open slide 3 if srv, slide 2 if surface analysis, 1 for system scan, 0 for combat otherwise
+        $("#mode-carousel").carousel(srv ? 3 : saaMode ? 2 : fssMode ? 1 : 0);
     }
 }
 
