@@ -1,0 +1,27 @@
+﻿public Button ToggleDriveAssist { get; set; }
+public Setting<bool> DriveAssistDefault { get; set; } // TODO: check data type
+
+public Button AutoBreakBuggyButton { get; set; }
+public Button HeadlightsBuggyButton { get; set; }
+public Button ToggleBuggyTurretButton { get; set; }
+
+public Button VerticalThrustersButton { get; set; }
+public Button SelectTarget_Buggy { get; set; }
+public Button IncreaseEnginesPower_Buggy { get; set; }
+public Button IncreaseWeaponsPower_Buggy { get; set; }
+public Button IncreaseSystemsPower_Buggy { get; set; }
+public Button ResetPowerDistribution_Buggy { get; set; }
+public Button ToggleCargoScoop_Buggy { get; set; }
+public Button EjectAllCargo_Buggy { get; set; }
+public Button RecallDismissShip { get; set; }
+public Button UIFocus_Buggy { get; set; }
+public Button FocusLeftPanel_Buggy { get; set; }
+public Button FocusCommsPanel_Buggy { get; set; }
+public Button QuickCommsPanel_Buggy { get; set; }
+public Button FocusRadarPanel_Buggy { get; set; }
+public Button FocusRightPanel_Buggy { get; set; }
+public Button GalaxyMapOpen_Buggy { get; set; }
+public Button SystemMapOpen_Buggy { get; set; }
+public Button OpenCodexGoToDiscovery_Buggy { get; set; }
+public Button PlayerHUDModeToggle_Buggy { get; set; }
+public Button HeadLookToggle_Buggy { get; set; }
