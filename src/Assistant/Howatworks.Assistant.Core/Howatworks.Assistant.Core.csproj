@@ -18,6 +18,16 @@
     <None Remove="StaticContent\fonts\EUROCAPS.TTF" />
     <None Remove="StaticContent\fonts\Sintony-Regular.ttf" />
     <None Remove="StaticContent\img\database.svg" />
+    <None Remove="StaticContent\img\flame.svg" />
+    <None Remove="StaticContent\img\globe.svg" />
+    <None Remove="StaticContent\img\mute.svg" />
+    <None Remove="StaticContent\img\north-star.svg" />
+    <None Remove="StaticContent\img\paper-airplane.svg" />
+    <None Remove="StaticContent\img\rocket.svg" />
+    <None Remove="StaticContent\img\rss.svg" />
+    <None Remove="StaticContent\img\screen-normal.svg" />
+    <None Remove="StaticContent\img\sun.svg" />
+    <None Remove="StaticContent\img\telescope.svg" />
     <None Remove="StaticContent\js\assistant.js" />
   </ItemGroup>
 
@@ -31,6 +41,16 @@
     <EmbeddedResource Include="StaticContent\fonts\EUROCAPS.TTF" />
     <EmbeddedResource Include="StaticContent\fonts\Sintony-Regular.ttf" />
     <EmbeddedResource Include="StaticContent\img\database.svg" />
+    <EmbeddedResource Include="StaticContent\img\flame.svg" />
+    <EmbeddedResource Include="StaticContent\img\globe.svg" />
+    <EmbeddedResource Include="StaticContent\img\mute.svg" />
+    <EmbeddedResource Include="StaticContent\img\north-star.svg" />
+    <EmbeddedResource Include="StaticContent\img\paper-airplane.svg" />
+    <EmbeddedResource Include="StaticContent\img\rocket.svg" />
+    <EmbeddedResource Include="StaticContent\img\rss.svg" />
+    <EmbeddedResource Include="StaticContent\img\screen-normal.svg" />
+    <EmbeddedResource Include="StaticContent\img\sun.svg" />
+    <EmbeddedResource Include="StaticContent\img\telescope.svg" />
     <EmbeddedResource Include="StaticContent\index.html" />
     <EmbeddedResource Include="StaticContent\js\assistant.js" />
   </ItemGroup>
