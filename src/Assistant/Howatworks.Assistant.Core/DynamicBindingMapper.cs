@@ -82,7 +82,7 @@ namespace Howatworks.Assistant.Core
             _selectedBindingFileWatcher.Start();
         }
 
-        public IReadOnlyCollection<string> GetBoundButtons(params string[] devices)
+        public IReadOnlyCollection<BoundButton> GetBoundButtons(params string[] devices)
         {
             return GetCurrentBindingMapper()?.GetBoundButtons(devices);
         }

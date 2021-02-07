@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Howatworks.Assistant.Core.Messages;
 using Howatworks.Assistant.WebSockets;
+using Howatworks.SubEtha.Bindings;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -13,6 +15,13 @@ namespace Howatworks.Assistant.Core
     public class AssistantMessageHub
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssistantMessageHub));
+
+        private static readonly string[] _alwaysHoldActivation = new[]
+        {
+            nameof(BindingSet.ExplorationFSSDiscoveryScan),
+            nameof(BindingSet.ExplorationFSSRadioTuningX_Decrease),
+            nameof(BindingSet.ExplorationFSSRadioTuningX_Increase)
+        };
 
         private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
         {
@@ -81,15 +90,32 @@ namespace Howatworks.Assistant.Core
         private async Task ReportAllBindingsToAllClients()
         {
             var bindingList = _controlBridge.GetAllBoundButtons();
-            var message = new AvailableBindingsMessage(bindingList);
+            var message = new AvailableBindingsMessage(bindingList.Select(FormatBinding));
             await _handler.SendMessageToAllAsync(JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
         }
 
         private async Task ReportAllBindings(string socketId)
         {
             var bindingList = _controlBridge.GetAllBoundButtons();
-            var message = new AvailableBindingsMessage(bindingList);
+            var message = new AvailableBindingsMessage(bindingList.Select(FormatBinding));
             await _handler.SendMessageAsync(socketId, JsonConvert.SerializeObject(message, _serializerSettings)).ConfigureAwait(false);
+        }
+
+        private static string FormatBinding(BoundButton button)
+        {
+            var activation = button.Activation;
+            // Apply special cases
+            if (_alwaysHoldActivation.Contains(button.BindingName))
+            {
+                // The ToggleOn attribute doesn't exist for some operations - as they can never be anything except 'hold'
+                activation = BindingActivationType.Hold;
+            }
+
+            if (activation == BindingActivationType.Hold)
+            {
+                return $"{button.BindingName}:Hold";
+            }
+            return button.BindingName;
         }
 
         private async Task RefreshAllClients(ControlStateModel state)

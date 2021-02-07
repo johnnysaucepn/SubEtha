@@ -67,8 +67,6 @@ namespace Howatworks.SubEtha.Bindings.Test
 
             Assert.NotNull(binding.HeadLookToggle.ToggleOn);
             Assert.True(binding.HeadLookToggle.ToggleOn.Value);
-
-            Assert.Null(binding.SetSpeedMinus50.ToggleOn);
         }
 
         [Fact]
