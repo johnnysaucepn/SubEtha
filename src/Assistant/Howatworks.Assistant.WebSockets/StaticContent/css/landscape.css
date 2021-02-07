@@ -124,10 +124,6 @@ button[data-edbutton="ToggleDriveAssist"] {
     grid-area: 1/5;
 }
 
-button[data-edbutton="ToggleButtonUpInput"] {
-    grid-area: 1/6;
-}
-
 button[data-edbutton="HeadlightsBuggyButton"] {
     grid-area: 1/8;
 }
