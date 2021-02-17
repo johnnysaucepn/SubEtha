@@ -1,15 +1,14 @@
-﻿using Howatworks.Assistant.Core;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace Howatworks.Assistant.Console
+namespace Howatworks.Assistant.Core
 {
-    internal class ConsoleWorker : BackgroundService
+    public class AssistantBackgroundService : BackgroundService
     {
         private readonly AssistantApp _app;
 
-        public ConsoleWorker(AssistantApp app)
+        public AssistantBackgroundService(AssistantApp app)
         {
             _app = app;
         }

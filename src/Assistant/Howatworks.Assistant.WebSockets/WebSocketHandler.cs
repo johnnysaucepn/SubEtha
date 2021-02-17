@@ -12,9 +12,9 @@ namespace Howatworks.Assistant.WebSockets
     /// </summary>
     public abstract class WebSocketHandler
     {
-        protected ConnectionManager WebSocketConnectionManager { get; set; }
+        protected ConnectionManager WebSocketConnectionManager { get; private set; }
 
-        public WebSocketHandler(ConnectionManager webSocketConnectionManager)
+        protected WebSocketHandler(ConnectionManager webSocketConnectionManager)
         {
             WebSocketConnectionManager = webSocketConnectionManager;
         }

@@ -2,8 +2,6 @@
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
 using Howatworks.Assistant.Core;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Autofac.Extensions.DependencyInjection;
@@ -45,7 +43,7 @@ namespace Howatworks.Assistant.Console
                 })
                 .ConfigureServices((_, services) =>
                 {
-                    services.AddHostedService<ConsoleWorker>();
+                    services.AddHostedService<AssistantBackgroundService>();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
