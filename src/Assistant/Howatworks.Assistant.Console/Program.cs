@@ -41,7 +41,7 @@ namespace Howatworks.Assistant.Console
                     var config = hostContext.Configuration;
                     builder.RegisterModule(new ThumbCoreModule(config));
                     builder.RegisterModule(new ThumbConsoleModule(config));
-                    builder.RegisterModule(new AssistantModule(config));
+                    builder.RegisterModule(new AssistantModule());
                 })
                 .ConfigureServices((_, services) =>
                 {
@@ -52,6 +52,5 @@ namespace Howatworks.Assistant.Console
                     webBuilder.UseStartup<Startup>();
                 });
         }
-
     }
 }

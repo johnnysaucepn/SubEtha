@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Autofac;
 using Howatworks.Assistant.WebSockets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,11 @@ namespace Howatworks.Assistant.Core
 
             services.AddControllers();
             services.AddMvc(options => options.EnableEndpointRouting = false);
-            //services.AddWebSocketManager();
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule<WebSocketModule>();
         }
 
         public void Configure(IApplicationBuilder app)

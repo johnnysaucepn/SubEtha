@@ -29,7 +29,7 @@ namespace Howatworks.Assistant.Wpf
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ThumbCoreModule(config));
             builder.RegisterModule(new ThumbWpfModule(config));
-            builder.RegisterModule(new AssistantModule(config));
+            builder.RegisterModule(new AssistantModule());
             builder.RegisterModule(new AssistantWpfModule());
             _container = builder.Build();
 
