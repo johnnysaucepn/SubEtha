@@ -5,10 +5,10 @@
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <IsTestProject>false</IsTestProject>
     <OutputType>Library</OutputType>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SocketTest.html" />
     <None Remove="StaticContent\css\custom.css" />
     <None Remove="StaticContent\css\landscape.css" />
     <None Remove="StaticContent\css\portrait.css" />

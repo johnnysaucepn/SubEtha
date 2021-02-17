@@ -15,7 +15,7 @@ namespace Howatworks.Assistant.WebSockets
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebSocketManagerMiddleware));
 
         private readonly RequestDelegate _next;
-        private WebSocketHandler _webSocketHandler { get; set; }
+        private readonly WebSocketHandler _webSocketHandler;
 
         public WebSocketManagerMiddleware(RequestDelegate next,
                                             WebSocketHandler webSocketHandler)

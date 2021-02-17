@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Howatworks.Assistant.Core.Messages;
 using Howatworks.Assistant.WebSockets;
@@ -39,10 +40,13 @@ namespace Howatworks.Assistant.Core
             _controlBridge = controlBridge;
             _statusManager = statusManager;
             _messageParser = messageParser;
+        }
 
+        public void StartListening(CancellationToken token)
+        {
             _statusManager.ControlStateObservable
                 .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(async c => await RefreshAllClients(c).ConfigureAwait(false));
+                .Subscribe(async c => await RefreshAllClients(c).ConfigureAwait(false), token);
 
             _handler.MessageReceived.Subscribe(async m =>
             {
@@ -63,15 +67,15 @@ namespace Howatworks.Assistant.Core
                         await ReportAllBindings(sourceSocketId).ConfigureAwait(false);
                         break;
                 }
-            });
+            }, token);
 
             // Every new connection gets the current state
             _handler.ConnectionChanges
                 .Where(c => c.Change == ConnectionChange.Connected)
-                .Subscribe(async c => await RefreshClient(c.SocketId, _statusManager.State).ConfigureAwait(false));
+                .Subscribe(async c => await RefreshClient(c.SocketId, _statusManager.State).ConfigureAwait(false), token);
 
             _controlBridge.SelectedBindingsChanged
-                .Subscribe(async _ => await ReportAllBindingsToAllClients().ConfigureAwait(false));
+                .Subscribe(async _ => await ReportAllBindingsToAllClients().ConfigureAwait(false), token);
         }
 
         private async Task ReportAllBindingsToAllClients()

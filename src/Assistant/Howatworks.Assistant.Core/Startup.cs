@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Autofac;
 using Howatworks.Assistant.WebSockets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

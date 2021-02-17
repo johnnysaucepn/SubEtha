@@ -1,11 +1,12 @@
 {
   "profiles": {
-    "Howatworks.Assistant.Console": {
+    "Howatworks.Assistant.Wpf": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "https://localhost:5985;http://localhost:5984"
     }
   }
 }
