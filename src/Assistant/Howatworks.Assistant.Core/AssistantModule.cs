@@ -1,8 +1,7 @@
 ﻿using Autofac;
 using Howatworks.Assistant.Core.ControlSimulators;
+using Howatworks.Assistant.WebSockets;
 using Howatworks.SubEtha.Bindings;
-using log4net;
-using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.Assistant.Core
 {
@@ -10,6 +9,8 @@ namespace Howatworks.Assistant.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule<AssistantWebSocketModule>();
+
             builder.RegisterType<AssistantApp>().AsSelf().SingleInstance();
             builder.RegisterType<StatusManager>().AsSelf().SingleInstance();
             builder.RegisterType<AssistantMessageHub>().AsSelf().SingleInstance();

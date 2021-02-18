@@ -167,7 +167,7 @@ namespace Howatworks.Assistant.Core.ControlSimulators
                 ["Key_MediaSelect"] = VirtualKeyCode.LAUNCH_MEDIA_SELECT,
                 ["Key_GreenModifier"] = VirtualKeyCode.NONAME, // TODO: ???
                 ["Key_OrangeModifier"] = VirtualKeyCode.NONAME, // TODO: ???
-            }; ;
+            };
         }
 
         public VirtualKeyCode? MapKey(string key)

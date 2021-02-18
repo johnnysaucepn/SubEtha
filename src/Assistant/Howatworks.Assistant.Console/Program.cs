@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics.CodeAnalysis;
+using Howatworks.Assistant.WebSockets;
 
 namespace Howatworks.Assistant.Console
 {

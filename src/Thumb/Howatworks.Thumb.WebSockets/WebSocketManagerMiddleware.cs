@@ -5,7 +5,7 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Howatworks.Assistant.WebSockets
+namespace Howatworks.Thumb.WebSockets
 {
     /// <summary>
     /// Adapted from code published at https://radu-matei.com/blog/aspnet-core-websockets-middleware

@@ -56,6 +56,5 @@ namespace Howatworks.Assistant.Core.ControlSimulators
 
             return buttonNumber;
         }
-
     }
 }

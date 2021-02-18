@@ -2,10 +2,8 @@
 using Hardcodet.Wpf.TaskbarNotification;
 using Howatworks.Assistant.Core;
 using Howatworks.Thumb.Core;
-using System.Threading.Tasks;
 using System.Windows;
 using Howatworks.Thumb.Wpf;
-using System.Threading;
 using System;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +12,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
+using Howatworks.Assistant.WebSockets;
 
 namespace Howatworks.Assistant.Wpf
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Howatworks.Assistant.WebSockets
+namespace Howatworks.Thumb.WebSockets
 {
     /// <summary>
     /// Adapted from code published at https://radu-matei.com/blog/aspnet-core-websockets-middleware

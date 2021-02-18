@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Extensions.FileProviders;
 using Xunit;
 
-namespace Howatworks.Assistant.Core.Test
+namespace Howatworks.Assistant.WebSockets.Test
 {
     public class ManifestEmbeddedFileProviderTests
     {

@@ -6,7 +6,6 @@ using System.Reflection;
 
 namespace Howatworks.Thumb.Core
 {
-
     public class Log4NetThumbLogging : IThumbLogging
     {
         private readonly IConfiguration _config;

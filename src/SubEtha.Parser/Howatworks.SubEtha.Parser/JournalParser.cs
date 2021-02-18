@@ -25,7 +25,6 @@ namespace Howatworks.SubEtha.Parser
                         t => t,
                         StringComparer.OrdinalIgnoreCase
                     );
-
             });
 
         public static IList<JsonConverter> AllConverters = new List<JsonConverter> { new ParentItemConverter() };
@@ -145,7 +144,6 @@ namespace Howatworks.SubEtha.Parser
             }
 
             return null;
-
         }
     }
 }

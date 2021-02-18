@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using Howatworks.Thumb.WebSockets;
+using log4net;
 using System;
 using System.Net.WebSockets;
 using System.Reactive.Linq;

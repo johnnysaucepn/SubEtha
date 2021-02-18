@@ -169,6 +169,5 @@ namespace Howatworks.Assistant.Core.ControlSimulators
         {
             return _table[keyName].Item2;
         }
-
     }
 }

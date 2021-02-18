@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Howatworks.Assistant.Core.Controllers
+namespace Howatworks.Assistant.WebSockets.Controllers
 {
     public class HomeController : ControllerBase
     {
