@@ -28,7 +28,7 @@ namespace Howatworks.Assistant.WebSockets
 
             var socketId = WebSocketConnectionManager.GetId(socket);
             Log.Info($"Connected '{socketId}'");
-            _connectionChanges.OnNext(new ConnectionChangeEvent(socketId, ConnectionChange.Connected));
+            await Task.Run(() => _connectionChanges.OnNext(new ConnectionChangeEvent(socketId, ConnectionChange.Connected))).ConfigureAwait(false);
         }
 
         public override async Task OnDisconnected(WebSocket socket)
@@ -38,7 +38,7 @@ namespace Howatworks.Assistant.WebSockets
 
             await base.OnDisconnected(socket).ConfigureAwait(false);
 
-            _connectionChanges.OnNext(new ConnectionChangeEvent(socketId, ConnectionChange.Disconnected));
+            await Task.Run(() => _connectionChanges.OnNext(new ConnectionChangeEvent(socketId, ConnectionChange.Disconnected))).ConfigureAwait(false);
         }
 
         public override async Task ReceiveAsync(WebSocket socket, WebSocketReceiveResult result, byte[] buffer)
@@ -48,7 +48,7 @@ namespace Howatworks.Assistant.WebSockets
 
             Log.Info($"Received '{rawString}' from '{socketId}'");
 
-            _messageReceived.OnNext(new IncomingMessage(socketId, rawString));
+            await Task.Run(() => _messageReceived.OnNext(new IncomingMessage(socketId, rawString))).ConfigureAwait(false);
         }
     }
 }

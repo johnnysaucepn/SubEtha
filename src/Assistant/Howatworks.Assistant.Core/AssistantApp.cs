@@ -72,10 +72,7 @@ namespace Howatworks.Assistant.Core
             _statusManager.SubscribeTo(publication);
             _processor.StartListening(token);
 
-            publication.Subscribe(t =>
-            {
-                _updateSubject.OnNext(t.Entry.Timestamp);
-            });
+            publication.Subscribe(t => _updateSubject.OnNext(t.Entry.Timestamp));
 
             Updates
                 .Subscribe(e =>

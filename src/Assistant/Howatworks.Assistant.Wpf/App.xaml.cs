@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.Assistant.Wpf
 {
@@ -52,6 +53,7 @@ namespace Howatworks.Assistant.Wpf
             _host.Dispose();
         }
 
+        [SuppressMessage("Simplification", "RCS1021:Convert lambda expression body to expression-body.", Justification = "Clarity and consistency")]
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder()

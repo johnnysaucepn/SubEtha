@@ -33,24 +33,20 @@ namespace Howatworks.Assistant.WebSockets
                 return;
             }
 
-            var socket = await context.WebSockets.AcceptWebSocketAsync();
-            await _webSocketHandler.OnConnected(socket);
+            var socket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
+            await _webSocketHandler.OnConnected(socket).ConfigureAwait(false);
 
             await Receive(socket, async (result, buffer) =>
             {
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    await _webSocketHandler.ReceiveAsync(socket, result, buffer);
-                    return;
+                    await _webSocketHandler.ReceiveAsync(socket, result, buffer).ConfigureAwait(false);
                 }
-
                 else if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    await _webSocketHandler.OnDisconnected(socket);
-                    return;
+                    await _webSocketHandler.OnDisconnected(socket).ConfigureAwait(false);
                 }
-
-            });
+            }).ConfigureAwait(false);
         }
 
         private async Task Receive(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
@@ -60,7 +56,7 @@ namespace Howatworks.Assistant.WebSockets
             while (socket.State == WebSocketState.Open)
             {
                 var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
-                                                        cancellationToken: CancellationToken.None);
+                                                        cancellationToken: CancellationToken.None).ConfigureAwait(false);
 
                 handleMessage(result, buffer);
             }

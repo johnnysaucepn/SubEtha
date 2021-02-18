@@ -12,7 +12,7 @@ namespace Howatworks.Assistant.WebSockets
     /// </summary>
     public abstract class WebSocketHandler
     {
-        protected ConnectionManager WebSocketConnectionManager { get; private set; }
+        protected ConnectionManager WebSocketConnectionManager { get; }
 
         protected WebSocketHandler(ConnectionManager webSocketConnectionManager)
         {
@@ -21,12 +21,12 @@ namespace Howatworks.Assistant.WebSockets
 
         public virtual async Task OnConnected(WebSocket socket)
         {
-            WebSocketConnectionManager.AddSocket(socket);
+            await WebSocketConnectionManager.AddSocket(socket).ConfigureAwait(false);
         }
 
         public virtual async Task OnDisconnected(WebSocket socket)
         {
-            await WebSocketConnectionManager.RemoveSocket(WebSocketConnectionManager.GetId(socket));
+            await WebSocketConnectionManager.RemoveSocket(WebSocketConnectionManager.GetId(socket)).ConfigureAwait(false);
         }
 
         public async Task SendMessageAsync(WebSocket socket, string message)
@@ -39,12 +39,12 @@ namespace Howatworks.Assistant.WebSockets
                                                                     count: message.Length),
                                     messageType: WebSocketMessageType.Text,
                                     endOfMessage: true,
-                                    cancellationToken: CancellationToken.None);
+                                    cancellationToken: CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task SendMessageAsync(string socketId, string message)
         {
-            await SendMessageAsync(WebSocketConnectionManager.GetSocketById(socketId), message);
+            await SendMessageAsync(WebSocketConnectionManager.GetSocketById(socketId), message).ConfigureAwait(false);
         }
 
         public async Task SendMessageToAllAsync(string message)
@@ -52,7 +52,7 @@ namespace Howatworks.Assistant.WebSockets
             foreach (var pair in WebSocketConnectionManager.GetAll())
             {
                 if (pair.Value.State == WebSocketState.Open)
-                    await SendMessageAsync(pair.Value, message);
+                    await SendMessageAsync(pair.Value, message).ConfigureAwait(false);
             }
         }
 
