@@ -1,11 +1,16 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using Autofac;
 using Hardcodet.Wpf.TaskbarNotification;
 using Howatworks.Thumb.Core;
 using Howatworks.Matrix.Core;
 using Howatworks.Thumb.Wpf;
+using Microsoft.Extensions.Hosting;
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
 
 namespace Howatworks.Matrix.Wpf
 {
@@ -15,53 +20,69 @@ namespace Howatworks.Matrix.Wpf
     public partial class App : Application
     {
         private TaskbarIcon _tb;
-        private CancellationTokenSource _cts = new CancellationTokenSource();
-        private IContainer _container;
+        private readonly IHost _host;
 
-        protected override void OnStartup(StartupEventArgs e)
+        public App()
         {
-            base.OnStartup(e);
-
-            var config = new ThumbConfigBuilder("Matrix").Build();
-
-            var logger = new Log4NetThumbLogging(config);
-            logger.Configure();
-
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new ThumbCoreModule(config));
-            builder.RegisterModule(new ThumbWpfModule(config));
-            builder.RegisterModule(new MatrixModule());
-            builder.RegisterModule(new MatrixWpfModule());
-
-            _container = builder.Build();
-
-            using (var scope = _container.BeginLifetimeScope())
-            {
-                var app = _container.Resolve<MatrixApp>();
-
-                _tb = (TaskbarIcon)FindResource("TrayIcon");
-                LoadTaskbarIcon();
-
-                Task.Run(() =>
-                {
-                    app.Run(_cts.Token);
-                });
-            }
+            var args = Environment.GetCommandLineArgs();
+            _host = CreateHostBuilder(args)
+                .Build();
         }
 
-        protected override void OnExit(ExitEventArgs e)
+        public async void Application_Startup(object sender, StartupEventArgs e)
         {
-            base.OnExit(e);
-            _cts.Cancel();
+            await _host.StartAsync().ConfigureAwait(true);
+
+            _tb = (TaskbarIcon)FindResource("TrayIcon");
+            var trayVm = _host.Services.GetRequiredService<TrayIconViewModel>();
+            var authDialog = _host.Services.GetRequiredService<AuthenticationDialog>();
+            LoadTaskbarIcon(trayVm, authDialog);
+        }
+
+        public async void Application_Exit(object sender, ExitEventArgs e)
+        {
             _tb.Visibility = Visibility.Hidden;
             _tb.Dispose();
+
+            // Workaround for application shutdown hang: https://github.com/dotnet/extensions/issues/1363
+            var lifetime = _host.Services.GetService<IHostLifetime>() as IDisposable;
+            lifetime?.Dispose();
+
+            await _host.StopAsync().ConfigureAwait(true);
+            _host.Dispose();
         }
 
-        public void LoadTaskbarIcon()
+        [SuppressMessage("Simplification", "RCS1021:Convert lambda expression body to expression-body.", Justification = "Clarity and consistency")]
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var trayVm = _container.Resolve<TrayIconViewModel>();
-            var authDialog = _container.Resolve<AuthenticationDialog>();
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder.AddThumbConfiguration("Matrix");
+                    builder.AddCommandLine(args);
+                })
+                .ConfigureLogging((hostContext, logging) =>
+                {
+                    logging.UseThumbLogging(hostContext.Configuration);
+                    logging.AddLog4Net();
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>((hostContext, builder) =>
+                {
+                    var config = hostContext.Configuration;
+                    builder.RegisterModule(new ThumbCoreModule(config));
+                    builder.RegisterModule(new ThumbWpfModule(config));
+                    builder.RegisterModule(new MatrixModule());
+                    builder.RegisterModule(new MatrixWpfModule());
+                })
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddHostedService<MatrixBackgroundService>();
+                });
+        }
 
+        private void LoadTaskbarIcon(TrayIconViewModel trayVm, AuthenticationDialog authDialog)
+        {
             trayVm.OnExitApplication += (s, e) => Application.Current.Shutdown();
             trayVm.OnAuthenticationRequested += (s, e) => authDialog.Show();
 
