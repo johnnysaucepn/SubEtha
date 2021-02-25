@@ -11,6 +11,7 @@ namespace Howatworks.Thumb.Core
         private readonly string _defaultAppStoragePath;
         private readonly string _defaultJournalPath;
         private readonly string _defaultBindingsPath;
+        private readonly string _logFolder;
         public Dictionary<string, string> DefaultConfig { get; }
 
         public ThumbConfigurationContext(string appName)
@@ -32,6 +33,7 @@ namespace Howatworks.Thumb.Core
             _defaultAppStoragePath = Path.Combine(appData, "Howatworks", appName);
             _defaultJournalPath = Path.Combine(savedGamesPath, "Frontier Developments", "Elite Dangerous");
             _defaultBindingsPath = Path.Combine(appData, "Frontier Developments", "Elite Dangerous", "Options", "Bindings");
+            _logFolder = Path.Combine(_defaultAppStoragePath, "Logs");
         }
 
         public IDictionary<string,string> GetDefaultConfig()
@@ -45,7 +47,7 @@ namespace Howatworks.Thumb.Core
                 ["BindingsFolder"] = _defaultBindingsPath,
                 ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)",
                 ["JournalMonitorStateFolder"] = _defaultAppStoragePath,
-                ["LogFolder"] = _defaultAppStoragePath
+                ["LogFolder"] = _logFolder
             };
         }
     }

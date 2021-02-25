@@ -29,8 +29,7 @@ namespace Howatworks.Matrix.Site
                 .ConfigureLogging(logging =>
                 {
                     var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                    var workingFolder = Path.Combine(appDataFolder, "Howatworks", "Matrix");
-                    var logFolder = Path.Combine(workingFolder, "Logs");
+                    var logFolder = Path.Combine(appDataFolder, "Howatworks", "Matrix", "Logs");
                     Directory.CreateDirectory(logFolder);
 
                     GlobalContext.Properties["logfolder"] = logFolder;
