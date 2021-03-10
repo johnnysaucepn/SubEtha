@@ -1,45 +1,45 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using log4net;
-using log4net.Config;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Howatworks.Matrix.Site
 {
     public static class Program
     {
-        private static string _appDataFolder;
-        private static string _workingFolder;
-        private static string _logFolder;
-
         public static void Main(string[] args)
         {
-            _appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            _workingFolder = Path.Combine(_appDataFolder, "Howatworks", "Matrix");
-            _logFolder = Path.Combine(_workingFolder, "Logs");
-            Directory.CreateDirectory(_logFolder);
-
-            GlobalContext.Properties["logfolder"] = _logFolder;
-            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-
-
-            CreateWebHostBuilder(args).Build().Run();
+            CreateHostBuilder(args)
+                .Build()
+                .Run();
         }
 
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((builderContext, config) =>
+        [SuppressMessage("Simplification", "RCS1021:Convert lambda expression body to expression-body.", Justification = "Clarity and consistency")]
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration(builder =>
                 {
-                    var env = builderContext.HostingEnvironment;
-
-                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    builder.AddCommandLine(args);
                 })
-                .UseStartup<Startup>();
+                .ConfigureLogging(logging =>
+                {
+                    var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                    var logFolder = Path.Combine(appDataFolder, "Howatworks", "Matrix", "Logs");
+                    Directory.CreateDirectory(logFolder);
 
+                    GlobalContext.Properties["logfolder"] = logFolder;
+
+                    logging.AddLog4Net();
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+        }
     }
 }

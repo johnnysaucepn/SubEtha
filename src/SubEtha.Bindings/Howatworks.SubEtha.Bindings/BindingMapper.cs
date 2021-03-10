@@ -12,7 +12,9 @@ namespace Howatworks.SubEtha.Bindings
 
         private readonly Lazy<Dictionary<string, Button>> _buttonLookup;
 
-        public event EventHandler BindingsChanged; // not currently used - static bindings don't change
+#pragma warning disable 67
+        public event EventHandler BindingsChanged; //not currently used - static bindings don't change
+#pragma warning restore 67
 
         public BindingMapper(BindingSet bindingSet)
         {
@@ -28,7 +30,6 @@ namespace Howatworks.SubEtha.Bindings
                         p => p.GetValue(_bindingSet) as Button,
                         StringComparer.OrdinalIgnoreCase
                     );
-
             });
         }
 

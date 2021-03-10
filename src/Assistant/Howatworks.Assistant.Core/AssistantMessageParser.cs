@@ -28,19 +28,14 @@ namespace Howatworks.Assistant.Core
 
             Log.Info($"Received '{messageType}' message '{messageString}'");
 
-            switch (messageType)
+            return messageType switch
             {
-                case AssistantMessageType.ActivateBinding:
-                    return JsonConvert.DeserializeObject<ActivateBindingMessage>(messageString, _serializerSettings);
-                case AssistantMessageType.StartActivateBinding:
-                    return JsonConvert.DeserializeObject<StartActivateBindingMessage>(messageString, _serializerSettings);
-                case AssistantMessageType.EndActivateBinding:
-                    return JsonConvert.DeserializeObject<EndActivateBindingMessage>(messageString, _serializerSettings);
-                case AssistantMessageType.GetAvailableBindings:
-                    return JsonConvert.DeserializeObject<GetAvailableBindingsMessage>(messageString, _serializerSettings);
-                default:
-                    return new RawMessage { MessageContent = messageString };
-            }
+                AssistantMessageType.ActivateBinding => JsonConvert.DeserializeObject<ActivateBindingMessage>(messageString, _serializerSettings),
+                AssistantMessageType.StartActivateBinding => JsonConvert.DeserializeObject<StartActivateBindingMessage>(messageString, _serializerSettings),
+                AssistantMessageType.EndActivateBinding => JsonConvert.DeserializeObject<EndActivateBindingMessage>(messageString, _serializerSettings),
+                AssistantMessageType.GetAvailableBindings => JsonConvert.DeserializeObject<GetAvailableBindingsMessage>(messageString, _serializerSettings),
+                _ => new RawMessage { MessageContent = messageString },
+            };
         }
     }
 }

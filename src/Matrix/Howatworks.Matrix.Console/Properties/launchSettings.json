@@ -3,7 +3,7 @@
     "Howatworks.Matrix.Console": {
       "commandName": "Project",
       "environmentVariables": {
-        "HOSTINGENVIRONMENT": "vs"
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }

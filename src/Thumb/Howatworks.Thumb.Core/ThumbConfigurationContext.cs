@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -7,13 +6,15 @@ using PInvoke;
 
 namespace Howatworks.Thumb.Core
 {
-    public class ThumbConfigBuilder
+    public class ThumbConfigurationContext
     {
         private readonly string _defaultAppStoragePath;
         private readonly string _defaultJournalPath;
         private readonly string _defaultBindingsPath;
+        private readonly string _logFolder;
+        public Dictionary<string, string> DefaultConfig { get; }
 
-        public ThumbConfigBuilder(string appName)
+        public ThumbConfigurationContext(string appName)
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
@@ -32,11 +33,12 @@ namespace Howatworks.Thumb.Core
             _defaultAppStoragePath = Path.Combine(appData, "Howatworks", appName);
             _defaultJournalPath = Path.Combine(savedGamesPath, "Frontier Developments", "Elite Dangerous");
             _defaultBindingsPath = Path.Combine(appData, "Frontier Developments", "Elite Dangerous", "Options", "Bindings");
+            _logFolder = Path.Combine(_defaultAppStoragePath, "Logs");
         }
 
-        public IConfiguration Build()
+        public IDictionary<string,string> GetDefaultConfig()
         {
-            var defaultConfig = new Dictionary<string, string>
+            return new Dictionary<string, string>
             {
                 ["JournalFolder"] = _defaultJournalPath,
                 ["JournalPattern"] = "Journal.*.log",
@@ -45,17 +47,8 @@ namespace Howatworks.Thumb.Core
                 ["BindingsFolder"] = _defaultBindingsPath,
                 ["ActiveWindowTitle"] = "Elite - Dangerous (CLIENT)",
                 ["JournalMonitorStateFolder"] = _defaultAppStoragePath,
-                ["LogFolder"] = _defaultAppStoragePath
-        };
-            var env = Environment.GetEnvironmentVariable("HOSTINGENVIRONMENT");
-            var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables("THUMB_")
-                .AddInMemoryCollection(defaultConfig)
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{env}.json", true)
-                .Build();
-
-            return config;
+                ["LogFolder"] = _logFolder
+            };
         }
     }
 }

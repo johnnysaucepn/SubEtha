@@ -25,7 +25,5 @@ namespace Howatworks.Thumb.Console
         {
             return KeyPresses().ToObservable(TaskPoolScheduler.Default).Publish().RefCount();
         }
-
     }
-
 }

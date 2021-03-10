@@ -171,6 +171,5 @@ namespace Howatworks.Assistant.Core.ControlSimulators
             var response = User32.SendInput(inputs.Length, inputs, Marshal.SizeOf(key));
             return response;
         }
-
     }
 }

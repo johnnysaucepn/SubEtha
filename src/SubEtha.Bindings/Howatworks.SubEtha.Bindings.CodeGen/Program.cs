@@ -7,9 +7,9 @@ using System.Xml.Linq;
 
 namespace Howatworks.SubEtha.Bindings.CodeGen
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
                 .AddCommandLine(args)

@@ -1,41 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-    <IsTestProject>false</IsTestProject>
     <OutputType>Library</OutputType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="SocketTest.html" />
-    <None Remove="StaticContent\css\custom.css" />
-    <None Remove="StaticContent\css\landscape.css" />
-    <None Remove="StaticContent\css\portrait.css" />
-    <None Remove="StaticContent\css\theme-ed.css" />
-    <None Remove="StaticContent\favicon.ico" />
-    <None Remove="StaticContent\fonts\EUROCAPS.TTF" />
-    <None Remove="StaticContent\fonts\Sintony-Regular.ttf" />
-    <None Remove="StaticContent\js\assistant.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="StaticContent\css\custom.css" />
-    <EmbeddedResource Include="StaticContent\css\landscape.css" />
-    <EmbeddedResource Include="StaticContent\css\portrait.css" />
-    <EmbeddedResource Include="StaticContent\css\theme-ed.css" />
-    <EmbeddedResource Include="StaticContent\favicon.ico" />
-    <EmbeddedResource Include="StaticContent\fonts\EUROCAPS.TTF" />
-    <EmbeddedResource Include="StaticContent\fonts\Sintony-Regular.ttf" />
-    <EmbeddedResource Include="StaticContent\index.html" />
-    <EmbeddedResource Include="StaticContent\js\assistant.js" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
     <PackageReference Include="InputSimulatorStandard" Version="1.0.0" />
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.2" />
     <PackageReference Include="PInvoke.User32" Version="0.7.78" />
   </ItemGroup>
 
