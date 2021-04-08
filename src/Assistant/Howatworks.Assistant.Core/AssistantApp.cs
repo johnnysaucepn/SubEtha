@@ -53,44 +53,52 @@ namespace Howatworks.Assistant.Core
 
         public async Task RunAsync(CancellationToken token)
         {
-            Log.Info("Starting up");
-
-            _monitor.JournalFileWatch.Where(x => x.Action == JournalWatchAction.Started).Subscribe(
-                e => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'")
-            );
-
-            _statusManager.ControlStateObservable
-                .Throttle(TimeSpan.FromSeconds(1))
-                .Subscribe(_ => _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status"));
-
-            var startTime = _state.LastEntrySeen ?? DateTimeOffset.MinValue;
-            var source = new JournalEntrySource(_parser, startTime, _monitor);
-
-            var publisher = new JournalEntryPublisher(source);
-            var publication = publisher.Observable.Publish();
-
-            _statusManager.SubscribeTo(publication);
-            _processor.StartListening(token);
-
-            publication.Subscribe(t => _updateSubject.OnNext(t.Entry.Timestamp));
-
-            Updates
-                .Subscribe(e =>
-                {
-                    var lastEntry = e.Value;
-                    var lastChecked = e.Timestamp;
-                    Log.Info($"Updated at {lastChecked}, last entry stamped {lastEntry}");
-                    _state.Update(lastChecked, lastEntry);
-                });
-
-            using (publication.Connect())
+            try
             {
-                while (!token.IsCancellationRequested)
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+                Log.Info("Starting up");
 
-                    publisher.Poll();
+                _monitor.JournalFileWatch.Where(x => x.Action == JournalWatchAction.Started).Subscribe(
+                    e => _notifier.Notify(NotificationPriority.High, NotificationEventType.FileSystem, $"Started watching '{e.File.FullName}'")
+                );
+
+                _statusManager.ControlStateObservable
+                    .Throttle(TimeSpan.FromSeconds(1))
+                    .Subscribe(_ => _notifier.Notify(NotificationPriority.High, NotificationEventType.Update, "Updated control status"));
+
+                var startTime = _state.LastEntrySeen ?? DateTimeOffset.MinValue;
+                var source = new JournalEntrySource(_parser, startTime, _monitor);
+
+                var publisher = new JournalEntryPublisher(source);
+                var publication = publisher.Observable.Publish();
+
+                _statusManager.SubscribeTo(publication);
+                _processor.StartListening(token);
+
+                publication.Subscribe(t => _updateSubject.OnNext(t.Entry.Timestamp));
+
+                Updates
+                    .Subscribe(e =>
+                    {
+                        var lastEntry = e.Value;
+                        var lastChecked = e.Timestamp;
+                        Log.Info($"Updated at {lastChecked}, last entry stamped {lastEntry}");
+                        _state.Update(lastChecked, lastEntry);
+                    });
+
+                using (publication.Connect())
+                {
+                    while (!token.IsCancellationRequested)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+
+                        publisher.Poll();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                throw;
             }
         }
 
