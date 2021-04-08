@@ -32,7 +32,10 @@ namespace Howatworks.SubEtha.Bindings
 
         [XmlElement]
         public ButtonBinding Secondary { get; set; }
+    }
 
+    public class ToggleButton : Button
+    {
         [XmlElement]
         public Setting<bool> ToggleOn { get; set; } // TODO: check data type
     }

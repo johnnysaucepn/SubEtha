@@ -71,6 +71,11 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                         if (children.Any(x => x.Name == "Primary") && children.Any(x => x.Name == "Secondary"))
                         {
                             controlType = "Button";
+
+                            if (children.Any(x => x.Name == "ToggleOn"))
+                            {
+                                controlType = "ToggleButton";
+                            }
                         }
                         if (children.Any(x => x.Name == "Binding"))
                         {

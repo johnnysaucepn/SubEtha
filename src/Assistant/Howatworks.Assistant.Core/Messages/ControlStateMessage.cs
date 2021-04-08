@@ -13,6 +13,9 @@ namespace Howatworks.Assistant.Core.Messages
         public bool Supercruise { get; set; }
 
         [JsonProperty]
+        public bool Srv { get; set; }
+
+        [JsonProperty]
         public bool HardpointsDeployed { get; set; }
 
         [JsonProperty]

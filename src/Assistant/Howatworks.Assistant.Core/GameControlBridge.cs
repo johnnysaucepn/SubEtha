@@ -38,9 +38,9 @@ namespace Howatworks.Assistant.Core
                 .Select(_ => Unit.Default);
         }
 
-        public IReadOnlyCollection<string> GetAllBoundButtons()
+        public IReadOnlyCollection<BoundButton> GetAllBoundButtons()
         {
-            return _bindingMapper?.GetBoundButtons("Keyboard", "Mouse") ?? new List<string>();
+            return _bindingMapper?.GetBoundButtons("Keyboard", "Mouse") ?? new List<BoundButton>();
         }
 
         public void ActivateKeyCombination(string bindingName)

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Howatworks.SubEtha.Bindings
 {
-    public class BindingMapper : IBindingMapper
+    public partial class BindingMapper : IBindingMapper
     {
         private readonly BindingSet _bindingSet;
 
@@ -52,15 +52,22 @@ namespace Howatworks.SubEtha.Bindings
             return _buttonLookup.Value.ContainsKey(name) ? _buttonLookup.Value[name] : null;
         }
 
-        public IReadOnlyCollection<string> GetBoundButtons(params string[] devices)
+        public IReadOnlyCollection<BoundButton> GetBoundButtons(params string[] devices)
         {
-            var bindings =
-                _buttonLookup.Value.Where(x =>
-                    IsBound(devices, x));
+            var bindings = _buttonLookup.Value.Where(x => IsBound(devices, x));
 
-            var bindingNames = bindings.Select(y => y.Key);
+            var boundButtons = bindings.Select(y =>
+            {
+                var bindingName = y.Key;
+                if (y.Value is ToggleButton t)
+                {
+                    var toggleMode = t.ToggleOn.Value ? BindingActivationType.Press : BindingActivationType.Hold;
+                    return new BoundButton(bindingName, toggleMode);
+                }
+                return new BoundButton(bindingName);
+            });
 
-            return bindingNames.ToList();
+            return boundButtons.ToList();
         }
 
         private static bool IsBound(string[] devices, KeyValuePair<string, Button> buttonBinding)

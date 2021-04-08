@@ -6,9 +6,9 @@ namespace Howatworks.Assistant.Core.Messages
     {
         public AssistantMessageType MessageType => AssistantMessageType.AvailableBindings;
 
-        public IReadOnlyCollection<string> Bindings { get; set; }
+        public IEnumerable<string> Bindings { get; set; }
 
-        public AvailableBindingsMessage(IReadOnlyCollection<string> bindings)
+        public AvailableBindingsMessage(IEnumerable<string> bindings)
         {
             Bindings = bindings;
         }

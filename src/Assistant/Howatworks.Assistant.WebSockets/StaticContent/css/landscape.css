@@ -50,7 +50,6 @@ button[data-edbutton="CycleNextTarget"] {
 
 /* #travel-realspace */
 
-
 button[data-edbutton="UseBoostJuice"] {
     grid-area: 1/1;
 }
@@ -79,6 +78,10 @@ button[data-edbutton="DeployHeatSink"] {
     grid-area: 1/7;
 }
 
+button[data-edbutton="ShipSpotLightToggle"] {
+    grid-area: 1/8;
+}
+
 /* #travel-supercruise */
 
 button[data-edbutton="SetSpeedZero"] {
@@ -99,7 +102,33 @@ button[data-edbutton="ExplorationFSSEnter"] {
     grid-area: 1/5;
 }
 
-/* #mode-combat */
+/* #travel-srv */
+
+button[data-edbutton="VerticalThrustersButton"] {
+    grid-area: 1/1;
+}
+
+button[data-edbutton="ToggleCargoScoop_Buggy"] {
+    grid-area: 1/2;
+}
+
+button[data-edbutton="AutoBreakBuggyButton"] {
+    grid-area: 1/3;
+}
+
+button[data-edbutton="RecallDismissShip"] {
+    grid-area: 1/4;
+}
+
+button[data-edbutton="ToggleDriveAssist"] {
+    grid-area: 1/5;
+}
+
+button[data-edbutton="HeadlightsBuggyButton"] {
+    grid-area: 1/8;
+}
+
+/* #mode-shipcombat */
 
 button[data-edbutton="SelectHighestThreat"] {
     grid-area: 1/1;

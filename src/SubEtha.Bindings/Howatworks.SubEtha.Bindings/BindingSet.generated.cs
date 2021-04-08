@@ -19,7 +19,7 @@
        public Setting<string> YawToRollMode { get; set; } // TODO: enum?
        public Setting<decimal> YawToRollSensitivity { get; set; }
        public Setting<string> YawToRollMode_FAOff { get; set; } // TODO: enum?
-       public Button YawToRollButton { get; set; }
+       public ToggleButton YawToRollButton { get; set; }
        public Axis RollAxisRaw { get; set; }
        public Button RollLeftButton { get; set; }
        public Button RollRightButton { get; set; }
@@ -35,7 +35,7 @@
        public Axis AheadThrust { get; set; }
        public Button ForwardThrustButton { get; set; }
        public Button BackwardThrustButton { get; set; }
-       public Button UseAlternateFlightValuesToggle { get; set; }
+       public ToggleButton UseAlternateFlightValuesToggle { get; set; }
        public Axis YawAxisAlternate { get; set; }
        public Axis RollAxisAlternate { get; set; }
        public Axis PitchAxisAlternate { get; set; }
@@ -43,7 +43,7 @@
        public Axis VerticalThrustAlternate { get; set; }
        public Axis ThrottleAxis { get; set; }
        public Setting<string> ThrottleRange { get; set; } // TODO: enum?
-       public Button ToggleReverseThrottleInput { get; set; }
+       public ToggleButton ToggleReverseThrottleInput { get; set; }
        public Button ForwardKey { get; set; }
        public Button BackwardKey { get; set; }
        public Setting<decimal> ThrottleIncrement { get; set; }
@@ -75,12 +75,12 @@
        public Axis AheadThrust_Landing { get; set; }
        public Button ForwardThrustButton_Landing { get; set; }
        public Button BackwardThrustButton_Landing { get; set; }
-       public Button ToggleFlightAssist { get; set; }
+       public ToggleButton ToggleFlightAssist { get; set; }
        public Button UseBoostJuice { get; set; }
        public Button HyperSuperCombination { get; set; }
        public Button Supercruise { get; set; }
        public Button Hyperspace { get; set; }
-       public Button DisableRotationCorrectToggle { get; set; }
+       public ToggleButton DisableRotationCorrectToggle { get; set; }
        public Button OrbitLinesToggle { get; set; }
        public Button SelectTarget { get; set; }
        public Button CycleNextTarget { get; set; }
@@ -102,7 +102,7 @@
        public Button CycleFireGroupPrevious { get; set; }
        public Button DeployHardpointToggle { get; set; }
        public Setting<bool> DeployHardpointsOnFire { get; set; } // TODO: check data type
-       public Button ToggleButtonUpInput { get; set; }
+       public ToggleButton ToggleButtonUpInput { get; set; }
        public Button DeployHeatSink { get; set; }
        public Button ShipSpotLightToggle { get; set; }
        public Axis RadarRangeAxis { get; set; }
@@ -113,10 +113,10 @@
        public Button IncreaseSystemsPower { get; set; }
        public Button ResetPowerDistribution { get; set; }
        public Button HMDReset { get; set; }
-       public Button ToggleCargoScoop { get; set; }
+       public ToggleButton ToggleCargoScoop { get; set; }
        public Button EjectAllCargo { get; set; }
        public Button LandingGearToggle { get; set; }
-       public Button MicrophoneMute { get; set; }
+       public ToggleButton MicrophoneMute { get; set; }
        public Setting<string> MuteButtonMode { get; set; } // TODO: enum?
        public Setting<string> CqcMuteButtonMode { get; set; } // TODO: enum?
        public Button UseShieldCell { get; set; }
@@ -142,8 +142,8 @@
        public Setting<bool> EnableCameraLockOn { get; set; } // TODO: check data type
        public Button GalaxyMapOpen { get; set; }
        public Button SystemMapOpen { get; set; }
-       public Button ShowPGScoreSummaryInput { get; set; }
-       public Button HeadLookToggle { get; set; }
+       public ToggleButton ShowPGScoreSummaryInput { get; set; }
+       public ToggleButton HeadLookToggle { get; set; }
        public Button Pause { get; set; }
        public Button FriendsMenu { get; set; }
        public Button OpenCodexGoToDiscovery { get; set; }
@@ -197,9 +197,9 @@
        public Axis CamZoomAxis { get; set; }
        public Button CamZoomIn { get; set; }
        public Button CamZoomOut { get; set; }
-       public Button CamTranslateZHold { get; set; }
+       public ToggleButton CamTranslateZHold { get; set; }
        public Button GalaxyMapHome { get; set; }
-       public Button ToggleDriveAssist { get; set; }
+       public ToggleButton ToggleDriveAssist { get; set; }
        public Setting<bool> DriveAssistDefault { get; set; } // TODO: check data type
        public Setting<string> MouseBuggySteeringXMode { get; set; } // TODO: enum?
        public Setting<bool> MouseBuggySteeringXDecay { get; set; } // TODO: check data type
@@ -216,10 +216,10 @@
        public Axis BuggyPitchAxis { get; set; }
        public Button BuggyPitchUpButton { get; set; }
        public Button BuggyPitchDownButton { get; set; }
-       public Button VerticalThrustersButton { get; set; }
+       public ToggleButton VerticalThrustersButton { get; set; }
        public Button BuggyPrimaryFireButton { get; set; }
        public Button BuggySecondaryFireButton { get; set; }
-       public Button AutoBreakBuggyButton { get; set; }
+       public ToggleButton AutoBreakBuggyButton { get; set; }
        public Button HeadlightsBuggyButton { get; set; }
        public Button ToggleBuggyTurretButton { get; set; }
        public Button BuggyCycleFireGroupNext { get; set; }
@@ -240,7 +240,7 @@
        public Setting<decimal> BuggyTurretMouseLinearity { get; set; }
        public Axis DriveSpeedAxis { get; set; }
        public Setting<string> BuggyThrottleRange { get; set; } // TODO: enum?
-       public Button BuggyToggleReverseThrottleInput { get; set; }
+       public ToggleButton BuggyToggleReverseThrottleInput { get; set; }
        public Setting<decimal> BuggyThrottleIncrement { get; set; }
        public Button IncreaseSpeedButtonMax { get; set; }
        public Button DecreaseSpeedButtonMax { get; set; }
@@ -250,7 +250,7 @@
        public Button IncreaseWeaponsPower_Buggy { get; set; }
        public Button IncreaseSystemsPower_Buggy { get; set; }
        public Button ResetPowerDistribution_Buggy { get; set; }
-       public Button ToggleCargoScoop_Buggy { get; set; }
+       public ToggleButton ToggleCargoScoop_Buggy { get; set; }
        public Button EjectAllCargo_Buggy { get; set; }
        public Button RecallDismissShip { get; set; }
        public Button UIFocus_Buggy { get; set; }
@@ -263,7 +263,7 @@
        public Button SystemMapOpen_Buggy { get; set; }
        public Button OpenCodexGoToDiscovery_Buggy { get; set; }
        public Button PlayerHUDModeToggle_Buggy { get; set; }
-       public Button HeadLookToggle_Buggy { get; set; }
+       public ToggleButton HeadLookToggle_Buggy { get; set; }
        public Button MultiCrewToggleMode { get; set; }
        public Button MultiCrewPrimaryFire { get; set; }
        public Button MultiCrewSecondaryFire { get; set; }
@@ -312,7 +312,7 @@
        public Button FreeCamSpeedDec { get; set; }
        public Axis MoveFreeCamY { get; set; }
        public Setting<string> ThrottleRangeFreeCam { get; set; } // TODO: enum?
-       public Button ToggleReverseThrottleInputFreeCam { get; set; }
+       public ToggleButton ToggleReverseThrottleInputFreeCam { get; set; }
        public Button MoveFreeCamForward { get; set; }
        public Button MoveFreeCamBackwards { get; set; }
        public Axis MoveFreeCamX { get; set; }
@@ -380,7 +380,7 @@
        public Setting<decimal> FSSMouseLinearity { get; set; }
        public Button ExplorationFSSTarget { get; set; }
        public Button ExplorationFSSShowHelp { get; set; }
-       public Button ExplorationSAAChangeScannedAreaViewToggle { get; set; }
+       public ToggleButton ExplorationSAAChangeScannedAreaViewToggle { get; set; }
        public Button ExplorationSAAExitThirdPerson { get; set; }
        public Setting<string> SAAThirdPersonMouseXMode { get; set; } // TODO: enum?
        public Setting<bool> SAAThirdPersonMouseXDecay { get; set; } // TODO: check data type
