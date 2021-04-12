@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Howatworks.Assistant.Wpf": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

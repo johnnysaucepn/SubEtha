@@ -1,9 +1,8 @@
 ﻿.button-grid {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 /* #navigation-zone */
-
 button[data-edbutton="IncreaseEnginesPower"] {
     grid-area: 1/2;
 }
@@ -21,31 +20,31 @@ button[data-edbutton="IncreaseWeaponsPower"] {
 }
 
 button[data-edbutton="GalaxyMapOpen"] {
-    grid-area: 1/5;
+    grid-area: 1/4;
 }
 
 button[data-edbutton="SystemMapOpen"] {
-    grid-area: 2/5;
+    grid-area: 2/4;
 }
 
 button#meta-jump {
-    grid-area: 1/7;
+    grid-area: 3/4;
 }
 
 button[data-edbutton="TargetNextRouteSystem"] {
-    grid-area: 1/6;
+    grid-area: 4/4;
 }
 
 button[data-edbutton="SelectTarget"] {
-    grid-area: 2/6;
+    grid-area: 4/1;
 }
 
 button[data-edbutton="CyclePreviousTarget"] {
-    grid-area: 2/7;
+    grid-area: 4/2;
 }
 
 button[data-edbutton="CycleNextTarget"] {
-    grid-area: 2/8;
+    grid-area: 4/3;
 }
 
 /* #travel-realspace */
@@ -67,16 +66,21 @@ button[data-edbutton="Supercruise"] {
     grid-area: 1/4;
 }
 
+
 button[data-edbutton="ToggleFlightAssist"] {
-    grid-area: 1/5;
+    grid-area: 2/1;
 }
 
 button[data-edbutton="ToggleButtonUpInput"] {
-    grid-area: 1/6;
+    grid-area: 2/2;
 }
 
 button[data-edbutton="DeployHeatSink"] {
-    grid-area: 1/7;
+    grid-area: 2/3;
+}
+
+button[data-edbutton="ShipSpotLightToggle"] {
+    grid-area: 2/4;
 }
 
 /* #travel-supercruise */
@@ -96,10 +100,36 @@ button[data-edbutton="SetSpeed100"] {
 /* Supercruise drop in same location as #travel-realspace */
 
 button[data-edbutton="ExplorationFSSEnter"] {
-    grid-area: 1/5;
+    grid-area: 2/4;
 }
 
-/* #mode-combat */
+/* #travel-srv */
+
+button[data-edbutton="VerticalThrustersButton"] {
+    grid-area: 1/1;
+}
+
+button[data-edbutton="ToggleCargoScoop_Buggy"] {
+    grid-area: 1/2;
+}
+
+button[data-edbutton="AutoBreakBuggyButton"] {
+    grid-area: 1/3;
+}
+
+button[data-edbutton="RecallDismissShip"] {
+    grid-area: 1/4;
+}
+
+button[data-edbutton="ToggleDriveAssist"] {
+    grid-area: 2/1;
+}
+
+button[data-edbutton="HeadlightsBuggyButton"] {
+    grid-area: 2/4;
+}
+
+/* #mode-shipcombat */
 
 button[data-edbutton="SelectHighestThreat"] {
     grid-area: 1/1;
@@ -119,19 +149,19 @@ button[data-edbutton="FireChaffLauncher"] {
 
 
 button[data-edbutton="CyclePreviousSubsystem"] {
-    grid-area: 1/5;
+    grid-area: 2/1;
 }
 
 button[data-edbutton="CycleNextSubsystem"] {
-    grid-area: 1/6;
+    grid-area: 2/2;
 }
 
 button[data-edbutton="UseShieldCell"] {
-    grid-area: 1/7;
+    grid-area: 2/3;
 }
 
 button[data-edbutton="ChargeECM"] {
-    grid-area: 1/8;
+    grid-area: 2/4;
 }
 
 /* #mode-fss */

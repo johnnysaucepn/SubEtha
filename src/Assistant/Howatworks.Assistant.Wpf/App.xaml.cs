@@ -2,11 +2,17 @@
 using Hardcodet.Wpf.TaskbarNotification;
 using Howatworks.Assistant.Core;
 using Howatworks.Thumb.Core;
-using System.Threading.Tasks;
 using System.Windows;
 using Howatworks.Thumb.Wpf;
-using System.Threading;
 using System;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
+using Howatworks.Assistant.WebSockets;
 
 namespace Howatworks.Assistant.Wpf
 {
@@ -16,56 +22,71 @@ namespace Howatworks.Assistant.Wpf
     public partial class App : Application
     {
         private TaskbarIcon _tb;
-        private IContainer _container;
-        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private readonly IHost _host;
 
-        public void Start()
+        public App()
         {
-            var config = new ThumbConfigBuilder("Assistant").Build();
-
-            var logger = new Log4NetThumbLogging(config);
-            logger.Configure();
-
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new ThumbCoreModule(config));
-            builder.RegisterModule(new ThumbWpfModule(config));
-            builder.RegisterModule(new AssistantModule(config));
-            builder.RegisterModule(new AssistantWpfModule());
-            _container = builder.Build();
-
-            using (var scope = _container.BeginLifetimeScope())
-            {
-                var app = _container.Resolve<AssistantApp>();
-
-                _tb = (TaskbarIcon)FindResource("TrayIcon");
-                LoadTaskbarIcon();
-
-                Task.Run(() =>
-                {
-                    var args = Environment.GetCommandLineArgs();
-                    app.Run(args, _cts.Token);
-                });
-            }
+            var args = Environment.GetCommandLineArgs();
+            _host = CreateHostBuilder(args)
+                .Build();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        public async void Application_Startup(object sender, StartupEventArgs e)
         {
-            base.OnStartup(e);
-            Start();
+            await _host.StartAsync().ConfigureAwait(true);
+
+            _tb = (TaskbarIcon)FindResource("TrayIcon");
+            LoadTaskbarIcon(_host.Services.GetRequiredService<TrayIconViewModel>());
         }
 
-        protected override void OnExit(ExitEventArgs e)
+        public async void Application_Exit(object sender, ExitEventArgs e)
         {
-            base.OnExit(e);
-            _cts.Cancel();
             _tb.Visibility = Visibility.Hidden;
             _tb.Dispose();
+
+            // Workaround for application shutdown hang: https://github.com/dotnet/extensions/issues/1363
+            var lifetime = _host.Services.GetService<IHostLifetime>() as IDisposable;
+            lifetime?.Dispose();
+
+            await _host.StopAsync().ConfigureAwait(true);
+            _host.Dispose();
         }
 
-        public void LoadTaskbarIcon()
+        [SuppressMessage("Simplification", "RCS1021:Convert lambda expression body to expression-body.", Justification = "Clarity and consistency")]
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var trayVm = _container.Resolve<TrayIconViewModel>();
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder.AddThumbConfiguration("Assistant");
+                    builder.AddCommandLine(args);
+                })
+                .ConfigureLogging((hostContext, logging) =>
+                {
+                    logging.UseThumbLogging(hostContext.Configuration);
+                    logging.AddLog4Net();
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>((hostContext, builder) =>
+                {
+                    var config = hostContext.Configuration;
+                    builder.RegisterModule(new ThumbCoreModule(config));
+                    builder.RegisterModule(new ThumbWpfModule(config));
+                    builder.RegisterModule(new AssistantModule());
+                    builder.RegisterModule(new AssistantWpfModule());
+                })
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddHostedService<AssistantBackgroundService>();
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+        }
 
+        private void LoadTaskbarIcon(TrayIconViewModel trayVm)
+        {
             trayVm.OnExitApplication += (s, e) => Application.Current.Shutdown();
 
             _tb.DataContext = trayVm;

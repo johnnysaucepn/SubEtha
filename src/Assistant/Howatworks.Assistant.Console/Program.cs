@@ -1,11 +1,15 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using Howatworks.Thumb.Console;
 using Howatworks.Thumb.Core;
 using Howatworks.Assistant.Core;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Reactive.Linq;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
+using Howatworks.Assistant.WebSockets;
 
 namespace Howatworks.Assistant.Console
 {
@@ -13,35 +17,41 @@ namespace Howatworks.Assistant.Console
     {
         public static void Main(string[] args)
         {
-            var config = new ThumbConfigBuilder("Assistant").Build();
+            CreateHostBuilder(args)
+                .Build()
+                .Run();
+        }
 
-            var logger = new Log4NetThumbLogging(config);
-            logger.Configure();
-
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new ThumbCoreModule(config));
-            builder.RegisterModule(new ThumbConsoleModule(config));
-            builder.RegisterModule(new AssistantModule(config));
-            var container = builder.Build();
-
-            using (var scope = container.BeginLifetimeScope())
-            {
-                var app = scope.Resolve<AssistantApp>();
-                var keyListener = scope.Resolve<ConsoleKeyListener>();
-
-                var cts = new CancellationTokenSource();
-                var reset = new ManualResetEventSlim(false);
-
-                Task.Run(() => app.Run(args, cts.Token));
-
-                keyListener.Observable.Where(k => k.Key == ConsoleKey.Escape).Subscribe(_ => reset.Set());
-
-                // Wait forever, unless something trips the switch
-                reset.Wait();
-
-                // Cancel the token to shut any pending operations down
-                cts.Cancel();
-            }
+        [SuppressMessage("Simplification", "RCS1021:Convert lambda expression body to expression-body.", Justification = "Clarity and consistency")]
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder.AddThumbConfiguration("Assistant");
+                    builder.AddCommandLine(args);
+                })
+                .ConfigureLogging((hostContext, logging) =>
+                {
+                    logging.UseThumbLogging(hostContext.Configuration);
+                    logging.AddLog4Net();
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>((hostContext, builder) =>
+                {
+                    var config = hostContext.Configuration;
+                    builder.RegisterModule(new ThumbCoreModule(config));
+                    builder.RegisterModule(new ThumbConsoleModule(config));
+                    builder.RegisterModule(new AssistantModule());
+                })
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddHostedService<AssistantBackgroundService>();
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
         }
     }
 }

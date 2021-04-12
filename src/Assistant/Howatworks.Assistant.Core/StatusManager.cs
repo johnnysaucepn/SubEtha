@@ -26,6 +26,7 @@ namespace Howatworks.Assistant.Core
         {
             State.LandingGearDown = status.HasFlag(StatusFlags.LandingGearDown);
             State.Supercruise = status.HasFlag(StatusFlags.Supercruise);
+            State.Srv = status.HasFlag(StatusFlags.InSrv);
             State.HardpointsDeployed = status.HasFlag(StatusFlags.HardPointsDeployed);
             State.LightsOn = status.HasFlag(StatusFlags.LightsOn);
             State.CargoScoopDeployed = status.HasFlag(StatusFlags.CargoScoopDeployed);

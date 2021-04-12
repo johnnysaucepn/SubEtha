@@ -38,9 +38,9 @@ namespace Howatworks.Assistant.Core
                 .Select(_ => Unit.Default);
         }
 
-        public IReadOnlyCollection<string> GetAllBoundButtons()
+        public IReadOnlyCollection<BoundButton> GetAllBoundButtons()
         {
-            return _bindingMapper?.GetBoundButtons("Keyboard", "Mouse") ?? new List<string>();
+            return _bindingMapper?.GetBoundButtons("Keyboard", "Mouse") ?? new List<BoundButton>();
         }
 
         public void ActivateKeyCombination(string bindingName)
@@ -96,7 +96,7 @@ namespace Howatworks.Assistant.Core
             return null;
         }
 
-        private void TriggerKeyCombination(Button button, Action<string,string[]> keyboardAction, Action<string> mouseAction)
+        private void TriggerKeyCombination(Button button, Action<string, string[]> keyboardAction, Action<string> mouseAction)
         {
             if (!DoesWindowHaveFocus(_activeWindowTitle))
             {
@@ -126,12 +126,12 @@ namespace Howatworks.Assistant.Core
                 return;
             }
 
-            var modifierNames = selectedButtonBinding.Modifier.Select(x => x.Key).ToArray();
+            var modifierNames = selectedButtonBinding.Modifier.Select(x => x.Key);
             Log.Info($"Pressing '{selectedButtonBinding.Key}' with '{(modifierNames.Any() ? string.Join(", ", modifierNames) : "no")}' modifiers");
 
             if (selectedButtonBinding.Device == "Keyboard")
             {
-                keyboardAction(selectedButtonBinding.Key, modifierNames);
+                keyboardAction(selectedButtonBinding.Key, modifierNames.ToArray());
             }
             else if (selectedButtonBinding.Device == "Mouse")
             {
@@ -157,7 +157,5 @@ namespace Howatworks.Assistant.Core
             Log.Debug($"Window '{windowTitle}' not in foreground");
             return false;
         }
-
-
     }
 }

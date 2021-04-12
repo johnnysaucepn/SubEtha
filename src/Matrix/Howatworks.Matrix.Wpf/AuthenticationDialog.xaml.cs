@@ -21,7 +21,7 @@ namespace Howatworks.Matrix.Wpf
     public partial class AuthenticationDialog : Window
     {
         readonly AuthenticationDialogViewModel _viewModel;
-        
+
         public AuthenticationDialog(AuthenticationDialogViewModel viewModel)
         {
             _viewModel = viewModel;

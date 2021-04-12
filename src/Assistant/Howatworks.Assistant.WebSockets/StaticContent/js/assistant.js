@@ -68,34 +68,31 @@ function init() {
 
     connection.open();
 
-    $(".edbutton:not(.press-and-hold)").each(function(i) {
-        $(this).on("click", function() {
-            var bindingName = $(this).attr('data-edbutton');
-            console.log("clicked " + bindingName);
-            if (connection.isOpen()) {
-                connection.sendBindingActivationRequest({ 'BindingName': bindingName });
-            }
-        });
+    $(document).on("click", ".edbutton:not(.press-and-hold)", function() {
+        var bindingName = $(this).attr('data-edbutton');
+        console.log("clicked " + bindingName);
+        if (connection.isOpen()) {
+            connection.sendBindingActivationRequest({ 'BindingName': bindingName });
+        }
     });
 
-    $(".edbutton.press-and-hold").each(function (i) {
-        $(this).on("pointerdown", function () {
-            var bindingName = $(this).attr('data-edbutton');
-            console.log("down " + bindingName);
-            heldBindingName = bindingName;
+    $(document).on("pointerdown", ".edbutton.press-and-hold", function () {
+        var bindingName = $(this).attr('data-edbutton');
+        console.log("down " + bindingName);
+        heldBindingName = bindingName;
+        if (connection.isOpen()) {
+            connection.sendBindingStartActivationRequest({ 'BindingName': bindingName });
+        }
+    });
+
+    $(document).on("pointerup pointerout", ".edbutton.press-and-hold", function () {
+        if (heldBindingName !== "") {
+            console.log("up " + heldBindingName);
             if (connection.isOpen()) {
-                connection.sendBindingStartActivationRequest({ 'BindingName': bindingName });
+                connection.sendBindingEndActivationRequest({ 'BindingName': heldBindingName });
             }
-        });
-        $(this).on("pointerup pointerout", function () {
-            if (heldBindingName !== "") {
-                console.log("up " + heldBindingName);
-                if (connection.isOpen()) {
-                    connection.sendBindingEndActivationRequest({ 'BindingName': heldBindingName });
-                }
-                heldBindingName = "";
-            }
-        });
+            heldBindingName = "";
+        }
     });
 
     $(window).on("focus", function () {
@@ -141,9 +138,9 @@ function onMessage(evt) {
         // As long as you have one of those, you should be able to hyper-jump.
         $("#meta-jump").each(function (i) {
             var button = $(this);
-            if (isInList(bindingList, "HyperSuperCombination")) {
+            if (bindingIsInList(bindingList, "HyperSuperCombination").found) {
                 button.attr("data-edbutton", "HyperSuperCombination");
-            } else if (isInList(bindingList, "Hyperspace")) {
+            } else if (bindingIsInList(bindingList, "Hyperspace").found) {
                 button.attr("data-edbutton", "Hyperspace");
             }
         });
@@ -151,9 +148,16 @@ function onMessage(evt) {
         $(".edbutton").each(function (i) {
             var button = $(this);
             var bindingName = button.attr("data-edbutton");
-            if (isInList(bindingList, bindingName)) {
+            var bindingMatch = bindingIsInList(bindingList, bindingName);
+            if (bindingMatch.found) {
                 button.removeClass("disabled");
                 button.prop("disabled", false);
+                if (bindingMatch.activation === "Hold") {
+                    button.addClass("press-and-hold");
+                } else {
+                    button.removeClass("press-and-hold");
+                }
+
             } else {
                 button.addClass("disabled");
                 button.prop("disabled", true);
@@ -162,24 +166,32 @@ function onMessage(evt) {
 
     } else if (parsedMessage.MessageType === "ControlState") {
         var supercruise = parsedMessage.Supercruise === true;
+        var srv = parsedMessage.Srv === true;
         var analysis = parsedMessage.HudAnalysisMode === true;
         var fssMode = parsedMessage.FssMode === true;
         var saaMode = parsedMessage.SaaMode === true;
 
-        // open slide 0 if real-space, 1 if supercruise
-        $("#travel-carousel").carousel(supercruise ? 1 : 0);
+        // open slide 0 if real-space, 1 if supercruise, 2 if SRV
+        $("#travel-zone").carousel(srv ? 2 : supercruise ? 1 : 0);
 
-        // open slide 2 if surface analysis, 1 for system scan, 0 for combat otherwise
-        $("#mode-carousel").carousel(saaMode ? 2 : fssMode ? 1 : 0);
+        // open slide 3 if srv, slide 2 if surface analysis, 1 for system scan, 0 for combat otherwise
+        $("#mode-zone").carousel(srv ? 3 : saaMode ? 2 : fssMode ? 1 : 0);
     }
 }
 
-function isInList(list, element) {
-    if (list === null) return false;
-    if (element === null) return false;
-    if (list.length === 0) return false;
+function bindingIsInList(list, element) {
+    if (list === null) return { found: false };
+    if (element === null) return { found: false };
+    if (list.length === 0) return { found: false };
 
-    return list.indexOf(element) >= 0;
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].startsWith(element)) {
+            var activation = list[i].endsWith(":Hold") ? "Hold" : "Press";
+            return { found: true, activation: activation };
+        }
+    }
+
+    return { found: false };
 }
 
 function onError(evt) {

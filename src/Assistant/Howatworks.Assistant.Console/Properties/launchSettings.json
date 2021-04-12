@@ -2,8 +2,9 @@
   "profiles": {
     "Howatworks.Assistant.Console": {
       "commandName": "Project",
+      "launchBrowser": true,
       "environmentVariables": {
-        "HOSTINGENVIRONMENT": "vs"
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }

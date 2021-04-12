@@ -3,7 +3,7 @@
     "Howatworks.Matrix.Wpf": {
       "commandName": "Project",
       "environmentVariables": {
-        "HOSTINGENVIRONMENT": "vs"
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }
