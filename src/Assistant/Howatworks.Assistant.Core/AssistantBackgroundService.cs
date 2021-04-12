@@ -32,7 +32,7 @@ namespace Howatworks.Assistant.Core
             {
                 await _app.RunAsync(stoppingToken).ConfigureAwait(false);
             }
-            catch (OperationCanceledException c)
+            catch (OperationCanceledException)
             {
                 _logger.LogInformation($"{nameof(AssistantBackgroundService)} cancelled");
             }
