@@ -85,7 +85,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Assistant.WebSoc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Thumb.WebSockets", "Thumb\Howatworks.Thumb.WebSockets\Howatworks.Thumb.WebSockets.csproj", "{B3CF7EDB-F5A8-432D-9634-F44706DEDD4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.Assistant.WebSockets.Test", "Assistant\Howatworks.Assistant.WebSockets.Test\Howatworks.Assistant.WebSockets.Test.csproj", "{FC151E3B-1285-44D3-9E98-61DDBFED08CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.Assistant.WebSockets.Test", "Assistant\Howatworks.Assistant.WebSockets.Test\Howatworks.Assistant.WebSockets.Test.csproj", "{FC151E3B-1285-44D3-9E98-61DDBFED08CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
