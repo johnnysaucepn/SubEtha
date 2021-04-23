@@ -3,6 +3,7 @@ using log4net;
 using log4net.Config;
 using Microsoft.Extensions.Configuration;
 using PInvoke;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
