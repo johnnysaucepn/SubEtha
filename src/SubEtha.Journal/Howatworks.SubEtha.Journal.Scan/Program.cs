@@ -70,7 +70,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             {
                 parser.Parse(line);
             }
-            catch (JournalParseException ex)
+            catch (Exception ex) when (ex is UnrecognizedJournalException || ex is JournalParseException)
             {
                 Log.Warn(line);
                 Log.Warn(ex.Message);
