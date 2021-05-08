@@ -3,6 +3,7 @@ using log4net;
 using log4net.Config;
 using Microsoft.Extensions.Configuration;
 using PInvoke;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -70,7 +71,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             {
                 parser.Parse(line);
             }
-            catch (JournalParseException ex)
+            catch (Exception ex) when (ex is UnrecognizedJournalException || ex is JournalParseException)
             {
                 Log.Warn(line);
                 Log.Warn(ex.Message);

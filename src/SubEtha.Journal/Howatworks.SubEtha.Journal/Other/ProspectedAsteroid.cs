@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Howatworks.SubEtha.Journal.Other
 {
@@ -12,7 +13,10 @@ namespace Howatworks.SubEtha.Journal.Other
             public decimal Proportion { get; set; } // TODO: check data type
         }
 
+        public List<MaterialItem> Materials { get; set; }
+
         public string Content { get; set; } // TODO: consider enum (High/Medium/Low)
+        public string Content_Localised { get; set; }
 
         public string MotherlodeMaterial { get; set; }
         public decimal Remaining { get; set; } // TODO: check data type
