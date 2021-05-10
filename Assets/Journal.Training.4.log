@@ -1,7 +1,0 @@
-{ "timestamp":"2017-01-09T01:37:05Z", "event":"Fileheader", "part":1, "language":"English\\UK", "gameversion":"2.2", "build":"r126898/r0 " }
-{ "timestamp":"2017-01-09T01:43:50Z", "event":"DockingRequested", "StationName":"Azeban City" }
-{ "timestamp":"2017-01-09T01:43:50Z", "event":"ReceiveText", "From":"Azeban City", "Message":"$DockingChatter_Neutral;", "Message_Localised":"Ensure to observe starport protocol during your visit, pilot.", "Channel":"npc" }
-{ "timestamp":"2017-01-09T01:43:51Z", "event":"ReceiveText", "From":"Azeban City", "Message":"$STATION_docking_granted;", "Message_Localised":"Docking request granted.", "Channel":"npc" }
-{ "timestamp":"2017-01-09T01:43:51Z", "event":"DockingGranted", "LandingPad":43, "StationName":"Azeban City" }
-{ "timestamp":"2017-01-09T01:44:13Z", "event":"ReceiveText", "From":"Azeban City", "Message":"$STATION_NoFireZone_entered;", "Message_Localised":"No fire zone entered.", "Channel":"npc" }
-{ "timestamp":"2017-01-09T01:47:20Z", "event":"Docked", "StationName":"Azeban City", "StationType":"Coriolis", "StarSystem":"Eranin", "StationGovernment":"$government_None;", "StationGovernment_Localised":"None" }

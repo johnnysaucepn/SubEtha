@@ -4,8 +4,6 @@
   <!-- Custom properties -->
   <PropertyGroup>
     <BuildOutputPath>$(MSBuildThisFileDirectory)\..\.build\</BuildOutputPath>
-    <AppOutputPath>$(BuildOutputPath)\PublishedApps\</AppOutputPath>
-    <InstallerOutputPath>$(BuildOutputPath)\Installers\</InstallerOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,7 +14,6 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageOutputPath>$(BuildOutputPath)\Packages\</PackageOutputPath>
   </PropertyGroup>
-
 
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)\..\LICENSE.md" Pack="true" Visible="true" PackagePath="">
@@ -34,10 +31,5 @@
     <!-- Note: GitVersionTask automatically populates Version and PackageVersion, etc. -->
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
   </PropertyGroup>
-
-  <Target Name="ZipPublishArtifacts" Condition="'$(GitVersion_FullSemVer)' != ''" AfterTargets="Publish">
-    <MakeDir Directories="$(AppOutputPath)" />
-    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(AppOutputPath)\$(ProjectName)-$(GitVersion_FullSemVer).zip" />
-  </Target>
 
 </Project>

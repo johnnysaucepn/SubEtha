@@ -11,25 +11,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Monitor", "Monitor", "{D214
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Parser", "Parser", "{F4570D1F-DF2A-4F53-AF59-6C2CCB246144}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings", "SubEtha.Bindings\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj", "{98216977-60B8-4320-AAE8-5963D22D8A39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings", "Bindings\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj", "{98216977-60B8-4320-AAE8-5963D22D8A39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.CodeGen", "SubEtha.Bindings\Howatworks.SubEtha.Bindings.CodeGen\Howatworks.SubEtha.Bindings.CodeGen.csproj", "{5439EFB0-E797-4D26-9A3B-4597EAC5B974}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.CodeGen", "Bindings\Howatworks.SubEtha.Bindings.CodeGen\Howatworks.SubEtha.Bindings.CodeGen.csproj", "{5439EFB0-E797-4D26-9A3B-4597EAC5B974}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.Test", "SubEtha.Bindings\Howatworks.SubEtha.Bindings.Test\Howatworks.SubEtha.Bindings.Test.csproj", "{53D5E78F-2A51-4E29-86BB-A8ACE0725162}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.Test", "Bindings\Howatworks.SubEtha.Bindings.Test\Howatworks.SubEtha.Bindings.Test.csproj", "{53D5E78F-2A51-4E29-86BB-A8ACE0725162}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal", "SubEtha.Journal\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj", "{C2B0F44B-0F0A-489D-8502-76BB0E0CCFE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal", "Journal\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj", "{C2B0F44B-0F0A-489D-8502-76BB0E0CCFE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal.Scan", "SubEtha.Journal\Howatworks.SubEtha.Journal.Scan\Howatworks.SubEtha.Journal.Scan.csproj", "{05975182-95E4-47BD-8F6B-A3DE44353AF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal.Scan", "Journal\Howatworks.SubEtha.Journal.Scan\Howatworks.SubEtha.Journal.Scan.csproj", "{05975182-95E4-47BD-8F6B-A3DE44353AF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal.Test", "SubEtha.Journal\Howatworks.SubEtha.Journal.Test\Howatworks.SubEtha.Journal.Test.csproj", "{0A2324D2-6F3B-4E7F-8DE9-ED4B652B3EDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal.Test", "Journal\Howatworks.SubEtha.Journal.Test\Howatworks.SubEtha.Journal.Test.csproj", "{0A2324D2-6F3B-4E7F-8DE9-ED4B652B3EDC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Monitor", "SubEtha.Monitor\Howatworks.SubEtha.Monitor\Howatworks.SubEtha.Monitor.csproj", "{20ECCB21-7F53-4BC6-94DE-7152863BC67C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Monitor", "Monitor\Howatworks.SubEtha.Monitor\Howatworks.SubEtha.Monitor.csproj", "{20ECCB21-7F53-4BC6-94DE-7152863BC67C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Monitor.Test", "SubEtha.Monitor\Howatworks.SubEtha.Monitor.Test\Howatworks.SubEtha.Monitor.Test.csproj", "{800C30DF-B4B2-4374-817D-95980454B7E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Monitor.Test", "Monitor\Howatworks.SubEtha.Monitor.Test\Howatworks.SubEtha.Monitor.Test.csproj", "{800C30DF-B4B2-4374-817D-95980454B7E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Parser", "SubEtha.Parser\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj", "{A39C25F6-C801-4C57-8353-CD527E12B15E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Parser", "Parser\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj", "{A39C25F6-C801-4C57-8353-CD527E12B15E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Parser.Test", "SubEtha.Parser\Howatworks.SubEtha.Parser.Test\Howatworks.SubEtha.Parser.Test.csproj", "{98870B8C-538D-445C-8F26-83544CB5CCD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Parser.Test", "Parser\Howatworks.SubEtha.Parser.Test\Howatworks.SubEtha.Parser.Test.csproj", "{98870B8C-538D-445C-8F26-83544CB5CCD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8E85157-404C-460B-BC61-80C03A18D89A}"
+	ProjectSection(SolutionItems) = preProject
+		..\build.cake = ..\build.cake
+		..\LICENSE.md = ..\LICENSE.md
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
