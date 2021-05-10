@@ -7,14 +7,14 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.2.0" />
+    <PackageReference Include="Howatworks.SubEtha.Bindings" Version="0.6.47" />
+    <PackageReference Include="Howatworks.SubEtha.Journal" Version="0.6.47" />
     <PackageReference Include="InputSimulatorStandard" Version="1.0.0" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SubEtha.Bindings\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj" />
-    <ProjectReference Include="..\..\SubEtha.Journal\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
     <ProjectReference Include="..\..\Thumb\Howatworks.Thumb.Core\Howatworks.Thumb.Core.csproj" />
     <ProjectReference Include="..\Howatworks.Assistant.WebSockets\Howatworks.Assistant.WebSockets.csproj" />
   </ItemGroup>
