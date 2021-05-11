@@ -1,3 +1,0 @@
-{ "timestamp":"2017-01-09T01:37:05Z", "event":"Fileheader", "part":1, "language":"English\\UK", "gameversion":"2.2", "build":"r126898/r0 " }
-{ "timestamp":"2017-01-09T01:41:26Z", "event":"FSDJump", "StarSystem":"Eranin", "StarPos":[-22.844,36.531,-1.188], "SystemAllegiance":"Alliance", "SystemEconomy":"$economy_Agri;", "SystemEconomy_Localised":"Agriculture", "SystemGovernment":"$government_Confederacy;", "SystemGovernment_Localised":"Confederacy", "SystemSecurity":"$SYSTEM_SECURITY_medium;", "SystemSecurity_Localised":"Medium Security", "JumpDist":8.234, "FuelUsed":0.287701, "FuelLevel":1.712299 }
-{ "timestamp":"2017-01-09T01:43:26Z", "event":"SupercruiseExit", "StarSystem":"Eranin", "Body":"Azeban City", "BodyType":"Station" }

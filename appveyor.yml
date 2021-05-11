@@ -9,17 +9,12 @@ install:
 build_script:
   - ps: dotnet cake
 
-after_build:
-  - ps: dotnet cake --target=PublishApps
-
 test_script:
   - ps: dotnet cake --target=Test
 
 after_test:
   - ps: dotnet cake --target=PublishCoverage
   - ps: Get-ChildItem ./.build/Packages/*.nupkg | % { Push-AppveyorArtifact $_.FullName -DeploymentName NuGetPackages }
-  - ps: Get-ChildItem ./.build/Installers/*.msi | % { Push-AppveyorArtifact $_.FullName -DeploymentName WindowsInstallers }
-  - ps: Get-ChildItem ./.build/PublishedApps/*.zip | % { Push-AppveyorArtifact $_.FullName -DeploymentName Apps }
   - ps: Get-ChildItem ./.build/CoverageResults/Coverage.*.cobertura.xml | % { Push-AppveyorArtifact $_.FullName -DeploymentName CoverageReports }
 
 notifications:

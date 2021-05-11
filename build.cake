@@ -1,9 +1,9 @@
-﻿#tool "nuget:?package=xunit.runner.console&version=2.4.1"
-#addin "nuget:?package=Cake.Incubator&version=5.1.0"
-#tool "nuget:?package=coverlet.console&version=1.7.2"
-#addin "nuget:?package=Cake.Coverlet&version=2.5.1"
-#tool "nuget:?package=Codecov&version=1.12.3"
-#addin "nuget:?package=Cake.Codecov&version=0.9.1"
+﻿#tool "nuget:?package=xunit.runner.console"
+#addin "nuget:?package=Cake.Incubator"
+#tool "nuget:?package=coverlet.console"
+#addin "nuget:?package=Cake.Coverlet"
+#tool "nuget:?package=Codecov"
+#addin "nuget:?package=Cake.Codecov"
 
 var target = Argument("target", "Build");
 
@@ -11,9 +11,7 @@ public class BuildData
 {
     public DirectoryPath TestResultsDirectory;
     public DirectoryPath CoverageResultsDirectory;
-    public DirectoryPath AppDirectory;
     public DirectoryPath PackageDirectory;
-    public DirectoryPath InstallerDirectory;
     public string Configuration;
     public int BuildNumber;
 }
@@ -22,9 +20,7 @@ Setup<BuildData>(ctx => new BuildData()
     {
         TestResultsDirectory = Directory(@"./.build/TestResults/"),
         CoverageResultsDirectory = Directory(@"./.build/CoverageResults/"),
-        AppDirectory = Directory(@"./.build/PublishedApps/"),
         PackageDirectory = Directory(@"./.build/Packages/"),
-        InstallerDirectory = Directory(@"./.build/Installers/"),
         Configuration = "Release",
         BuildNumber = AppVeyor.IsRunningOnAppVeyor ? AppVeyor.Environment.Build.Number : 0
     });
@@ -33,35 +29,15 @@ Task("Build")
     .Does<BuildData>(data =>
     {
     	CleanDirectory(data.PackageDirectory);
-    	CleanDirectory(data.InstallerDirectory);
-    	
+
         DotNetCoreBuild("src/SubEtha.sln", new DotNetCoreBuildSettings
-        { 
+        {
             Configuration = data.Configuration,
             MSBuildSettings = new DotNetCoreMSBuildSettings
             {
                 MaxCpuCount = 1
             }
         });
-    });
-
-Task("PublishApps")
-    .Does<BuildData>(data =>
-    {
-        CleanDirectory(data.AppDirectory);
-
-        var publishSettings = new DotNetCorePublishSettings
-        { 
-            Configuration = data.Configuration,
-            MSBuildSettings = new DotNetCoreMSBuildSettings
-            {
-                MaxCpuCount = 1
-            }
-        };
-
-        DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Site/Howatworks.Matrix.Site.csproj", publishSettings);
-        DotNetCorePublish("./src/Assistant/Howatworks.Assistant.Console/Howatworks.Assistant.Console.csproj", publishSettings);
-        DotNetCorePublish("./src/Matrix/Howatworks.Matrix.Console/Howatworks.Matrix.Console.csproj", publishSettings);
     });
 
 Task("NuGetPush")
@@ -114,7 +90,7 @@ Task("PublishCoverage")
         if (AppVeyor.IsRunningOnAppVeyor)
         {
             Codecov(new CodecovSettings
-            { 
+            {
                 Files = coverageFiles.Select(f => f.FullPath),
                 NoColor = true,
                 Required = true

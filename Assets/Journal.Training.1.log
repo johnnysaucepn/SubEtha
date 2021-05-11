@@ -1,5 +1,0 @@
-{ "timestamp":"2017-01-09T01:37:05Z", "event":"Fileheader", "part":1, "language":"English\\UK", "gameversion":"2.2", "build":"r126898/r0 " }
-{ "timestamp":"2017-01-09T01:39:08Z", "event":"Location", "Docked":true, "StationName":"Romanek's Folly", "StationType":"Coriolis", "StarSystem":"Morgor", "StarPos":[-15.250,39.531,-2.250], "SystemAllegiance":"Federation", "SystemEconomy":"$economy_Colony;", "SystemEconomy_Localised":"Colony", "SystemGovernment":"$government_Confederacy;", "SystemGovernment_Localised":"Confederacy", "SystemSecurity":"$SYSTEM_SECURITY_medium;", "SystemSecurity_Localised":"Medium Security", "Body":"Romanek's Folly", "BodyType":"Station" }
-{ "timestamp":"2017-01-09T01:39:08Z", "event":"Docked", "StationName":"Romanek's Folly", "StationType":"Coriolis", "StarSystem":"Morgor", "StationGovernment":"$government_None;", "StationGovernment_Localised":"None" }
-{ "timestamp":"2017-01-09T01:39:51Z", "event":"Undocked", "StationName":"Romanek's Folly", "StationType":"Coriolis" }
-
