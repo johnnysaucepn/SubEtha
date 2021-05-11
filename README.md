@@ -12,7 +12,7 @@ Journal log events, allowing the creation of new tools for tracking player activ
 The intent is to free developers from the burden of maintaining repetitive parsing and processing code, particularly when
 new iterations of the journal spec are published.
 
-Layered upon this, there are [![standalone sample tools](https://github.com/johnnysaucepn/SubEtha.Apps)] that illustrate
+Layered upon this, there are [standalone sample tools](https://github.com/johnnysaucepn/SubEtha.Apps) that illustrate
 the use of these packages and offers a re-usable architecture to add new capabilities - this should provide a starter kit
 for developing journal-based apps.
 
@@ -32,7 +32,7 @@ types on demand.
 
 This is a higher level again, providing a fully-operational file monitor that will track the core log files for updates,
 and trigger events that your application can process however it wishes. In addition, it exposes these updates as a sequence
-using [![Reactive Extensions](https://www.nuget.org/packages/System.Reactive/)].
+using [Reactive Extensions](https://www.nuget.org/packages/System.Reactive/).
 
 ### Howatworks.SubEtha.Bindings
 
@@ -42,7 +42,7 @@ device.
 ## Installation
 
 You can get started by consuming the [NuGet packages](https://www.nuget.org/packages?q=Howatworks.SubEtha) in your own
-projects, or by building and running the [![sample apps](https://github.com/johnnysaucepn/SubEtha.Apps)].
+projects, or by building and running the [sample apps](https://github.com/johnnysaucepn/SubEtha.Apps).
 
 Build the packages using Visual Studio 2019+, or at the command line using:
 ```
