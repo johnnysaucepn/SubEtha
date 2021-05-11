@@ -7,13 +7,3 @@ updates:
     day: sunday
     time: "22:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: Microsoft.AspNetCore*
-    versions:
-    - ">= 5.x"
-  - dependency-name: Microsoft.EntityFrameworkCore*
-    versions:
-    - ">= 5.x"
-  - dependency-name: Npgsql.EntityFrameworkCore*
-    versions:
-    - ">= 5.x"
