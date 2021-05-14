@@ -1,14 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Howatworks.SubEtha.Journal;
-using log4net;
 
 namespace Howatworks.SubEtha.Parser
 {
     public class LiveJournalReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LiveJournalReader));
-
         public FileInfo File { get; }
         public JournalLogFileInfo Context { get; }
         private DateTimeOffset _lastSeen;
@@ -47,7 +45,7 @@ namespace Howatworks.SubEtha.Parser
                     }
                     catch (JournalParseException e)
                     {
-                        Log.Warn($"Unable to read content of {File.Name}", e);
+                        Debug.WriteLine($"Unable to read content of {File.Name}: {e}");
                         return null;
                     }
                 }

@@ -49,9 +49,11 @@ namespace Howatworks.SubEtha.Journal.Scan
             foreach (var file in logFiles)
             {
                 Log.Info($"Checking file '{file}'...");
-                var reader = new LogJournalReader(new FileInfo(file), parser);
-                // Read all entries from all files
-                reader.ReadLines().ToList().ForEach(l => AttemptParse(l.Line, parser));
+                using (var reader = new LogJournalReader(new FileInfo(file), parser))
+                {
+                    // Read all entries from all files
+                    reader.ReadLines().ToList().ForEach(l => AttemptParse(l.Line, parser));
+                }
             }
 
             var liveFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
@@ -71,7 +73,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             {
                 parser.Parse(line);
             }
-            catch (Exception ex) when (ex is UnrecognizedJournalException || ex is JournalParseException)
+            catch (Exception ex) when (ex is JournalParseException)
             {
                 Log.Warn(line);
                 Log.Warn(ex.Message);

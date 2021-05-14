@@ -1,6 +1,6 @@
-﻿using log4net;
-using Microsoft.Extensions.FileSystemGlobbing;
+﻿using Microsoft.Extensions.FileSystemGlobbing;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -19,7 +19,6 @@ namespace Howatworks.SubEtha.Monitor
         public IObservable<string> DeletedFiles { get; }
         public IObservable<Exception> Errors { get; }
         public IObservable<(string oldPath, string newPath)> RenamedFiles { get; }
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CustomFileWatcher));
 
         private readonly FileSystemWatcher _journalWatcher;
 
@@ -43,20 +42,20 @@ namespace Howatworks.SubEtha.Monitor
                 .Merge(GetIncomingRenamedFiles())
                 // Include files that exist at the time the watcher is created
                 .Merge(GetExistingFiles())
-                .Do(x => Log.Info($"Seen new file '{x}'"));
+                .Do(x => Debug.WriteLine($"Seen new file '{x}'"));
 
             ChangedFiles =
                 GetModifiedFiles()
-                .Do(x => Log.Info($"Seen modified file '{x}'"));
+                .Do(x => Debug.WriteLine($"Seen modified file '{x}'"));
 
             DeletedFiles =
                 GetDeletedFiles()
                 // Treat renamed files as ones that have been created in one place and deleted in another
                 .Merge(GetOutgoingRenamedFiles())
-                .Do(x => Log.Info($"Seen deletion of file '{x}'"));
+                .Do(x => Debug.WriteLine($"Seen deletion of file '{x}'"));
 
             Errors = GetErrors()
-                .Do(x => Log.Warn("Seen file error", x));
+                .Do(x => Debug.WriteLine("Seen file error", x));
         }
 
         private IObservable<string> GetCreatedFiles() =>

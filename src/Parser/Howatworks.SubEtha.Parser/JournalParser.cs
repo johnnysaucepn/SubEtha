@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Howatworks.SubEtha.Journal;
-using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -11,8 +10,6 @@ namespace Howatworks.SubEtha.Parser
 {
     public class JournalParser : IJournalParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalParser));
-
         private readonly Lazy<Dictionary<string, Type>> _entryTypeLookup = new Lazy<Dictionary<string, Type>>(
             () =>
             {
@@ -60,29 +57,13 @@ namespace Howatworks.SubEtha.Parser
             _serializerSettings = strict ? Strict : Loose;
         }
 
-        public bool Validate(string line)
-        {
-            try
-            {
-                var json = JObject.Parse(line);
-            }
-            catch (JsonException e)
-            {
-                Log.Debug("Line failed validation", e);
-                return false;
-            }
-            return true;
-        }
-
         /// <summary>
         /// Parse the absolute minimum required for an entry - saves time in deserialising
         /// to a specific type too early.
         /// </summary>
         /// <param name="line"></param>
-        /// <returns></returns>
         public (string eventType, DateTimeOffset timestamp) ParseCommonProperties(string line)
         {
-            //var json = JObject.Parse(line);
             try
             {
                 var json = (JObject)JsonConvert.DeserializeObject(line, _serializerSettings);
@@ -112,19 +93,23 @@ namespace Howatworks.SubEtha.Parser
 
         public IJournalEntry Parse(string line)
         {
-            var (eventType, _) = ParseCommonProperties(line);
+            var (entryType, _) = ParseCommonProperties(line);
 
-            return Parse(eventType, line);
+            return Parse(entryType, line);
         }
 
-        public IJournalEntry Parse(string eventType, string line)
+        public IJournalEntry Parse(string entryType, string line)
         {
-            if (!_entryTypeLookup.Value.ContainsKey(eventType))
+            // Quick check that this is an entry type that we are able to parse
+            if (!_entryTypeLookup.Value.ContainsKey(entryType))
             {
-                throw new UnrecognizedJournalException(eventType, line);
+                throw new UnrecognizedJournalException(entryType, line);
             }
-            var mappedType = _entryTypeLookup.Value[eventType];
 
+            // What type of object will we serialize this to?
+            var mappedType = _entryTypeLookup.Value[entryType];
+
+            // Try to deserialize to the identified type, wrap any parsing exceptions
             try
             {
                 var entry = (IJournalEntry) JsonConvert.DeserializeObject(line, mappedType, _serializerSettings);
@@ -143,7 +128,7 @@ namespace Howatworks.SubEtha.Parser
                 throw new JournalParseException($"Unexpected exception when parsing - {e.Message}", line, e);
             }
 
-            return null;
+            throw new JournalParseException("Parsing succeeded but data was empty", line);
         }
     }
 }

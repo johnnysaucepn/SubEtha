@@ -7,22 +7,30 @@ namespace Howatworks.SubEtha.Parser
     {
         public string JournalFragment { get; }
 
+        public JournalParseException()
+        {
+        }
+
+        public JournalParseException(string message)
+            : base(message)
+        {
+        }
+
+        public JournalParseException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
         public JournalParseException(string message, string fragment, Exception innerException)
             : base(message, innerException)
         {
             JournalFragment = fragment;
         }
 
-        public JournalParseException()
+        public JournalParseException(string message, string fragment)
+            : base(message)
         {
-        }
-
-        public JournalParseException(string message) : base(message)
-        {
-        }
-
-        public JournalParseException(string message, Exception innerException) : base(message, innerException)
-        {
+            JournalFragment = fragment;
         }
     }
 }

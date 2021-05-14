@@ -26,6 +26,5 @@ namespace Howatworks.SubEtha.Journal
             HeaderTimestamp = timestamp;
             LastEntry = lastEntry;
         }
-
     }
 }

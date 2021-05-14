@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Howatworks.SubEtha.Journal;
-using log4net;
 
 namespace Howatworks.SubEtha.Parser
 {
     public class LogJournalReader : IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LogJournalReader));
-
         public FileInfo File { get; }
 
         public JournalLogFileInfo Context { get; }
@@ -82,11 +80,11 @@ namespace Howatworks.SubEtha.Parser
             }
             catch (FileNotFoundException e)
             {
-                Log.Error($"Could not read file '{e.FileName}' - {e.Message}");
+                Debug.Fail($"Could not read file '{e.FileName}' - {e.Message}");
             }
             catch (IOException e)
             {
-                Log.Error($"Could not read file '{File.FullName}' - {e.Message}");
+                Debug.Fail($"Could not read file '{File.FullName}' - {e.Message}");
             }
 
             return info;
@@ -99,7 +97,7 @@ namespace Howatworks.SubEtha.Parser
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
-                Log.Debug(line);
+                Debug.WriteLine(line);
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 yield return new JournalLine(Context, line);
@@ -120,7 +118,7 @@ namespace Howatworks.SubEtha.Parser
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~IncrementalJournalReader()
+        // ~LogJournalReader()
         // {
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         //     Dispose(disposing: false);
