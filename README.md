@@ -66,6 +66,8 @@ SubEtha and associated tools make use of the following libraries and application
   * Rearchitected to use Reactive Extensions (Rx) to simplify data flow
 * 0.7
   * Migrated apps to separate repository
+* 0.8
+  * Removed dependency on log4net for libraries
 
   
 Distributed under the MIT license. See ``LICENSE.md`` for more information.
