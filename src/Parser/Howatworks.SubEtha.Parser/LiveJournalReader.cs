@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Howatworks.SubEtha.Journal;
+using Howatworks.SubEtha.Parser.Logging;
 
 namespace Howatworks.SubEtha.Parser
 {

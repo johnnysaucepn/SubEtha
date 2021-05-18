@@ -1,4 +1,5 @@
 ﻿using Howatworks.SubEtha.Parser;
+using Howatworks.SubEtha.Parser.Logging;
 using Microsoft.Extensions.FileSystemGlobbing;
 using System;
 using System.IO;

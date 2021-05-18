@@ -1,4 +1,5 @@
 ﻿using Howatworks.SubEtha.Parser;
+using Howatworks.SubEtha.Parser.Logging;
 using log4net;
 using log4net.Config;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +28,8 @@ namespace Howatworks.SubEtha.Journal.Scan
             var defaultConfig = new Dictionary<string, string>
             {
                 ["JournalFolder"] = defaultJournalFolder,
-                ["JournalPattern"] = "Journal.*.log",
-                ["RealTimeFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json;NavRoute.json;ModulesInfo.json;Cargo.json"
+                ["LogPattern"] = "Journal.*.log",
+                ["LiveFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json;NavRoute.json;ModulesInfo.json;Cargo.json"
             };
 
             var config = new ConfigurationBuilder()
@@ -40,55 +41,64 @@ namespace Howatworks.SubEtha.Journal.Scan
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             Log.Info("Started");
 
-            using var subEthaLog = SubEthaLog.LogEvents.Subscribe(log =>
-            {
-                switch (log)
-                {
-                    case var d when log.Level == SubEthaLogLevel.Debug:
-                        Log.Debug($"{d.Source}: {d.Message}");
-                        break;
-                    case var w when log.Level == SubEthaLogLevel.Warn:
-                        Log.Warn($"{w.Source}: {w.Message}", w.Exception);
-                        break;
-                    case var e when log.Level == SubEthaLogLevel.Error:
-                        Log.Error($"{e.Source}: {e.Message}", e.Exception);
-                        break;
-                    default:
-                        Log.Info($"{log.Source}: {log.Message}");
-                        break;
-                }
-            });
+            // Subscribe to loggable events we might be interested in
+            SubEthaLog.LogEvent += SubEthaLog_LogEvent;
 
             var parser = new JournalParser(true);  // Use strict parsing
-
             var basePath = config["JournalFolder"];
 
-            var logPattern = config["JournalPattern"];
+            // Instead of using the full monitor, just enumerate files and parse them one by one
+            var logPattern = config["LogPattern"];
             var logFiles = Directory.EnumerateFiles(basePath, logPattern, SearchOption.TopDirectoryOnly);
+
             foreach (var file in logFiles)
             {
                 Log.Info($"Checking file '{file}'...");
                 var reader = new LogJournalReader(new FileInfo(file), parser);
                 // Read all entries from all files
-                reader.ReadLines().ToList().ForEach(l => AttemptParse(l.Line, parser));
+                reader.ReadLines().ToList().ForEach(l => Validate(l.Line, parser));
             }
 
-            var liveFiles = config["RealTimeFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
+            // Get all the live files (that get replaced as they are updated)
+            var liveFiles = config["LiveFilenames"].Split(';').Select(x => Path.Combine(basePath, x.Trim()));
+
             foreach (var file in liveFiles)
             {
                 Log.Info($"Checking file '{file}'...");
                 var reader = new LiveJournalReader(new FileInfo(file), parser);
                 // Read entry from each file
-                AttemptParse(reader.ReadCurrent().Line, parser);
+                Validate(reader.ReadCurrent().Line, parser);
+            }
+
+            // Unsub from loggable events
+            SubEthaLog.LogEvent -= SubEthaLog_LogEvent;
+        }
+
+        private static void SubEthaLog_LogEvent(object sender, SubEthaLogEvent log)
+        {
+            switch (log)
+            {
+                case var d when log.Level == SubEthaLogLevel.Debug:
+                    Log.Debug($"{d.Source}: {d.Message}");
+                    break;
+                case var w when log.Level == SubEthaLogLevel.Warn:
+                    Log.Warn($"{w.Source}: {w.Message}", w.Exception);
+                    break;
+                case var e when log.Level == SubEthaLogLevel.Error:
+                    Log.Error($"{e.Source}: {e.Message}", e.Exception);
+                    break;
+                default:
+                    Log.Info($"{log.Source}: {log.Message}");
+                    break;
             }
         }
 
-        private static void AttemptParse(string line, JournalParser parser)
+        private static void Validate(string line, JournalParser parser)
         {
             Log.Debug(line);
             try
             {
-                parser.Parse(line);
+                var _ = parser.Parse(line);
             }
             catch (Exception ex) when (ex is UnrecognizedJournalException || ex is JournalParseException)
             {

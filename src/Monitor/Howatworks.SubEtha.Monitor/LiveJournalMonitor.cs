@@ -12,8 +12,6 @@ namespace Howatworks.SubEtha.Monitor
 {
     public class LiveJournalMonitor : IJournalLineSource
     {
-        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<LiveJournalMonitor>();
-
         private readonly List<LiveJournalReader> _liveReaders;
 
         private readonly ISubject<JournalWatchActivity> _journalFileWatch = new Subject<JournalWatchActivity>();
@@ -23,7 +21,7 @@ namespace Howatworks.SubEtha.Monitor
         public LiveJournalMonitor(IConfiguration config, IJournalReaderFactory readerFactory)
         {
             var folder = config["JournalFolder"];
-            var liveFilenames = config["RealTimeFilenames"].Split(';').Select(x => x.Trim());
+            var liveFilenames = config["LiveFilenames"].Split(';').Select(x => x.Trim());
 
             _liveReaders = new List<LiveJournalReader>();
             foreach (var filename in liveFilenames)

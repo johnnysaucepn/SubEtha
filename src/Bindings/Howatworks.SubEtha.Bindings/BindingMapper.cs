@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Howatworks.SubEtha.Bindings
 {
-    public partial class BindingMapper : IBindingMapper
+    public class BindingMapper : IBindingMapper
     {
         private readonly BindingSet _bindingSet;
 

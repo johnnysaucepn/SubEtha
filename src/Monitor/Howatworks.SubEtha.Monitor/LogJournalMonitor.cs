@@ -12,8 +12,6 @@ namespace Howatworks.SubEtha.Monitor
 {
     public class LogJournalMonitor : IJournalLineSource
     {
-        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<LogJournalMonitor>();
-
         private readonly CustomFileWatcher _logFileWatcher;
         private readonly SortedList<DateTimeOffset, LogJournalReader> _logReaders;
 
@@ -24,7 +22,7 @@ namespace Howatworks.SubEtha.Monitor
         {
             startTime = startTime ?? DateTimeOffset.MinValue;
             var folder = config["JournalFolder"];
-            var logPattern = config["JournalPattern"];
+            var logPattern = config["LogPattern"];
 
             _logReaders = new SortedList<DateTimeOffset, LogJournalReader>();
 
