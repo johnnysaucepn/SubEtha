@@ -20,28 +20,32 @@ namespace Howatworks.SubEtha.Monitor
             _startTime = startTime;
         }
 
-        public IEnumerable<JournalEntry> GetJournalEntries()
+        public IEnumerable<JournalResult<JournalEntry>> GetJournalEntries()
         {
             return _lineSources
                 .SelectMany(s => s.GetJournalLines())
-                .Select(l =>
+                .Select(lineResult =>
                 {
-                    try
+                    if (lineResult.IsSuccess)
                     {
-                        return new JournalEntry(l.Context, _parser.Parse(l.Line));
+                        var line = lineResult.Value;
+                        var entryResult = _parser.Parse(line.Line);
+                        if (entryResult.IsSuccess)
+                        {
+                            return JournalResult.Success(new JournalEntry(line.Context, entryResult.Value));
+                        }
+                        else
+                        {
+                            return JournalResult.Failure<JournalEntry>($"{entryResult.Message} in '{line.Context.Filename}': {line.Line}");
+                        }
                     }
-                    catch (JournalParseException e)
+                    else
                     {
-                        Debug.WriteLine($"'{l.Context.Filename}': {e.Message}");
-                        Debug.WriteLine(e.JournalFragment);
+                        return JournalResult.Failure<JournalEntry>(lineResult.Message);
                     }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine($"'{l.Context.Filename}': {e.Message}");
-                    }
-                    return null;
                 })
-                .Where(x => x?.Entry != null && x.Entry.Timestamp >= _startTime);
+                // Exclude items that would be successful if they weren't out of date
+                .Where(x => x.IsFailure || x.Value.Entry.Timestamp >= _startTime);
         }
     }
 }

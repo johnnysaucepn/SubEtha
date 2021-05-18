@@ -52,7 +52,7 @@ namespace Howatworks.SubEtha.Journal.Scan
                 using (var reader = new LogJournalReader(new FileInfo(file), parser))
                 {
                     // Read all entries from all files
-                    reader.ReadLines().ToList().ForEach(l => AttemptParse(l.Line, parser));
+                    reader.ReadAll().ToList().ForEach(l => AttemptParse(l.Line, parser));
                 }
             }
 

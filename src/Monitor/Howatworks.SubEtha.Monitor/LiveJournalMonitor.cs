@@ -33,11 +33,10 @@ namespace Howatworks.SubEtha.Monitor
             }
         }
 
-        public IEnumerable<JournalLine> GetJournalLines()
+        public IEnumerable<JournalResult<JournalLine>> GetJournalLines()
         {
             return _liveReaders
-                .Select(x => x.ReadCurrent())
-                .Where(l => l != null);
+                .Select(x => x.ReadCurrent());
         }
     }
 }

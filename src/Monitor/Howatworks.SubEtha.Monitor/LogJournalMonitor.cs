@@ -34,7 +34,7 @@ namespace Howatworks.SubEtha.Monitor
                 var newReader = readerFactory.CreateLogJournalReader(file);
 
                 // As long as the files has some entries that happened after our desired start time, it's a valid source
-                if (newReader.Context.LastEntry >= startTime)
+                if (newReader.Context.HeaderTimestamp >= startTime)
                 {
                     _logReaders.Add(newReader.Context.HeaderTimestamp, newReader);
                     _journalFileWatch.OnNext(new JournalWatchActivity(JournalWatchAction.Started, file));
@@ -52,11 +52,11 @@ namespace Howatworks.SubEtha.Monitor
             _logFileWatcher.Start();
         }
 
-        public IEnumerable<JournalLine> GetJournalLines()
+        public IEnumerable<JournalResult<JournalLine>> GetJournalLines()
         {
             return _logReaders
-                .SelectMany(x => x.Value.ReadLines())
-                .Where(l => l != null);
+                .SelectMany(x => x.Value.ReadAll())
+                .Select(JournalResult.Success);
         }
     }
 }

@@ -5,14 +5,14 @@ using Howatworks.SubEtha.Journal;
 
 namespace Howatworks.SubEtha.Parser
 {
-    public class LiveJournalReader
+    public class LiveJournalReader : IJournalReader
     {
         public FileInfo File { get; }
         public JournalLogFileInfo Context { get; }
+
+        // Track the timestamp on the last item we saw, so we only report changes
         private DateTimeOffset _lastSeen;
         private readonly IJournalParser _parser;
-
-        public bool FileExists => File.Exists;
 
         public LiveJournalReader(FileInfo file, IJournalParser parser)
         {
@@ -22,9 +22,12 @@ namespace Howatworks.SubEtha.Parser
             Context = new JournalLogFileInfo(File);
         }
 
-        public JournalLine ReadCurrent()
+        public JournalResult<JournalLine> ReadCurrent()
         {
-            if (!File.Exists) return null;
+            if (!File.Exists)
+            {
+                return JournalResult.Failure<JournalLine>($"File '{File.Name}' not found");
+            }
 
             using (var file = new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -32,25 +35,29 @@ namespace Howatworks.SubEtha.Parser
                 {
                     var content = stream.ReadToEnd();
 
-                    if (string.IsNullOrWhiteSpace(content)) return null;
+                    if (string.IsNullOrWhiteSpace(content))
+                    {
+                        return JournalResult.Failure<JournalLine>($"File '{File.Name}' contains no content");
+                    }
 
                     try
                     {
+                        // Skip any out-of-order entries
                         var (_, timestamp) = _parser.ParseCommonProperties(content);
                         if (timestamp > _lastSeen)
                         {
                             _lastSeen = timestamp;
-                            return new JournalLine(Context, content);
+                            return JournalResult.Success(new JournalLine(Context, content));
                         }
                     }
                     catch (JournalParseException e)
                     {
-                        Debug.WriteLine($"Unable to read content of {File.Name}: {e}");
-                        return null;
+                        return JournalResult.Failure<JournalLine>($"Unable to read content of {File.Name}: {e}");
                     }
                 }
             }
-            return null;
+            return JournalResult.Failure<JournalLine>($"File '{File.Name}' contains no new content");
         }
     }
 }
+

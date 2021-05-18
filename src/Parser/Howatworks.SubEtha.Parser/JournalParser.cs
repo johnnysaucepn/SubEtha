@@ -86,19 +86,29 @@ namespace Howatworks.SubEtha.Parser
             }
         }
 
-        public T Parse<T>(string line) where T : class
+        public JournalResult<T> Parse<T>(string line) where T : class, IJournalEntry
         {
-            return Parse(typeof(T).Name, line) as T;
+            var result = Parse(typeof(T).Name, line);
+            if (result.IsSuccess)
+            {
+                return result.Value is T castValue
+                    ? JournalResult<T>.Success(castValue)
+                    : JournalResult<T>.Failure($"Could not cast {result.Value.GetType().Name} to {typeof(T).Name}", line);
+            }
+            else
+            {
+                return JournalResult<T>.Failure(result.Message, line);
+            }
         }
 
-        public IJournalEntry Parse(string line)
+        public JournalResult<IJournalEntry> Parse(string line)
         {
             var (entryType, _) = ParseCommonProperties(line);
 
             return Parse(entryType, line);
         }
 
-        public IJournalEntry Parse(string entryType, string line)
+        public JournalResult<IJournalEntry> Parse(string entryType, string line)
         {
             // Quick check that this is an entry type that we are able to parse
             if (!_entryTypeLookup.Value.ContainsKey(entryType))
@@ -113,22 +123,22 @@ namespace Howatworks.SubEtha.Parser
             try
             {
                 var entry = (IJournalEntry) JsonConvert.DeserializeObject(line, mappedType, _serializerSettings);
-                if (entry != null) return entry;
+                if (entry != null) return JournalResult<IJournalEntry>.Success(entry);
             }
             catch (JsonSerializationException e)
             {
-                throw new JournalParseException($"JSON deserialisation failure - {e.Message}", line, e);
+                return JournalResult<IJournalEntry>.Failure($"JSON deserialisation failure - {e.Message}", line);
             }
             catch (FormatException e)
             {
-                throw new JournalParseException($"Failure in type conversion - {e.Message}", line, e);
+                return JournalResult<IJournalEntry>.Failure($"Failure in type conversion - {e.Message}", line);
             }
             catch (Exception e)
             {
-                throw new JournalParseException($"Unexpected exception when parsing - {e.Message}", line, e);
+                return JournalResult<IJournalEntry>.Failure($"Unexpected exception when parsing - {e.Message}", line);
             }
 
-            throw new JournalParseException("Parsing succeeded but data was empty", line);
+            return JournalResult<IJournalEntry>.Failure("Parsing succeeded but data was empty", line);
         }
     }
 }

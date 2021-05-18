@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Howatworks.SubEtha.Journal;
 
 namespace Howatworks.SubEtha.Parser
 {
-    public class LogJournalReader : IDisposable
+    public class LogJournalReader : IJournalReader, IDisposable
     {
         public FileInfo File { get; }
-
         public JournalLogFileInfo Context { get; }
 
         private Lazy<StreamReader> _stream;
@@ -33,75 +31,55 @@ namespace Howatworks.SubEtha.Parser
 
         private JournalLogFileInfo ReadFileInfo()
         {
-            FileHeader fileHeader = null;
-            var info = new JournalLogFileInfo(File);
-            DateTimeOffset? lastEntry = null;
-
-            try
+            // Get a new reader for this action only
+            using (var streamReader = GetStreamReader())
             {
-                // Get a new reader for this action only
-                using (var streamReader = GetStreamReader())
-                {
-                    // FileHeader *should* be the first line in the file, but at least try the first 5
-                    var tolerance = 5;
+                // FileHeader *should* be the first line in the file, but at least try the first 5
+                var tolerance = 5;
 
-                    while (!streamReader.EndOfStream && tolerance > 0 && fileHeader == null)
+                while (!streamReader.EndOfStream && tolerance > 0)
+                {
+                    var line = streamReader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var fileHeaderParsed = _parser.Parse<FileHeader>(line);
+                    if (fileHeaderParsed.IsSuccess)
                     {
-                        var line = streamReader.ReadLine();
-                        if (string.IsNullOrWhiteSpace(line)) continue;
-
-                        try
-                        {
-                            var (eventType, timestamp) = _parser.ParseCommonProperties(line);
-
-                            if (timestamp > (lastEntry ?? DateTimeOffset.MinValue))
-                            {
-                                lastEntry = timestamp;
-                            }
-
-                            if (eventType?.Equals(nameof(FileHeader), StringComparison.InvariantCultureIgnoreCase) == true)
-                            {
-                                fileHeader = _parser.Parse<FileHeader>(line);
-                            }
-                        }
-                        catch (JournalParseException)
-                        {
-                            // Cannot parse line, don't consider as potential fileheader
-                        }
-
-                        tolerance--;
+                        var fileHeader = fileHeaderParsed.Value;
+                        return new JournalLogFileInfo(File, fileHeader.GameVersion, fileHeader.Timestamp);
                     }
-                }
-
-                if (fileHeader != null)
-                {
-                    info = new JournalLogFileInfo(File, fileHeader.GameVersion, fileHeader.Timestamp, lastEntry ?? fileHeader.Timestamp);
+                    tolerance--;
                 }
             }
-            catch (FileNotFoundException e)
-            {
-                Debug.Fail($"Could not read file '{e.FileName}' - {e.Message}");
-            }
-            catch (IOException e)
-            {
-                Debug.Fail($"Could not read file '{File.FullName}' - {e.Message}");
-            }
 
-            return info;
+            return new JournalLogFileInfo(File);
         }
 
-        public IEnumerable<JournalLine> ReadLines()
+        public IEnumerable<JournalLine> ReadAll()
         {
             var streamReader = _stream.Value;
 
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
-                Debug.WriteLine(line);
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 yield return new JournalLine(Context, line);
             }
+        }
+
+        public JournalResult<JournalLine> ReadNext()
+        {
+            var streamReader = _stream.Value;
+
+            while (!streamReader.EndOfStream)
+            {
+                var line = streamReader.ReadLine();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                return JournalResult.Success(new JournalLine(Context, line));
+            }
+            return JournalResult.Failure<JournalLine>($"End of file '{File.Name}' reached");
         }
 
         protected virtual void Dispose(bool disposing)
