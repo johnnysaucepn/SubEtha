@@ -97,7 +97,6 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                 csWriter.Write(@"   }
 }
 ");
-
             }
         }
     }

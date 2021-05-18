@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using Howatworks.SubEtha.Journal;
-using log4net;
+using Howatworks.SubEtha.Parser.Logging;
 
 namespace Howatworks.SubEtha.Parser
 {
     public class LiveJournalReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LiveJournalReader));
+        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<LiveJournalReader>();
 
         public FileInfo File { get; }
         public JournalLogFileInfo Context { get; }

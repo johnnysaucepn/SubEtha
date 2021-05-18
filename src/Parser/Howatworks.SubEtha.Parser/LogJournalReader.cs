@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using Howatworks.SubEtha.Journal;
-using log4net;
+using Howatworks.SubEtha.Parser.Logging;
 
 namespace Howatworks.SubEtha.Parser
 {
     public class LogJournalReader : IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LogJournalReader));
+        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<LogJournalReader>();
 
         public FileInfo File { get; }
 
@@ -82,11 +82,11 @@ namespace Howatworks.SubEtha.Parser
             }
             catch (FileNotFoundException e)
             {
-                Log.Error($"Could not read file '{e.FileName}' - {e.Message}");
+                Log.Error($"Could not read file '{e.FileName}'", e);
             }
             catch (IOException e)
             {
-                Log.Error($"Could not read file '{File.FullName}' - {e.Message}");
+                Log.Error($"Could not read file '{File.FullName}'", e);
             }
 
             return info;
