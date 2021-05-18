@@ -1,5 +1,4 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Howatworks.SubEtha.Journal;
@@ -9,7 +8,7 @@ namespace Howatworks.SubEtha.Monitor
 {
     public class JournalEntrySource : IJournalEntrySource
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalEntrySource));
+        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<JournalEntrySource>();
         private readonly IJournalParser _parser;
         private readonly DateTimeOffset _startTime;
         private readonly IJournalLineSource[] _lineSources;
@@ -33,18 +32,15 @@ namespace Howatworks.SubEtha.Monitor
                     }
                     catch (JournalParseException e)
                     {
-                        Log.Error($"'{l.Context.Filename}': {e.JournalFragment}");
-                        Log.Error(e.Message);
+                        Log.Error($"'{l.Context.Filename}': {e.JournalFragment}", e);
                     }
                     catch (UnrecognizedJournalException e)
                     {
-                        Log.Warn($"'{l.Context.Filename}': {e.JournalFragment}");
-                        Log.Warn(e.Message);
+                        Log.Warn($"'{l.Context.Filename}': {e.JournalFragment}", e);
                     }
                     return null;
                 })
                 .Where(x => x?.Entry != null && x.Entry.Timestamp >= _startTime);
         }
-
     }
 }

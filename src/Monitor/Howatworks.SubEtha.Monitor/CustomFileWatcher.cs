@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿using Howatworks.SubEtha.Parser;
 using Microsoft.Extensions.FileSystemGlobbing;
 using System;
 using System.IO;
@@ -14,12 +14,13 @@ namespace Howatworks.SubEtha.Monitor
     /// </summary>
     public class CustomFileWatcher
     {
+        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<CustomFileWatcher>();
+
         public IObservable<string> ChangedFiles { get; }
         public IObservable<string> CreatedFiles { get; }
         public IObservable<string> DeletedFiles { get; }
         public IObservable<Exception> Errors { get; }
         public IObservable<(string oldPath, string newPath)> RenamedFiles { get; }
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CustomFileWatcher));
 
         private readonly FileSystemWatcher _journalWatcher;
 

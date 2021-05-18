@@ -6,14 +6,13 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Parser;
-using log4net;
 using Microsoft.Extensions.Configuration;
 
 namespace Howatworks.SubEtha.Monitor
 {
     public class LiveJournalMonitor : IJournalLineSource
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LiveJournalMonitor));
+        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<LiveJournalMonitor>();
 
         private readonly List<LiveJournalReader> _liveReaders;
 

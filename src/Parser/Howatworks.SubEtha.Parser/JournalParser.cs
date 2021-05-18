@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Howatworks.SubEtha.Journal;
-using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -11,7 +10,7 @@ namespace Howatworks.SubEtha.Parser
 {
     public class JournalParser : IJournalParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(JournalParser));
+        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<JournalParser>();
 
         private readonly Lazy<Dictionary<string, Type>> _entryTypeLookup = new Lazy<Dictionary<string, Type>>(
             () =>

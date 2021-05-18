@@ -40,6 +40,25 @@ namespace Howatworks.SubEtha.Journal.Scan
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             Log.Info("Started");
 
+            using var subEthaLog = SubEthaLog.LogEvents.Subscribe(log =>
+            {
+                switch (log)
+                {
+                    case var d when log.Level == SubEthaLogLevel.Debug:
+                        Log.Debug($"{d.Source}: {d.Message}");
+                        break;
+                    case var w when log.Level == SubEthaLogLevel.Warn:
+                        Log.Warn($"{w.Source}: {w.Message}", w.Exception);
+                        break;
+                    case var e when log.Level == SubEthaLogLevel.Error:
+                        Log.Error($"{e.Source}: {e.Message}", e.Exception);
+                        break;
+                    default:
+                        Log.Info($"{log.Source}: {log.Message}");
+                        break;
+                }
+            });
+
             var parser = new JournalParser(true);  // Use strict parsing
 
             var basePath = config["JournalFolder"];
