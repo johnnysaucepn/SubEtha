@@ -11,6 +11,7 @@ namespace Howatworks.SubEtha.Journal.Status
         }
 
         public StatusFlags Flags { get; set; }
+        public StatusFlags2 Flags2 { get; set; }
         public List<int> Pips { get; set; } // TODO: measured in half-pips, consider converting
         public int Firegroup { get; set; } // TODO: check spelling
 
@@ -25,9 +26,18 @@ namespace Howatworks.SubEtha.Journal.Status
         public string BodyName { get; set; }
         public decimal? PlanetRadius { get; set; } // TODO: check data type
 
+        public decimal? Oxygen { get; set; }
+        public decimal? Health { get; set; }
+        public decimal? Temperature { get; set; } // TODO: check data type
+
         public bool HasFlag(StatusFlags flag)
         {
             return (Flags & flag) != 0;
+        }
+
+        public bool HasFlag(StatusFlags2 flag)
+        {
+            return (Flags2 & flag) != 0;
         }
     }
 }
