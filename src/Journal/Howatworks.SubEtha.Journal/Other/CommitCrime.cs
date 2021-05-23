@@ -10,6 +10,7 @@ namespace Howatworks.SubEtha.Journal.Other
 
         #region Optional
         public string Victim { get; set; }
+        public string Victim_Localised { get; set; }
         public long? Fine { get; set; }
         public long? Bounty { get; set; }
         #endregion

@@ -11,5 +11,9 @@ namespace Howatworks.SubEtha.Journal.Travel
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public int BodyID { get; set; }
         public string BodyType { get; set; } // TODO: enum?
+
+        // TODO: Are these still optional in Horizons?
+        public bool? Taxi { get; set; }
+        public bool? Multicrew { get; set; }
     }
 }

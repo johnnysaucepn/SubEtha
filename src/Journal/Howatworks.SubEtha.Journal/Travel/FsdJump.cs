@@ -79,5 +79,8 @@ namespace Howatworks.SubEtha.Journal.Travel
         // TODO: consider enum -  ("InPrepareRadius", "Prepared", "Exploited", "Contested", "Controlled", "Turmoil", "HomeSystem")
         public string PowerplayState { get; set; }
 
+        // TODO: Are these still optional in Horizons?
+        public bool? Taxi { get; set; }
+        public bool? Multicrew { get; set; }
     }
 }

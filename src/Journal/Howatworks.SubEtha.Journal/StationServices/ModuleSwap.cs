@@ -15,6 +15,6 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public string ToItem_Localised { get; set; }
         public string Ship { get; set; } // NOTE: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; }
+        public long ShipID { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public class ShipItem
         {
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public int ShipID { get; set; }
+            public long ShipID { get; set; }
             public string ShipType { get; set; }
             public string ShipType_Localised { get; set; }
             public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public class ShipRemoteItem
         {
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public int ShipID { get; set; }
+            public long ShipID { get; set; }
             public string ShipType { get; set; }
             public string ShipType_Localised { get; set; }
             public string Name { get; set; }

@@ -14,5 +14,6 @@ namespace Howatworks.SubEtha.Journal
         public string GameVersion { get; set; }
         [JournalName("build")]
         public string Build { get; set; }
+        public bool Odyssey { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public long MarketID { get; set; }
         public string Ship { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipId { get; set; } // TODO: check name
+        public long ShipId { get; set; } // TODO: check name
         public List<ModuleItem> Items { get; set; }
     }
 

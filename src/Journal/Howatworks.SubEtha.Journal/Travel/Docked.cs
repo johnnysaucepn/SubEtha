@@ -38,5 +38,9 @@ namespace Howatworks.SubEtha.Journal.Travel
         public List<string> StationServices { get; set; }
         public bool Wanted { get; set; } // TODO: check data type
         public bool ActiveFine { get; set; }
+
+        // TODO: Are these still optional in Horizons?
+        public bool? Taxi { get; set; }
+        public bool? Multicrew { get; set; }
     }
 }

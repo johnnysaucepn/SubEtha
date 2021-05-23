@@ -115,5 +115,13 @@ namespace Howatworks.SubEtha.Journal.Travel
         public string StationEconomy_Localised { get; set; }
         public List<StationEconomyItem> StationEconomies { get; set; }
         #endregion
+
+        #region Odyssey
+        public bool? Taxi { get; set; }
+        public bool? Multicrew { get; set; }
+        [JournalName("InSRV")]
+        public bool? InSrv { get; set; } // TODO: check this
+        public bool? OnFoot { get; set; }
+        #endregion
     }
 }

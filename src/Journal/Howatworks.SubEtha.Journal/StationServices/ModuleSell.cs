@@ -13,6 +13,6 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public long SellPrice { get; set; }
         public string Ship { get; set; } // Note: ship type
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; }
+        public long ShipID { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Howatworks.SubEtha.Journal.Odyssey
 {
     [ExcludeFromCodeCoverage]
+    [JournalName("BackPack")]
     public class Backpack : JournalEntryBase
     {
         public class BackpackItem

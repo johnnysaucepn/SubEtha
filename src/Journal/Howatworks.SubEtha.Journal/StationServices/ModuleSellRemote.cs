@@ -12,7 +12,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public long SellPrice { get; set; }
         public string Ship { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; } // check capitalisation, doc says ShipId
+        public long ShipID { get; set; } // check capitalisation, doc says ShipId
 
     }
 }
