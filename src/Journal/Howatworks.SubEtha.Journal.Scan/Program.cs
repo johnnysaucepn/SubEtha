@@ -29,7 +29,7 @@ namespace Howatworks.SubEtha.Journal.Scan
             {
                 ["JournalFolder"] = defaultJournalFolder,
                 ["LogPattern"] = "Journal.*.log",
-                ["LiveFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json;NavRoute.json;ModulesInfo.json;Cargo.json"
+                ["LiveFilenames"] = "Status.json;Market.json;Outfitting.json;Shipyard.json;NavRoute.json;ModulesInfo.json;Cargo.json;Backpack.json"
             };
 
             var config = new ConfigurationBuilder()
