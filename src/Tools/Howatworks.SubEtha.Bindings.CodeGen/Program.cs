@@ -83,14 +83,8 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                         }
                     }
 
-                    if (string.IsNullOrWhiteSpace(controlComment))
-                    {
-                        csWriter.WriteLine($"       public {controlType} {controlName} {{ get; set; }}");
-                    }
-                    else
-                    {
-                        csWriter.WriteLine($"       public {controlType} {controlName} {{ get; set; }} // {controlComment}");
-                    }
+                    csWriter.Write($"       public {controlType} {controlName} {{ get; set; }}");
+                    csWriter.WriteLine(string.IsNullOrWhiteSpace(controlComment) ? string.Empty : $" // {controlComment}");
 
                     dedupeList.Add(controlName.ToString());
                 }

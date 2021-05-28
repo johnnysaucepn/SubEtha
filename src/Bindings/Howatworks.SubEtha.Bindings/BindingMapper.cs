@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 
 namespace Howatworks.SubEtha.Bindings
 {
@@ -33,13 +32,9 @@ namespace Howatworks.SubEtha.Bindings
             });
         }
 
-        public static BindingMapper FromFile(string bindingsPath)
+        public static BindingMapper FromFile(FileInfo file)
         {
-            var serializer = new XmlSerializer(typeof(BindingSet), new XmlRootAttribute("Root"));
-            using (var file = File.OpenRead(bindingsPath))
-            {
-                return new BindingMapper((BindingSet)serializer.Deserialize(file));
-            }
+            return new BindingMapper(new BindingSetReader(file).Read());
         }
 
         public string GetPresetName()

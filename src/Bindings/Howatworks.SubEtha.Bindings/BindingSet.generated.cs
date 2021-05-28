@@ -295,6 +295,7 @@
        public Button OpenOrders { get; set; }
        public Button PhotoCameraToggle { get; set; }
        public Button PhotoCameraToggle_Buggy { get; set; }
+       public Button PhotoCameraToggle_Humanoid { get; set; }
        public Button VanityCameraScrollLeft { get; set; }
        public Button VanityCameraScrollRight { get; set; }
        public Button ToggleFreeCam { get; set; }
@@ -382,6 +383,8 @@
        public Button ExplorationFSSShowHelp { get; set; }
        public ToggleButton ExplorationSAAChangeScannedAreaViewToggle { get; set; }
        public Button ExplorationSAAExitThirdPerson { get; set; }
+       public Button ExplorationSAANextGenus { get; set; }
+       public Button ExplorationSAAPreviousGenus { get; set; }
        public Setting<string> SAAThirdPersonMouseXMode { get; set; } // TODO: enum?
        public Setting<bool> SAAThirdPersonMouseXDecay { get; set; } // TODO: check data type
        public Setting<string> SAAThirdPersonMouseYMode { get; set; } // TODO: enum?
@@ -396,5 +399,70 @@
        public Axis SAAThirdPersonFovAxisRaw { get; set; }
        public Button SAAThirdPersonFovOutButton { get; set; }
        public Button SAAThirdPersonFovInButton { get; set; }
+       public Setting<string> MouseHumanoidXMode { get; set; } // TODO: enum?
+       public Setting<string> MouseHumanoidYMode { get; set; } // TODO: enum?
+       public Setting<decimal> MouseHumanoidSensitivity { get; set; }
+       public Axis HumanoidForwardAxis { get; set; }
+       public Button HumanoidForwardButton { get; set; }
+       public Button HumanoidBackwardButton { get; set; }
+       public Axis HumanoidStrafeAxis { get; set; }
+       public Button HumanoidStrafeLeftButton { get; set; }
+       public Button HumanoidStrafeRightButton { get; set; }
+       public Axis HumanoidRotateAxis { get; set; }
+       public Setting<decimal> HumanoidRotateSensitivity { get; set; }
+       public Button HumanoidRotateLeftButton { get; set; }
+       public Button HumanoidRotateRightButton { get; set; }
+       public Axis HumanoidPitchAxis { get; set; }
+       public Setting<decimal> HumanoidPitchSensitivity { get; set; }
+       public Button HumanoidPitchUpButton { get; set; }
+       public Button HumanoidPitchDownButton { get; set; }
+       public ToggleButton HumanoidSprintButton { get; set; }
+       public ToggleButton HumanoidWalkButton { get; set; }
+       public ToggleButton HumanoidCrouchButton { get; set; }
+       public Button HumanoidJumpButton { get; set; }
+       public Button HumanoidPrimaryInteractButton { get; set; }
+       public Button HumanoidSecondaryInteractButton { get; set; }
+       public Button HumanoidItemWheelButton { get; set; }
+       public Axis HumanoidItemWheelButton_XAxis { get; set; }
+       public Button HumanoidItemWheelButton_XLeft { get; set; }
+       public Button HumanoidItemWheelButton_XRight { get; set; }
+       public Axis HumanoidItemWheelButton_YAxis { get; set; }
+       public Button HumanoidItemWheelButton_YUp { get; set; }
+       public Button HumanoidItemWheelButton_YDown { get; set; }
+       public Setting<bool> HumanoidItemWheel_AcceptMouseInput { get; set; } // TODO: check data type
+       public Button HumanoidPrimaryFireButton { get; set; }
+       public ToggleButton HumanoidZoomButton { get; set; }
+       public Button HumanoidThrowGrenadeButton { get; set; }
+       public Button HumanoidMeleeButton { get; set; }
+       public Button HumanoidReloadButton { get; set; }
+       public Button HumanoidSwitchWeapon { get; set; }
+       public Button HumanoidSelectPrimaryWeaponButton { get; set; }
+       public Button HumanoidSelectSecondaryWeaponButton { get; set; }
+       public Button HumanoidSelectUtilityWeaponButton { get; set; }
+       public Button HumanoidSelectNextWeaponButton { get; set; }
+       public Button HumanoidSelectPreviousWeaponButton { get; set; }
+       public Button HumanoidHideWeaponButton { get; set; }
+       public Button HumanoidSelectNextGrenadeTypeButton { get; set; }
+       public Button HumanoidSelectPreviousGrenadeTypeButton { get; set; }
+       public Button HumanoidToggleFlashlightButton { get; set; }
+       public Button HumanoidToggleNightVisionButton { get; set; }
+       public Button HumanoidToggleShieldsButton { get; set; }
+       public Button HumanoidSwitchToRechargeTool { get; set; }
+       public Button HumanoidSwitchToCompAnalyser { get; set; }
+       public Button HumanoidSwitchToSuitTool { get; set; }
+       public Button HumanoidToggleToolModeButton { get; set; }
+       public Button HumanoidToggleMissionHelpPanelButton { get; set; }
+       public Button GalaxyMapOpen_Humanoid { get; set; }
+       public Button SystemMapOpen_Humanoid { get; set; }
+       public Button FocusCommsPanel_Humanoid { get; set; }
+       public Button QuickCommsPanel_Humanoid { get; set; }
+       public Button HumanoidOpenAccessPanelButton { get; set; }
+       public Button HumanoidConflictContextualUIButton { get; set; }
+       public Button StoreEnableRotation { get; set; }
+       public Axis StorePitchCamera { get; set; }
+       public Axis StoreYawCamera { get; set; }
+       public Button StoreCamZoomIn { get; set; }
+       public Button StoreCamZoomOut { get; set; }
+       public Button StoreToggle { get; set; }
    }
 }
