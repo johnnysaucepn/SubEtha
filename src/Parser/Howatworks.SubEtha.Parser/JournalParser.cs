@@ -145,5 +145,22 @@ namespace Howatworks.SubEtha.Parser
 
             return null;
         }
+
+        public JournalEntry Parse(JournalLine line)
+        {
+            try
+            {
+                return new JournalEntry(line.Context, Parse(line.Line));
+            }
+            catch (JournalParseException e)
+            {
+                Log.Error($"'{line.Context.Filename}': {e.JournalFragment}", e);
+            }
+            catch (UnrecognizedJournalException e)
+            {
+                Log.Warn($"'{line.Context.Filename}': {e.JournalFragment}", e);
+            }
+            return new JournalEntry(line.Context, null);
+        }
     }
 }
