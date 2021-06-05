@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Howatworks.SubEtha.Common;
 using Howatworks.SubEtha.Journal;
 using Howatworks.SubEtha.Parser;
 using Microsoft.Extensions.Configuration;

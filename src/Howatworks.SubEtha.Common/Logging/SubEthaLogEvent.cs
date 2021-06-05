@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Howatworks.SubEtha.Parser.Logging
+namespace Howatworks.SubEtha.Common.Logging
 {
     public class SubEthaLogEvent
     {

@@ -1,5 +1,4 @@
-﻿using Howatworks.SubEtha.Parser;
-using Howatworks.SubEtha.Parser.Logging;
+﻿using Howatworks.SubEtha.Common.Logging;
 using Microsoft.Extensions.FileSystemGlobbing;
 using System;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
-namespace Howatworks.SubEtha.Monitor
+namespace Howatworks.SubEtha.Common
 {
     /// <summary>
     /// The standard FileSystemWatcher class has several limitations, such as case-sensitivity (even on Windows).
@@ -23,7 +22,7 @@ namespace Howatworks.SubEtha.Monitor
         public IObservable<Exception> Errors { get; }
         public IObservable<(string oldPath, string newPath)> RenamedFiles { get; }
 
-        private readonly FileSystemWatcher _journalWatcher;
+        private readonly FileSystemWatcher _watcher;
 
         public string Folder { get; }
         public string Pattern { get; }
@@ -34,7 +33,7 @@ namespace Howatworks.SubEtha.Monitor
             Folder = folder;
             Pattern = pattern;
             _matcher = new Matcher(StringComparison.InvariantCultureIgnoreCase).AddInclude(Pattern);
-            _journalWatcher = new FileSystemWatcher(Folder)
+            _watcher = new FileSystemWatcher(Folder)
             {
                 EnableRaisingEvents = false
             };
@@ -63,24 +62,24 @@ namespace Howatworks.SubEtha.Monitor
 
         private IObservable<string> GetCreatedFiles() =>
             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
-                h => _journalWatcher.Created += h,
-                h => _journalWatcher.Created -= h
+                h => _watcher.Created += h,
+                h => _watcher.Created -= h
             )
             .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
             .Select(x => x.EventArgs.FullPath);
 
         private IObservable<string> GetModifiedFiles() =>
             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
-                h => _journalWatcher.Changed += h,
-                h => _journalWatcher.Changed -= h
+                h => _watcher.Changed += h,
+                h => _watcher.Changed -= h
             )
             .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
             .Select(x => x.EventArgs.FullPath);
 
         private IObservable<string> GetDeletedFiles() =>
             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
-                h => _journalWatcher.Deleted += h,
-                h => _journalWatcher.Deleted -= h
+                h => _watcher.Deleted += h,
+                h => _watcher.Deleted -= h
             )
             .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
             .Select(x => x.EventArgs.FullPath);
@@ -102,35 +101,35 @@ namespace Howatworks.SubEtha.Monitor
 
         private IObservable<string> GetOutgoingRenamedFiles() =>
             Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(
-                h => _journalWatcher.Renamed += h,
-                h => _journalWatcher.Renamed -= h
+                h => _watcher.Renamed += h,
+                h => _watcher.Renamed -= h
             )
             .Where(x => _matcher.Match(x.EventArgs.OldName).HasMatches)
             .Select(x => x.EventArgs.OldFullPath);
 
         private IObservable<string> GetIncomingRenamedFiles() =>
             Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(
-                h => _journalWatcher.Renamed += h,
-                h => _journalWatcher.Renamed -= h
+                h => _watcher.Renamed += h,
+                h => _watcher.Renamed -= h
             )
             .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
             .Select(x => x.EventArgs.FullPath);
 
         private IObservable<Exception> GetErrors() =>
             Observable.FromEventPattern<ErrorEventHandler, ErrorEventArgs>(
-                h => _journalWatcher.Error += h,
-                h => _journalWatcher.Error -= h
+                h => _watcher.Error += h,
+                h => _watcher.Error -= h
             )
             .Select(x => x.EventArgs.GetException());
 
         public void Start()
         {
-            _journalWatcher.EnableRaisingEvents = true;
+            _watcher.EnableRaisingEvents = true;
         }
 
         public void Stop()
         {
-            _journalWatcher.EnableRaisingEvents = false;
+            _watcher.EnableRaisingEvents = false;
         }
     }
 }

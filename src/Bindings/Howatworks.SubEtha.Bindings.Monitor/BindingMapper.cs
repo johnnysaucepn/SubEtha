@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace Howatworks.SubEtha.Bindings
+namespace Howatworks.SubEtha.Bindings.Monitor
 {
     public class BindingMapper : IBindingMapper
     {
@@ -30,11 +29,6 @@ namespace Howatworks.SubEtha.Bindings
                         StringComparer.OrdinalIgnoreCase
                     );
             });
-        }
-
-        public static BindingMapper FromFile(FileInfo file)
-        {
-            return new BindingMapper(new BindingSetReader(file).Read());
         }
 
         public string GetPresetName()

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Howatworks.SubEtha.Common.Logging;
 using Howatworks.SubEtha.Journal;
-using Howatworks.SubEtha.Parser.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

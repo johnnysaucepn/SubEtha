@@ -1,5 +1,5 @@
-﻿using Howatworks.SubEtha.Parser;
-using Howatworks.SubEtha.Parser.Logging;
+﻿using Howatworks.SubEtha.Common.Logging;
+using Howatworks.SubEtha.Parser;
 using log4net;
 using log4net.Config;
 using Microsoft.Extensions.Configuration;

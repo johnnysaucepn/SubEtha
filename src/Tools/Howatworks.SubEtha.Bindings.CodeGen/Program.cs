@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Howatworks.SubEtha.Bindings.Monitor;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +13,12 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
 {
     internal static class Program
     {
+        private static readonly JsonSerializerSettings _serializer = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            Converters = { new StringEnumConverter() }
+        };
+
         private static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
@@ -16,18 +26,27 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                 .Build();
 
             var xmlFilePath = config["src"];
-            var csFilePath = config["dest"] ?? Path.Combine(Path.GetDirectoryName(xmlFilePath), "BindingSet.generated.cs");
+            var defaultOutputPath = Path.GetDirectoryName(xmlFilePath);
+            var catJsonFilePath = config["cat"] ?? Path.Combine(defaultOutputPath, "BindingCategories.json");
+            var setCsFilePath = config["set"] ?? Path.Combine(defaultOutputPath, "BindingSet.generated.cs");
+            var lookupCsFilePath = config["lookup"] ?? Path.Combine(defaultOutputPath, "BindingLookup.generated.cs");
 
             var dedupeList = new List<string>();
+            UpdateSet(xmlFilePath, setCsFilePath, dedupeList);
+            UpdateLookup(catJsonFilePath, lookupCsFilePath);
+        }
 
+        private static void UpdateSet(string xmlFilePath, string setCsFilePath, List<string> dedupeList)
+        {
             var xmlReader = XDocument.Load(xmlFilePath);
-            using (var csWriter = new StreamWriter(csFilePath, false, Encoding.UTF8))
+            using (var csWriter = new StreamWriter(setCsFilePath, false, Encoding.UTF8))
             {
-                csWriter.Write(@"namespace Howatworks.SubEtha.Bindings
-{
+                var ns = typeof(BindingSet).Namespace;
+                csWriter.Write($@"namespace {ns}
+{{
     [System.Diagnostics.CodeAnalysis.SuppressMessage(""ReSharper"", ""InconsistentNaming"")]
     public partial class BindingSet
-    {
+    {{
 ");
 
                 foreach (var item in xmlReader.Root.Elements())
@@ -91,6 +110,77 @@ namespace Howatworks.SubEtha.Bindings.CodeGen
                 csWriter.Write(@"   }
 }
 ");
+            }
+        }
+
+        private static void UpdateLookup(string catJsonFilePath, string lookupCsFilePath)
+        {
+            Dictionary<string, BindingCategory> catLookup = ReadCategoryLookup(catJsonFilePath);
+
+            using (var csWriter = new StreamWriter(lookupCsFilePath, false, Encoding.UTF8))
+            {
+                var ns = typeof(BindingLookup).Namespace;
+
+                csWriter.Write($@"using System.Collections.Generic;
+
+namespace {ns}
+{{
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(""ReSharper"", ""InconsistentNaming"")]
+    public partial class BindingLookup
+    {{
+        public Dictionary<string, BindingCategory> Lookup = new Dictionary<string, BindingCategory> {{
+");
+
+                foreach (var controlName in catLookup.Keys)
+                {
+                    BindingCategory controlCategory = BindingCategory.Unknown;
+                    if (catLookup.ContainsKey(controlName))
+                    {
+                        controlCategory = catLookup[controlName];
+                    }
+                    else
+                    {
+                        catLookup[controlName] = BindingCategory.Unknown;
+                    }
+
+                    csWriter.WriteLine($"            [nameof(BindingSet.{controlName})] = BindingCategory.{controlCategory},");
+                }
+
+
+                csWriter.Write(@"        };
+    }
+}
+");
+            }
+
+            WriteCategoryLookup(catJsonFilePath, catLookup);
+        }
+
+        private static Dictionary<string, BindingCategory> ReadCategoryLookup(string catJsonFilePath)
+        {
+            var emptySet = new Dictionary<string, BindingCategory>();
+            try
+            {
+                var catJson = File.ReadAllText(catJsonFilePath);
+                return JsonConvert.DeserializeObject<Dictionary<string, BindingCategory>>(catJson) ?? emptySet;
+            }
+            catch (Exception ex) when (ex is JsonSerializationException || ex is IOException)
+            {
+                Console.Error.WriteLine($"Could not read category file '{catJsonFilePath}' - {ex}");
+                return emptySet;
+            }
+        }
+
+        private static void WriteCategoryLookup(string catJsonFilePath, Dictionary<string, BindingCategory> categories)
+        {
+            try
+            {
+                var catJson = JsonConvert.SerializeObject(categories, _serializer);
+                File.WriteAllText(catJsonFilePath, catJson);
+            }
+            catch (Exception ex) when (ex is JsonSerializationException || ex is IOException)
+            {
+                Console.Error.WriteLine($"Could not update category file '{catJsonFilePath}' - {ex}");
             }
         }
     }

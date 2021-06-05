@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Howatworks.SubEtha.Bindings
+namespace Howatworks.SubEtha.Bindings.Monitor
 {
     public interface IBindingMapper
     {

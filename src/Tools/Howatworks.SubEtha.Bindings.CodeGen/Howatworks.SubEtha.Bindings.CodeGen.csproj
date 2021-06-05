@@ -7,6 +7,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Bindings\Howatworks.SubEtha.Bindings.Monitor\Howatworks.SubEtha.Bindings.Monitor.csproj" />
+    <ProjectReference Include="..\..\Bindings\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj" />
   </ItemGroup>
 
 </Project>

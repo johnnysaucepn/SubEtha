@@ -40,7 +40,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Journal.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.CodeGen", "Tools\Howatworks.SubEtha.Bindings.CodeGen\Howatworks.SubEtha.Bindings.CodeGen.csproj", "{20B9740C-350B-404C-80AB-CEE11032FEB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.SubEtha.Bindings.Scan", "Tools\Howatworks.SubEtha.Bindings.Scan\Howatworks.SubEtha.Bindings.Scan.csproj", "{5FF48C6C-159F-426E-955B-DABF45A83065}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.Scan", "Tools\Howatworks.SubEtha.Bindings.Scan\Howatworks.SubEtha.Bindings.Scan.csproj", "{5FF48C6C-159F-426E-955B-DABF45A83065}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Bindings.Monitor", "Bindings\Howatworks.SubEtha.Bindings.Monitor\Howatworks.SubEtha.Bindings.Monitor.csproj", "{93C455A6-1FEE-4E80-A555-69FDD390AC95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howatworks.SubEtha.Common", "Howatworks.SubEtha.Common\Howatworks.SubEtha.Common.csproj", "{39A70F3F-3C52-4CD0-B8EC-9591EF82073C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Howatworks.SubEtha.Common.Test", "Howatworks.SubEtha.Common.Test\Howatworks.SubEtha.Common.Test.csproj", "{557FAC2A-4951-48DB-A8BF-AADDC1F69F7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +98,18 @@ Global
 		{5FF48C6C-159F-426E-955B-DABF45A83065}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF48C6C-159F-426E-955B-DABF45A83065}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF48C6C-159F-426E-955B-DABF45A83065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93C455A6-1FEE-4E80-A555-69FDD390AC95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93C455A6-1FEE-4E80-A555-69FDD390AC95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93C455A6-1FEE-4E80-A555-69FDD390AC95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93C455A6-1FEE-4E80-A555-69FDD390AC95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39A70F3F-3C52-4CD0-B8EC-9591EF82073C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39A70F3F-3C52-4CD0-B8EC-9591EF82073C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39A70F3F-3C52-4CD0-B8EC-9591EF82073C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39A70F3F-3C52-4CD0-B8EC-9591EF82073C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{557FAC2A-4951-48DB-A8BF-AADDC1F69F7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{557FAC2A-4951-48DB-A8BF-AADDC1F69F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{557FAC2A-4951-48DB-A8BF-AADDC1F69F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{557FAC2A-4951-48DB-A8BF-AADDC1F69F7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +126,7 @@ Global
 		{349F1D6A-F12C-4E6A-ADF1-43F9955A161E} = {F6F89CB3-E955-4074-BE35-118F45644769}
 		{20B9740C-350B-404C-80AB-CEE11032FEB0} = {F6F89CB3-E955-4074-BE35-118F45644769}
 		{5FF48C6C-159F-426E-955B-DABF45A83065} = {F6F89CB3-E955-4074-BE35-118F45644769}
+		{93C455A6-1FEE-4E80-A555-69FDD390AC95} = {F2134956-968B-4912-A4C2-288917713688}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83C552C3-FA11-4510-8F9F-B6BC1641E4A2}

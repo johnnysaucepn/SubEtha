@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Howatworks.SubEtha.Parser.Logging
+namespace Howatworks.SubEtha.Common.Logging
 {
     /// <summary>
     /// Instead of being tied to logging frameworks that require dependency injection to work,
@@ -30,6 +30,11 @@ namespace Howatworks.SubEtha.Parser.Logging
         public void Info(string message, params object[] items)
         {
             OnLogEvent(new SubEthaLogEvent(Source, SubEthaLogLevel.Info, message, items));
+        }
+
+        public void Warn(string message, params object[] items)
+        {
+            OnLogEvent(new SubEthaLogEvent(Source, SubEthaLogLevel.Warn, message, items));
         }
 
         public void Warn(string message, Exception exception, params object[] items)

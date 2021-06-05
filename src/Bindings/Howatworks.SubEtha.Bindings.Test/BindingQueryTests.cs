@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Howatworks.SubEtha.Bindings.Monitor;
 using Xunit;
 
 namespace Howatworks.SubEtha.Bindings.Test

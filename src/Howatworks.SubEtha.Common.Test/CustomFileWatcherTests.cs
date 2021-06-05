@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using Xunit;
 
-namespace Howatworks.SubEtha.Monitor.Test
+namespace Howatworks.SubEtha.Common.Test
 {
     public class CustomFileWatcherTests : IDisposable
     {
