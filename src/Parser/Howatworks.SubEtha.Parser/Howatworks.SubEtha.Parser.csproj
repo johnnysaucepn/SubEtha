@@ -22,6 +22,6 @@
     <ProjectReference Include="..\..\Journal\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\NuGetAssets.props" />
+  <Import Project="$(SolutionDir)\NuGetAssets.props" />
 
 </Project>
