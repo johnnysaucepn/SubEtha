@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace Howatworks.SubEtha.Bindings.Monitor
 {
@@ -10,9 +12,7 @@ namespace Howatworks.SubEtha.Bindings.Monitor
 
         private readonly Lazy<Dictionary<string, Button>> _buttonLookup;
 
-#pragma warning disable 67
-        public event EventHandler BindingsChanged; //not currently used - static bindings don't change
-#pragma warning restore 67
+        public IObservable<Unit> BindingsChanged => Observable.Never<Unit>(); //not currently used - static bindings don't change
 
         public BindingMapper(BindingSet bindingSet)
         {

@@ -14,7 +14,7 @@ namespace Howatworks.SubEtha.Bindings.Monitor
     /// <remarks>TODO: CustomFileWatcher doesn't appear to correctly track the file changes, therefore switching
     /// sets requires an app restart.</remarks>
     /// </summary>
-    public class DynamicBindingMapper : IDisposable
+    public class DynamicBindingMapper : IBindingMapper, IDisposable
     {
         //private static readonly SubEthaLog Log = SubEthaLog.GetLogger<DynamicBindingMapper>();
 
