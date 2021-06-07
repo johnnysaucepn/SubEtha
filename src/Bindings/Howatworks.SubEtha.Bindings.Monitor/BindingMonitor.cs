@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace Howatworks.SubEtha.Bindings.Monitor
 {
@@ -23,8 +24,11 @@ namespace Howatworks.SubEtha.Bindings.Monitor
 
         private bool disposedValue;
 
-        public event EventHandler<BindingsChangedEventArgs> BindingsChanged;
-        public event EventHandler<SelectedPresetChangedEventArgs> SelectedPresetChanged;
+        private readonly ISubject<string> _bindingsChanged = new Subject<string>();
+        public IObservable<string> BindingsChanged { get; }
+
+        private readonly ISubject<SelectedPresets> _selectedPresetChanged = new Subject<SelectedPresets>();
+        public IObservable<SelectedPresets> SelectedPresetChanged { get; }
 
         public BindingMonitor(IConfiguration config)
         {
@@ -46,7 +50,7 @@ namespace Howatworks.SubEtha.Bindings.Monitor
                     var presetName = updatedBinding.PresetName;
                     _allBindingsByPresetName[presetName] = updatedBinding;
 
-                    BindingsChanged?.Invoke(this, new BindingsChangedEventArgs(presetName));
+                    _bindingsChanged.OnNext(presetName);
                 });
 
             // Now start raising file events
@@ -63,11 +67,11 @@ namespace Howatworks.SubEtha.Bindings.Monitor
                 .Throttle(TimeSpan.FromSeconds(3))
                 .Subscribe(x =>
                 {
-                    Log.Info("Checking for new binding preset");
+                    Log.Info("Checking for new binding presets");
                     var currentSelectedPresetNames = ReadStartPresets(new FileInfo(Path.Combine(folder, x)));
                     Log.Info($"Selecting binding presets {currentSelectedPresetNames}");
                     // Refresh everyone's list of available bindings
-                    SelectedPresetChanged?.Invoke(this, new SelectedPresetChangedEventArgs(currentSelectedPresetNames));
+                    _selectedPresetChanged.OnNext(currentSelectedPresetNames);
                 });
 
             // Now start raising file events

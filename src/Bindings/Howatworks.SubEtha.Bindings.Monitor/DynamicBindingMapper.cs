@@ -1,11 +1,10 @@
-﻿using Howatworks.SubEtha.Common;
-using Howatworks.SubEtha.Common.Logging;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace Howatworks.SubEtha.Bindings.Monitor
 {
@@ -27,19 +26,31 @@ namespace Howatworks.SubEtha.Bindings.Monitor
         private BindingMapper _driving;
         private BindingMapper _onFoot;
 
+        private readonly CompositeDisposable _disposables = new CompositeDisposable();
+
+        private readonly ISubject<Unit> _bindingsChanged = new Subject<Unit>();
+        public IObservable<Unit> BindingsChanged { get; }
+
         public DynamicBindingMapper(BindingMonitor monitor)
         {
             _monitor = monitor;
-            _monitor.BindingsChanged += Monitor_BindingsChanged;
-            _monitor.SelectedPresetChanged += Monitor_SelectedPresetChanged;
+            _disposables.Add(
+                _monitor.BindingsChanged.Subscribe(presetName => Monitor_BindingsChanged(presetName))
+                );
+
+            _disposables.Add(
+                _monitor.SelectedPresetChanged.Subscribe(presets => Monitor_SelectedPresetChanged(presets))
+                );
         }
 
-        private void Monitor_SelectedPresetChanged(object sender, SelectedPresetChangedEventArgs e)
+        private void Monitor_SelectedPresetChanged(SelectedPresets presets)
         {
-            ReplaceBindings(ref _general, e.NewSelectedPresets.General);
-            ReplaceBindings(ref _inShip, e.NewSelectedPresets.InShip);
-            ReplaceBindings(ref _driving, e.NewSelectedPresets.Driving);
-            ReplaceBindings(ref _onFoot, e.NewSelectedPresets.OnFoot);
+            ReplaceBindings(ref _general, presets.General);
+            ReplaceBindings(ref _inShip, presets.InShip);
+            ReplaceBindings(ref _driving, presets.Driving);
+            ReplaceBindings(ref _onFoot, presets.OnFoot);
+
+            _bindingsChanged.OnNext(Unit.Default);
         }
 
         private void ReplaceBindings(ref BindingMapper mapper, string newPreset)
@@ -50,14 +61,16 @@ namespace Howatworks.SubEtha.Bindings.Monitor
             }
         }
 
-        private void Monitor_BindingsChanged(object sender, BindingsChangedEventArgs e)
+        private void Monitor_BindingsChanged(string presetName)
         {
-            var newBinding = new BindingMapper(_monitor.GetBindingSet(e.PresetName));
+            var newBinding = new BindingMapper(_monitor.GetBindingSet(presetName));
 
             ReplaceBinding(ref _general, newBinding);
             ReplaceBinding(ref _inShip, newBinding);
             ReplaceBinding(ref _driving, newBinding);
             ReplaceBinding(ref _onFoot, newBinding);
+
+            _bindingsChanged.OnNext(Unit.Default);
         }
 
         private void ReplaceBinding(ref BindingMapper oldMapper, BindingMapper newMapper)
@@ -89,31 +102,13 @@ namespace Howatworks.SubEtha.Bindings.Monitor
                 _onFoot?.GetButtonBindingByName(name);
         }
 
-        /*private BindingMapper GetCurrentBindingMapper()
-        {
-            if (_currentSelectedPresetName == null)
-            {
-                return null;
-            }
-            if (_allBindingsByPresetName.TryGetValue(_currentSelectedPresetName, out var selectedBindingMapper))
-            {
-                return selectedBindingMapper;
-            }
-            Log.Warn("No binding preset selected");
-            return null;
-        }*/
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
                 if (disposing)
                 {
-                    _monitor.BindingsChanged -= Monitor_BindingsChanged;
-                    _monitor.SelectedPresetChanged -= Monitor_SelectedPresetChanged;
-
-                    //_allBindingSubscription?.Dispose();
-                    //_selectedBindingSubscription?.Dispose();
+                    _disposables.Dispose();
                 }
 
                 disposedValue = true;
