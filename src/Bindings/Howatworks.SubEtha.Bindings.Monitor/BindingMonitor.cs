@@ -25,10 +25,10 @@ namespace Howatworks.SubEtha.Bindings.Monitor
         private bool disposedValue;
 
         private readonly ISubject<string> _bindingsChanged = new Subject<string>();
-        public IObservable<string> BindingsChanged { get; }
+        public IObservable<string> BindingsChanged => _bindingsChanged.AsObservable();
 
         private readonly ISubject<SelectedPresets> _selectedPresetChanged = new Subject<SelectedPresets>();
-        public IObservable<SelectedPresets> SelectedPresetChanged { get; }
+        public IObservable<SelectedPresets> SelectedPresetChanged => _selectedPresetChanged.AsObservable();
 
         public BindingMonitor(IConfiguration config)
         {

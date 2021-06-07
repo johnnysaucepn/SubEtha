@@ -29,7 +29,7 @@ namespace Howatworks.SubEtha.Bindings.Monitor
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
 
         private readonly ISubject<Unit> _bindingsChanged = new Subject<Unit>();
-        public IObservable<Unit> BindingsChanged { get; }
+        public IObservable<Unit> BindingsChanged => _bindingsChanged.AsObservable();
 
         public DynamicBindingMapper(BindingMonitor monitor)
         {
