@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Howatworks.SubEtha.Bindings.CodeGen": {
+      "commandName": "Project",
+      "commandLineArgs": "--src=\"..\\..\\..\\..\\..\\..\\Assets\\Odyssey.4.0.binds\""
+    }
+  }
+}

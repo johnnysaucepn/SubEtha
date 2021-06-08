@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Howatworks.SubEtha.Common.Logging;
 using Howatworks.SubEtha.Journal;
-using Howatworks.SubEtha.Parser.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -144,6 +144,23 @@ namespace Howatworks.SubEtha.Parser
             }
 
             return null;
+        }
+
+        public JournalEntry Parse(JournalLine line)
+        {
+            try
+            {
+                return new JournalEntry(line.Context, Parse(line.Line));
+            }
+            catch (JournalParseException e)
+            {
+                Log.Error($"'{line.Context.Filename}': {e.JournalFragment}", e);
+            }
+            catch (UnrecognizedJournalException e)
+            {
+                Log.Warn($"'{line.Context.Filename}': {e.JournalFragment}", e);
+            }
+            return new JournalEntry(line.Context, null);
         }
     }
 }

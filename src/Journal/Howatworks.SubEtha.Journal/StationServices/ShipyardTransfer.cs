@@ -10,7 +10,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public string ShipType { get; set; }
         public string ShipType_Localised { get; set; } // NOTE: not documented
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; }
+        public long ShipID { get; set; }
         public string System { get; set; } // NOTE: name
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long ShipMarketID { get; set; }

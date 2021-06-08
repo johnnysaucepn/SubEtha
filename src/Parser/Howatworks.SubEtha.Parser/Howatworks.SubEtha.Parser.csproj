@@ -18,9 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Howatworks.SubEtha.Common\Howatworks.SubEtha.Common.csproj" />
     <ProjectReference Include="..\..\Journal\Howatworks.SubEtha.Journal\Howatworks.SubEtha.Journal.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\NuGetAssets.props" />
+  <Import Project="$(SolutionDir)\NuGetAssets.props" />
 
 </Project>

@@ -14,7 +14,7 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public long TransferCost { get; set; }
         public string Ship { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; } // TODO: check capitalisation
+        public long ShipID { get; set; } // TODO: check capitalisation
         public int TransferTime { get; set; } //TODO: check data type
     }
 }

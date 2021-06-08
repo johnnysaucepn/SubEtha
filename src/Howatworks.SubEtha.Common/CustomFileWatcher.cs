@@ -1,0 +1,135 @@
+﻿using Howatworks.SubEtha.Common.Logging;
+using Microsoft.Extensions.FileSystemGlobbing;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+
+namespace Howatworks.SubEtha.Common
+{
+    /// <summary>
+    /// The standard FileSystemWatcher class has several limitations, such as case-sensitivity (even on Windows).
+    /// Also, for our needs, we don't generally care about the mechanics of renaming files, so abstract them away and build in useful logging.
+    /// </summary>
+    public class CustomFileWatcher
+    {
+        private static readonly SubEthaLog Log = SubEthaLog.GetLogger<CustomFileWatcher>();
+
+        public IObservable<string> ChangedFiles { get; }
+        public IObservable<string> CreatedFiles { get; }
+        public IObservable<string> DeletedFiles { get; }
+        public IObservable<Exception> Errors { get; }
+        public IObservable<(string oldPath, string newPath)> RenamedFiles { get; }
+
+        private readonly FileSystemWatcher _watcher;
+
+        public string Folder { get; }
+        public string Pattern { get; }
+        private readonly Matcher _matcher;
+
+        public CustomFileWatcher(string folder, string pattern)
+        {
+            Folder = folder;
+            Pattern = pattern;
+            _matcher = new Matcher(StringComparison.InvariantCultureIgnoreCase).AddInclude(Pattern);
+            _watcher = new FileSystemWatcher(Folder)
+            {
+                EnableRaisingEvents = false
+            };
+
+            CreatedFiles =
+                GetCreatedFiles()
+                // Treat renamed files as ones that have been created in one place and deleted in another
+                .Merge(GetIncomingRenamedFiles())
+                // Include files that exist at the time the watcher is created
+                .Merge(GetExistingFiles())
+                .Do(x => Log.Info($"Seen new file '{x}'"));
+
+            ChangedFiles =
+                GetModifiedFiles()
+                .Do(x => Log.Info($"Seen modified file '{x}'"));
+
+            DeletedFiles =
+                GetDeletedFiles()
+                // Treat renamed files as ones that have been created in one place and deleted in another
+                .Merge(GetOutgoingRenamedFiles())
+                .Do(x => Log.Info($"Seen deletion of file '{x}'"));
+
+            Errors = GetErrors()
+                .Do(x => Log.Warn("Seen file error", x));
+        }
+
+        private IObservable<string> GetCreatedFiles() =>
+            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+                h => _watcher.Created += h,
+                h => _watcher.Created -= h
+            )
+            .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+            .Select(x => x.EventArgs.FullPath);
+
+        private IObservable<string> GetModifiedFiles() =>
+            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+                h => _watcher.Changed += h,
+                h => _watcher.Changed -= h
+            )
+            .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+            .Select(x => x.EventArgs.FullPath);
+
+        private IObservable<string> GetDeletedFiles() =>
+            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+                h => _watcher.Deleted += h,
+                h => _watcher.Deleted -= h
+            )
+            .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+            .Select(x => x.EventArgs.FullPath);
+
+        private IObservable<string> GetExistingFiles()
+        {
+            return Observable.Create<string>(o =>
+            {
+                foreach (var file in Directory.EnumerateFiles(Folder)
+                    .Select(Path.GetFileName)
+                    .Where(f => _matcher.Match(f).HasMatches))
+                {
+                    o.OnNext(file);
+                }
+                o.OnCompleted();
+                return Disposable.Empty;
+            });
+        }
+
+        private IObservable<string> GetOutgoingRenamedFiles() =>
+            Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(
+                h => _watcher.Renamed += h,
+                h => _watcher.Renamed -= h
+            )
+            .Where(x => _matcher.Match(x.EventArgs.OldName).HasMatches)
+            .Select(x => x.EventArgs.OldFullPath);
+
+        private IObservable<string> GetIncomingRenamedFiles() =>
+            Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(
+                h => _watcher.Renamed += h,
+                h => _watcher.Renamed -= h
+            )
+            .Where(x => _matcher.Match(x.EventArgs.Name).HasMatches)
+            .Select(x => x.EventArgs.FullPath);
+
+        private IObservable<Exception> GetErrors() =>
+            Observable.FromEventPattern<ErrorEventHandler, ErrorEventArgs>(
+                h => _watcher.Error += h,
+                h => _watcher.Error -= h
+            )
+            .Select(x => x.EventArgs.GetException());
+
+        public void Start()
+        {
+            _watcher.EnableRaisingEvents = true;
+        }
+
+        public void Stop()
+        {
+            _watcher.EnableRaisingEvents = false;
+        }
+    }
+}

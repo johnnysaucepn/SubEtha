@@ -15,7 +15,6 @@ namespace Howatworks.SubEtha.Monitor
         private readonly List<LiveJournalReader> _liveReaders;
 
         private readonly ISubject<JournalWatchActivity> _journalFileWatch = new Subject<JournalWatchActivity>();
-
         public IObservable<JournalWatchActivity> JournalFileWatch => _journalFileWatch.AsObservable();
 
         public LiveJournalMonitor(IConfiguration config, IJournalReaderFactory readerFactory)

@@ -5,11 +5,13 @@ namespace Howatworks.SubEtha.Journal.Startup
     [ExcludeFromCodeCoverage]
     public class Progress : JournalEntryBase
     {
-        public decimal Combat { get; set; } // Note: sample suggests int
-        public decimal Trade { get; set; } // Note: sample suggests int
-        public decimal Explore { get; set; } // Note: sample suggests int
-        public decimal Empire { get; set; } // Note: sample suggests int
-        public decimal Federation { get; set; } // Note: sample suggests int
-        public decimal CQC { get; set; } // Note: sample suggests int
+        public int Combat { get; set; }
+        public int Trade { get; set; }
+        public int Explore { get; set; }
+        public int Soldier { get; set; }
+        public int Exobiologist { get; set; }
+        public int Empire { get; set; }
+        public int Federation { get; set; }
+        public int CQC { get; set; }
     }
 }

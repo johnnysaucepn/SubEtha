@@ -21,7 +21,9 @@ namespace Howatworks.SubEtha.Monitor
         {
             var allEntries = _source.GetJournalEntries();
             foreach (var entry in allEntries)
+            {
                 _subject.OnNext(entry);
+            }
         }
     }
 }

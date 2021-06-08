@@ -25,6 +25,6 @@
     <ProjectReference Include="..\..\Parser\Howatworks.SubEtha.Parser\Howatworks.SubEtha.Parser.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\NuGetAssets.props" />
+  <Import Project="$(SolutionDir)\NuGetAssets.props" />
 
 </Project>

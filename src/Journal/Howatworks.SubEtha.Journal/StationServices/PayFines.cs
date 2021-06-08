@@ -10,6 +10,6 @@ namespace Howatworks.SubEtha.Journal.StationServices
         public bool AllFines { get; set; }
         public string Faction { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; }
+        public long ShipID { get; set; }
     }
 }

@@ -9,10 +9,11 @@ namespace Howatworks.SubEtha.Journal.Startup
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public string FID { get; set; }     // NOTE: Player ID
         public bool Horizons { get; set; }
+        public bool Odyssey { get; set; }
         public string Ship { get; set; } // NOTE: ship type
         public string Ship_Localised { get; set; }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; }
+        public long ShipID { get; set; }
         public bool? StartLanded { get; set; }
         public bool? StartDead { get; set; }
         public string GameMode { get; set; } // NOTE: Open, Solo or Group - consider enum?

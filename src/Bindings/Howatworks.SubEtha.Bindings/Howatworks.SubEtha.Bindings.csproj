@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Title>Elite: Dangerous Player Journal Parser</Title>
+    <Title>Elite: Dangerous Player Bindings</Title>
     <Description>Plain .NET object representations of control bindings for the game Elite: Dangerous</Description>
     <PackageTags>elite dangerous controls bindings</PackageTags>
     <Authors>James Howat</Authors>
@@ -13,6 +13,6 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <Import Project="..\..\NuGetAssets.props" />
+  <Import Project="$(SolutionDir)\NuGetAssets.props" />
 
 </Project>

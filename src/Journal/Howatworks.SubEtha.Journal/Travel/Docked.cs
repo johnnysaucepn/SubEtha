@@ -22,7 +22,7 @@ namespace Howatworks.SubEtha.Journal.Travel
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public long MarketID { get; set; }
         public long SystemAddress { get; set; }
-        public string StationType { get; set; }
+        public string StationType { get; set; } // TODO: enum?
         public string StarSystem { get; set; }
         public bool CockpitBreach { get; set; }
         public StationFactionItem StationFaction { get; set; }
@@ -38,5 +38,9 @@ namespace Howatworks.SubEtha.Journal.Travel
         public List<string> StationServices { get; set; }
         public bool Wanted { get; set; } // TODO: check data type
         public bool ActiveFine { get; set; }
+
+        // TODO: Are these still optional in Horizons?
+        public bool? Taxi { get; set; }
+        public bool? Multicrew { get; set; }
     }
 }

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Title>Elite: Dangerous Player Bindings Monitor</Title>
+    <Description>An API for quick and easy monitoring of control bindings for the game Elite: Dangerous</Description>
+    <PackageTags>elite dangerous controls bindings</PackageTags>
+    <Authors>James Howat</Authors>
+    <PackageProjectUrl>https://github.com/johnnysaucepn/SubEtha</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/johnnysaucepn/SubEtha</RepositoryUrl>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <Import Project="$(SolutionDir)\NuGetAssets.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Howatworks.SubEtha.Common\Howatworks.SubEtha.Common.csproj" />
+    <ProjectReference Include="..\Howatworks.SubEtha.Bindings\Howatworks.SubEtha.Bindings.csproj" />
+  </ItemGroup>
+
+</Project>

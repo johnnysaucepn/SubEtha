@@ -52,7 +52,7 @@ namespace Howatworks.SubEtha.Journal.Startup
 
         public string Ship { get; set; } // NOTE: Ship type
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public int ShipID { get; set; }
+        public long ShipID { get; set; }
         public string ShipName { get; set; }
         public string ShipIdent { get; set; }
         public long? HullValue { get; set; }

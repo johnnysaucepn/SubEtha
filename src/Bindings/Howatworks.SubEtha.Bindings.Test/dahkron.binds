@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<Root PresetName="Dahkron" MajorVersion="3" MinorVersion="0">
+<Root PresetName="Dahkron" MajorVersion="4" MinorVersion="0">
   <KeyboardLayout>en-US</KeyboardLayout>
   <MouseXMode Value="" />
   <MouseXDecay Value="0" />
@@ -1484,4 +1484,18 @@
     <Primary Device="{NoDevice}" Key="" />
     <Secondary Device="{NoDevice}" Key="" />
   </SAAThirdPersonFovInButton>
+  <!-- New to 4.0 format-->
+  <HumanoidZoomButton>
+    <Primary Device="Mouse" Key="Mouse_2">
+      <Hold Value="1" />
+    </Primary>
+    <Secondary Device="{NoDevice}" Key="" />
+    <ToggleOn Value="1" />
+  </HumanoidZoomButton>
+  <HumanoidItemWheelButton>
+    <Primary Device="Mouse" Key="Mouse_3">
+      <Hold Value="0" />
+    </Primary>
+    <Secondary Device="{NoDevice}" Key="" />
+  </HumanoidItemWheelButton>
 </Root>
