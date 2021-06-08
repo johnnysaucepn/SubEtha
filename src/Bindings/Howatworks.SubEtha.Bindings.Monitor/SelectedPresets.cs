@@ -1,10 +1,8 @@
-﻿namespace Howatworks.SubEtha.Bindings.Monitor
+﻿using System.Collections.Generic;
+
+namespace Howatworks.SubEtha.Bindings.Monitor
 {
-    public class SelectedPresets
+    public class SelectedPresets : Dictionary<BindingCategory, string>
     {
-        public string InShip { get; set; }
-        public string General { get; set; }
-        public string Driving { get; set; }
-        public string OnFoot { get; set; }
     }
 }

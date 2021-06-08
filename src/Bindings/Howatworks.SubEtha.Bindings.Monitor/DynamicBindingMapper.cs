@@ -21,10 +21,8 @@ namespace Howatworks.SubEtha.Bindings.Monitor
         private bool disposedValue;
 
         private readonly BindingMonitor _monitor;
-        private BindingMapper _general;
-        private BindingMapper _inShip;
-        private BindingMapper _driving;
-        private BindingMapper _onFoot;
+        private SelectedPresets _activePresets = new SelectedPresets();
+        private readonly Dictionary<string, BindingMapper> _bindingMappers = new Dictionary<string, BindingMapper>();
 
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
 
@@ -35,7 +33,7 @@ namespace Howatworks.SubEtha.Bindings.Monitor
         {
             _monitor = monitor;
             _disposables.Add(
-                _monitor.BindingsChanged.Subscribe(presetName => Monitor_BindingsChanged(presetName))
+                _monitor.BindingsChanged.Subscribe(bindingSet => Monitor_BindingsChanged(bindingSet))
                 );
 
             _disposables.Add(
@@ -45,61 +43,78 @@ namespace Howatworks.SubEtha.Bindings.Monitor
 
         private void Monitor_SelectedPresetChanged(SelectedPresets presets)
         {
-            ReplaceBindings(ref _general, presets.General);
+            _activePresets = presets;
+
+            /*ReplaceBindings(ref _general, presets.General);
             ReplaceBindings(ref _inShip, presets.InShip);
             ReplaceBindings(ref _driving, presets.Driving);
-            ReplaceBindings(ref _onFoot, presets.OnFoot);
+            ReplaceBindings(ref _onFoot, presets.OnFoot);*/
 
             _bindingsChanged.OnNext(Unit.Default);
         }
 
-        private void ReplaceBindings(ref BindingMapper mapper, string newPreset)
+        /*private void ReplaceBindings(ref BindingMapper mapper, BindingSet bindingSet)
         {
-            if (!mapper.GetPresetName().Equals(newPreset, StringComparison.InvariantCultureIgnoreCase))
+            if (mapper?.GetPresetName().Equals(bindingSet.PresetName, StringComparison.InvariantCultureIgnoreCase) != true)
             {
-                mapper = new BindingMapper(_monitor.GetBindingSet(newPreset));
+                mapper = new BindingMapper(bindingSet);
             }
-        }
+        }*/
 
-        private void Monitor_BindingsChanged(string presetName)
+        private void Monitor_BindingsChanged(BindingSet bindingSet)
         {
-            var newBinding = new BindingMapper(_monitor.GetBindingSet(presetName));
+            var newMapper = new BindingMapper(bindingSet);
+            var presetName = bindingSet.PresetName;
 
-            ReplaceBinding(ref _general, newBinding);
-            ReplaceBinding(ref _inShip, newBinding);
-            ReplaceBinding(ref _driving, newBinding);
-            ReplaceBinding(ref _onFoot, newBinding);
+            _bindingMappers[presetName] = newMapper;
+
+            /*foreach (var kvp in _bindingMappers)
+            {
+                if (kvp.Value.GetPresetName().Equals(bindingSet.PresetName))
+                {
+                    _bindingMappers[kvp.Key] = newMapper;
+                }
+            }*/
 
             _bindingsChanged.OnNext(Unit.Default);
         }
 
-        private void ReplaceBinding(ref BindingMapper oldMapper, BindingMapper newMapper)
-        {
-            if (oldMapper.GetPresetName().Equals(newMapper.GetPresetName()))
-            {
-                oldMapper = newMapper;
-            }
-        }
 
         public IReadOnlyCollection<BoundButton> GetBoundButtons(params string[] devices)
         {
             var comparer = new BoundButtonComparer();
-            return _general?.GetBoundButtons(devices)
+
+            IEnumerable<BoundButton> collection = new List<BoundButton>();
+            foreach (var mapper in _bindingMappers.Values.Distinct())
+            {
+                collection = collection.Union(mapper.GetBoundButtons(devices), comparer);
+            }
+
+            return collection.ToList();
+            /*return _bindingMappers._general?.GetBoundButtons(devices)
                 .Union(_inShip?.GetBoundButtons(devices), comparer)
                 .Union(_driving?.GetBoundButtons(devices), comparer)
                 .Union(_onFoot?.GetBoundButtons(devices), comparer)
-                .ToList();
+                .ToList();*/
         }
 
         public Button GetButtonBindingByName(string name)
         {
-            return _general?.GetButtonBindingByName(name)
+            foreach (var mapper in _bindingMappers.Values.Distinct())
+            {
+                var mapped = mapper.GetButtonBindingByName(name);
+                if (mapped != null) return mapped;
+            }
+            return null;
+            /*
+                return _general?.GetButtonBindingByName(name)
                 ??
                 _inShip?.GetButtonBindingByName(name)
                 ??
                 _driving?.GetButtonBindingByName(name)
                 ??
                 _onFoot?.GetButtonBindingByName(name);
+            */
         }
 
         protected virtual void Dispose(bool disposing)
